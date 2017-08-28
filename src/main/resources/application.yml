@@ -1,32 +1,20 @@
 server:
-    port: 9090
-    context-path: /a
+    port: 80
+#    context-path: /a
+
 
 logging:
     level:
-        root: debug
+        root: info
+        com.loushuiyifan: debug
         com.loushuiyifan.shiro.cache.EhcacheManagerWrapper: info
         net.sf.ehcache: info
         org.springframework: info
         org.apache: info
-        org.apache.shiro: debug
+        org.apache.shiro: info
 
 
 spring:
-    mvc:
-        view:
-            prefix: /templates/
-            suffix: .html
-
-    thymeleaf:
-        enabled: true
-        cache: false
-        mode: LEGACYHTML5
-        encoding: UTF-8
-        content-type: text/html
-        check-template-location: true
-        check-template: false
-
     datasource:
         url: jdbc:mysql://localhost:3306/aweb
         username: root
@@ -72,3 +60,5 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+
+

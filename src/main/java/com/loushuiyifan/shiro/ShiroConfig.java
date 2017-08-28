@@ -1,6 +1,5 @@
 package com.loushuiyifan.shiro;
 
-import com.loushuiyifan.redis.RedisConfig;
 import com.loushuiyifan.shiro.cache.EhcacheManagerWrapper;
 import com.loushuiyifan.shiro.filter.MyFormAuthenticationFilter;
 import com.loushuiyifan.shiro.filter.SysUserFilter;
@@ -13,7 +12,6 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +23,10 @@ import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,7 +36,6 @@ import java.util.Map;
  * @create 2017-03-19 16:12.
  */
 @Configuration
-@Import({RedisConfig.class, EhcacheConfig.class})
 public class ShiroConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiroConfig.class);
@@ -158,35 +156,18 @@ public class ShiroConfig {
         return factoryBean;
     }
 
-    /**
-     * 表单提交 自定义配置过滤器
-     *
-     * @return
-     */
+
     @Bean
-    public MyFormAuthenticationFilter myFormAuthenticationFilter() {
-        return new MyFormAuthenticationFilter();
+    public FilterRegistrationBean shiroFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new DelegatingFilterProxy());
+        registration.setDispatcherTypes(DispatcherType.REQUEST);
+        registration.addUrlPatterns("/*");
+        registration.addInitParameter("targetFilterLifecycle", "true");
+        registration.setName("shiroFilter");
+        return registration;
     }
 
-    /**
-     * 用户信息 过滤器
-     *
-     * @return
-     */
-    @Bean
-    public SysUserFilter sysUserFilter() {
-        return new SysUserFilter();
-    }
-
-    @Bean(name = "filterShiroFilterRegistrationBean")
-    protected FilterRegistrationBean filterShiroFilterRegistrationBean() throws Exception {
-
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter((AbstractShiroFilter) shiroFilter().getObject());
-        filterRegistrationBean.setOrder(1);
-
-        return filterRegistrationBean;
-    }
 
     @Bean
     public ShiroFilterFactoryBean shiroFilter() {
@@ -197,8 +178,8 @@ public class ShiroConfig {
         factoryBean.setUnauthorizedUrl("/error");
 
         Map<String, Filter> filterMap = new LinkedHashMap<>();
-        filterMap.put("myForm", myFormAuthenticationFilter());
-        filterMap.put("sysUser", sysUserFilter());
+        filterMap.put("myForm", new MyFormAuthenticationFilter());
+        filterMap.put("sysUser", new SysUserFilter());
         factoryBean.setFilters(filterMap);
 
         factoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());

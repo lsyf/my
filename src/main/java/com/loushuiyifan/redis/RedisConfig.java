@@ -126,12 +126,13 @@ public class RedisConfig extends JCacheConfigurerSupport {
         return new KeyGenerator() {
             @Override
             public Object generate(Object o, Method method, Object... objects) {
-                StringBuffer sb = new StringBuffer("aweb_json:");
+                StringBuffer sb = new StringBuffer("my_json:");
                 sb.append(o.getClass().getName());
                 sb.append(_T).append(method.getName());
                 for (Object obj : objects) {
                     sb.append(_T).append(obj.toString());
                 }
+                LOG.debug("保存key: {}", sb);
                 return sb.toString();
             }
         };
