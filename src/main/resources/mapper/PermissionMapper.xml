@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.mybatis.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.loushuiyifan.mybatis.bean.Permission">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="parent_ids" jdbcType="VARCHAR" property="parentIds"/>
+        <result column="permission" jdbcType="VARCHAR" property="permission"/>
+        <result column="available" jdbcType="BIT" property="available"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, url, parent_id, parent_ids, permission, available
+    </sql>
+    <sql id="Base_Column_List_F">
+        f.id, f.name, f.url, f.parent_id, f.parent_ids, f.permission, f.available
+    </sql>
+
+    <select id="findAllPermissions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM aweb_permission
+        where available=1
+        order by concat(parent_ids,id)
+    </select>
+
+    <select id="findPermissions" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List_F"/>
+        FROM
+        (
+        SELECT
+        <include refid="Base_Column_List_F"/>
+        FROM
+        aweb_user a,
+        aweb_user_role b,
+        aweb_role c,
+        aweb_role_resource d,
+        aweb_resource e,
+        aweb_permission f
+        WHERE
+        a.id = b.user_id
+        AND c.id = b.role_id
+        AND c.id = d.role_id
+        AND e.id = d.resource_id
+        AND e.resource_id = f.id
+        AND e.type = 'permission'
+        AND e.alls = 0
+        AND f.available = 1
+        AND a.username = #{username}
+        UNION
+        SELECT
+        <include refid="Base_Column_List_F"/>
+        FROM
+        aweb_resource e,
+        aweb_permission f
+        WHERE
+        e.resource_id = f.id
+        AND e.type = 'permission'
+        AND e.alls = 1
+        AND f.available = 1
+        ) f
+        order by concat(f.parent_ids,f.id)
+    </select>
+
+    <delete id="deleteAllKids">
+        DELETE
+        FROM
+        aweb_permission
+        WHERE
+        parent_ids LIKE #{paths}
+    </delete>
+</mapper>

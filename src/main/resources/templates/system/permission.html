@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/static}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>权限管理</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+    <link href="../../static/plugins/jquery-treegrid/jquery.treegrid.css"
+          th:href="@{/static/plugins/jquery-treegrid/jquery.treegrid.css}" rel="stylesheet">
+    <script src="../../static/plugins/jquery-treegrid/jquery.treegrid.js"
+            th:src="@{/static/plugins/jquery-treegrid/jquery.treegrid.js}"></script>
+    <script src="../../static/plugins/jquery-treegrid/jquery.treegrid.bootstrap3.js"
+            th:src="@{/static/plugins/jquery-treegrid/jquery.treegrid.bootstrap3.js}"></script>
+
+
+    <link rel="stylesheet"
+          href="../../static/plugins/bootstrap-select/bootstrap-select.min.css"
+          th:href="@{/static/plugins/bootstrap-select/bootstrap-select.min.css}">
+    <script src="../../static/plugins/bootstrap-select/bootstrap-select.min.js"
+            th:src="@{/static/plugins/bootstrap-select/bootstrap-select.min.js}"></script>
+
+    <script src="../../static/js/system/permission.js"
+            th:src="@{/static/js/system/permission.js}"></script>
+
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1 >
+                <span id="content-header-h1">权限管理</span>
+                <!--<small>仪表盘</small>-->
+            </h1>
+            <ol class="breadcrumb" id="content-header-ol">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+                <li class="active">权限管理</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content" >
+
+            <div id="table-panel">
+                <div class="box box-primary">
+
+                    <div class="box-body">
+                        <table class="table tree table-hover table-bordered table-condensed">
+                            <thead id="thead">
+                            <tr>
+                                <th>名称</th>
+                                <th>权限操作符</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="form-panel" hidden>
+                <div class="box box-primary">
+                    <div class="box-header">
+                    </div>
+
+                    <div class="box-body">
+                        <div class="col-sm-8">
+
+                            <form id="permission_form" class="form-horizontal">
+
+                                <!--parentName 父权限-->
+                                <div id="div_parentName" class="form-group">
+                                    <label for="permission_parentName" class="col-sm-4 control-label">父权限</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="parentName" id="permission_parentName"
+                                               disabled>
+                                    </div>
+                                </div>
+                                <!--parentName 父权限操作符-->
+                                <div id="div_parentPermission" class="form-group">
+                                    <label for="permission_parentPermission" class="col-sm-4 control-label">父操作符</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="permission_parentPermission"
+                                               disabled>
+                                    </div>
+                                </div>
+                                <!--parentId 父权限ID 隐藏-->
+                                <div class="form-group" hidden>
+                                    <label for="permission_parentId" class="col-sm-4 control-label">父权限ID</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="parentId" id="permission_parentId"
+                                        >
+                                    </div>
+                                </div>
+
+                                <!--id 权限ID 隐藏-->
+                                <div class="form-group" hidden>
+                                    <label for="permission_id" class="col-sm-4 control-label">权限ID</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="id" id="permission_id"
+                                        >
+                                    </div>
+                                </div>
+
+                                <!--name 子权限名称-->
+                                <div class="form-group">
+                                    <label for="permission_name" class="col-sm-4 control-label">权限名称</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="name" id="permission_name"
+                                        >
+                                    </div>
+                                </div>
+
+
+                                <!--权限操作符-->
+                                <div class="form-group">
+                                    <label for="permission_permission" class="col-sm-4 control-label">权限操作符</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="permission"
+                                               id="permission_permission"
+                                        >
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group ">
+                                    <button class="btn btn-danger pull-right" type="button"
+                                            style="margin-right: 5px" onclick="showPanel(1)">
+                                        取消
+                                    </button>
+                                    <button id="btn_save" type="submit" class="btn btn-success pull-right "
+                                            style="margin-right: 5px">
+                                        保存
+                                    </button>
+
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <script>
+            var PAGE_NAME = '权限管理';
+            $(function () {
+                initPermission();
+            });
+        </script>
+
+    </div>
+
+</div>
+</body>
+</html>

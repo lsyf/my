@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>index</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content">
+
+        <div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" id="tabs1" role="tablist">
+                <li class="active" role="presentation" aria-ajax="false">
+                    <a aria-controls="tab_home" data-toggle="tab" href="#tab_home" role="tab">
+                        主页
+                    </a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_home" role="tabpanel">
+                    <iframe id="test" th:src="@{/home}" height="700" frameborder="no"
+                            width="100%"></iframe>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+</body>
+</html>

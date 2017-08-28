@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>main-footer</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="../../static/plugins/font-awesome/css/font-awesome.css"
+          th:href="@{/static/plugins/font-awesome/css/font-awesome.css}">
+    <link rel="stylesheet" href="../../static/dist/css/AdminLTE.min.css"
+          th:href="@{/static/dist/css/AdminLTE.min.css}">
+    <link rel="stylesheet" href="../../static/dist/css/skins/skin-blue.min.css"
+          th:href="@{/static/dist/css/skins/skin-blue.min.css}">
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Main Footer -->
+    <footer class="main-footer" th:fragment="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+           BY LSYF
+        </div>
+        <!-- Default to the left -->
+        <!--<strong>Copyright &copy; 2017 <a href="#">Company</a>.</strong> All rights reserved.-->
+        <strong>LIVE &amp; <a href="#">LEARN</a></strong>
+    </footer>
+
+</div>
+
+<script src="../../static/plugins/jQuery/jquery-2.2.3.min.js"
+        th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script src="../../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<script src="../../static/dist/js/app.min.js"
+        th:src="@{/static/dist/js/app.min.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/static}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>用户管理</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+    <link rel="stylesheet"
+          href="../../static/plugins/bootstrap-select/bootstrap-select.min.css"
+          th:href="@{/static/plugins/bootstrap-select/bootstrap-select.min.css}">
+    <script src="../../static/plugins/bootstrap-select/bootstrap-select.min.js"
+            th:src="@{/static/plugins/bootstrap-select/bootstrap-select.min.js}"></script>
+
+    <link rel="stylesheet"
+          href="../../static/plugins/bootstrap-table/bootstrap-table.min.css"
+          th:href="@{/static/plugins/bootstrap-table/bootstrap-table.min.css}">
+    <script src="../../static/plugins/bootstrap-table/bootstrap-table.min.js"
+            th:src="@{/static/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script src="../../static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"
+            th:src="@{/static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+
+    <link rel="stylesheet"
+          href="../../static/plugins/zTree/zTreeStyle.css"
+          th:href="@{/static/plugins/zTree/zTreeStyle.css}">
+    <script src="../../static/plugins/zTree/jquery.ztree.all.min.js"
+            th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
+
+
+    <script src="../../static/js/system/user.js"
+            th:src="@{/static/js/system/user.js}"></script>
+
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1 >
+                <span id="content-header-h1">用户管理</span>
+                <!--<small>仪表盘</small>-->
+            </h1>
+            <ol class="breadcrumb" id="content-header-ol">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+                <li class="active">用户管理</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div id="table-panel">
+                <div class="box box-primary">
+                    <div class="box-body">
+
+                        <form id="formSearch" onkeydown="if(event.keyCode==13){return false;}" class="form-horizontal">
+                            <div class="form-group" style="margin-top:15px">
+                                <label class="control-label col-sm-1" for="input_search">条件</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" name="role" id="input_search"
+                                           placeholder="用户名/角色名">
+                                    </input>
+                                </div>
+
+                                <div class="col-sm-4" style="text-align:left;">
+                                    <button type="button" style="margin-left:50px" id="btn_query"
+                                            class="btn btn-primary">查询
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+
+                        <div id="toolbar" class="btn-group">
+                            <button id="btn_add" type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                            </button>
+
+                        </div>
+                        <table id="table_user"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="form-panel" hidden>
+                <div class="box box-primary">
+                    <div class="box-header">
+                    </div>
+                    <div class="box-body">
+                        <div class="col-sm-8">
+                            <form id="user_form" class="form-horizontal">
+
+                                <div class="form-group" hidden>
+                                    <label for="user_id" class="col-sm-4 control-label">用户ID</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="id" id="user_id"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="user_username" class="col-sm-4 control-label">用户名</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="username" id="user_username"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="user_password" class="col-sm-4 control-label">密码</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="password" id="user_password"
+                                        placeholder="默认不显示，填写则修改密码">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="user_locked" class="col-sm-4 control-label">冻结</label>
+                                    <div class="col-sm-8" id="user_locked">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="user_role" class="col-sm-4 control-label">角色</label>
+                                    <div class="col-sm-8">
+                                        <!--<ul id="treeRole" class="ztree"></ul>-->
+                                        <input type="text" class="form-control" id="user_role">
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="user_org" class="col-sm-4 control-label">组织</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="user_org">
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group ">
+                                    <button class="btn btn-danger pull-right" type="button"
+                                            style="margin-right: 5px" onclick="showPanel(1)">
+                                        取消
+                                    </button>
+                                    <button id="btn_save" type="submit"
+                                            class="btn btn-success pull-right "
+                                            style="margin-right: 5px">
+                                        保存
+                                    </button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="menuContent" class="menuContent" style="display:none; position: absolute; border-color: #829dd2;">
+                <ul id="treeRole" class="ztree"></ul>
+            </div>
+
+            <div id="menuContent2" class="menuContent" style="display:none; position: absolute; border-color: #829dd2;">
+                <ul id="treeOrg" class="ztree"></ul>
+            </div>
+
+        </section>
+
+
+        <script>
+            var PAGE_NAME = '用户管理';
+            $(function () {
+                initUser();
+            });
+        </script>
+
+    </div>
+
+</div>
+</body>
+</html>

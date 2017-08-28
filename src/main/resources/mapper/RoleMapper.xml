@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.mybatis.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.loushuiyifan.mybatis.bean.Role">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="role" jdbcType="VARCHAR" property="role"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="available" jdbcType="BIT" property="available"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, role, name, available
+    </sql>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM aweb_role
+        WHERE name LIKE #{name}
+    </select>
+
+    <select id="selectAllMenus" resultType="com.loushuiyifan.web.bean.Menu4Role">
+    SELECT
+        b.*, a.alls alls,
+        a.id resource_id
+    FROM
+        aweb_resource a,
+        aweb_menu b
+    WHERE
+        b.id = a.resource_id
+    AND a.type = 'menu'
+  </select>
+
+    <select id="selectAllPermissions" resultType="com.loushuiyifan.web.bean.Permission4Role">
+    SELECT
+        b.*, a.alls alls,
+        a.id resource_id
+    FROM
+        aweb_resource a,
+        aweb_permission b
+    WHERE
+        b.id = a.resource_id
+    AND a.type = 'permission'
+  </select>
+
+    <select id="selectResourceByRole" resultType="Long">
+    SELECT
+        c.id
+    FROM
+        aweb_role a,
+        aweb_role_resource b,
+        aweb_resource c
+    WHERE
+        a.id = b.role_id
+    AND c.id = b.resource_id
+    AND a.id = #{roleId}
+  </select>
+
+    <select id="selectAllResources" resultType="Long">
+    SELECT
+        id
+    FROM
+	  aweb_resource
+    </select>
+
+
+    <insert id="addRoleResource">
+        INSERT INTO aweb_role_resource
+        (id,role_id,resource_id)
+        VALUES (#{id},#{roleId},#{resourceId})
+    </insert>
+
+    <insert id="addRoleResources">
+        INSERT INTO aweb_role_resource
+        (role_id,resource_id)
+        VALUES
+        <foreach collection="resourceIds" item="resourceId" separator=",">
+            (#{roleId},#{resourceId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleResources">
+        DELETE FROM aweb_role_resource
+        WHERE role_id=#{roleId}
+        and resource_id IN
+        <foreach collection="resourceIds" item="resourceId" open="(" close=")" separator=",">
+            #{resourceId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAllRoleResources">
+        DELETE FROM aweb_role_resource
+        WHERE role_id=#{id}
+    </delete>
+
+    <select id="countUserByRoleId" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            aweb_user_role
+        WHERE
+            role_id = #{id}
+    </select>
+
+
+</mapper>

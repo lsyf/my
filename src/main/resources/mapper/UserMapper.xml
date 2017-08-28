@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.mybatis.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.loushuiyifan.mybatis.bean.User">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="salt" jdbcType="VARCHAR" property="salt"/>
+        <result column="locked" jdbcType="BIT" property="locked"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, username, password, salt, locked
+    </sql>
+
+    <sql id="Base_Column_List_a">
+        a.id, a.username, a.locked
+    </sql>
+
+    <select id="test" resultType="Map">
+        SELECT
+        <foreach collection="list" item="value" separator=",">
+            ${value}
+        </foreach>
+        FROM aweb_user
+    </select>
+
+
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM aweb_user
+        where username=#{username}
+    </select>
+    <select id="isAdmin" resultType="String">
+        SELECT
+            a.username
+        FROM
+            aweb_user a,
+            aweb_role b,
+            aweb_user_role c
+        WHERE
+            a.id = c.user_id
+        AND b.id = c.role_id
+        AND b.role = 'admin'
+        AND a.username = #{username}
+    </select>
+
+    <select id="findRoles" resultType="String">
+        SELECT
+            b.role
+        FROM
+            aweb_user a,
+            aweb_role b,
+            aweb_user_role c
+        WHERE
+            a.id = c.user_id
+        AND b.id = c.role_id
+        AND b.available=1
+        AND a.username =  #{username}
+    </select>
+
+    <select id="findAllPermissions" resultType="String">
+        select
+            permission
+        FROM aweb_permission
+        where available=1
+    </select>
+
+    <select id="findPermissions" resultType="String">
+        SELECT
+            f.permission
+        FROM
+            aweb_user a,
+            aweb_user_role b,
+            aweb_role c,
+            aweb_role_resource d,
+            aweb_resource e,
+            aweb_permission f
+        WHERE
+            a.id = b.user_id
+        AND c.id = b.role_id
+        AND c.id = d.role_id
+        AND e.id = d.resource_id
+        AND e.resource_id = f.id
+        AND e.type = 'permission'
+        AND e.alls = 0
+        AND f.available = 1
+        AND a.username = #{username}
+        UNION
+            SELECT
+                f.permission
+            FROM
+                aweb_resource e,
+                aweb_permission f
+            WHERE
+                e.resource_id = f.id
+            AND e.type = 'permission'
+            AND e.alls = 1
+            AND f.available = 1
+    </select>
+
+    <select id="selectByNameOrRole" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List_a"></include>
+        from aweb_user a, aweb_user_role b, aweb_role c
+        where a.id = b.user_id
+        and c.id = b.role_id
+        and a.username like #{name}
+        union
+        select
+        <include refid="Base_Column_List_a"></include>
+        from aweb_user a, aweb_user_role b, aweb_role c
+        where a.id = b.user_id
+        and c.id = b.role_id
+        and a.username not like #{name}
+        and c.name like #{name}
+    </select>
+
+    <select id="selectAllRoleIds" resultType="Long">
+        select role_id
+        from   aweb_user_role
+        where  user_id=#{userId}
+    </select>
+
+    <select id="selectAllOrgIds" resultType="Long">
+        select org_id
+        from   aweb_user_organization
+        where  user_id=#{userId}
+    </select>
+
+    <select id="selectAllUsers" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List_a"></include>
+        from aweb_user a
+    </select>
+
+
+    <insert id="addUserRoles">
+        INSERT INTO aweb_user_role
+        (user_id,role_id)
+        VALUES
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{userId},#{roleId})
+        </foreach>
+    </insert>
+
+    <insert id="addUserOrgs">
+        INSERT INTO aweb_user_organization
+        (user_id,org_id)
+        VALUES
+        <foreach collection="orgIds" item="orgId" separator=",">
+            (#{userId},#{orgId})
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteUserRoles">
+        DELETE FROM aweb_user_role
+        WHERE user_id=#{userId}
+        and role_id IN
+        <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteUserOrgs">
+        DELETE FROM aweb_user_organization
+        WHERE user_id=#{userId}
+        and org_id IN
+        <foreach collection="orgIds" item="orgId" open="(" close=")" separator=",">
+            #{orgId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAllUserRoles">
+        DELETE FROM aweb_user_role
+        WHERE user_id=#{id}
+    </delete>
+
+    <delete id="deleteAllUserOrgs">
+        DELETE FROM aweb_user_organization
+        WHERE user_id=#{id}
+    </delete>
+</mapper>

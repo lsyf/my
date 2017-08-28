@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>错误</title>
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <!--自适应屏幕-->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../static/plugins/font-awesome/css/font-awesome.css"
+          th:href="@{/static/plugins/font-awesome/css/font-awesome.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../static/dist/css/AdminLTE.min.css"
+          th:href="@{/static/dist/css/AdminLTE.min.css}">
+    <link rel="stylesheet" href="../static/dist/css/skins/_all-skins.min.min.css"
+          th:href="@{/static/dist/css/skins/skin-blue.min.css}">
+
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to get the
+desired effect
+使用下列class来获取想要的效果
+|---------------------------------------------------------|
+| SKINS         | skin-blue                               |
+|               | skin-black                              |
+|               | skin-purple                             |
+|               | skin-yellow                             |
+|               | skin-red                                |
+|               | skin-green                              |
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | fixed                                   |获得一个固定的标题和侧边栏
+|               | layout-boxed                            |获得一个只有1250像素的盒装布局
+|               | layout-top-nav                          |移除侧边栏，添加顶部导航栏中的链接
+|               | sidebar-collapse                        |加载时有折叠的侧边栏
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper1">
+
+    <section class="content1">
+        <div align="center">
+            <h3 >错误页面</h3>
+            <small th:text="${error}">error</small>
+        </div>
+        <!-- /.error-page -->
+    </section>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 2.2.3 -->
+<script src="../static/plugins/jQuery/jquery-2.2.3.min.js"
+        th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<!-- AdminLTE App -->
+<script src="../static/dist/js/app.min.js"
+        th:src="@{/static/dist/js/app.min.js}"></script>
+
+<!-- Optionally, you can add Slimscroll and FastClick plugins.
+     Both of these plugins are recommended to enhance the
+     user experience. Slimscroll is required when using the
+     fixed layout. -->
+</body>
+</html>

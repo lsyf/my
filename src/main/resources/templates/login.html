@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登录</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../static/plugins/font-awesome/css/font-awesome.css"
+          th:href="@{/static/plugins/font-awesome/css/font-awesome.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../static/dist/css/AdminLTE.min.css"
+          th:href="@{/static/dist/css/AdminLTE.min.css}">
+
+    <!-- iCheck -->
+    <link rel="stylesheet" href="../static/plugins/iCheck/square/blue.css"
+          th:href="@{/static/plugins/iCheck/square/blue.css}">
+
+    <!-- jQuery 2.2.3 -->
+    <script src="../static/plugins/jQuery/jquery-2.2.3.min.js"
+            th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="../static/bootstrap/js/bootstrap.min.js"
+            th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- iCheck -->
+    <script src="../static/plugins/iCheck/icheck.min.js"
+            th:src="@{/static/plugins/iCheck/icheck.min.js}"></script>
+    <!-- jQuery-validate -->
+    <script src="../static/plugins/jQuery-validate/jquery.validate.min.js"
+            th:src="@{/static/plugins/jQuery-validate/jquery.validate.min.js}"></script>
+    <script src="../static/plugins/jQuery-form/jquery.form.min.js"
+            th:src="@{/static/plugins/jQuery-form/jquery.form.min.js}"></script>
+
+
+    <link rel="stylesheet" href="../static/plugins/toastr/toastr.min.css"
+          th:href="@{/static/plugins/toastr/toastr.min.css}">
+    <script src="../static/plugins/toastr/toastr.min.js"
+            th:src="@{/static/plugins/toastr/toastr.min.js}"></script>
+
+
+    <script src="../static/js/layout.js"
+            th:src="@{/static/js/layout.js}"></script>
+    <script src="../static/js/login.js"
+            th:src="@{/static/js/login.js}"></script>
+</head>
+<body class="hold-transition login-page">
+<div id="ie_alert" class="alert alert-danger" style="margin:10px;display:none;text-align: center">
+    系统不支持IE浏览器，请使用更为高级的浏览器，例如火狐、谷歌浏览器或360、搜狗浏览器（极速模式）等更为先进的浏览器！
+</div>
+
+<div class="login-box">
+    <div class="login-logo">
+        <a th:href="@{/}">收入分析</a>
+    </div>
+
+
+    <div class="login-box-body">
+
+        <form id="form_login">
+            <div class="form-group has-feedback">
+                <input name="username" type="text" class="form-control" placeholder="账户">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input name="password" type="password" class="form-control" placeholder="密码">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox icheck">
+                        <label>
+                            <input name="rememberMe" type="checkbox"> 记住我
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <button id="btn_login" type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                </div>
+            </div>
+        </form>
+
+        <a th:href="@{/forgetPW}">忘记密码</a><br>
+        <a th:href="@{/register}" href="./register.html">注册账户</a>
+
+    </div>
+</div>
+
+
+
+<script th:inline="javascript">
+
+
+    //主机URL
+    var hostUrl = /*[[ @{'/'} ]]*/;
+
+    toastr.options = {
+        "positionClass": "toast-bottom-center"
+    }
+
+    //判断是否是IE浏览器
+    if (isIE()) {
+        $("#ie_alert").show();
+    }
+
+    //为了解决火狐刷新后退按钮不恢复禁用状态
+    $(window).on("beforeunload", function () {
+
+    });
+
+
+    $(function () {
+        initValidator();
+        initForm();
+    });
+
+
+</script>
+</body>
+</html>

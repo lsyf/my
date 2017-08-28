@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>main-sidebar</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="../../static/plugins/font-awesome/css/font-awesome.css"
+          th:href="@{/static/plugins/font-awesome/css/font-awesome.css}">
+    <link rel="stylesheet" href="../../static/dist/css/AdminLTE.css"
+          th:href="@{/static/dist/css/AdminLTE.min.css}">
+    <link rel="stylesheet" href="../../static/dist/css/skins/skin-blue.min.css"
+          th:href="@{/static/dist/css/skins/skin-blue.min.css}">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Left side column. contains the logo and sidebar -->
+    <!--左侧边栏，包含logo和侧边栏-->
+    <aside class="main-sidebar" th:fragment="main-sidebar">
+
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+            <!-- Sidebar user panel (optional) -->
+            <!--用户面板-->
+            <div class="user-panel">
+                <!--用户头像-->
+                <div class="pull-left image">
+                    <img src="../../static/dist/img/user2-160x160.jpg"
+                         th:src="@{/static/dist/img/user2-160x160.jpg}"
+                         class="img-circle" alt="User Image">
+                </div>
+                <!--用户信息-->
+                <div class="pull-left info">
+                    <p>Alexander Pierce</p>
+                    <!-- Status -->
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+
+            <!-- search form (Optional) -->
+            <!--搜索框-->
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+                </div>
+            </form>
+
+
+            <!-- Sidebar Menu -->
+            <!--侧边栏菜单-->
+            <ul class="sidebar-menu" id="sidebar-menu">
+                <!--菜单头部-->
+                <li class="header">菜单</li>
+
+                <!-- Optionally, you can add icons to the links -->
+                <li id="siderbar-li-0">
+                    <a th:href="@{/}">
+                        <i class="fa fa-dashboard"></i>
+                        <span>首页</span>
+                    </a>
+                </li>
+
+
+                <!--菜单结构，最高三层menu-->
+                <!--第一层-->
+                <li th:each="a,aStat:${sidebar.kids}"
+                    th:id="'siderbar-li-'+${a.menu.id}"
+                    th:class="${a.tree}?'treeview'">
+
+                    <!--如果不是tree-->
+                    <a th:if="${!a.tree}" th:href="${a.menu.url.substring(1)}">
+                        <i class="fa fa-link"></i>
+                        <span th:text="${a.menu.name}"></span>
+                    </a>
+
+                    <!--如果是tree-->
+                    <a th:if="${a.tree}">
+                        <i class="fa fa-link"></i>
+                        <span th:text="${a.menu.name}"></span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+
+                    <!--第二层-->
+                    <ul th:if="${a.tree}" class="treeview-menu">
+                        <li th:each="b,bStat:${a.kids}"
+                            th:id="'siderbar-li-'+${b.menu.id}"
+                            th:class="${b.tree}?'treeview'">
+
+                            <!--如果不是tree-->
+                            <a th:if="${!b.tree}" target="navTab" th:href="${b.menu.url.substring(1)}">
+                                <i class="fa fa-circle-o"></i>
+                                <span th:text="${b.menu.name}"></span>
+                            </a>
+
+                            <!--如果是tree-->
+                            <a th:if="${b.tree}">
+                                <i class="fa fa-link"></i>
+                                <span th:text="${b.menu.name}"></span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+
+                            <!--第三层-->
+                            <ul th:if="${b.tree}" class="treeview-menu">
+                                <li th:each="c,cStat:${b.kids}"
+                                    th:id="'siderbar-li-'+${c.menu.id}"
+                                    th:class="${c.tree}?'treeview'">
+
+                                    <!--如果不是tree-->
+                                    <a th:if="${!c.tree}" th:href="${c.menu.url.substring(1)}">
+                                        <i class="fa fa-circle-o"></i>
+                                        <span th:text="${c.menu.name}"></span>
+                                    </a>
+
+                                    <!--如果是tree,则不予显示-->
+
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+
+                </li>
+
+            </ul>
+
+            <script th:inline="javascript">
+                //主机URL
+                var sidebar = [[${sidebar}]];
+                console.log(sidebar)
+            </script>
+
+        </section>
+
+    </aside>
+
+</div>
+<script src="../../static/plugins/jQuery/jquery-2.2.3.min.js"
+        th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script src="../../static/bootstrap/js/bootstrap.min.js"
+        th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<!--<script src="../../static/dist/js/app.min.js"-->
+<!--th:src="@{/static/dist/js/app.min.js}"></script>-->
+
+
+</body>
+</html>

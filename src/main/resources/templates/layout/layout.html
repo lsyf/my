@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>layout</title>
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <!--自适应屏幕-->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../static/plugins/font-awesome/css/font-awesome.css"
+          th:href="@{/static/plugins/font-awesome/css/font-awesome.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../static/dist/css/AdminLTE.min.css"
+          th:href="@{/static/dist/css/AdminLTE.min.css}">
+    <link rel="stylesheet" href="../../static/dist/css/skins/skin-blue.min.css"
+          th:href="@{/static/dist/css/skins/skin-blue.min.css}">
+
+    <!--全局css-->
+    <link rel="stylesheet" href="../../static/css/layout.css"
+          th:href="@{/static/css/layout.css}">
+
+    <!-- REQUIRED JS SCRIPTS -->
+
+    <!-- jQuery 2.2.3 -->
+    <script src="../../static/plugins/jQuery/jquery-2.2.3.min.js"
+            th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="../../static/bootstrap/js/bootstrap.min.js"
+            th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- AdminLTE App -->
+    <script src="../../static/dist/js/app.min.js"
+            th:src="@{/static/dist/js/app.min.js}"></script>
+
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
+
+    <!--表单检查-->
+    <script src="../../static/plugins/jQuery-validate/jquery.validate.min.js"
+            th:src="@{/static/plugins/jQuery-validate/jquery.validate.min.js}"></script>
+    <script src="../../static/plugins/jQuery-form/jquery.form.min.js"
+            th:src="@{/static/plugins/jQuery-form/jquery.form.min.js}"></script>
+
+    <!--toastr-->
+    <link rel="stylesheet" href="../../static/plugins/toastr/toastr.min.css"
+          th:href="@{/static/plugins/toastr/toastr.min.css}">
+    <script src="../../static/plugins/toastr/toastr.min.js"
+            th:src="@{/static/plugins/toastr/toastr.min.js}"></script>
+
+    <link rel="stylesheet" href="../../static/plugins/bootstrap-addtabs/bootstrap.addtabs.css"
+          th:href="@{/static/plugins/bootstrap-addtabs/bootstrap.addtabs.css}">
+    <script src="../../static/plugins/bootstrap-addtabs/bootstrap.addtabs.js"
+            th:src="@{/static/plugins/bootstrap-addtabs/bootstrap.addtabs.js}"></script>
+
+    <!--通用js-->
+    <script src="../../static/js/layout.js"
+            th:src="@{/static/js/layout.js}"></script>
+
+
+    <!-- Menu -->
+    <script src="../../static/js/sidebar.js"
+            th:src="@{/static/js/sidebar.js}"></script>
+
+
+    <!--配置-->
+    <script th:inline="javascript">
+        //主机URL
+        var hostUrl = /*[[ @{'/'} ]]*/;
+        var user = new Object();
+
+
+        $(function () {
+            //加载菜单
+            loadSidebar();
+        });
+    </script>
+
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to get the
+desired effect
+使用下列class来获取想要的效果
+|---------------------------------------------------------|
+| SKINS         | skin-blue                               |
+|               | skin-black                              |
+|               | skin-purple                             |
+|               | skin-yellow                             |
+|               | skin-red                                |
+|               | skin-green                              |
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | fixed                                   |获得一个固定的标题和侧边栏
+|               | layout-boxed                            |获得一个只有1250像素的盒装布局
+|               | layout-top-nav                          |移除侧边栏，添加顶部导航栏中的链接
+|               | sidebar-collapse                        |加载时有折叠的侧边栏
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+
+    <!-- Main Header -->
+    <header class="main-header" th:replace="layout/main-header :: main-header"></header>
+
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar" th:replace="layout/main-sidebar :: main-sidebar"></aside>
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content"></div>
+
+
+    <!-- Main Footer -->
+    <footer class="main-footer" th:replace="layout/main-footer :: main-footer"></footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar" th:replace="layout/control-sidebar :: control-sidebar"></aside>
+
+
+    <div th:replace="modal/modal_layout :: alert"></div>
+
+
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+
+
+</div>
+
+
+</body>
+</html>
