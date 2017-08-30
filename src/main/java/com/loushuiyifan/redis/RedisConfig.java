@@ -10,16 +10,15 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.jcache.config.JCacheConfigurerSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.lang.reflect.Method;
 
@@ -29,7 +28,6 @@ import java.lang.reflect.Method;
  */
 
 @Configuration
-@PropertySource({"classpath:redis.properties"})
 @EnableCaching(proxyTargetClass = true)
 public class RedisConfig extends JCacheConfigurerSupport {
 
@@ -41,46 +39,14 @@ public class RedisConfig extends JCacheConfigurerSupport {
     private static String _T = "_";
 
     @Bean
-    public RedisCacheManager cacheManager() {
-        RedisCacheManager cacheManager = new RedisCacheManager(stringRedisTemplate());
-//        cacheManager.setDefaultExpiration(30 * 60); // 30min
+    @Primary
+    public RedisCacheManager redisCacheManager(StringRedisTemplate template) {
+        RedisCacheManager cacheManager = new RedisCacheManager(template);
         cacheManager.setDefaultExpiration(30 * 24 * 60 * 60); // 30d
 
         return cacheManager;
     }
 
-
-    @Bean
-    public JedisPoolConfig jedisPoolConfig() {
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(env.getRequiredProperty("redis.config.maxTotal", Integer.class));
-        config.setMaxIdle(env.getRequiredProperty("redis.config.maxIdle", Integer.class));
-        config.setMinIdle(env.getRequiredProperty("redis.config.minIdle", Integer.class));
-        config.setMaxWaitMillis(env.getRequiredProperty("redis.config.maxWaitMillis", Long.class));
-        config.setMinEvictableIdleTimeMillis(env.getRequiredProperty("redis.config.minEvictableIdleTimeMillis", Long.class));
-        config.setNumTestsPerEvictionRun(env.getRequiredProperty("redis.config.numTestsPerEvictionRun", Integer.class));
-        config.setTimeBetweenEvictionRunsMillis(env.getRequiredProperty("redis.config.timeBetweenEvictionRunsMillis", Long.class));
-        config.setTestOnBorrow(env.getRequiredProperty("redis.config.testOnBorrow", Boolean.class));
-        config.setTestOnReturn(env.getRequiredProperty("redis.config.testOnReturn", Boolean.class));
-        config.setTestWhileIdle(env.getRequiredProperty("redis.config.testWhileIdle", Boolean.class));
-
-        return config;
-    }
-
-
-    @Bean(destroyMethod = "destroy")
-    public JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setPoolConfig(jedisPoolConfig());
-        factory.setHostName(env.getRequiredProperty("redis.hostName"));
-        factory.setPort(env.getRequiredProperty("redis.port", Integer.class));
-        factory.setTimeout(env.getRequiredProperty("redis.timeout", Integer.class));
-        factory.setDatabase(env.getRequiredProperty("redis.database", Integer.class));
-        factory.setPassword(env.getRequiredProperty("redis.password"));
-        factory.setUsePool(env.getRequiredProperty("redis.usePool", Boolean.class));
-
-        return factory;
-    }
 
     @Bean
     public StringRedisSerializer stringRedisSerializer() {
@@ -98,9 +64,9 @@ public class RedisConfig extends JCacheConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate redisTemplate() {
+    public RedisTemplate redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate redisTemplate = new RedisTemplate();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        redisTemplate.setConnectionFactory(factory);
         redisTemplate.setKeySerializer(stringRedisSerializer());
         redisTemplate.setHashKeySerializer(stringRedisSerializer());
         redisTemplate.setValueSerializer(jdkSerializationRedisSerializer());
@@ -110,9 +76,9 @@ public class RedisConfig extends JCacheConfigurerSupport {
     }
 
     @Bean("stringRedisTemplate")
-    public StringRedisTemplate stringRedisTemplate() {
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory factory) {
         StringRedisTemplate redisTemplate = new StringRedisTemplate();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        redisTemplate.setConnectionFactory(factory);
         redisTemplate.setKeySerializer(stringRedisSerializer());
         redisTemplate.setHashKeySerializer(stringRedisSerializer());
         redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer());
@@ -132,7 +98,7 @@ public class RedisConfig extends JCacheConfigurerSupport {
                 for (Object obj : objects) {
                     sb.append(_T).append(obj.toString());
                 }
-                LOG.debug("保存key: {}", sb);
+                LOG.debug("redis key : {}", sb);
                 return sb.toString();
             }
         };

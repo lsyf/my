@@ -44,6 +44,19 @@ spring:
                 enabled: true
                 exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
 
+    redis:
+        database: 10
+        host: 134.96.246.24
+        port: 8081
+        timeout: 15000
+        password: root
+        pool:
+            max-active: 10
+            max-idle: 10
+            max-wait: 15000
+            min-idle: 2
+
+
 
 mybatis:
     type-aliases-package: com.loushuiyifan.mybatis.bean

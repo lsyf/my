@@ -25,7 +25,7 @@ public class SysUserFilter extends AccessControlFilter {
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
 
-        logger.info(((HttpServletRequest) request).getRequestURL().toString());
+        logger.debug(((HttpServletRequest) request).getRequestURL().toString());
 
         Subject subject = getSubject(request, response);
         if (subject == null) {
