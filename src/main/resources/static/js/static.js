@@ -49,6 +49,7 @@ function resetValidator(form) {
     form.find(".form-group.has-error").removeClass("has-error");
     if (validatorForm != null) {
         validatorForm.resetForm();
+        // validatorForm.validate().element( this );
     }
 }
 

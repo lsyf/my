@@ -128,6 +128,7 @@ function doSave() {
                     oTable.refresh();
                 } else {
                     toastr.error('添加失败');
+                    toastr.error(r.msg);
                 }
             },
             error: function (result) {
@@ -163,6 +164,7 @@ function doSave() {
                     oTable.refresh();
                 } else {
                     toastr.error('修改失败');
+                    toastr.error(r.msg);
                 }
             },
             error: function (result) {
@@ -234,6 +236,7 @@ function deleteUser(id) {
                     oTable.refresh();
                 } else {
                     toastr.error('删除失败');
+                    toastr.error(r.msg);
                 }
             },
             error: function (result) {
