@@ -1,23 +1,32 @@
 server:
-    port: 80
-#    context-path: /a
-
+    port: 8080
+    context-path: /a
 
 logging:
     level:
         root: info
         com.loushuiyifan: debug
+        com.loushuiyifan.redis.RedisConfig: info
         com.loushuiyifan.shiro.cache.EhcacheManagerWrapper: info
         net.sf.ehcache: info
         org.springframework: info
         org.apache: info
         org.apache.shiro: info
+#    file: /report/logs/my.log
 
 
 spring:
-    mvc:
-        favicon:
-            enabled: true
+    thymeleaf:
+          cache: false
+    output:
+        ansi:
+          enabled: always
+    resources:
+        chain:
+          strategy:
+            content:
+              enabled: true
+              paths: /**
     datasource:
         url: jdbc:mysql://localhost:3306/aweb
         username: root
@@ -76,5 +85,6 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
-
+    page-size-zero: true
+    auto-runtime-dialect: true
 
