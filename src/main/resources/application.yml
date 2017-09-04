@@ -7,6 +7,7 @@ logging:
     level:
         root: info
         com.loushuiyifan: debug
+        com.loushuiyifan.redis.RedisConfig: info
         com.loushuiyifan.shiro.cache.EhcacheManagerWrapper: info
         net.sf.ehcache: info
         org.springframework: info
@@ -16,6 +17,8 @@ logging:
 
 
 spring:
+    thymeleaf:
+          cache: false
     output:
         ansi:
           enabled: always
