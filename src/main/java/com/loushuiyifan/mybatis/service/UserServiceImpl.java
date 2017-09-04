@@ -31,6 +31,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
     @Autowired
     PasswordHelper passwordHelper;
 
+    public long nextValKey() {
+        return userMapper.nextvalKey();
+    }
+
+
 
     /**
      * 根据用户名查找角色
@@ -156,7 +161,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
         }
 
         if (!list_add.isEmpty()) {
-            userMapper.addUserRoles(id, list_add);
+            for (long roleId : list_add) {
+                long keyId = userMapper.nextvalKey();
+                userMapper.addUserRole(keyId, id, roleId);
+            }
         }
         if (!list_del.isEmpty()) {
             userMapper.deleteUserRoles(id, list_del);
@@ -174,7 +182,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
         }
 
         if (!list_add2.isEmpty()) {
-            userMapper.addUserOrgs(id, list_add2);
+            for (long orgId : list_add2) {
+                long keyId = userMapper.nextvalKey();
+                userMapper.addUserOrg(keyId, id, orgId);
+            }
         }
         if (!list_del2.isEmpty()) {
             userMapper.deleteUserOrgs(id, list_del2);
@@ -222,7 +233,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
         }
 
         if (!list_add.isEmpty()) {
-            userMapper.addUserRoles(id, list_add);
+            for (long roleId : list_add) {
+                long keyId = userMapper.nextvalKey();
+                userMapper.addUserRole(keyId, id, roleId);
+            }
         }
 
         //然后更新user相关的 organization
@@ -232,7 +246,10 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
         }
 
         if (!list_add2.isEmpty()) {
-            userMapper.addUserOrgs(id, list_add2);
+            for (long orgId : list_add2) {
+                long keyId = userMapper.nextvalKey();
+                userMapper.addUserOrg(keyId, id, orgId);
+            }
         }
 
 

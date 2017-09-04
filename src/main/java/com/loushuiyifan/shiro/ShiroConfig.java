@@ -193,6 +193,7 @@ public class ShiroConfig {
         chainDefinition.addPathDefinition("/pic/**", "anon");
         chainDefinition.addPathDefinition("/druid/**", "anon");
         chainDefinition.addPathDefinition("/static/**", "anon");
+        chainDefinition.addPathDefinition("/favicon.ico", "anon");
         chainDefinition.addPathDefinition("/register", "anon");
         chainDefinition.addPathDefinition("/error", "anon");
         chainDefinition.addPathDefinition("/login", "myForm");

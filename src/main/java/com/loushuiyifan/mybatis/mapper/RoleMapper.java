@@ -19,6 +19,10 @@ public interface RoleMapper extends MyMapper<Role> {
 
     List<Long> selectAllResources();
 
+    int addRoleResource(
+            @Param("id") Long id,
+            @Param("roleId") Long roleId,
+            @Param("resourceId") Long resourceIds);
 
     int addRoleResources(
             @Param("roleId") Long roleId,

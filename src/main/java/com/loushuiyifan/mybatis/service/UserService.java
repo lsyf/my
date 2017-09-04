@@ -15,6 +15,7 @@ import java.util.Set;
  */
 public interface UserService extends IService<User> {
 
+    long nextValKey();
 
     /**
      * 根据用户名查找角色

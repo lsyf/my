@@ -1,6 +1,5 @@
 package com.loushuiyifan.web.service;
 
-
 import com.loushuiyifan.mybatis.bean.Menu;
 import com.loushuiyifan.mybatis.mapper.MenuMapper;
 import com.loushuiyifan.mybatis.service.UserService;

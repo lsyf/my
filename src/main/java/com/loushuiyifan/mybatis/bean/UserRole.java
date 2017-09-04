@@ -5,7 +5,8 @@ import javax.persistence.*;
 @Table(name = "aweb_user_role")
 public class UserRole {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY ,
+            generator = "select aweb_id.nextval from dual")
     private Long id;
 
     @Column(name = "user_id")

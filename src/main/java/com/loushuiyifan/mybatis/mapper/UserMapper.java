@@ -11,6 +11,7 @@ public interface UserMapper extends MyMapper<User> {
 
     List<Map> test(List<String> ids);
 
+    long nextvalKey();
 
     User selectByUsername(String username);
 
@@ -36,10 +37,18 @@ public interface UserMapper extends MyMapper<User> {
             @Param("userId") Long userId,
             @Param("roleIds") List<Long> roleIds);
 
+    int addUserRole(@Param("id") long id,
+                    @Param("userId") long userId,
+                    @Param("roleId") long roleId);
+
+
     int deleteUserRoles(@Param("userId") long userId,
                         @Param("roleIds") List<Long> roleIds);
 
     int deleteAllUserRoles(long id);
+
+    int deleteAllUserOrgs(long id);
+
 
     void addUserOrgs(@Param("userId") long userId,
                      @Param("orgIds") List<Long> orgIds);
@@ -47,5 +56,8 @@ public interface UserMapper extends MyMapper<User> {
     void deleteUserOrgs(@Param("userId") long userId,
                         @Param("orgIds") List<Long> orgIds);
 
-    int deleteAllUserOrgs(long id);
+    int addUserOrg(@Param("id") long id,
+                   @Param("userId") long userId,
+                   @Param("orgId") long orgId);
+
 }

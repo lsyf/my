@@ -5,7 +5,8 @@ import javax.persistence.*;
 @Table(name = "aweb_organization")
 public class Organization {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY,
+            generator = "select aweb_id.nextval from dual")
     private Long id;
 
     private String name;

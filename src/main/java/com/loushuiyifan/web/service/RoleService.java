@@ -3,6 +3,7 @@ package com.loushuiyifan.web.service;
 import com.loushuiyifan.mybatis.bean.Role;
 import com.loushuiyifan.mybatis.mapper.RoleMapper;
 import com.loushuiyifan.mybatis.mapper.RoleResourceMapper;
+import com.loushuiyifan.mybatis.mapper.UserMapper;
 import com.loushuiyifan.web.bean.AddVO;
 import com.loushuiyifan.web.bean.Menu4Role;
 import com.loushuiyifan.web.bean.Permission4Role;
@@ -25,6 +26,9 @@ public class RoleService {
 
     @Autowired
     RoleMapper roleMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     RoleResourceMapper roleResourceMapper;
@@ -129,7 +133,10 @@ public class RoleService {
             }
         }
         if (!list_add.isEmpty()) {
-            roleMapper.addRoleResources(id, list_add);
+            for (long resId : list_add) {
+                long keyId = userMapper.nextvalKey();
+                roleMapper.addRoleResource(keyId, id, resId);
+            }
         }
         if (!list_del.isEmpty()) {
             roleMapper.deleteRoleResources(id, list_del);
@@ -164,8 +171,10 @@ public class RoleService {
             list_add.add(b.getId());
         }
         if (!list_add.isEmpty()) {
-            long id = bean.getId();
-            roleMapper.addRoleResources(id, list_add);
+            for (long resId : list_add) {
+                long keyId = userMapper.nextvalKey();
+                roleMapper.addRoleResource(keyId, bean.getId(), resId);
+            }
         }
 
         return num;

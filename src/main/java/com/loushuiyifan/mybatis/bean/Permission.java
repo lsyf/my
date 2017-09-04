@@ -6,7 +6,8 @@ import java.io.Serializable;
 @Table(name = "aweb_permission")
 public class Permission implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY ,
+            generator = "select aweb_id.nextval from dual")
     private Long id;
 
     private String name;
