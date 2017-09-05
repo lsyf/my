@@ -4,13 +4,12 @@ import com.loushuiyifan.shiro.cache.EhcacheManagerWrapper;
 import com.loushuiyifan.shiro.filter.MyFormAuthenticationFilter;
 import com.loushuiyifan.shiro.filter.SysUserFilter;
 import com.loushuiyifan.shiro.realm.UserRealm;
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
-import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
@@ -28,6 +27,7 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -182,25 +182,17 @@ public class ShiroConfig {
         filterMap.put("sysUser", new SysUserFilter());
         factoryBean.setFilters(filterMap);
 
-        factoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
+        try {
+            String str = IOUtils.toString(new ClassPathResource("shiro.properties").getInputStream(), "utf-8");
+            factoryBean.setFilterChainDefinitions(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error("配置shiroFilter出错", e);
+        }
 
         return factoryBean;
     }
 
-    @Bean
-    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
-        DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-        chainDefinition.addPathDefinition("/pic/**", "anon");
-        chainDefinition.addPathDefinition("/druid/**", "anon");
-        chainDefinition.addPathDefinition("/static/**", "anon");
-        chainDefinition.addPathDefinition("/favicon.ico", "anon");
-        chainDefinition.addPathDefinition("/register", "anon");
-        chainDefinition.addPathDefinition("/error", "anon");
-        chainDefinition.addPathDefinition("/login", "myForm");
-        chainDefinition.addPathDefinition("/logout", "logout");
-        chainDefinition.addPathDefinition("/**", "user,sysUser");
-        return chainDefinition;
-    }
 
     /**
      * 启用shrio授权注解拦截方式

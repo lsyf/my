@@ -1,15 +1,18 @@
 package com.loushuiyifan;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.loushuiyifan.mybatis.mapper")
+@MapperScan(basePackages = "com.loushuiyifan.**.mapper")
 @EnableTransactionManagement
 public class App extends SpringBootServletInitializer {
+    protected final static Logger logger = LoggerFactory.getLogger(App.class);
 
     //生成war包的配置，将项目的启动类RestjpademoApplication.java继承SpringBootServletInitializer并重写configure方法
 //    @Override
@@ -20,5 +23,6 @@ public class App extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
+        logger.info("应用启动成功");
     }
 }

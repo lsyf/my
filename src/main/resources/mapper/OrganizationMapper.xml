@@ -69,10 +69,8 @@
     SELECT
         COUNT(1)
     FROM
-        aweb_organization a,
-        aweb_user_organization b
+        aweb_user_organization
     WHERE
-        a.id = b.org_id
-    AND b.id = #{id}
+        org_id = #{id}
     </select>
 </mapper>
