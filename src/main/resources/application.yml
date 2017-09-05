@@ -72,12 +72,12 @@ spring:
 
 
 mybatis:
-    type-aliases-package: com.loushuiyifan.mybatis.bean
+    type-aliases-package: com.loushuiyifan.common.bean
     mapper-locations: classpath*:mapper/**/*.xml
 
 mapper:
     mappers:
-        - com.loushuiyifan.mybatis.util.MyMapper
+        - com.loushuiyifan.config.mybatis.MyMapper
     not-empty: false
     before: true
 

@@ -9,7 +9,8 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.loushuiyifan.**.mapper")
+@MapperScan(basePackages = {"com.loushuiyifan.common.mapper",
+        "com.loushuiyifan.**.dao"})
 @EnableTransactionManagement
 public class App extends SpringBootServletInitializer {
     protected final static Logger logger = LoggerFactory.getLogger(App.class);
@@ -23,6 +24,6 @@ public class App extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
-        logger.info("应用启动成功");
+        logger.info("App is success!");
     }
 }
