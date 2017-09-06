@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: 8081
     context-path: /a
 
 
@@ -7,12 +7,10 @@ logging:
     level:
         root: info
         com.loushuiyifan: debug
-        com.loushuiyifan.redis.RedisConfig: info
-        com.loushuiyifan.shiro.cache.EhcacheManagerWrapper: info
+        com.loushuiyifan.config: info
         net.sf.ehcache: info
         org.springframework: info
         org.apache: info
-        org.apache.shiro: info
 #    file: /report/logs/my.log
 
 
@@ -37,7 +35,7 @@ spring:
             min-idle: 1
             max-active: 20
             max-wait: 60000
-            validation-query: SELECT 1
+            validation-query: SELECT 1 FROM DUAL
             test-while-idle: true
             test-on-borrow: false
             test-on-return: false
