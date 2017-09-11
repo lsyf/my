@@ -33,9 +33,12 @@ public class UserService extends BaseService<User> {
     @Autowired
     PasswordHelper passwordHelper;
 
-
-    public Long nextvalKey(){
+    public Long nextvalKey() {
         return userDAO.nextvalKey();
+    }
+
+    public int saveSelective(User user) {
+        return userMapper.insertSelective(user);
     }
 
     /**
@@ -130,10 +133,10 @@ public class UserService extends BaseService<User> {
     }
 
     public int updateUser(UserVO userUpdate) {
-        long id = userUpdate.getId();
+        Long id = userUpdate.getId();
         String username = userUpdate.getUsername();
         String password = userUpdate.getPassword();
-        boolean locked = userUpdate.isLocked();
+        Byte locked = userUpdate.getLocked();
 
         //首先更新user
         User bean = new User();

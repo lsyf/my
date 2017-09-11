@@ -1,9 +1,13 @@
 var oTable;
+var menuTree;
+var permissionTree;
 function initRole() {
 
     oTable = new TableInit();
     oTable.Init();
 
+    menuTree = new MenuTree();
+    permissionTree = new PermissionTree();
 
     //初始化Button的点击事件
     $("#btn_query").click(function () {
@@ -16,6 +20,25 @@ function initRole() {
 
 
     initForm();
+    initTree();
+}
+
+function initTree() {
+    //获取权限 相关菜单和权限信息
+    $.post(hostUrl + "role/mp")
+        .done(function (r) {
+            if (r.state) {
+                var data = r.data;
+                menuTree.Init(data.menus);
+                permissionTree.Init(data.permissions);
+            } else {
+                toastr.error('获取信息失败，请重试');
+            }
+        })
+        .fail(function () {
+            toastr.error('发送请求失败');
+        });
+
 }
 
 function initForm() {
@@ -154,57 +177,6 @@ function addRole() {
 
     showPanel(0, 'add');
 
-
-    //获取权限 相关菜单和权限信息
-    $.post(hostUrl + "role/mp")
-        .done(function (r) {
-            if (r.state) {
-                var data = r.data;
-                var menuNodes = [];
-                var permissionNodes = [];
-                data.menus.forEach(function (menu) {
-                    var node = new Object();
-                    node.id = menu.id;
-                    node.pId = menu.parent_id;
-                    node.name = menu.name;
-                    node.open = true;
-                    if (menu.alls == 1) {
-                        node.chkDisabled = true;
-                        node.checked = true;
-                    }
-                    node.rId = menu.resource_id;
-                    node.checkedOld = node.checked;
-                    menuNodes.push(node)
-                });
-
-                data.permissions.forEach(function (permission) {
-                    var node = new Object();
-                    node.id = permission.id;
-                    node.pId = permission.parent_id;
-                    node.name = permission.name;
-                    node.open = true;
-                    if (permission.alls == 1) {
-                        node.chkDisabled = true;
-                        node.checked = true;
-                    }
-                    node.rId = permission.resource_id;
-                    node.checkedOld = node.checked;
-                    permissionNodes.push(node)
-                });
-
-                //展现 菜单和权限信息
-                $.fn.zTree.init($("#treeMenu"), menuSetting, menuNodes);
-                $.fn.zTree.init($("#treePermission"), permissionSetting, permissionNodes);
-            } else {
-                toastr.error('获取角色信息失败，请重试');
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-    ;
-
-
 }
 
 
@@ -224,53 +196,15 @@ function viewRole(role, type) {
 
 
     //获取权限 相关菜单和权限信息
-    $.post(hostUrl + "role/info", {"id": role.id})
+    $.post(hostUrl + "role/info", {id: role.id, name: role.name})
         .done(function (r) {
             if (r.state) {
                 var data = r.data;
-                var resources = data.resources;
 
-                var menuNodes = [];
-                var permissionNodes = [];
-                data.menus.forEach(function (menu) {
-                    var node = new Object();
-                    node.id = menu.id;
-                    node.pId = menu.parent_id;
-                    node.name = menu.name;
-                    node.open = true;
-                    if (menu.alls == 1) {
-                        node.chkDisabled = true;
-                        node.checked = true;
-                    }
-                    if ($.inArray(menu.resource_id, resources) != -1) {
-                        node.checked = true;
-                    }
-                    node.checkedOld = node.checked;
-                    node.rId = menu.resource_id;
-                    menuNodes.push(node)
-                });
 
-                data.permissions.forEach(function (permission) {
-                    var node = new Object();
-                    node.id = permission.id;
-                    node.pId = permission.parent_id;
-                    node.name = permission.name;
-                    node.open = true;
-                    if (permission.alls == 1) {
-                        node.chkDisabled = true;
-                        node.checked = true;
-                    }
-                    if ($.inArray(permission.resource_id, resources) != -1) {
-                        node.checked = true;
-                    }
-                    node.checkedOld = node.checked;
-                    node.rId = permission.resource_id;
-                    permissionNodes.push(node)
-                });
+                menuTree.loadData(data);
+                permissionTree.loadData(data);
 
-                //展现 菜单和权限信息
-                $.fn.zTree.init($("#treeMenu"), menuSetting, menuNodes);
-                $.fn.zTree.init($("#treePermission"), permissionSetting, permissionNodes);
             } else {
                 toastr.error('查看角色信息失败，请重试');
             }
@@ -308,34 +242,163 @@ function deleteRole(id) {
 
 }
 
+var MenuTree = function () {
+    var oZtree = new Object();
+    oZtree.id = "treeMenu";//zTree id
+    //初始化数据
+    oZtree.Init = function (datas) {
+        var nodes = [];
+        datas.forEach(function (data) {
+            var node = new Object();
+            node.id = data.id;
+            node.pId = data.parentId;
+            node.name = data.name;
+            node.open = true;
+            if (data.alls == 1) {
+                node.chkDisabled = true;
+                node.checked = true;
+            }
 
-//菜单ztree配置
-var menuSetting = {
-    check: {
-        enable: true,
-        chkDisabledInherit: true,
-        chkboxType: {"Y": "p", "N": "s"}
-    },
-    data: {
-        simpleData: {
-            enable: true
+            node.checkedOld = node.checked;
+            node.rId = data.resourceId;
+            nodes.push(node)
+        });
+
+        oZtree.data = nodes;
+        $.fn.zTree.init($("#" + oZtree.id), treeSetting, nodes);
+    };
+
+    //初始化 多选框
+    oZtree.loadData = function (resources) {
+        var nodes = [];
+        $.extend(true, nodes, oZtree.data);
+
+        nodes.forEach(function (node) {
+            if ($.inArray(node.rId, resources) != -1) {
+                node.checked = true;
+            }
+        });
+
+        $.fn.zTree.init($("#" + oZtree.id), treeSetting, nodes);
+    };
+
+    //初始化 多选框
+    oZtree.reset = function () {
+        $.fn.zTree.init($("#" + oZtree.id), treeSetting, oZtree.data);
+    };
+
+    //定制获取值
+    oZtree.val = function () {
+        var tree = $.fn.zTree.getZTreeObj(oZtree.id);
+
+        var changes = tree.getChangeCheckedNodes();
+        var datas = [];
+
+        changes.forEach(function (a) {
+            var temp = new Object();
+            temp.id = a.rId;
+            temp.add = a.checked;
+            datas.push(temp);
+        });
+        return datas;
+    };
+
+    //ztree配置
+    var treeSetting = {
+        check: {
+            enable: true,
+            chkDisabledInherit: true,
+            chkboxType: {"Y": "p", "N": "s"}
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
         }
-    }
+    };
+
+    return oZtree;
 };
 
-//权限ztree配置
-var permissionSetting = {
-    check: {
-        enable: true,
-        chkDisabledInherit: true,
-        chkboxType: {"Y": "", "N": ""}
-    },
-    data: {
-        simpleData: {
-            enable: true
+
+var PermissionTree = function () {
+    var oZtree = new Object();
+    oZtree.id = "treePermission";//zTree id
+    //初始化数据
+    oZtree.Init = function (datas) {
+        var nodes = [];
+        datas.forEach(function (data) {
+            var node = new Object();
+            node.id = data.id;
+            node.pId = data.parentId;
+            node.name = data.name;
+            node.open = true;
+            if (data.alls == 1) {
+                node.chkDisabled = true;
+                node.checked = true;
+            }
+
+            node.checkedOld = node.checked;
+            node.rId = data.resourceId;
+            nodes.push(node)
+        });
+
+        oZtree.data = nodes;
+        $.fn.zTree.init($("#" + oZtree.id), treeSetting, nodes);
+    };
+
+    //初始化 多选框
+    oZtree.loadData = function (resources) {
+        var nodes = [];
+        $.extend(true, nodes, oZtree.data);
+
+        nodes.forEach(function (node) {
+            if ($.inArray(node.rId, resources) != -1) {
+                node.checked = true;
+            }
+        });
+
+        $.fn.zTree.init($("#" + oZtree.id), treeSetting, nodes);
+    };
+
+    //初始化 多选框
+    oZtree.reset = function () {
+        $.fn.zTree.init($("#" + oZtree.id), treeSetting, oZtree.data);
+    };
+
+    //定制获取值
+    oZtree.val = function () {
+        var tree = $.fn.zTree.getZTreeObj(oZtree.id);
+
+        var changes = tree.getChangeCheckedNodes();
+        var datas = [];
+
+        changes.forEach(function (a) {
+            var temp = new Object();
+            temp.id = a.rId;
+            temp.add = a.checked;
+            datas.push(temp);
+        });
+        return datas;
+    };
+
+    //ztree配置
+    var treeSetting = {
+        check: {
+            enable: true,
+            chkDisabledInherit: true,
+            chkboxType: {"Y": "", "N": ""}
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
         }
-    }
+    };
+
+    return oZtree;
 };
+
 
 //Table初始化
 var TableInit = function () {
@@ -453,6 +516,9 @@ function showPanel(a, b) {
         $.fn.zTree.destroy();
 
         resetValidator(form);
+
+        menuTree.reset();
+        permissionTree.reset();
 
         switch (b) {
             case 'add':

@@ -1,49 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.common.mapper.DictionaryMapper">
-    <resultMap id="BaseResultMap" type="com.loushuiyifan.common.bean.Dictionary">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="data" jdbcType="VARCHAR" property="data"/>
-        <result column="sorting" jdbcType="INTEGER" property="sorting"/>
-        <result column="remark" jdbcType="VARCHAR" property="remark"/>
-        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
-        <result column="available" jdbcType="BIT" property="available"/>
-    </resultMap>
 
-    <sql id="Base_Column_List">
-      id, name, parent_id,  available,data,sorting,remark
-    </sql>
-
-
-    <select id="listByParentId" resultMap="BaseResultMap">
-       select *
-       from aweb_dictionary a
-       where a.parent_id = #{parentid}
-       order by sorting desc
-    </select>
-
-
-    <select id="listByName" resultMap="BaseResultMap">
-        select *
-        from aweb_dictionary
-        where name like #{name}
-        and parent_id=0
-        order by sorting desc
-    </select>
-
-    <delete id="deleteAllKids">
-        delete
-        from aweb_dictionary
-        where parent_id = #{parentId}
-    </delete>
-
-
-    <select id="getParameter" resultMap="BaseResultMap">
-        select name, data
-        from aweb_dictionary
-        where parent_id =
-          (select id from aweb_dictionary where data = #{data})
-        order by sorting desc
-    </select>
 </mapper>

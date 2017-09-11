@@ -12,10 +12,12 @@ function initForm() {
     validatorForm = $('#form-body').validate({
         rules: {
             name: 'required',
+            type: 'required',
             data: 'required'
         },
         messages: {
             name: "节点名不能为空",
+            type: "组织类型不能为空",
             data: "节点值不能为空",
         },
         submitHandler: function (form) {
@@ -67,6 +69,7 @@ function addOrgRoot() {
             id: maxId,
             name: "新建根节点(未保存)",
             lvl: 1,
+            type: "",
             isAdd: true
         });
 
@@ -92,9 +95,12 @@ function editOrg(node) {
         $('#form-parentId').val(node.parentId);
         $('#form-parentIds').val(node.parentIds);
         $('#div-parent').show();
+        $('#form-type').attr("readonly",true);
     } else {//根节点
         $('#div-parent').hide();
+        $('#form-type').attr("readonly",false);
     }
+    $('#form-type').val(node.type);
     $('#form-name').val(node.name);
     $('#form-data').val(node.data ? node.data : '');
     $('#form-lvl').val(node.lvl);
@@ -174,6 +180,7 @@ function afterSave(data) {
     chooseNode.parentId = data.parentId;
     chooseNode.parentIds = data.parentIds;
     chooseNode.lvl = data.lvl;
+    chooseNode.type = data.type;
 
     //chooseNode其他已有的数据不用配置
 
@@ -256,6 +263,7 @@ var treeSetting = {
                 maxId++;
                 var lvl = treeNode.lvl + 1;
                 var parentIds = treeNode.parentIds + treeNode.id + '/';
+                var type = treeNode.type;
 
                 zTree.addNodes(treeNode,
                     {
@@ -265,6 +273,7 @@ var treeSetting = {
                         parentId: treeNode.id,
                         parentIds: parentIds,
                         lvl: lvl,
+                        type: type,
                         isAdd: true
                     });
                 return false;

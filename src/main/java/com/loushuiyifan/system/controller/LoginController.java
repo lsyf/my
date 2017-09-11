@@ -1,9 +1,9 @@
 package com.loushuiyifan.system.controller;
 
 import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.system.service.UserService;
 import com.loushuiyifan.config.shiro.ShiroConfig;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
+import com.loushuiyifan.system.service.UserService;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -94,7 +94,7 @@ public class LoginController {
         user.setPassword(password);
         passwordHelper.encryptPassword(user);
 
-        userService.save(user);
+        userService.saveSelective(user);
 
 
         return JsonResult.success();

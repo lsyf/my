@@ -52,31 +52,19 @@ public class RoleService {
      * @param id
      * @return
      */
-    public Map<String, Object> getRoleInfo(String id) {
-        long roleId = Long.parseLong(id);
-        Role role = roleMapper.selectByPrimaryKey(roleId);
+    public List<Long> getRoleInfo(Long id, String name) {
 
-
-        //首先查询所有菜单和权限 以及其与资源关联
-        List<Menu4Role> menus = roleDAO.selectAllMenus();
-        List<Permission4Role> permissions = roleDAO.selectAllPermissions();
-
-
-        //然后查询 该角色所有的资源列表
+        //查询 该角色所有的资源列表
         //如果是管理员则返回所有结果
         List<Long> resources = null;
-        if ("admin".equals(role.getRole())) {
+        if ("admin".equals(name)) {
             resources = roleDAO.selectAllResources();
         } else {
-            resources = roleDAO.selectResourceByRole(roleId);
+            resources = roleDAO.selectResourceByRole(id);
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("menus", menus);
-        map.put("permissions", permissions);
-        map.put("resources", resources);
 
-        return map;
+        return resources;
     }
 
     /**

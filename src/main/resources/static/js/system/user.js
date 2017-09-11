@@ -65,7 +65,7 @@ function initTree() {
 var rg_locked;
 function initRG() {
     rg_locked = new createRadioGroup($('#user_locked'));
-    var lockeds = [{value: true, text: '是'}, {value: false, text: '否'}];
+    var lockeds = [{value: 1, text: '是'}, {value: 0, text: '否'}];
     rg_locked.init('locked', lockeds);
 }
 

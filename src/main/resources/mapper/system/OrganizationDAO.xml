@@ -1,42 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.system.dao.OrganizationDAO">
-    <resultMap id="BaseResultMap" type="com.loushuiyifan.common.bean.Organization">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="data" jdbcType="VARCHAR" property="data"/>
-        <result column="sorting" jdbcType="INTEGER" property="sorting"/>
-        <result column="lvl" jdbcType="INTEGER" property="lvl"/>
-        <result column="remark" jdbcType="VARCHAR" property="remark"/>
-        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
-        <result column="parent_ids" jdbcType="VARCHAR" property="parentIds"/>
-        <result column="available" jdbcType="BIT" property="available"/>
-    </resultMap>
-
-    <sql id="Base_Column_List">
-      id, name, parent_id, parent_ids, available,data,sorting,remark,lvl
-    </sql>
 
 
-    <select id="listOrganizationByParentId" resultMap="BaseResultMap">
+    <select id="listOrganizationByParentId" resultType="com.loushuiyifan.common.bean.Organization">
        select name,data from aweb_organization a where a.parent_id = #{parentId}
     </select>
 
-    <select id="listByLvl" resultMap="BaseResultMap">
-      <![CDATA[
+    <select id="listByLvl" resultType="com.loushuiyifan.common.bean.Organization">
         SELECT
             *
         FROM
             aweb_organization a
         WHERE
-            a.lvl <= #{lvl}
+            a.lvl <![CDATA[ <= ]]> #{lvl}
         ORDER BY
             lvl ASC,
             a.sorting DESC
-       ]]>
     </select>
 
-    <select id="listNodesByPath" resultMap="BaseResultMap">
+    <select id="listNodesByPath" resultType="com.loushuiyifan.common.bean.Organization">
         SELECT
             *
         FROM

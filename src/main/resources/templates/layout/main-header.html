@@ -177,7 +177,7 @@
                                 </p>
                             </li>
                             <!-- Menu Body -->
-                            <li class="user-body">
+                            <li class="user-body" hidden="hidden">
                                 <div class="row">
                                     <div class="col-xs-4 text-center">
                                         <a href="#">Followers</a>
@@ -194,7 +194,13 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a th:href="@{/passwd}" class="btn btn-default btn-flat">更改密码</a>
+                                    <!--<a th:href="@{/passwd}" class="btn btn-default btn-flat">更改密码</a>-->
+                                    <a id="btn_userInfo" class="btn btn-default btn-flat">更改密码</a>
+                                    <script>
+                                        $('#btn_userInfo').attr('data-url',hostUrl+'passwd');
+                                        $('#btn_userInfo').attr('data-addtab','-1');
+                                        $('#btn_userInfo').attr('data-title','修改密码');
+                                    </script>
                                 </div>
                                 <div class="pull-right">
                                     <a th:href="@{/logout}" class="btn btn-default btn-flat">退出</a>

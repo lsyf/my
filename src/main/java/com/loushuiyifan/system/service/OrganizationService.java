@@ -38,6 +38,8 @@ public class OrganizationService {
     }
 
     public int update(Organization org) {
+        //设置组织类型无法更改
+        org.setType(null);
         return organizationMapper.updateByPrimaryKeySelective(org);
     }
 

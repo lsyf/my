@@ -53,11 +53,11 @@ public class RoleController {
     @PostMapping("info")
     @ResponseBody
     @RequiresPermissions("system:role:view")
-    public JsonResult info(String id) {
+    public JsonResult info(Long id,String name) {
 
-        Map<String, Object> map = roleService.getRoleInfo(id);
+        List<Long> list = roleService.getRoleInfo(id,name);
 
-        return JsonResult.success(map);
+        return JsonResult.success(list);
     }
 
     @PostMapping("mp")
