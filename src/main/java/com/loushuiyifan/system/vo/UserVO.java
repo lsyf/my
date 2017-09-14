@@ -17,5 +17,10 @@ public class UserVO {
     List<AddVO> roles;
     List<AddVO> orgs;
 
+    private String nickname;
+    private String phone;
+    private String email;
+    private String avatar;
+
 
 }

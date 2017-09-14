@@ -100,12 +100,18 @@ function doSave() {
     var id = $("#user_id").val().trim();
     var username = $("#user_username").val().trim();
     var password = $("#user_password").val().trim();
+    var nickname = $("#user_nickname").val().trim();
+    var phone = $("#user_phone").val().trim();
+    var email = $("#user_email").val().trim();
     var locked = rg_locked.val();
 
     if (id == "") {
         var param = {
             username: username,
             password: password,
+            nickname: nickname,
+            phone: phone,
+            email: email,
             roles: roles,
             orgs: orgs
         };
@@ -141,6 +147,9 @@ function doSave() {
             id: id,
             username: username,
             password: password,
+            nickname: nickname,
+            phone: phone,
+            email: email,
             locked: locked,
             roles: roles,
             orgs: orgs
@@ -197,6 +206,9 @@ function viewUser(user, type) {
     $("#user_id").val(user.id);
     $("#user_username").val(user.username);
     $("#user_password").val('');
+    $("#user_nickname").val(user.nickname ? user.nickname : "");
+    $("#user_phone").val(user.phone ? user.phone : "");
+    $("#user_email").val(user.email ? user.email : "");
     rg_locked.val(user.locked);
 
 
@@ -289,6 +301,18 @@ var TableInit = function () {
             }, {
                 field: 'username',
                 title: '用户名'
+            }, {
+                field: 'nickname',
+                title: '昵称'
+            }, {
+                field: 'lastLogin',
+                title: '上次登录',
+                formatter: function (v) {
+                    if (v) {
+                        v = moment(v).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                    return v;
+                }
             }, {
                 field: 'locked',
                 title: '冻结',

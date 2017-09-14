@@ -39,6 +39,9 @@ public class UserRealm extends AuthorizingRealm {
 
         User user = userService.findByUsername(username);
 
+        //更新登录时间
+        userService.updateLogin(user.getId());
+
         if (user == null) {
             throw new UnknownAccountException();//没找到帐号
         }

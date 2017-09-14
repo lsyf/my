@@ -136,7 +136,15 @@ public class UserService extends BaseService<User> {
         Long id = userUpdate.getId();
         String username = userUpdate.getUsername();
         String password = userUpdate.getPassword();
+        String nickname = userUpdate.getNickname();
+        String phone = userUpdate.getPhone();
+        String email = userUpdate.getEmail();
         Byte locked = userUpdate.getLocked();
+
+        //如果未设昵称则默认为登录名
+        if (StringUtils.isEmpty(nickname)) {
+            nickname = username;
+        }
 
         //首先更新user
         User bean = new User();
@@ -144,6 +152,9 @@ public class UserService extends BaseService<User> {
         bean.setUsername(username);
         bean.setPassword(password);
         bean.setLocked(locked);
+        bean.setNickname(nickname);
+        bean.setPhone(phone);
+        bean.setEmail(email);
 
         //如果密码不为空，则更新密码
         if (password != null && !StringUtils.isEmpty(password.trim())) {
@@ -214,11 +225,22 @@ public class UserService extends BaseService<User> {
 
         String username = userUpdate.getUsername();
         String password = userUpdate.getPassword();
+        String nickname = userUpdate.getNickname();
+        String phone = userUpdate.getPhone();
+        String email = userUpdate.getEmail();
+
+        //如果未设昵称则默认为登录名
+        if (StringUtils.isEmpty(nickname)) {
+            nickname = username;
+        }
 
         //首先更新user
         User bean = new User();
         bean.setUsername(username);
         bean.setPassword(password);
+        bean.setNickname(nickname);
+        bean.setPhone(phone);
+        bean.setEmail(email);
 
         //如果密码不为空，则更新密码
         if (password == null || StringUtils.isEmpty(password.trim())) {
@@ -262,4 +284,7 @@ public class UserService extends BaseService<User> {
     }
 
 
+    public void updateLogin(Long id) {
+        userDAO.updateLogin(id);
+    }
 }

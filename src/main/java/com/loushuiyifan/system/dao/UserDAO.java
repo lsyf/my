@@ -59,4 +59,5 @@ public interface UserDAO {
                    @Param("userId") long userId,
                    @Param("orgId") long orgId);
 
+    void updateLogin(Long id);
 }

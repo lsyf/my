@@ -3,11 +3,11 @@
 <mapper namespace="com.loushuiyifan.system.dao.UserDAO">
 
     <sql id="Base_Column_List">
-        id, username, password, salt, locked
+        id, username, password, salt, locked,nickname,phone,email,last_login
     </sql>
 
     <sql id="Base_Column_List_a">
-        a.id, a.username, a.locked
+        a.id, a.username,a.nickname,a.phone,a.email,a.last_login, a.locked
     </sql>
 
     <select id="nextvalKey" resultType="java.lang.Long">
@@ -29,6 +29,7 @@
         FROM aweb_user
         where username=#{username}
     </select>
+
     <select id="isAdmin" resultType="String">
         SELECT
             a.username
@@ -191,4 +192,10 @@
         DELETE FROM aweb_user_organization
         WHERE user_id=#{id}
     </delete>
+
+    <update id="updateLogin" >
+       update aweb_user
+       set last_login = sysdate
+       where id=#{id}
+    </update>
 </mapper>

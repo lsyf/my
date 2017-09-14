@@ -47,6 +47,7 @@ public class MenuController {
         HttpSession session = WebUtils.toHttp(request).getSession();
         User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
         String username = user.getUsername();
+        String nickname = user.getNickname();
 
         List<Menu> menus = menuService.getMenus(username);
 
@@ -54,6 +55,7 @@ public class MenuController {
         map.put("menus", menus);
         map.put("id", user.getId());
         map.put("username", username);
+        map.put("nickname", nickname);
 
         return JsonResult.success(map);
     }

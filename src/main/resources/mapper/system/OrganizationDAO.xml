@@ -31,6 +31,7 @@
             sorting DESC
     </select>
 
+
     <delete id="deleteAllKids">
         delete
         from aweb_organization
@@ -55,5 +56,10 @@
         aweb_user_organization
     WHERE
         org_id = #{id}
+    </select>
+
+
+    <select id="listFromCodeListTax" resultType="com.loushuiyifan.system.vo.CodeListTax">
+        select * from code_list_tax a where a.type_code='local_net' and a.code_level = #{lvl}
     </select>
 </mapper>

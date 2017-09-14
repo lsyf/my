@@ -2,6 +2,7 @@ package com.loushuiyifan.system.dao;
 
 
 import com.loushuiyifan.common.bean.Organization;
+import com.loushuiyifan.system.vo.CodeListTax;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface OrganizationDAO {
     int countUserByOrgPath(String path);
 
     int countUserByOrgId(Long id);
+
+    List<CodeListTax> listFromCodeListTax(int lvl);
 }

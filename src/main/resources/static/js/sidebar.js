@@ -32,8 +32,10 @@ function loadSidebar() {
 function userInfo(r) {
     user.id = r.data.id;
     user.username = r.data.username;
+    user.nickname = r.data.nickname;
 
-    $('.text_username').text(user.username);
+    //显示为昵称
+    $('.text_username').text(user.nickname);
 }
 
 /**
