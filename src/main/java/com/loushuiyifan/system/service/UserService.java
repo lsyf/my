@@ -14,6 +14,7 @@ import com.loushuiyifan.system.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -286,5 +287,16 @@ public class UserService extends BaseService<User> {
 
     public void updateLogin(Long id) {
         userDAO.updateLogin(id);
+    }
+
+
+    @Transactional
+    public void testTransactional() {
+        User user = new User();
+        user.setUsername("testTransactional");
+        userMapper.insertSelective(user);
+
+        throw new RuntimeException("testTransactional");
+
     }
 }

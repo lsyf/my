@@ -1,5 +1,5 @@
 server:
-    port: 8081
+    port: 8080
     context-path: /a
 
 
@@ -9,7 +9,9 @@ logging:
         com.loushuiyifan: debug
         com.loushuiyifan.config: info
         net.sf.ehcache: info
-        org.springframework: info
+        org.eclipse: info
+        org.mybatis: info
+        org.springframework: debug
         org.apache: info
 #    file: /report/logs/my.log
 
@@ -50,7 +52,6 @@ spring:
                 login-username: root
                 login-password: root
                 reset-enable: false
-#                allow: 127.0.0.1
             web-stat-filter:
                 enabled: true
                 exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"

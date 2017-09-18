@@ -62,4 +62,9 @@
     <select id="listFromCodeListTax" resultType="com.loushuiyifan.system.vo.CodeListTax">
         select * from code_list_tax a where a.type_code='local_net' and a.code_level = #{lvl}
     </select>
+
+    <select id="listFromUserCompany" resultType="com.loushuiyifan.system.vo.UserCompany">
+        select *
+        from user_company a
+    </select>
 </mapper>

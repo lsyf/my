@@ -5,6 +5,7 @@ import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.mapper.OrganizationMapper;
 import com.loushuiyifan.system.dao.OrganizationDAO;
 import com.loushuiyifan.system.vo.CodeListTax;
+import com.loushuiyifan.system.vo.UserCompany;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +66,6 @@ public class OrganizationService {
 
     /**
      * 组织(及其下级)是否被用户关联
-     *
-     * @param id
-     * @param path
-     * @return
      */
     public boolean isOrgRelatedUser(Long id, String path) {
         //首先判断该组织引用数量
@@ -80,15 +77,17 @@ public class OrganizationService {
         return num > 0;
     }
 
+
     /**
-     * 从旧表中导入 地市 组织信息
+     * 从旧表(code_list_tax)中导入 地市 组织信息
      */
     public void importDataFromCodeListTax() {
         final String type = "local_net";
 
         Map<String, Organization> orgs = Maps.newHashMap();//保存的组织列表
+
+        //遍历各个等级组织
         for (int i = 0; i < 10; i++) {
-            //首先获取各个等级组织
             List<CodeListTax> list = organizationDAO.listFromCodeListTax(i);
 
             LOGGER.info("--{}--", i);
@@ -98,7 +97,7 @@ public class OrganizationService {
                 break;
             }
 
-            //先进行插入数据
+            //先进行插入组织数据
             for (CodeListTax t : list) {
                 Organization o = new Organization();
                 o.setName(t.getCodeName());
@@ -113,7 +112,7 @@ public class OrganizationService {
                     Organization p = orgs.get(parentCodeId);
                     o.setParentId(p.getId());
 
-                    //设置父节点路径
+                    //拼接父节点路径
                     String tempPath = p.getParentIds();
                     tempPath = tempPath == null ? "" : tempPath;
                     String path = String.format("%s%d/", tempPath, p.getId());
@@ -121,11 +120,47 @@ public class OrganizationService {
                 }
                 organizationMapper.insertSelective(o);
                 LOGGER.info("save: {}", o.getData());
-                //存入容器
+
+                //保存后的组织数据 以data值为key存入容器，以备接下来使用
                 orgs.put(o.getData(), o);
             }
         }
 
+    }
+
+    /**
+     * 从旧表(user_company)中导入 部门 组织信息
+     */
+    public void importDataFromUserCompany() {
+        final String type = "user_company";
+
+        //首先插入父节点
+        Organization p = new Organization();
+        p.setType(type);
+        p.setName("所有部门");
+        p.setData("0");
+        p.setLvl(1);
+        organizationMapper.insertSelective(p);
+        Long pId = p.getId();
+        String pPath = pId + "/";
+
+        LOGGER.info("save parent: {}", p.getName());
+
+
+        //查询旧表中所有数据
+        List<UserCompany> list = organizationDAO.listFromUserCompany();
+        for (UserCompany uc : list) {
+            Organization o = new Organization();
+            o.setType(type);
+            o.setName(uc.getTitle());
+            o.setData(uc.getCompanyid());
+            o.setParentId(pId);
+            o.setParentIds(pPath);
+            o.setLvl(2);
+
+            organizationMapper.insertSelective(o);
+            LOGGER.info("save: {}", o.getName());
+        }
 
     }
 }

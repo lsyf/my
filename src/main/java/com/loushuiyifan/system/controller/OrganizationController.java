@@ -34,7 +34,7 @@ public class OrganizationController {
     @RequiresPermissions("system:organization:view")
     @ResponseBody
     public JsonResult listRoot() {
-        List<Organization> list = orgnizationService.listRoot(2);
+        List<Organization> list = orgnizationService.listRoot(1);
         if (list == null || list.size() == 0) {
             return JsonResult.failure("无数据");
         }
