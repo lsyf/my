@@ -3,13 +3,18 @@ package com.loushuiyifan.system.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.common.bean.UserOrganization;
 import com.loushuiyifan.common.mapper.UserMapper;
+import com.loushuiyifan.common.mapper.UserOrganizationMapper;
 import com.loushuiyifan.config.mybatis.BaseService;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
 import com.loushuiyifan.system.dao.UserDAO;
 import com.loushuiyifan.system.vo.AddVO;
 import com.loushuiyifan.system.vo.DataPage;
+import com.loushuiyifan.system.vo.SUser;
 import com.loushuiyifan.system.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,7 @@ import java.util.*;
  */
 @Service
 public class UserService extends BaseService<User> {
+
 
     @Autowired
     UserMapper userMapper;
@@ -117,6 +123,12 @@ public class UserService extends BaseService<User> {
     }
 
 
+    /**
+     * 获取用户的 角色，组织信息
+     *
+     * @param id
+     * @return
+     */
     public Map<String, Object> getUserInfo(String id) {
         long userId = Long.parseLong(id);
 
@@ -125,14 +137,27 @@ public class UserService extends BaseService<User> {
         List<Long> roleIds = userDAO.selectAllRoleIds(userId);
 
         //获取所有组织信息
-        List<Long> orgIds = userDAO.selectAllOrgIds(userId);
+        List<Long> orgIds = userDAO.selectAllOrgIds(userId, OrganizationService.TYPE_CITY);
 
+        //获取部门信息
+        List<Long> deptIds = userDAO.selectAllOrgIds(userId, OrganizationService.TYPE_DEPT);
+        Long deptId = null;
+        if (deptIds != null && 1 == deptIds.size()) {
+            deptId = deptIds.get(0);
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("roleIds", roleIds);
         map.put("orgIds", orgIds);
+        map.put("deptId", deptId);
         return map;
     }
 
+    /**
+     * 更改用户信息
+     *
+     * @param userUpdate
+     * @return
+     */
     public int updateUser(UserVO userUpdate) {
         Long id = userUpdate.getId();
         String username = userUpdate.getUsername();
@@ -169,7 +194,7 @@ public class UserService extends BaseService<User> {
         List<Long> list_add = new ArrayList<>();
         List<Long> list_del = new ArrayList<>();
         for (AddVO a : userUpdate.getRoles()) {
-            if (a.isAdd()) {
+            if (a.getAdd()) {
                 list_add.add(a.getId());
             } else {
                 list_del.add(a.getId());
@@ -186,30 +211,42 @@ public class UserService extends BaseService<User> {
             userDAO.deleteUserRoles(id, list_del);
         }
 
-        //然后更新user相关的 organization(增加or删除)
+        //由于部门组织 和地市组织 存放在一个表中
+        //导致 用户和组织关联表只有一个
+        //现抛弃 通过组织标记增删状态 进行数据库 删减操作
+        //改为 先删除所有组织信息，再依次进行插入
+
+        //删除该用户所有组织信息
+        userDAO.deleteAllUserOrgs(id);
+
+        //部门
+        long keyId = userDAO.nextvalKey();
+        Long deptId = userUpdate.getDeptId();
+        userDAO.addUserOrg(keyId, id, deptId);
+
+        //地市
         List<Long> list_add2 = new ArrayList<>();
-        List<Long> list_del2 = new ArrayList<>();
         for (AddVO a : userUpdate.getOrgs()) {
-            if (a.isAdd()) {
+            if (a.getAdd()) {
                 list_add2.add(a.getId());
-            } else {
-                list_del2.add(a.getId());
             }
         }
-
         if (!list_add2.isEmpty()) {
             for (long orgId : list_add2) {
-                long keyId = userDAO.nextvalKey();
+                keyId = userDAO.nextvalKey();
                 userDAO.addUserOrg(keyId, id, orgId);
             }
-        }
-        if (!list_del2.isEmpty()) {
-            userDAO.deleteUserOrgs(id, list_del2);
         }
 
         return num;
     }
 
+    /**
+     * 根据用户ID删除用户
+     *
+     * @param id
+     * @return
+     */
     public int delete(long id) {
 
         //删除用户
@@ -222,6 +259,13 @@ public class UserService extends BaseService<User> {
         return 0;
     }
 
+    /**
+     * 新增一个用户信息
+     *
+     * @param userUpdate
+     * @return
+     * @throws Exception
+     */
     public int addUser(UserVO userUpdate) throws Exception {
 
         String username = userUpdate.getUsername();
@@ -229,6 +273,7 @@ public class UserService extends BaseService<User> {
         String nickname = userUpdate.getNickname();
         String phone = userUpdate.getPhone();
         String email = userUpdate.getEmail();
+        Byte locked = userUpdate.getLocked();
 
         //如果未设昵称则默认为登录名
         if (StringUtils.isEmpty(nickname)) {
@@ -242,6 +287,7 @@ public class UserService extends BaseService<User> {
         bean.setNickname(nickname);
         bean.setPhone(phone);
         bean.setEmail(email);
+        bean.setLocked(locked);
 
         //如果密码不为空，则更新密码
         if (password == null || StringUtils.isEmpty(password.trim())) {
@@ -266,7 +312,12 @@ public class UserService extends BaseService<User> {
             }
         }
 
-        //然后更新user相关的 organization
+        //部门
+        long keyId = userDAO.nextvalKey();
+        Long deptId = userUpdate.getDeptId();
+        userDAO.addUserOrg(keyId, id, deptId);
+
+        //地市
         List<Long> list_add2 = new ArrayList<>();
         for (AddVO a : userUpdate.getOrgs()) {
             list_add2.add(a.getId());
@@ -274,7 +325,7 @@ public class UserService extends BaseService<User> {
 
         if (!list_add2.isEmpty()) {
             for (long orgId : list_add2) {
-                long keyId = userDAO.nextvalKey();
+                keyId = userDAO.nextvalKey();
                 userDAO.addUserOrg(keyId, id, orgId);
             }
         }
@@ -285,11 +336,19 @@ public class UserService extends BaseService<User> {
     }
 
 
+    /**
+     * 更新登录时间
+     *
+     * @param id
+     */
     public void updateLogin(Long id) {
         userDAO.updateLogin(id);
     }
 
 
+    /**
+     * 用来测试 事务管理
+     */
     @Transactional
     public void testTransactional() {
         User user = new User();
@@ -299,4 +358,88 @@ public class UserService extends BaseService<User> {
         throw new RuntimeException("testTransactional");
 
     }
+
+    @Autowired
+    OrganizationService organizationService;
+
+    @Autowired
+    UserOrganizationMapper userOrganizationMapper;
+
+    /**
+     * 导入旧表s_user中用户信息(筛选sts为Y)
+     */
+    @Transactional
+    public void importDataFromSUser() {
+        //首先查询所有组织信息 部门+地市
+        List<Organization> depts = organizationService.listByType(OrganizationService.TYPE_DEPT);
+        List<Organization> citys = organizationService.listByType(OrganizationService.TYPE_CITY);
+
+        //遍历组织信息 并 以data为key,id为value存放在Map中以备关联
+        Map<String, Long> deptMap = Maps.newHashMap();
+        Map<String, Long> cityMap = Maps.newHashMap();
+        for (Organization o : depts) {
+            deptMap.put(o.getData(), o.getId());
+        }
+        for (Organization o : citys) {
+            cityMap.put(o.getData(), o.getId());
+        }
+        //释放内存
+        depts = null;
+        citys = null;
+
+
+        //查询所有旧表用户信息
+        List<SUser> list = userDAO.listFromSUser();
+
+        //遍历用户信息
+        for (SUser s : list) {
+            User user = new User();
+            user.setUsername(s.getName());
+            user.setNickname(s.getViewname());
+            user.setPhone(s.getTel());
+            user.setEmail(s.getEmail());
+            userMapper.insertSelective(user);
+
+            Long id = user.getId();
+
+            //关联部门
+            Long deptId = deptMap.get(s.getCompanyid());
+            if (deptId == null) {
+                throw new RuntimeException("未找到部门ID");
+            }
+            UserOrganization dept = new UserOrganization();
+            dept.setUserId(id);
+            dept.setOrgId(deptId);
+            userOrganizationMapper.insertSelective(dept);
+
+            //关联地市
+            Long cityId = cityMap.get(s.getDeptid());
+            if (cityId == null) {
+                throw new RuntimeException("未找到地市ID");
+            }
+            UserOrganization city = new UserOrganization();
+            city.setUserId(id);
+            city.setOrgId(cityId);
+            userOrganizationMapper.insertSelective(city);
+
+        }
+
+    }
+
+    /**
+     * 更新所有用户密码
+     */
+    @Transactional
+    public void updateAllUserPassword(){
+        List<User> list = userMapper.selectAll();
+        for (User user : list) {
+            if (user.getId()<1000) {
+                continue;
+            }
+            user.setPassword("123456");
+            passwordHelper.encryptPassword(user);
+            userMapper.updateByPrimaryKeySelective(user);
+        }
+    }
+
 }

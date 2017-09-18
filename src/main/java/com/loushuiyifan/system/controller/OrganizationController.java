@@ -60,6 +60,22 @@ public class OrganizationController {
         return JsonResult.success(roles);
     }
 
+    @PostMapping("listOrgs")
+    @ResponseBody
+    @RequiresPermissions("system:organization:view")
+    public JsonResult listOrgs(String type) {
+
+        List<Organization> orgs = null;
+        if (OrganizationService.TYPE_CITY.equals(type)) {
+            orgs = orgnizationService.listByType(type);
+        } else if (OrganizationService.TYPE_DEPT.equals(type)) {
+            orgs = orgnizationService.listByTypeAndLvl(type, 2);
+        }
+
+        return JsonResult.success(orgs);
+    }
+
+
     @PostMapping("add")
     @RequiresPermissions("system:organization:add")
     @ResponseBody
@@ -81,7 +97,7 @@ public class OrganizationController {
     @ResponseBody
     public JsonResult delete(Long id, String path) {
 
-        boolean isRelated = orgnizationService.isOrgRelatedUser(id,path);
+        boolean isRelated = orgnizationService.isOrgRelatedUser(id, path);
 
         if (isRelated) {
             return JsonResult.failure("该组织或下级已被使用，无法删除");

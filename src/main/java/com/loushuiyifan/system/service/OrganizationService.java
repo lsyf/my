@@ -23,6 +23,11 @@ public class OrganizationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationService.class);
 
+    //地市
+    public static final String TYPE_CITY ="local_net";
+    //部门
+    public static final String TYPE_DEPT ="user_dept";
+
     @Autowired
     OrganizationMapper organizationMapper;
 
@@ -60,6 +65,10 @@ public class OrganizationService {
         return num;
     }
 
+    /**
+     * 查询所有组织数据
+     * @return
+     */
     public List<Organization> listAll() {
         return organizationMapper.selectAll();
     }
@@ -77,12 +86,31 @@ public class OrganizationService {
         return num > 0;
     }
 
+    /**
+     * 根据组织类型查询所有 信息
+     * @param type
+     * @return
+     */
+    public List<Organization> listByType(String type){
+        return organizationDAO.listByType(type);
+    }
+
+
+    /**
+     * 根据组织类型和lvl 查询(目前用来查询部门信息)
+     * @param type
+     * @param i
+     * @return
+     */
+    public List<Organization> listByTypeAndLvl(String type, int lvl) {
+        return organizationDAO.listByTypeAndLvl(type,lvl);
+    }
 
     /**
      * 从旧表(code_list_tax)中导入 地市 组织信息
      */
     public void importDataFromCodeListTax() {
-        final String type = "local_net";
+        final String type = TYPE_CITY;
 
         Map<String, Organization> orgs = Maps.newHashMap();//保存的组织列表
 
@@ -132,7 +160,7 @@ public class OrganizationService {
      * 从旧表(user_company)中导入 部门 组织信息
      */
     public void importDataFromUserCompany() {
-        final String type = "user_company";
+        final String type = TYPE_DEPT;
 
         //首先插入父节点
         Organization p = new Organization();
@@ -163,4 +191,6 @@ public class OrganizationService {
         }
 
     }
+
+
 }

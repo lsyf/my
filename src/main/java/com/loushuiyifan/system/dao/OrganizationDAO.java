@@ -4,6 +4,7 @@ package com.loushuiyifan.system.dao;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.system.vo.CodeListTax;
 import com.loushuiyifan.system.vo.UserCompany;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,4 +35,14 @@ public interface OrganizationDAO {
      * @return
      */
     List<UserCompany> listFromUserCompany();
+
+    /**
+     * 根据组织类型查询所有 信息
+     * @param type
+     * @return
+     */
+    List<Organization> listByType(String type);
+
+    List<Organization> listByTypeAndLvl(@Param("type") String type,
+                                        @Param("lvl") int lvl);
 }

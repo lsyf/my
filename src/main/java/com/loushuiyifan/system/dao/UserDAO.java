@@ -1,6 +1,7 @@
 package com.loushuiyifan.system.dao;
 
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.system.vo.SUser;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -26,7 +27,13 @@ public interface UserDAO {
 
     List<Long> selectAllRoleIds(long userId);
 
-    List<Long> selectAllOrgIds(long userId);
+    /**
+     * 根据用户id和组织类型，获取用户所属组织
+     * @param userId
+     * @return
+     */
+    List<Long> selectAllOrgIds(@Param("userId") long userId,
+                               @Param("type") String type);
 
 
     List<User> selectAllUsers();
@@ -60,4 +67,10 @@ public interface UserDAO {
                    @Param("orgId") long orgId);
 
     void updateLogin(Long id);
+
+    /**
+     * 从s_user查询所有sts为Y的用户信息
+     * @return
+     */
+    List<SUser> listFromSUser();
 }

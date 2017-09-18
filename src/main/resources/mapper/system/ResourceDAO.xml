@@ -53,7 +53,7 @@
     </delete>
 
     <delete id="deleteResourceKids">
-        DELETE a
+        DELETE
         FROM
         aweb_resource a
         WHERE a.type = #{type}

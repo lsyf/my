@@ -58,6 +58,18 @@
         org_id = #{id}
     </select>
 
+    <select id="listByType" resultType="com.loushuiyifan.common.bean.Organization">
+      select t.*
+      from aweb_organization t
+      where t.type = #{type}
+    </select>
+
+    <select id="listByTypeAndLvl" resultType="com.loushuiyifan.common.bean.Organization">
+      select t.*
+      from aweb_organization t
+      where t.type = #{type}
+      and t.lvl = #{lvl}
+    </select>
 
     <select id="listFromCodeListTax" resultType="com.loushuiyifan.system.vo.CodeListTax">
         select * from code_list_tax a where a.type_code='local_net' and a.code_level = #{lvl}

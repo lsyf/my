@@ -33,6 +33,7 @@ function initEvent() {
 
 
 function initTree() {
+    //加载所有角色信息列表
     $.post(hostUrl + "role/listAll")
         .done(function (r) {
             if (r.state) {
@@ -47,11 +48,33 @@ function initTree() {
             toastr.error('发送请求失败');
         });
 
-    $.post(hostUrl + "organization/listAll")
+    //加载所有地市组织信息列表
+    $.post(hostUrl + "organization/listOrgs", {type: "local_net"})
         .done(function (r) {
             if (r.state) {
                 var data = r.data;
                 orgZtree.Init(data);
+            } else {
+                toastr.error('请求角色信息失败，请重试');
+                toastr.error(r.msg);
+            }
+        })
+        .fail(function () {
+            toastr.error('发送请求失败');
+        });
+
+    //加载所有部门组织信息列表
+    $.post(hostUrl + "organization/listOrgs", {type: "user_dept"})
+        .done(function (r) {
+            if (r.state) {
+                var data = r.data;
+
+                var $dept = $('#user_deptId');
+                $dept.empty();
+                data.forEach(function (d) {
+                    var option = '<option value="' + d.id + '">' + d.name + '</option>';
+                    $dept.append(option);
+                });
             } else {
                 toastr.error('请求角色信息失败，请重试');
                 toastr.error(r.msg);
@@ -103,6 +126,7 @@ function doSave() {
     var nickname = $("#user_nickname").val().trim();
     var phone = $("#user_phone").val().trim();
     var email = $("#user_email").val().trim();
+    var deptId = $("#user_deptId").val();
     var locked = rg_locked.val();
 
     if (id == "") {
@@ -113,7 +137,8 @@ function doSave() {
             phone: phone,
             email: email,
             roles: roles,
-            orgs: orgs
+            orgs: orgs,
+            deptId: deptId
         };
         $.ajax({
             type: "POST",
@@ -152,7 +177,8 @@ function doSave() {
             email: email,
             locked: locked,
             roles: roles,
-            orgs: orgs
+            orgs: orgs,
+            deptId: deptId
         };
         $.ajax({
             type: "POST",
@@ -219,7 +245,9 @@ function viewUser(user, type) {
                 var data = r.data;
                 var roleIds = data.roleIds;
                 var orgIds = data.orgIds;
+                var deptId = data.deptId;
 
+                $("#user_deptId").val(deptId);
                 roleZtree.loadData(roleIds);
                 orgZtree.loadData(orgIds);
             } else {
@@ -631,12 +659,12 @@ var OrgZtree = function () {
     oZtree.val = function () {
         var tree = $.fn.zTree.getZTreeObj(oZtree.id);
 
-        var changes = tree.getChangeCheckedNodes();
+        var changes = tree.getCheckedNodes();
         var datas = [];
         changes.forEach(function (a) {
             var temp = new Object();
             temp.id = a.id;
-            temp.add = a.checked;
+            temp.add = true;
             datas.push(temp);
         });
         return datas;

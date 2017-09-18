@@ -123,8 +123,11 @@
 
     <select id="selectAllOrgIds" resultType="Long">
         select org_id
-        from   aweb_user_organization
-        where  user_id=#{userId}
+          from aweb_user_organization a
+          join aweb_organization b
+            on b.id = a.org_id
+           and b.type = #{type}
+         where a.user_id = #{userId}
     </select>
 
     <select id="selectAllUsers" resultType="com.loushuiyifan.common.bean.User">
@@ -198,4 +201,10 @@
        set last_login = sysdate
        where id=#{id}
     </update>
+
+    <select id="listFromSUser" resultType="com.loushuiyifan.system.vo.SUser">
+        select t.*
+        from s_user t
+        where t.sts = 'Y'
+    </select>
 </mapper>

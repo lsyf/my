@@ -15,7 +15,10 @@ public class UserVO {
     String password;
     Byte locked;
     List<AddVO> roles;
-    List<AddVO> orgs;
+
+    //以下两个均为 组织信息，根据type区分
+    List<AddVO> orgs;//地市组织
+    Long deptId;//部门组织
 
     private String nickname;
     private String phone;

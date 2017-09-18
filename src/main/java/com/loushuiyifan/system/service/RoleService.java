@@ -107,14 +107,14 @@ public class RoleService {
         List<Long> list_add = new ArrayList<>();
         List<Long> list_del = new ArrayList<>();
         for (AddVO a : roleUpdate.getMenu()) {
-            if (a.isAdd()) {
+            if (a.getAdd()) {
                 list_add.add(a.getId());
             } else {
                 list_del.add(a.getId());
             }
         }
         for (AddVO b : roleUpdate.getPermission()) {
-            if (b.isAdd()) {
+            if (b.getAdd()) {
                 list_add.add(b.getId());
             } else {
                 list_del.add(b.getId());
