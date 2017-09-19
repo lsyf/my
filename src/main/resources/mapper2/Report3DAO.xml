@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.da.dao.Report3DAO">
+
+
+    <resultMap id="BaseResultMap_2" type="com.loushuiyifan.da.vo.ProductConfig">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="conditions" jdbcType="VARCHAR" property="conditions"/>
+    </resultMap>
+
+
+    <select id="listProductConfig" resultMap="BaseResultMap_2">
+        select index_name as "name",condition as "conditions"
+        from income_fx_config_1
+        order by order_id asc
+    </select>
+
+
+    <select id="getMonthTotal" resultType="Decimal">
+       <![CDATA[
+        select (sum(unpay_fee)+sum(tax_amount))/ 100000000
+          from v_isee_product_mid_data a
+         where acct_month =#{month}
+        ]]>
+        <if test="config != null and config !=''">
+            and ${config}
+        </if>
+    </select>
+
+    <select id="getYearTotal" resultType="Decimal">
+       <![CDATA[
+        select (sum(unpay_fee)+sum(tax_amount))/ 100000000
+          from v_isee_product_mid_data a
+          where acct_month <=#{thisMonth}
+          and acct_month>=#{firstMonth}
+        ]]>
+        <if test="config != null and config !=''">
+            and ${config}
+        </if>
+    </select>
+
+ <select id="getMonthIsee" resultType="Decimal">
+     select sum(unpay_fee) / 100000000
+     from isee_product_c3
+     where horizon_index_Id = 15
+     and area_lvl = 4
+     and acct_month =#{month}
+    </select>
+ <select id="getYearIsee" resultType="Decimal">
+  <![CDATA[
+    select sum(unpay_fee) / 100000000
+      from isee_product_c3
+     where horizon_index_Id = 15
+       and area_lvl = 4
+       and acct_month <= #{thisMonth}
+       and acct_month >= #{firstMonth}
+        ]]>
+    </select>
+
+
+</mapper>

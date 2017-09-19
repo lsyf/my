@@ -6,14 +6,14 @@ import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>User: Zhang Kaitao
  * <p>Date: 14-1-28
  * <p>Version: 1.0
  */
-@Service
+@Component
 @Data
 public class PasswordHelper {
 

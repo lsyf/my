@@ -1,6 +1,5 @@
 package com.loushuiyifan;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -11,8 +10,6 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-@MapperScan(basePackages = {"com.loushuiyifan.common.mapper",
-        "com.loushuiyifan.**.dao"})
 public class App extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer {
     protected final static Logger logger = LoggerFactory.getLogger(App.class);
 

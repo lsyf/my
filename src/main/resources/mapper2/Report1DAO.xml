@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.da.dao.Report1DAO">
+
+    <resultMap id="BaseResultMap_1" type="com.loushuiyifan.da.vo.Report1">
+        <result column="month" jdbcType="VARCHAR" property="month"/>
+        <result column="mobile" jdbcType="DOUBLE" property="mobile"/>
+        <result column="fix_network" jdbcType="DOUBLE" property="fixNetwork"/>
+        <result column="budget_gap" jdbcType="DOUBLE" property="budgetGap"/>
+    </resultMap>
+
+    <select id="listProvinceMFBg" resultMap="BaseResultMap_1">
+        <![CDATA[
+        select
+        sum(case
+        when PRODUCT_TYPE1 in (2) then
+        UNPAY_FEE + TAX_AMOUNT
+        end) / 100000000 as "mobile",
+        sum(case
+        when PRODUCT_TYPE1 in (1) then
+        UNPAY_FEE + TAX_AMOUNT
+        end) / 100000000 as "fix_network",
+        acct_month as "month"
+        from v_isee_product_mid_data a
+        where acct_month >= #{start}
+        and acct_month <= #{end}
+        and uNPAY_FEE + TAX_AMOUNT <> 0
+        and PRODUCT_TYPE1 in (1, 2)
+        group by acct_month
+        order by acct_month asc
+        ]]>
+    </select>
+
+    <select id="listBudget" resultType="Map">
+        <![CDATA[
+        select sum(unpay_fee)/100000000 as "budget", acct_month as "month"
+        from isee_product_c3
+        where horizon_index_Id = 15
+        and  acct_month >= #{start}
+        and acct_month <= #{end}
+        and area_lvl = 4
+        group by acct_month
+        ]]>
+    </select>
+</mapper>

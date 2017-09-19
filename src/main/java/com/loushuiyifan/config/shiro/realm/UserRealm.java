@@ -1,6 +1,7 @@
 package com.loushuiyifan.config.shiro.realm;
 
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.common.util.SpringUtil;
 import com.loushuiyifan.system.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -8,7 +9,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>User: Zhang Kaitao
@@ -17,13 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class UserRealm extends AuthorizingRealm {
 
-    @Autowired
-    private UserService userService;
-
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = (String) principals.getPrimaryPrincipal();
+        UserService userService = (UserService) SpringUtil.getBean("userService");
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         //暂不需要角色控制权限
@@ -37,6 +35,7 @@ public class UserRealm extends AuthorizingRealm {
 
         String username = (String) token.getPrincipal();
 
+        UserService userService = (UserService) SpringUtil.getBean("userService");
         User user = userService.findByUsername(username);
 
         //更新登录时间

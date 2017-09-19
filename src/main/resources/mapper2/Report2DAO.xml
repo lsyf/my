@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.da.dao.Report2DAO">
+
+
+
+    <resultMap id="BaseResultMap_2" type="com.loushuiyifan.da.vo.ProductConfig">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="conditions" jdbcType="VARCHAR" property="conditions"/>
+    </resultMap>
+
+
+
+    <select id="getSumMF" resultType="Map">
+        <![CDATA[
+
+        select sum(case
+             when PRODUCT_TYPE1 in (2) then
+              UNPAY_FEE + TAX_AMOUNT
+           end) / 100000000 as "mobile",
+           sum(case
+                 when PRODUCT_TYPE1 in (1) then
+                  UNPAY_FEE + TAX_AMOUNT
+               end) / 100000000 as "fix_network"
+        from v_isee_product_mid_data a
+        where acct_month = #{month}
+        and uNPAY_FEE + TAX_AMOUNT <> 0
+        and PRODUCT_TYPE1 in (1, 2)
+        group by acct_month
+
+        ]]>
+    </select>
+
+    <select id="listProductConfig" resultMap="BaseResultMap_2">
+        select name as "name",conditions as "conditions"
+        from PC_INDEX_INNER_PRODUCT_CONFIG
+    </select>
+
+    <select id="listProductData" resultType="Map">
+          select
+          <foreach collection="configs" item="config" separator=",">
+            sum(case when PRODUCT_TYPE1 in (#{type}) and ${config.conditions} then UNPAY_FEE + TAX_AMOUNT end )/100000000 as "${config.name}"
+          </foreach>
+          from v_isee_product_mid_data a
+         where acct_month = #{month}
+           and uNPAY_FEE + TAX_AMOUNT != 0
+           and PRODUCT_TYPE1 in (#{type})
+         group by acct_month
+    </select>
+
+</mapper>

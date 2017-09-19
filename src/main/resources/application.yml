@@ -17,6 +17,8 @@ logging:
 
 
 spring:
+    aop:
+      proxy-target-class: true
     thymeleaf:
           cache: false
     output:
@@ -29,10 +31,15 @@ spring:
               enabled: true
               paths: /**
     datasource:
-        url: jdbc:oracle:thin:@//134.96.127.227:1521/CTZJRRS
-        username: RPT_WEB
-        password: x84yan
         druid:
+            primary:
+                url: jdbc:oracle:thin:@//134.96.127.227:1521/CTZJRRS
+                username: RPT_WEB
+                password: x84yan
+            secondary:
+                url: jdbc:oracle:thin:@//134.96.83.50:1521/pgbb
+                username: borpt
+                password: borpt_1004
             initial-size: 1
             min-idle: 1
             max-active: 20
@@ -70,11 +77,11 @@ spring:
 
 
 
-mybatis:
-    type-aliases-package: com.loushuiyifan.common.bean
-    mapper-locations: classpath*:mapper/**/*.xml
-    configuration:
-        map-underscore-to-camel-case: true    # 驼峰命名转换
+#mybatis:
+#    type-aliases-package: com.loushuiyifan.common.bean
+#    mapper-locations: classpath*:mapper/**/*.xml
+#    configuration:
+#        map-underscore-to-camel-case: true    # 驼峰命名转换
 
 mapper:
     mappers:
