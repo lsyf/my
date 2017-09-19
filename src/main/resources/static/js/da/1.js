@@ -1,3 +1,93 @@
+var oTable;
+function init() {
+
+    initDatePicker();
+
+    oTable = new TableInit();
+    oTable.Init();
+
+
+    initEvent();
+
+}
+
+function initChart(data) {
+    lastY = data[0];
+    thisY = data[1];
+
+    year1 = lastY.year;
+    year2 = thisY.year;
+    x=[];
+    y1=[];
+    y2=[];
+    for(var i = 1;i<13;i++) {
+        x.push(i);
+        y1.push(lastY[i]);
+        y2.push(thisY[i]);
+    }
+
+    option = {
+        color: ['#3398DB'],
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        legend: {
+            data: [year1, year2],
+            align: 'left',
+            left: 10
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                data : x,
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:year1,
+                type:'line',
+                itemStyle:{
+                    normal: {
+                        color: '#FF0000'
+                    }
+                },
+                data:y1
+            },
+            {
+                name:year2,
+                type:'line',
+                itemStyle:{
+                    normal: {
+                        color: '#4BACC6'
+                    }
+                },
+                data:y2
+            }
+        ]
+    };
+
+    var myChart = echarts.init(document.getElementById('main'));
+    myChart.setOption(option);
+
+}
+
 function initDatePicker() {
     $('#datepicker ').datepicker({
         format: "yyyymm",
@@ -6,247 +96,144 @@ function initDatePicker() {
         maxViewMode: 2,
         todayBtn: "linked",
         language: "zh-CN",
-        todayHighlight: true,
-        toggleActive: true
+        todayHighlight: true
     });
 
     m_this = moment().format('YYYYMM');
-    m_last = moment().add(-1, 'y').format('YYYYMM');
-    $('#datepicker').find("input[name='start']").val(m_last);
-    $('#datepicker').find("input[name='end']").val(m_this);
-
+    $('#datepicker').val(m_this);
 }
 
-//添加时间校验
-$.validator.addMethod("dateCheck", function (v, e) {
-    var start = $('#datepicker').find("input[name='start']").val();
-    var end = $('#datepicker').find("input[name='end']").val();
-    if (start == '' || end == '') {
-        return false;
-    } else {
-        return true;
-    }
+function initEvent() {
 
-}, "时间选择错误");
+    $('#btn_query').button("loading");
+    $('#btn_query').on('click', function () {
+        $('#btn_query').button("loading");
 
-$('#form_search').validate({
-    rules: {
-        end: 'dateCheck'
-    },
-    errorPlacement: function (error, element) {
-        error.css('color', 'red');
-        $('#form_search').append(error);
-    },
-    submitHandler: function (form) {
-        $(form).ajaxSubmit({
-            type: "POST",
-            url: hostUrl + 'da/provinceMFBg',
-            beforeSubmit: function () {
-                $('#btn_query').button("loading");
-            },
-            success: function (r, a, b) {
-                $('#btn_query').button("reset");
-                if (r == null || r == undefined || r.length == 0) {
-                    toastr.error('该账期无数据');
-                } else {
-                    initEcharts(r);
-                }
+        oTable.refresh()
+    });
 
-            }
-        });
-    }
-});
-
-function initEcharts(r) {
-    var xAxisData = [];
-    var data1 = [];
-    var data2 = [];
-    var data3 = [];
-
-    r.forEach(function (d, i) {
-        xAxisData.push(d.month != undefined ? d.month : '无数据');
-        data1.push(d.mobile != undefined ? d.mobile : 0);
-        data2.push(d.fixNetwork != undefined ? d.fixNetwork : 0);
-        data3.push(d.budgetGap != undefined ? d.budgetGap : 0);
+    $('#table').on('load-success.bs.table', function (a,data) {
+        $('#btn_query').button("reset");
+        console.log(data)
+        initChart(data);
+    });
+    $('#table').on('load-error.bs.table', function (a, b, c) {
+        $('#btn_query').button("reset");
+        console.log(a)
+        console.log(b)
+        console.log(c)
+    });
+    $('#table').on('click-cell.bs.table', function (element, field, value, row) {
+        console.log(field)
+        console.log(value)
+        console.log(row.name)
     });
 
 
-    var data = new Object();
-    data.xAxisData = xAxisData;
-    data.data1 = data1;
-    data.data2 = data2;
-    data.data3 = data3;
-    option = drillDown.getOption(data);
-
-
-    var dom = document.getElementById('main');
-    echarts.dispose(dom);
-
-    drillDown.initChart(dom, option);
-
-    // $('#return-button').on('click', function () {
-    //     $('#form_search').ajaxForm();
-    // });
 }
 
+//Table初始化
+var TableInit = function () {
+    var oTableInit = new Object();
 
-var drillDown = {
-    getOption: function (data) {
-        option = {
-            backgroundColor: '#eee',
-            legend: {
-                data: ['移动', '固网', '总的预算缺口'],
-                align: 'left',
-                left: 10
+
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#table').bootstrapTable({
+            url: hostUrl + 'da/da1',         //请求后台的URL（*）
+            method: 'post',                      //请求方式（*）
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            // height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            contentType: 'application/x-www-form-urlencoded',
+            queryParams: function (params) {
+                var temp = {
+                    month: $('#datepicker').val().trim()
+                };
+                return temp;
             },
-            brush: {
-                toolbox: ['rect', 'polygon', 'lineX', 'lineY', 'keep', 'clear'],
-                xAxisIndex: 0
-            },
-            toolbox: {
-                feature: {
-                    magicType: {
-                        type: ['stack', 'tiled']
-                    },
-                    dataView: {}
-                }
-            },
-            tooltip: {},
-            xAxis: {
-                data: data.xAxisData,
-                name: 'X Axis',
-                silent: false,
-                axisLine: {
-                    onZero: true,
-                },
-                axisLabel: {
-                    interval: 0,//横轴信息全部显示
-                    rotate: 60//60度角倾斜显示
-                },
-                splitLine: {show: false},
-                splitArea: {show: false}
-            },
-            yAxis: {
-                inverse: false,
-                interval: 1,
-                splitArea: {show: false}
-            },
-            grid: {
-                left: 100
-            },
-            visualMap: {
-                type: 'continuous',
-                dimension: 1,
-                text: ['High', 'Low'],
-                inverse: true,
-                itemHeight: 200,
-                calculable: true,
-                min: -2,
-                max: 6,
-                top: 60,
-                left: 10,
-                inRange: {
-                    colorLightness: [0.4, 0.8]
-                },
-                outOfRange: {
-                    color: '#bbb'
-                },
-                controller: {
-                    inRange: {
-                        color: '#2f4554'
-                    }
-                }
-            },
-            series: [
+            columns: [
                 {
-                    name: '移动',
-                    type: 'bar',
-                    stack: 'one',
-                    barMaxWidth: '50%',
-                    itemStyle: this.toItemStyle('#3C8DA3'),
-                    label: this.toLabel(),
-                    data: data.data1
-                },
-                {
-                    name: '固网',
-                    type: 'bar',
-                    stack: 'one',
-                    barMaxWidth: '50%',
-                    itemStyle: this.toItemStyle('#4BACC6'),
-                    label: this.toLabel(),
-                    data: data.data2
-                },
-                {
-                    name: '总的预算缺口',
-                    type: 'bar',
-                    stack: 'one',
-                    barMaxWidth: '50%',
-                    barMinHeight: '10',//防止高度过低无法放入数值
-                    itemStyle: this.toItemStyle('#FF0000'),
-                    label: this.toLabel(),
-                    data: data.data3
+                    field: 'year',
+                    title: '年份',
+                    align: 'center'
+                }, {
+                    field: '1',
+                    title: '1',
+                    align: 'center'
+                }, {
+                    field: '2',
+                    title: '2',
+                    align: 'center'
+                }, {
+                    field: '3',
+                    title: '3',
+                    align: 'center'
+                }, {
+                    field: '4',
+                    title: '4',
+                    align: 'center'
+                }, {
+                    field: '5',
+                    title: '5',
+                    align: 'center'
+                }, {
+                    field: '6',
+                    title: '6',
+                    align: 'center'
+                }, {
+                    field: '7',
+                    title: '7',
+                    align: 'center'
+                }, {
+                    field: '8',
+                    title: '8',
+                    align: 'center'
+                }, {
+                    field: '9',
+                    title: '9',
+                    align: 'center'
+                }, {
+                    field: '10',
+                    title: '10',
+                    align: 'center'
+                }, {
+                    field: '11',
+                    title: '11',
+                    align: 'center'
+                }, {
+                    field: '12',
+                    title: '12',
+                    align: 'center'
+                }, {
+                    field: 'period',
+                    title: '同期累计',
+                    align: 'center'
+                }, {
+                    field:"total",
+                    title: '总计',
+                    align: 'center'
                 }
             ]
-        };
-        return option;
-    },
-    initChart: function (dom, option) {
-        var myChart = echarts.init(dom);
-        myChart.setOption(option);
-        myChart.on('click', function (object) {
-            // 销毁之前的echarts实例
-            echarts.dispose(dom);
-            // 初始化一个新的实例
-            var myChart = echarts.init(dom);
-
-            option.series[1] = null;
-            option.series[2] = null;
-
-            // 我这里就模拟一个测试数据，做为demo演示
-            option.xAxis.data = [
-                '2016-09-01', '2016-09-02', '2016-09-03', '2016-09-04', '2016-09-05', '2016-09-06', '2016-09-07', '2016-09-08',
-                '2016-09-09', '2016-09-10', '2016-09-11', '2016-09-12', '2016-09-13', '2016-09-14', '2016-09-15', '2016-09-16',
-                '2016-09-17', '2016-09-18', '2016-09-19', '2016-09-20', '2016-09-21', '2016-09-22', '2016-09-23', '2016-09-24',
-                '2016-09-25', '2016-09-26', '2016-09-27', '2016-09-28', '2016-09-29', '2016-09-30'
-            ];
-            option.series[0].data = [
-                3, 4, 5, 6, 5, 6, 7, 8, 8, 9,
-                12, 13, 15, 16, 20, 12, 30, 21, 22, 29,
-                30, 31, 33, 34, 35, 36, 20, 29, 33, 40
-            ];
-            myChart.setOption(option, true);
         });
 
-    },
-    toItemStyle: function (color) {
-        var itemStyle = {
-            normal: {
-                color: color
-            },
-            emphasis: {
-                barBorderWidth: 1,
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowOffsetY: 0,
-                shadowColor: 'rgba(0,0,0,0.5)'
-            }
-        };
-        return itemStyle;
-    },
-    toLabel: function () {
-        var label = {
-            normal: {
-                show: true,
-                // formatter: function (data) {
-                //     // console.log(data);
-                //     return toDecimal(data.value, 2);
-                // },
-                textStyle: {
-                    color: '#000'
-                }
-            }
-        };
-        return label;
+
+    };
+
+    function percetFormatter(v) {
+        if (v == null) {
+            return;
+        }
+        return toDecimal(v * 100, 2) + '%';
     }
 
+    //刷新数据
+    oTableInit.refresh = function () {
+        $('#table').bootstrapTable('refresh');
+    };
+
+
+    return oTableInit;
 };

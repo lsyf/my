@@ -16,7 +16,7 @@ import java.util.List;
  * @email 979365556@qq.com
  */
 @Controller
-@RequestMapping("da")
+@RequestMapping("report")
 public class ReportController {
 
     @Autowired

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.da.dao.DaDAO">
+
+    <select id="listTwoYear" resultType="com.loushuiyifan.da.vo.MonthData">
+      select a.aft_amount as "amount", a.acct_month as "month"
+      from total_main_income_FX a
+      order by a.acct_month asc
+    </select>
+
+</mapper>

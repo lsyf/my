@@ -6,8 +6,7 @@ function initDatePicker() {
         maxViewMode: 2,
         todayBtn: "linked",
         language: "zh-CN",
-        todayHighlight: true,
-        toggleActive: true
+        todayHighlight: true
     });
 
     m_this = moment().format('YYYYMM');
@@ -48,7 +47,7 @@ $('#form_search').validate({
     submitHandler: function (form) {
         $(form).ajaxSubmit({
             type: "POST",
-            url: hostUrl + 'da/productLevel',
+            url: hostUrl + 'report/productLevel',
             beforeSubmit: function () {
                 $('#btn_query').button("loading");
             },
