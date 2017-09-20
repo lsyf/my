@@ -39,7 +39,7 @@ $('#form_search').validate({
     submitHandler: function (form) {
         $(form).ajaxSubmit({
             type: "POST",
-            url: hostUrl + 'report/provinceMFBg',
+            url: hostUrl + 'da0/provinceMFBg',
             beforeSubmit: function () {
                 $('#btn_query').button("loading");
             },

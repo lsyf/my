@@ -2,6 +2,8 @@ server:
     port: 8080
     context-path: /a
 
+storage:
+  location: D:/pic
 
 logging:
     level:
@@ -17,6 +19,10 @@ logging:
 
 
 spring:
+    http:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
     aop:
       proxy-target-class: true
     thymeleaf:
@@ -96,5 +102,6 @@ pagehelper:
     params: count=countSql
     page-size-zero: true
     auto-runtime-dialect: true
+
 
 

@@ -47,7 +47,7 @@ $('#form_search').validate({
     submitHandler: function (form) {
         $(form).ajaxSubmit({
             type: "POST",
-            url: hostUrl + 'report/productLevel',
+            url: hostUrl + 'da0/productLevel',
             beforeSubmit: function () {
                 $('#btn_query').button("loading");
             },

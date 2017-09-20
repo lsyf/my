@@ -59,7 +59,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table').bootstrapTable({
-            url: hostUrl + 'report/report3',         //请求后台的URL（*）
+            url: hostUrl + 'da0/report3',         //请求后台的URL（*）
             method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
