@@ -2,6 +2,7 @@ package com.loushuiyifan.da.service;
 
 import com.google.common.collect.Maps;
 import com.loushuiyifan.da.dao.DaDAO;
+import com.loushuiyifan.da.vo.DataAnalysis;
 import com.loushuiyifan.da.vo.MonthData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class DAService {
     @Autowired
     DaDAO daDAO;
 
-    public List<Map<String, Object>> listTwoYear() {
-        List<MonthData> datas = daDAO.listTwoYear();
+    public List<Map<String, Object>> da1() {
+        List<MonthData> datas = daDAO.da1();
 
         //转换格式
         List<Map<String, Object>> list = new ArrayList<>();
@@ -38,8 +39,8 @@ public class DAService {
         int index = 0;//年份下标
         int m = 1;//月份
         for (MonthData d : datas) {
-            String month = d.getMonth();
-            double amount = d.getAmount();
+            String month = d.getAcctMonth();
+            double amount = d.getAftAmount();
 
             Map<String, Object> data = list.get(index);
 
@@ -80,8 +81,8 @@ public class DAService {
         return list;
     }
 
-    public static void main(String[] args) {
-        System.out.println("201611".substring(0, 4));
-    }
 
+    public List<DataAnalysis> da2(String month) {
+        return daDAO.da2(month);
+    }
 }

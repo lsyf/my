@@ -1,6 +1,7 @@
 package com.loushuiyifan.da.controller;
 
 import com.loushuiyifan.da.service.DAService;
+import com.loushuiyifan.da.vo.DataAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,14 @@ public class DAController {
     @PostMapping("da1")
     @ResponseBody
     public List<Map<String,Object>> da1(String month) {
-        return daService.listTwoYear();
+        return daService.da1();
     }
 
+
+    @PostMapping("da2")
+    @ResponseBody
+    public List<DataAnalysis> da2(String month) {
+        return daService.da2(month);
+    }
 
 }

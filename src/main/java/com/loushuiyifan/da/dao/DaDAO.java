@@ -12,5 +12,7 @@ import java.util.List;
  */
 public interface DaDAO extends MyMapper<DataAnalysis> {
 
-    List<MonthData> listTwoYear();
+    List<MonthData> da1();
+
+    List<DataAnalysis> da2(String month);
 }

@@ -8,6 +8,6 @@ import lombok.Data;
  */
 @Data
 public class MonthData {
-    String month;
-    Double amount;
+    String acctMonth;
+    Double aftAmount;
 }

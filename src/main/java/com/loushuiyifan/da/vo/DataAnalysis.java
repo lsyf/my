@@ -8,5 +8,17 @@ import lombok.Data;
  */
 @Data
 public class DataAnalysis {
-    String month;
+    String acctMonth;
+    String latnId;
+    String latnName;
+    Double lastYearMonth;
+    Double lastMonth;
+    Double thisMonth;
+    Double totalLastYear;
+    Double totalThisYear;
+    Double yearTotalGrowthRate;
+    Double monthGrowthRate;
+    Double monthBudget;
+    Double monthBudgetGap;
+    Integer orderId;
 }

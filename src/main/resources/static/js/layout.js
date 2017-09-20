@@ -26,16 +26,30 @@ var isIE = function (ver) {
 
 /**
  * 保留两位小数
- * 功能：将浮点数四舍五入，取小数点后2位
+ * 功能：将浮点数四舍五入，取小数点后n位
  */
 function toDecimal(x, n) {
     var f = parseFloat(x);
     if (isNaN(f)) {
         return;
     }
+
+    //默认保留2位小数
+    n = n == null ? 2 : n;
+
     var temp = Math.pow(10, n);
     f = Math.round(x * temp) / temp;
     return f;
+}
+
+/**
+ * 转换百分制
+ */
+function toPercent(x, n) {
+    var temp = toDecimal(x * 100, n);
+    if (temp != null) {
+        return temp + '%';
+    }
 }
 
 
