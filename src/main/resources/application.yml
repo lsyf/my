@@ -2,8 +2,13 @@ server:
     port: 8080
     context-path: /a
 
-storage:
-  location: D:/pic
+report:
+  storage:
+    location: /report/files
+    image: /report/files/image
+    report-template: /report/files/reportTemplate
+    report-upload: /report/files/reportUpload
+    report-download: /report/files/image
 
 logging:
     level:

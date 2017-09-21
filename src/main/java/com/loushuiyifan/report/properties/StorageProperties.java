@@ -1,22 +1,30 @@
 package com.loushuiyifan.report.properties;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author 漏水亦凡
  * @date 2017/9/20
  */
-@ConfigurationProperties("storage")
+@ConfigurationProperties("report.storage")
+@Data
 public class StorageProperties {
 
-    private String location = "storage";
+    //默认文件路径
+    private String location = "location";
 
-    public String getLocation() {
-        return location;
-    }
+    //图片
+    private String image = "image";
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    //报表模板
+    private String reportTemplate = "reportTemplate";
+
+    //报表上传(包括多种上传文件)
+    private String reportUpload = "reportUpload";
+
+    //报表下载
+    private String reportDownload = "reportDownload";
+
 
 }

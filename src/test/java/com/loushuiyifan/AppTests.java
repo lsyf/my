@@ -1,14 +1,27 @@
 package com.loushuiyifan;
 
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.Test;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class AppTests {
 
+    class A{
+        int a = 1;
+    }
 
+    class B extends A {
+        int a ;
+    }
+
+
+    @Test
+    public void test() {
+        Path path = Paths.get("d:/");
+        path = path.resolve(Paths.get(""));
+        System.out.println(path);
+    }
 
 
 }

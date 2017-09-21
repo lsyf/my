@@ -12,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    public static final String PATH = "D:/pic";
 
     /**
      * 静态资源映射
@@ -24,9 +23,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
 
-        registry.addResourceHandler("/pic/**")
-                .addResourceLocations("file:" + PATH)
-                .setCachePeriod(3155926);
+//        registry.addResourceHandler("/download/**")
+//                .addResourceLocations("file:/report/")
+//                .setCachePeriod(3155926);
 
     }
 

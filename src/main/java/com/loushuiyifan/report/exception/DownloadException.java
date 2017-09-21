@@ -5,13 +5,13 @@ package com.loushuiyifan.report.exception;
  * @author 漏水亦凡
  * @date 2017/9/20
  */
-public class StorageException extends RuntimeException {
+public class DownloadException extends RuntimeException {
 
-    public StorageException(String message) {
+    public DownloadException(String message) {
         super(message);
     }
 
-    public StorageException(String message, Throwable cause) {
+    public DownloadException(String message, Throwable cause) {
         super(message, cause);
     }
 }

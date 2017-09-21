@@ -1,6 +1,6 @@
 package com.loushuiyifan.report.controller;
 
-import com.loushuiyifan.report.service.StorageService;
+import com.loushuiyifan.report.service.ImageStorageService;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadController {
 
     @Autowired
-    StorageService storageService;
+    ImageStorageService storageService;
 
 
     @GetMapping
