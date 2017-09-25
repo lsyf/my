@@ -51,12 +51,20 @@ public class DictionaryService {
 
 
     /**
-     * 根据字典code获取所有子节点
+     * 根据字典data获取所有子节点
      *
      * @param data
      * @return
      */
-    public List<Dictionary> getParameter(String data) {
-        return dictionaryDAO.getParameter(data);
+    public List<Dictionary> getAllKidsByData(String data) {
+        return dictionaryDAO.getAllKidsByData(data);
+    }
+
+    /**
+     * 根据字典data和子节点名称获取子节点data
+     *
+     */
+    public String getKidDataByName(String pData,String name) {
+        return dictionaryDAO.getKidDataByName(pData,name);
     }
 }

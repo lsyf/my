@@ -2,6 +2,7 @@ package com.loushuiyifan.system.dao;
 
 
 import com.loushuiyifan.common.bean.Dictionary;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ public interface DictionaryDAO {
 
     int deleteAllKids(long parentId);
 
-    List<Dictionary> getParameter(String data);
+    List<Dictionary> getAllKidsByData(String data);
 
+    String getKidDataByName(@Param("pData") String pData,
+                         @Param("name") String name);
 }

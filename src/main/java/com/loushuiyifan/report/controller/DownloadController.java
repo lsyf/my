@@ -1,7 +1,10 @@
 package com.loushuiyifan.report.controller;
 
+import com.loushuiyifan.report.exception.DownloadException;
 import com.loushuiyifan.report.properties.StorageProperties;
 import com.loushuiyifan.report.service.DownloadService;
+import com.loushuiyifan.system.service.DictionaryService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +22,7 @@ import java.nio.file.Paths;
  */
 @Controller
 @RequestMapping("download")
-public class DowloadController {
+public class DownloadController {
 
     @Autowired
     DownloadService downloadService;
@@ -27,6 +30,18 @@ public class DowloadController {
     @Autowired
     StorageProperties storageProperties;
 
+    @Autowired
+    DictionaryService dictionaryService;
+
+    public static final String TEMPLATE_DOWNLOAD = "templateDownload";
+
+    /**
+     * 下载 图片
+     * @param req
+     * @param resp
+     * @param name
+     * @throws Exception
+     */
     @GetMapping("image/{name:.+}")
     public void image(HttpServletRequest req,
                       HttpServletResponse resp,
@@ -36,11 +51,23 @@ public class DowloadController {
         downloadService.download(req, resp, file, name);
     }
 
+    /**
+     * 下载 导入模板
+     * @param req
+     * @param resp
+     * @param name
+     * @throws Exception
+     */
     @GetMapping("template/{name:.+}")
     public void template(HttpServletRequest req,
                          HttpServletResponse resp,
                          @PathVariable String name) throws Exception {
 
+        //根据数据字典 查找对应模板的 文件名
+        name = dictionaryService.getKidDataByName(TEMPLATE_DOWNLOAD, name);
+        if (StringUtils.isEmpty(name)) {
+            throw new DownloadException("未找到模板");
+        }
         Path file = Paths.get(storageProperties.getReportTemplate(), name);
         downloadService.download(req, resp, file, name);
     }

@@ -1,6 +1,15 @@
 .content-wrapper {
     margin-left: 0px;
 }
-#content-header-h1{
+
+#content-header-h1 {
     cursor: pointer;
+}
+
+/*zTree下拉框样式*/
+#menuContent {
+    display: none;
+    position: absolute;
+    border-color: #829dd2;
+    z-index: 10;
 }

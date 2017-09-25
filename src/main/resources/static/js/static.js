@@ -30,6 +30,14 @@ function initValidator() {
                 error.appendTo($group);
                 return ;
             }
+
+            if($(element).attr('type')=='file'){
+                var $group = $(element).parents('.file-input').parent();
+                error.css('display', 'block');
+                error.appendTo($group);
+                return ;
+            }
+
             //其他 如input则正常
             var $group = $(element).parent();
             error.appendTo($group);
@@ -42,6 +50,10 @@ function initValidator() {
             $(e).remove();
         }
     });
+
+    $.validator.addMethod("checkHidden", function (value, element, params) {
+        return  value != "";
+    }, "不能为空");
 }
 
 var validatorForm;

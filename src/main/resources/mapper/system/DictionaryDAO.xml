@@ -39,11 +39,19 @@
     </delete>
 
 
-    <select id="getParameter" resultMap="BaseResultMap">
+    <select id="getAllKidsByData" resultMap="BaseResultMap">
         select name, data
         from aweb_dictionary
         where parent_id =
           (select id from aweb_dictionary where data = #{data})
         order by sorting desc
+    </select>
+
+    <select id="getKidDataByName" resultType="String">
+        select data
+          from aweb_dictionary
+         where parent_id =
+               (select id from aweb_dictionary where data = #{pData})
+           and name = #{name}
     </select>
 </mapper>
