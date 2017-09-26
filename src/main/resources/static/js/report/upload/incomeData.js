@@ -31,13 +31,13 @@ function initForm() {
                 url: hostUrl + "import/incomeData",
                 type: 'post',
                 contentType: 'multipart/form-data',
-                resetForm: true,
                 beforeSubmit: function () {
                     $('#btn_upload').button("loading");
                 },
                 success: function (r) {
                     $('#btn_upload').button("reset");
                     if (r.state) {
+                        $(form).resetForm();
                         toastr.info('提交成功');
                     } else {
                         toastr.error('提交失败:' + r.msg);

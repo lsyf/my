@@ -3,7 +3,7 @@
 <mapper namespace="com.loushuiyifan.report.dao.ExtImportLogDAO">
 
     <select id="nextvalKey" resultType="java.lang.Long">
-        SELECT aweb_id.nextVal from dual
+        SELECT SEQ_IMPORT_LOG_ID.nextVal from dual
     </select>
 
 

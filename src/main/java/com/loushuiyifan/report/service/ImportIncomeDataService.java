@@ -9,6 +9,10 @@ import com.loushuiyifan.report.dto.CheckDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
@@ -39,6 +43,9 @@ public class ImportIncomeDataService {
     @Autowired
     ExtImportLogDAO extImportLogDAO;
 
+    @Autowired
+    SqlSessionFactory sqlSessionFactory;
+
     /**
      * 解析入库
      */
@@ -65,7 +72,7 @@ public class ImportIncomeDataService {
 
         //然后保存解析的数据
         Long logId = extImportLogDAO.nextvalKey();
-        importDataByGroup(list, logId);
+        importDataByGroup(list, logId, month);
 
         //最后保存日志数据
         ExtImportLog log = new ExtImportLog();
@@ -77,7 +84,7 @@ public class ImportIncomeDataService {
         log.setStatus("Y");
         log.setImportDate(Date.from(Instant.now()));
         String incomeSource = list.get(0).getIncomeSource();
-        log.setIncomeSource(incomeSource);
+        log.setIncomeSoure(incomeSource);
         log.setFileName(filename);
         extImportLogDAO.insert(log);
 
@@ -117,29 +124,30 @@ public class ImportIncomeDataService {
     }
 
     /**
-     * 以groupSize为单位分组 插入
+     * 在一个session中批量 插入
      *
      * @param list
      * @param logId
+     * @param month
      */
-    public void importDataByGroup(List<RptImportDataChennel> list, Long logId) {
-        int size = list.size();
-        int groupSize = 1000;
-        int group = size / groupSize + 1;
+    public void importDataByGroup(List<RptImportDataChennel> list, Long logId, String month) {
 
-        for (int i = 0; i < group; i++) {
-            int from = i * groupSize;
-            int to = (i + 1) * groupSize;
-            to = to > size ? size : to;
-            if (from == to) {//如果首尾相同则跳出
-                break;
+        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+        try {
+            logger.debug("批量插入数量: {}", list.size());
+
+            for (final RptImportDataChennel data : list) {
+                data.setLogId(logId);
+                data.setAcctMonth(month);
+                rptImportDataChennelDAO.insertSelective(data);
             }
-
-            logger.debug("第{}组  {}-{}", i + 1, from, to);
-            List<RptImportDataChennel> datas = list.subList(from, to);
-            rptImportDataChennelDAO.addRptImportDatas(logId, datas);
+            sqlSession.commit();
+        } finally {
+            sqlSession.close();
+            logger.debug("批量插入结束");
         }
     }
+
 
     /**
      * 收入数据解析类
@@ -149,12 +157,17 @@ public class ImportIncomeDataService {
 
         @Override
         protected List<RptImportDataChennel> processSheet(Sheet sheet) {
+            FormulaEvaluator evaluator = sheet
+                    .getWorkbook()
+                    .getCreationHelper()
+                    .createFormulaEvaluator();
+
             List<RptImportDataChennel> list = new ArrayList<>();
             for (int y = startY; y <= sheet.getLastRowNum(); y++) {
                 Row row = sheet.getRow(y);
                 RptImportDataChennel bean = new RptImportDataChennel();
                 for (int x = startX; x <= row.getLastCellNum(); x++) {
-                    String data = getCellData(row.getCell(x));
+                    String data = getCellData(row.getCell(x), evaluator);
                     if (StringUtils.isEmpty(data)) {
                         continue;
                     }
@@ -187,11 +200,9 @@ public class ImportIncomeDataService {
                             bean.setZglks(data);
                             break;
                         case 16:
-                            data.replace(",", "");
                             bean.setIndexData(Double.parseDouble(data));
                             break;
                         case 17:
-                            data.replace(",", "");
                             bean.setTaxValue(Double.parseDouble(data));
                             break;
                         case 18://ICT合同号

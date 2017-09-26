@@ -23,7 +23,8 @@ public class ExtImportLog {
 
     private Integer latnId;
 
-    private String incomeSource;
+    //TODO 数据库字段拼写错误
+    private String incomeSoure;
 
     private String fileName;
 

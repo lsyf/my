@@ -1,5 +1,6 @@
 package com.loushuiyifan.poi;
 
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -19,7 +20,7 @@ public class MapPoiRead extends AbstractPoiRead<Map<String, String>> {
     /**
      * 初始化
      *
-     * @param keys     属性集合
+     * @param keys 属性集合
      */
     public MapPoiRead(String[] keys) {
         this.keys = keys;
@@ -30,12 +31,14 @@ public class MapPoiRead extends AbstractPoiRead<Map<String, String>> {
         if (keys == null || keys.length == 0) {
             return null;
         }
+        FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
+
         List<Map<String, String>> list = new ArrayList<>();
         for (Sheet sheet : wb) {
             for (Row row : sheet) {
                 Map<String, String> map = new HashMap<>();
                 for (int i = 0; i < keys.length; i++) {
-                    map.put(keys[i], getCellData(row.getCell(i)));
+                    map.put(keys[i], getCellData(row.getCell(i), evaluator));
                 }
                 list.add(map);
             }

@@ -92,7 +92,7 @@ public class ImportController {
                 e1.printStackTrace();
                 logger.error("删除文件失败", e1);
             } finally {
-                throw new ReportException("导入失败", e);
+                throw new ReportException("导入失败: " + e.getMessage(), e);
             }
         }
         return JsonResult.success();

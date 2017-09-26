@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * @date 2017/9/25
  */
 @Data
-@Table(name = "rpt_import_data")
+@Table(name = "rpt_import_data_channel")
 public class RptImportDataChennel {
     Long logId;
 
