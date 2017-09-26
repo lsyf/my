@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.service;
+package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.report.properties.StorageProperties;
 import org.slf4j.Logger;
@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,14 +26,27 @@ public class ReportStorageService extends DefaultStorageService {
         super(properties);
     }
 
+    /**
+     * 配置报表存储根目录
+     *
+     * @param properties
+     * @return
+     */
     @Override
     public String configLocation(StorageProperties properties) {
         return properties.getReportUpload();
     }
 
+    /**
+     * 配置存储路径
+     *
+     * @param path
+     * @param name
+     * @return
+     */
     @Override
-    public Path configPath(Path path, String name) {
-        //根据日期存储
+    public Path configPath(Path path, String name) throws IOException {
+        //根据日期分类存储
         String date = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
         path = path.resolve(date);
         return super.configPath(path, name);

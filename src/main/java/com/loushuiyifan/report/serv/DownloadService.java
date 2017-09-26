@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.service;
+package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.report.exception.DownloadException;
 import org.slf4j.Logger;

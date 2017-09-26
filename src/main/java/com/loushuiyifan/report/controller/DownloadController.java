@@ -2,7 +2,7 @@ package com.loushuiyifan.report.controller;
 
 import com.loushuiyifan.report.exception.DownloadException;
 import com.loushuiyifan.report.properties.StorageProperties;
-import com.loushuiyifan.report.service.DownloadService;
+import com.loushuiyifan.report.serv.DownloadService;
 import com.loushuiyifan.system.service.DictionaryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

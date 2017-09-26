@@ -28,7 +28,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "upload/incomeData",
+                url: hostUrl + "import/incomeData",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 resetForm: true,

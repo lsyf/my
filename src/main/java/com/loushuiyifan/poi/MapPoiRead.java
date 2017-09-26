@@ -19,11 +19,9 @@ public class MapPoiRead extends AbstractPoiRead<Map<String, String>> {
     /**
      * 初始化
      *
-     * @param filePath 文件路径
      * @param keys     属性集合
      */
-    public MapPoiRead(String filePath, String[] keys) {
-        super(filePath);
+    public MapPoiRead(String[] keys) {
         this.keys = keys;
     }
 

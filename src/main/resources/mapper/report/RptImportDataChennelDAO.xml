@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptImportDataChennelDAO">
+    <insert id="addRptImportDatas">
+        INSERT INTO rpt_import_data_channel
+        (log_id ,area_id ,hor_code ,ver_code ,
+        index_data ,acct_month ,income_source ,c5_id ,
+        tax_value ,aft_tax_value ,self_code ,action ,
+        source_name ,contract_id ,contract_name ,zzxiulf ,
+        zglks ,ict_code ,hkont ,item_code)
+        VALUES
+        <foreach collection="datas" item="d" separator=",">
+            (#{logId},#{d.areaId},#{d.horCode},#{d.verCode},
+            #{d.indexData},#{d.acctMonth},#{d.incomeSource},#{d.c5Id},
+            #{d.taxValue},#{d.aftTaxValue},#{d.selfCode},#{d.action},
+            #{d.sourceName},#{d.contractId},#{d.contractName},#{d.zzxiulf},
+            #{d.zglks},#{d.ictCode},#{d.hkont},#{d.itemCode})
+        </foreach>
+    </insert>
+
+
+    <select id="checkRptImportData" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+            statementType="CALLABLE">
+        {call data_check_2017(
+         #{logId,mode=IN,jdbcType=NUMERIC},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+
+    <delete id="deleteByLogId">
+        delete
+        from rpt_import_data_channel
+        where log_id =#{logId}
+    </delete>
+
+</mapper>
+
+

@@ -2,7 +2,7 @@ package com.loushuiyifan.report.controller;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
-import com.loushuiyifan.report.service.LocalNetService;
+import com.loushuiyifan.report.serv.LocalNetService;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;

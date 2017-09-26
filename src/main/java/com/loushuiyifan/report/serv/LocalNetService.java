@@ -1,9 +1,8 @@
-package com.loushuiyifan.report.service;
+package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.report.dao.LocalNetDAO;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.vo.CommonVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

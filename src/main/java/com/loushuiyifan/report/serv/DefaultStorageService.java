@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.service;
+package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.report.exception.StorageException;
 import com.loushuiyifan.report.properties.StorageProperties;
@@ -40,15 +40,29 @@ public class DefaultStorageService implements StorageService {
     }
 
 
+    /**
+     * 配置存储路径 和 文件名称规则
+     *
+     * @param path
+     * @param name
+     * @return
+     */
     @Override
-    public Path configPath(Path path, String name) {
+    public Path configPath(Path path, String name) throws IOException {
+        //如果目录不存在则创建
+        if (!Files.exists(path)) {
+            Files.createDirectory(path);
+        }
+
         //文件名后加时间戳
         String time = LocalDateTime.now().format(nameSuffixFormatter);
         name = FilenameUtils.getBaseName(name) + time + FilenameUtils.getExtension(name);
         return path.resolve(name);
     }
 
-
+    /**
+     * 初始化存储目录
+     */
     @Override
     public void init() {
         try {
@@ -61,6 +75,12 @@ public class DefaultStorageService implements StorageService {
         }
     }
 
+    /**
+     * 保存
+     *
+     * @param file
+     * @return
+     */
     @Override
     public Path store(MultipartFile file) {
 

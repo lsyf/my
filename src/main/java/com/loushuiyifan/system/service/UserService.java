@@ -394,10 +394,14 @@ public class UserService extends BaseService<User> {
         //遍历用户信息
         for (SUser s : list) {
             User user = new User();
+            user.setId(s.getId());
             user.setUsername(s.getName());
             user.setNickname(s.getViewname());
             user.setPhone(s.getTel());
             user.setEmail(s.getEmail());
+            user.setPassword("123456");
+            passwordHelper.encryptPassword(user);
+
             userMapper.insertSelective(user);
 
             Long id = user.getId();

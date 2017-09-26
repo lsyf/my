@@ -1,9 +1,10 @@
-package com.loushuiyifan.report.service;
+package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.report.properties.StorageProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
@@ -19,7 +20,7 @@ public interface StorageService {
         return properties.getLocation();
     }
 
-    default Path configPath(Path path, String name) {
+    default Path configPath(Path path, String name) throws IOException {
         return path.resolve(name);
     }
 

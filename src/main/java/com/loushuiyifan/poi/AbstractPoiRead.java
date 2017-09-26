@@ -18,10 +18,57 @@ import java.util.List;
 public abstract class AbstractPoiRead<E> implements PoiRead<E> {
 
     private DataFormatter dataFormatter = new DataFormatter();
-    protected String filePath = null;
+    protected File file = null;
 
-    public AbstractPoiRead(String filePath) {
-        this.filePath = filePath;
+    protected int startX = 0;
+    protected int startY = 1;
+    protected boolean isMulti = false;
+
+
+    /**
+     * 设置读取的起始位置
+     *
+     * @param startX
+     * @param startY
+     */
+    public AbstractPoiRead startWith(int startX, int startY) {
+        this.startX = startX;
+        this.startY = startY;
+        return this;
+    }
+
+    /**
+     * 是否多sheet
+     *
+     * @param isMulti
+     * @return
+     */
+    public AbstractPoiRead multi(boolean isMulti) {
+        this.isMulti = isMulti;
+        return this;
+    }
+
+
+    /**
+     * 加载excel
+     *
+     * @param file
+     * @return
+     */
+    public AbstractPoiRead load(File file) {
+        this.file = file;
+        return this;
+    }
+
+    /**
+     * 加载excel
+     *
+     * @param filePath
+     * @return
+     */
+    public AbstractPoiRead load(String filePath) {
+        this.file = new File(filePath);
+        return this;
     }
 
     /**
@@ -31,7 +78,7 @@ public abstract class AbstractPoiRead<E> implements PoiRead<E> {
      * @throws Exception
      */
     public List<E> read() throws Exception {
-        return filePath.endsWith("x") ? readXLSX() : readXLSX();
+        return file.getName().endsWith("xlsx") ? readXLSX() : readXLS();
     }
 
     /**
@@ -41,7 +88,7 @@ public abstract class AbstractPoiRead<E> implements PoiRead<E> {
      * @throws Exception
      */
     public List<E> readXLSX() throws Exception {
-        OPCPackage pkg = OPCPackage.open(new File(filePath));
+        OPCPackage pkg = OPCPackage.open(file);
         XSSFWorkbook wb = new XSSFWorkbook(pkg);
 
         List<E> list = process(wb);
@@ -57,7 +104,7 @@ public abstract class AbstractPoiRead<E> implements PoiRead<E> {
      * @throws Exception
      */
     public List<E> readXLS() throws Exception {
-        NPOIFSFileSystem fs = new NPOIFSFileSystem(new File(filePath));
+        NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
         HSSFWorkbook wb = new HSSFWorkbook(fs);
 
         List<E> list = process(wb);
