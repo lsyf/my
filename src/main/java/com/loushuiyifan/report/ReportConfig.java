@@ -36,7 +36,8 @@ public class ReportConfig {
      * 导入报表类型
      */
     public enum RptImportType {
-        INCOME_DATA("rpt_import_data_channel");
+        INCOME_DATA("rpt_import_data_channel"),
+        ICT("rpt_import_data_ict");
 
         private String data;
 

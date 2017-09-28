@@ -8,7 +8,7 @@ report:
     image: /report/files/image
     report-template: /report/files/reportTemplate
     report-upload: /report/files/reportUpload
-    report-download: /report/files/image
+    report-download: /report/files/reportDownload
 
 logging:
     level:

@@ -3,12 +3,11 @@ package com.loushuiyifan.report.service;
 import com.loushuiyifan.poi.PoiRead;
 import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.bean.ExtImportLog;
-import com.loushuiyifan.report.bean.RptImportDataChennel;
+import com.loushuiyifan.report.bean.RptImportDataICT;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportDataChennelDAO;
+import com.loushuiyifan.report.dao.RptImportDataICTDAO;
 import com.loushuiyifan.report.dto.CheckDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.dto.IseeC4CutDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
@@ -37,13 +36,13 @@ import java.util.List;
  * @date 2017/9/22
  */
 @Service
-public class ImportIncomeDataService {
+public class ImportICTService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportIncomeDataService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportICTService.class);
 
 
     @Autowired
-    RptImportDataChennelDAO rptImportDataChennelDAO;
+    RptImportDataICTDAO rptImportDataICTDAO;
 
     @Autowired
     ExtImportLogDAO extImportLogDAO;
@@ -67,7 +66,7 @@ public class ImportIncomeDataService {
         String filename = path.getFileName().toString();
 
         //首先将文件解析成bean
-        List<RptImportDataChennel> list = getRptImportDataChennels(path);
+        List<RptImportDataICT> list = getRptImportDataICTs(path);
 
         //校验数据是否为空
         int size = list.size();
@@ -94,14 +93,13 @@ public class ImportIncomeDataService {
         String incomeSource = list.get(0).getIncomeSource();
         log.setIncomeSoure(incomeSource);
         log.setFileName(filename);
-        log.setType(ReportConfig.RptImportType.INCOME_DATA.toString());
+        log.setType(ReportConfig.RptImportType.ICT.toString());
         extImportLogDAO.insert(log);
 
         //校验导入数据指标
         CheckDataDTO dto = new CheckDataDTO();
         dto.setLogId(logId);
-        rptImportDataChennelDAO.checkRptImportData(dto);
-
+        rptImportDataICTDAO.checkImportData(dto);
         Integer code = dto.getRtnCode();
         //TODO 统一更改存过返回值
         if (code != 0) {//非0为失败
@@ -111,7 +109,7 @@ public class ImportIncomeDataService {
             } catch (Exception e) {
                 error = "校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("导入数据校验失败: {} ; {}", dto.getRtnMeg(), error);
+                error = String.format("导入数据校验失败: {}; {}", dto.getRtnMeg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }
@@ -126,14 +124,14 @@ public class ImportIncomeDataService {
      * @param path
      * @return
      */
-    public List<RptImportDataChennel> getRptImportDataChennels(Path path) throws Exception {
+    public List<RptImportDataICT> getRptImportDataICTs(Path path) throws Exception {
 
-        PoiRead read = new RptImportDataChennelRead()
+        PoiRead read = new RptImportDataICTRead()
                 .load(path.toFile())
                 .multi(true)//excel数据可以解析多sheet
                 .startWith(0, 1);
 
-        List<RptImportDataChennel> list = read.read();
+        List<RptImportDataICT> list = read.read();
         return list;
     }
 
@@ -144,16 +142,16 @@ public class ImportIncomeDataService {
      * @param logId
      * @param month
      */
-    public void importDataByGroup(List<RptImportDataChennel> list, Long logId, String month) {
+    public void importDataByGroup(List<RptImportDataICT> list, Long logId, String month) {
 
         final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
             logger.debug("批量插入数量: {}", list.size());
 
-            for (final RptImportDataChennel data : list) {
+            for (final RptImportDataICT data : list) {
                 data.setLogId(logId);
                 data.setAcctMonth(month);
-                rptImportDataChennelDAO.insertSelective(data);
+                rptImportDataICTDAO.insertSelective(data);
             }
             sqlSession.commit();
         } finally {
@@ -170,50 +168,10 @@ public class ImportIncomeDataService {
      * @return
      */
     public List<ImportDataLogVO> list(Long userId, String month) {
-        String type = ReportConfig.RptImportType.INCOME_DATA.toString();
-        return rptImportDataChennelDAO.listIncomeDataLog(userId, month, type);
+        String type = ReportConfig.RptImportType.ICT.toString();
+        return rptImportDataICTDAO.listICTLog(userId, month, type);
     }
 
-    /**
-     * 提交数据
-     *
-     * @param logId
-     */
-    public void commit(Long logId) {
-        //TODO 可以改为通过log表判断状态
-        //首先校验是否处于待提交状态
-        String action = rptImportDataChennelDAO.selectAction(logId);
-        if (action != null) {
-            throw new ReportException("该条记录已经提交");
-        }
-
-        //查询日志账期，校验提交时间
-        ExtImportLog log = extImportLogDAO.selectByPrimaryKey(logId);
-        String month = log.getAcctMonth();
-        dateService.checkUploadIncomeData(month);
-
-        //切割
-        IseeC4CutDTO iseeC4CutDTO = new IseeC4CutDTO();
-        iseeC4CutDTO.setLogId(logId);
-        iseeC4CutDTO.setMonth(month);
-        rptImportDataChennelDAO.iseeC4Cut(iseeC4CutDTO);
-        Integer code = iseeC4CutDTO.getRtnCode();
-        //TODO 统一更改存过返回值
-        if (code == 0) {//0为失败
-            throw new ReportException("数据切割失败: " + iseeC4CutDTO.getRtnMeg());
-        }
-
-        //提交
-        CheckDataDTO dto = new CheckDataDTO();
-        dto.setLogId(logId);
-        rptImportDataChennelDAO.commitRptImportData(dto);
-        code = dto.getRtnCode();
-        //TODO 统一更改存过返回值
-        if (code != 0) {//非0为失败
-            throw new ReportException("数据提交失败: " + dto.getRtnMeg());
-        }
-
-    }
 
     /**
      * 删除数据
@@ -225,32 +183,32 @@ public class ImportIncomeDataService {
         DeleteImportDataDTO dto = new DeleteImportDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
-        rptImportDataChennelDAO.deleteImportData(dto);
+        rptImportDataICTDAO.deleteImportData(dto);
         int code = dto.getRtnCode();
         //TODO 统一更改存过返回值
         if (code != 0) {//非0为失败
-            throw new ReportException("数据删除失败: " + dto.getRtnMeg());
+            throw new ReportException("数据删除失败:  " + dto.getRtnMeg());
         }
     }
 
 
     /**
-     * 收入数据解析类
+     * ICT数据解析类
      */
-    static class RptImportDataChennelRead extends ReportReadServ<RptImportDataChennel> {
+    static class RptImportDataICTRead extends ReportReadServ<RptImportDataICT> {
 
 
         @Override
-        protected List<RptImportDataChennel> processSheet(Sheet sheet) {
+        protected List<RptImportDataICT> processSheet(Sheet sheet) {
             FormulaEvaluator evaluator = sheet
                     .getWorkbook()
                     .getCreationHelper()
                     .createFormulaEvaluator();
 
-            List<RptImportDataChennel> list = new ArrayList<>();
+            List<RptImportDataICT> list = new ArrayList<>();
             for (int y = startY; y <= sheet.getLastRowNum(); y++) {
                 Row row = sheet.getRow(y);
-                RptImportDataChennel bean = new RptImportDataChennel();
+                RptImportDataICT bean = new RptImportDataICT();
                 for (int x = startX; x <= row.getLastCellNum(); x++) {
                     String data = getCellData(row.getCell(x), evaluator);
                     if (StringUtils.isEmpty(data)) {
@@ -295,6 +253,12 @@ public class ImportIncomeDataService {
                             break;
                         case 19://hkont供应商
                             bean.setHkont(data);
+                            break;
+                        case 20://ict名称
+                            bean.setItemCode(data);
+                            break;
+                        case 21://原始冲销数据标记
+                            bean.setRemark(data);
                             break;
                     }
                 }

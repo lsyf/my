@@ -28,7 +28,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "import/incomeData/upload",
+                url: hostUrl + "importICT/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -99,36 +99,11 @@ function initSelect() {
 }
 
 
-function commitData(row) {
-    editAlert('警告', '是否确定提交流水号: ' + row.logId, '提交', function () {
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "import/incomeData/commit",
-            data: {"logId": row.logId},
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('提交成功');
-                    hideAlert();
-                    table.refresh();
-                } else {
-                    toastr.error('提交失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
-            }
-        });
-    });
-    showAlert();
-}
-
 function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "import/incomeData/remove",
+            url: hostUrl + "importICT/remove",
             data: {"logId": row.logId},
             dataType: "json",
             success: function (r) {
@@ -157,7 +132,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            url: hostUrl + 'import/incomeData/list',         //请求后台的URL（*）
+            url: hostUrl + 'importICT/list',         //请求后台的URL（*）
             method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -206,9 +181,6 @@ var TableInit = function () {
                 field: 'remark',
                 title: '导入说明'
             }, {
-                field: 'action',
-                title: '提交状态'
-            }, {
                 field: 'operate',
                 title: '操作',
                 events: operateEvents,
@@ -222,9 +194,6 @@ var TableInit = function () {
     //操作 监听
     window.operateEvents = {
 
-        'click .commit': function (e, value, row, index) {
-            commitData(row);
-        },
         'click .remove': function (e, value, row, index) {
             removeData(row);
         }
@@ -233,8 +202,7 @@ var TableInit = function () {
     //操作显示format
     function operateFormatter(value, row, index) {
         return [
-            '<button type="button" class="commit btn btn-info btn-xs">提交</button> \
-             <button type="button" class="remove btn btn-danger btn-xs">删除</button>'
+            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
         ].join('');
     }
 

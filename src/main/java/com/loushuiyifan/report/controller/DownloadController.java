@@ -33,10 +33,12 @@ public class DownloadController {
     @Autowired
     DictionaryService dictionaryService;
 
+    //数据字典中 对应 模板字典的值
     public static final String TEMPLATE_DOWNLOAD = "templateDownload";
 
     /**
      * 下载 图片
+     *
      * @param req
      * @param resp
      * @param name
@@ -53,6 +55,7 @@ public class DownloadController {
 
     /**
      * 下载 导入模板
+     *
      * @param req
      * @param resp
      * @param name

@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2017/9/26
  */
 @Data
-public class IncomeDataLogVO {
+public class ImportDataLogVO {
 
 
     Long logId;

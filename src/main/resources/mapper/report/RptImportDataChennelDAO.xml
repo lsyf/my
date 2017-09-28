@@ -16,7 +16,7 @@
         where log_id =#{logId}
     </delete>
 
-    <select id="listIncomeDataLog" resultType="com.loushuiyifan.report.vo.IncomeDataLogVO">
+    <select id="listIncomeDataLog" resultType="com.loushuiyifan.report.vo.ImportDataLogVO">
         select b.log_id as "logId",
         b.file_name as "fileName",
         count(*) as "num",
