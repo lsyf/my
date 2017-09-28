@@ -31,7 +31,7 @@ public abstract class ReportReadServ<E> extends AbstractPoiRead<E> {
                 continue;
             }
             //解析sheet
-            list = processSheet(sheet);
+            list.addAll(processSheet(sheet));
             index++;
         }
         return list;
@@ -52,7 +52,6 @@ public abstract class ReportReadServ<E> extends AbstractPoiRead<E> {
      * @return
      */
     abstract protected boolean checkSheet(Sheet sheet);
-
 
 
 }

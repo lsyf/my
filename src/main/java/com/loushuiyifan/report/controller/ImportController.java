@@ -6,6 +6,7 @@ import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportStorageService;
 import com.loushuiyifan.report.service.ImportIncomeDataService;
+import com.loushuiyifan.report.vo.IncomeDataLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * 多种报表导入
@@ -39,7 +41,14 @@ public class ImportController {
     ReportStorageService reportStorageService;
 
     @Autowired
-    ImportIncomeDataService uploadIncomeDataService;
+    ImportIncomeDataService importIncomeDataService;
+
+    @ModelAttribute("user")
+    public User user(HttpServletRequest request) {
+        HttpSession session = WebUtils.toHttp(request).getSession();
+        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
+        return user;
+    }
 
     /**
      * 收入导入界面
@@ -61,13 +70,14 @@ public class ImportController {
      * @param latnId
      * @return
      */
-    @PostMapping("incomeData")
+    @PostMapping("incomeData/upload")
     @ResponseBody
-    public JsonResult file(@RequestParam("file") MultipartFile file,
-                           String month, String remark, String latnId, HttpServletRequest request) {
+    public JsonResult incomeDataUpload(@RequestParam("file") MultipartFile file,
+                                       String month,
+                                       String remark,
+                                       String latnId,
+                                       @ModelAttribute("user") User user) {
 
-        HttpSession session = WebUtils.toHttp(request).getSession();
-        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
         Long userId = user.getId();
 
         //首先校验能否导入
@@ -76,9 +86,9 @@ public class ImportController {
         //然后保存
         Path path = reportStorageService.store(file);
 
-        //最后解析入库
+        //最后解析入库(失败则删除文件)
         try {
-            uploadIncomeDataService.save(path,
+            importIncomeDataService.save(path,
                     Math.toIntExact(userId),
                     month,
                     Integer.parseInt(latnId),
@@ -98,4 +108,46 @@ public class ImportController {
         return JsonResult.success();
     }
 
+    /**
+     * 收入导入-稽核
+     *
+     * @param month
+     * @param latnId
+     * @return
+     */
+    @PostMapping("incomeData/list")
+    @ResponseBody
+    public JsonResult incomeDataList(String month,
+                                     String latnId,
+                                     @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+        List<IncomeDataLogVO> list = importIncomeDataService
+                .list(userId, month);
+
+        return JsonResult.success(list);
+    }
+
+    /**
+     * 收入导入-提交
+     */
+    @PostMapping("incomeData/commit")
+    @ResponseBody
+    public JsonResult incomeDataCommit(Long logId) {
+        importIncomeDataService.commit(logId);
+        return JsonResult.success();
+    }
+
+    /**
+     * 收入导入-删除
+     *
+     * @return
+     */
+    @PostMapping("incomeData/remove")
+    @ResponseBody
+    public JsonResult incomeDataRemove(Long logId,
+                                       @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+        importIncomeDataService.delete(userId, logId);
+        return JsonResult.success();
+    }
 }

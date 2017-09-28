@@ -32,5 +32,23 @@ public class ReportConfig {
         }
     }
 
+    /**
+     * 导入报表类型
+     */
+    public enum RptImportType {
+        INCOME_DATA("rpt_import_data_channel");
+
+        private String data;
+
+        RptImportType(String data) {
+            this.data = data;
+        }
+
+        @Override
+        public String toString() {
+            return this.data;
+        }
+    }
+
 
 }

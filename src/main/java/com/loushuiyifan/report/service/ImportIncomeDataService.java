@@ -1,13 +1,18 @@
 package com.loushuiyifan.report.service;
 
 import com.loushuiyifan.poi.PoiRead;
+import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.bean.ExtImportLog;
 import com.loushuiyifan.report.bean.RptImportDataChennel;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataChennelDAO;
 import com.loushuiyifan.report.dto.CheckDataDTO;
+import com.loushuiyifan.report.dto.DeleteImportDataDTO;
+import com.loushuiyifan.report.dto.IseeC4CutDTO;
 import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.IncomeDataLogVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -45,6 +50,9 @@ public class ImportIncomeDataService {
 
     @Autowired
     SqlSessionFactory sqlSessionFactory;
+
+    @Autowired
+    DateService dateService;
 
     /**
      * 解析入库
@@ -86,22 +94,24 @@ public class ImportIncomeDataService {
         String incomeSource = list.get(0).getIncomeSource();
         log.setIncomeSoure(incomeSource);
         log.setFileName(filename);
+        log.setType(ReportConfig.RptImportType.INCOME_DATA.toString());
         extImportLogDAO.insert(log);
 
         //校验导入数据指标
-        CheckDataDTO dto = new CheckDataDTO();
-        dto.setLogId(logId);
-        rptImportDataChennelDAO.checkRptImportData(dto);
-
-        Integer code = dto.getRtnCode();
-        if (code != 0) {//非0为失败
-            //先删除所有数据
-            rptImportDataChennelDAO.deleteByLogId(logId);
-            //删除日志
-            extImportLogDAO.deleteByPrimaryKey(logId);
-
-            throw new ReportException("数据校验失败: " + dto.getRtnMeg());
-        }
+//        CheckDataDTO dto = new CheckDataDTO();
+//        dto.setLogId(logId);
+//        rptImportDataChennelDAO.checkRptImportData(dto);
+//
+//        Integer code = dto.getRtnCode();
+//        //TODO 统一更改存过返回值
+//        if (code != 0) {//非0为失败
+//            //先删除所有数据
+//            rptImportDataChennelDAO.deleteByLogId(logId);
+//            //删除日志
+//            extImportLogDAO.deleteByPrimaryKey(logId);
+//
+//            throw new ReportException("数据校验失败: " + dto.getRtnMeg());
+//        }
 
     }
 
@@ -145,6 +155,77 @@ public class ImportIncomeDataService {
         } finally {
             sqlSession.close();
             logger.debug("批量插入结束");
+        }
+    }
+
+    /**
+     * 查询该用户某账期所有导入记录
+     *
+     * @param userId
+     * @param month
+     * @return
+     */
+    public List<IncomeDataLogVO> list(Long userId, String month) {
+        String type = ReportConfig.RptImportType.INCOME_DATA.toString();
+        return rptImportDataChennelDAO.listIncomeDataLog(userId, month, type);
+    }
+
+    /**
+     * 提交数据
+     *
+     * @param logId
+     */
+    public void commit(Long logId) {
+        //TODO 可以改为通过log表判断状态
+        //首先校验是否处于待提交状态
+        String action = rptImportDataChennelDAO.selectAction(logId);
+        if (action != null) {
+            throw new ReportException("该条记录已经提交");
+        }
+
+        //查询日志账期，校验提交时间
+        ExtImportLog log = extImportLogDAO.selectByPrimaryKey(logId);
+        String month = log.getAcctMonth();
+        dateService.checkUploadIncomeData(month);
+
+        //切割
+        IseeC4CutDTO iseeC4CutDTO = new IseeC4CutDTO();
+        iseeC4CutDTO.setLogId(logId);
+        iseeC4CutDTO.setMonth(month);
+        rptImportDataChennelDAO.iseeC4Cut(iseeC4CutDTO);
+        Integer code = iseeC4CutDTO.getRtnCode();
+        //TODO 统一更改存过返回值
+        if (code == 0) {//0为失败
+            throw new ReportException("数据切割失败: " + iseeC4CutDTO.getRtnMeg());
+        }
+
+        //提交
+        CheckDataDTO dto = new CheckDataDTO();
+        dto.setLogId(logId);
+        rptImportDataChennelDAO.commitRptImportData(dto);
+        code = dto.getRtnCode();
+        //TODO 统一更改存过返回值
+        if (code != 0) {//非0为失败
+            throw new ReportException("数据提交失败: " + dto.getRtnMeg());
+        }
+
+    }
+
+    /**
+     * 删除数据
+     *
+     * @param userId
+     * @param logId
+     */
+    public void delete(Long userId, Long logId) {
+        DeleteImportDataDTO dto = new DeleteImportDataDTO();
+        dto.setUserId(userId);
+        dto.setLogId(logId);
+        rptImportDataChennelDAO.deleteImportData(dto);
+        int code = dto.getRtnCode();
+        //TODO 统一更改存过返回值
+        if (code != 0) {//非0为失败
+            throw new ReportException("数据删除失败: " + dto.getRtnMeg());
         }
     }
 

@@ -28,7 +28,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "import/incomeData",
+                url: hostUrl + "import/incomeData/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -39,6 +39,7 @@ function initForm() {
                     if (r.state) {
                         $(form).resetForm();
                         toastr.info('提交成功');
+                        table.refresh();
                     } else {
                         toastr.error('提交失败:' + r.msg);
                     }
@@ -59,8 +60,12 @@ function initForm() {
 
 }
 
+function queryLog() {
+    table.refresh();
+}
+
 function initSelect() {
-    $.post(hostUrl + "date/lastMonths", {num: 5})
+    $.post(hostUrl + "date/aroundMonths", {num: 5})
         .done(function (r) {
             if (r.state) {
                 $('#upload_month').empty();
@@ -94,6 +99,56 @@ function initSelect() {
 }
 
 
+function commitData(row) {
+    editAlert('警告', '是否确定提交流水号: ' + row.logId, '提交', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "import/incomeData/commit",
+            data: {"logId": row.logId},
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('提交成功');
+                    hideAlert();
+                    table.refresh();
+                } else {
+                    toastr.error('提交失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
+function removeData(row) {
+    editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "import/incomeData/remove",
+            data: {"logId": row.logId},
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('删除成功');
+                    hideAlert();
+                    table.refresh();
+                } else {
+                    toastr.error('提删除失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
@@ -102,7 +157,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'user/list',         //请求后台的URL（*）
+            url: hostUrl + 'import/incomeData/list',         //请求后台的URL（*）
             method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -111,7 +166,7 @@ var TableInit = function () {
             sortOrder: "asc",                   //排序方式
             queryParams: oTableInit.queryParams,//传递参数（*）
             contentType: 'application/x-www-form-urlencoded',
-            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 10,                       //每页的记录行数（*）
             pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
@@ -130,32 +185,28 @@ var TableInit = function () {
                 return 'table-row';
             },
             columns: [{
-                field: 'id',
-                title: 'ID',
-                width: 80
-            }, {
-                field: 'username',
+                field: 'logId',
                 title: '流水号'
             }, {
-                field: 'username',
+                field: 'city',
                 title: '地市'
             }, {
-                field: 'username',
+                field: 'fileName',
                 title: '导入文件'
             }, {
-                field: 'username',
+                field: 'num',
                 title: '记录数'
             }, {
-                field: 'username',
+                field: 'sum',
                 title: '金额'
             }, {
-                field: 'username',
+                field: 'userId',
                 title: '操作人ID'
             }, {
-                field: 'username',
+                field: 'remark',
                 title: '导入说明'
             }, {
-                field: 'username',
+                field: 'action',
                 title: '提交状态'
             }, {
                 field: 'operate',
@@ -170,22 +221,19 @@ var TableInit = function () {
 
     //操作 监听
     window.operateEvents = {
-        'click .view': function (e, value, row, index) {
-            viewUser(row, "view");
-        },
-        'click .edit': function (e, value, row, index) {
-            viewUser(row, "edit");
+
+        'click .commit': function (e, value, row, index) {
+            commitData(row);
         },
         'click .remove': function (e, value, row, index) {
-            deleteUser(row.id);
+            removeData(row);
         }
     };
 
     //操作显示format
     function operateFormatter(value, row, index) {
         return [
-            '<button type="button" class="view btn btn-primary btn-xs">查看</button> \
-             <button type="button" class="edit btn btn-info btn-xs">修改</button> \
+            '<button type="button" class="commit btn btn-info btn-xs">提交</button> \
              <button type="button" class="remove btn btn-danger btn-xs">删除</button>'
         ].join('');
     }
@@ -198,9 +246,7 @@ var TableInit = function () {
     //得到查询的参数
     oTableInit.queryParams = function (params) {
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-            limit: params.limit,   //页面大小
-            offset: params.offset,  //页码
-            name: $("#input_search").val()
+            month: $("#upload_month").val()
         };
         return temp;
     };
@@ -299,7 +345,7 @@ var OrgZtree = function () {
 
     function zTreeOnClick(event, treeId, treeNode) {
         $('#' + oZtree.input).val(treeNode.name);
-        $('#' + oZtree.input).next().val(treeNode.id);
+        $('#' + oZtree.input).next().val(treeNode.data);
         $('#' + oZtree.input).next().change();
     };
 

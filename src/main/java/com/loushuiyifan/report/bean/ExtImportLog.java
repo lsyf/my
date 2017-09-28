@@ -19,23 +19,24 @@ public class ExtImportLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY,
             generator = "select SEQ_IMPORT_LOG_ID.nextval from dual")
-    private Long logId;
+    Long logId;
 
-    private Integer latnId;
+    Integer latnId;
 
-    //TODO 数据库字段拼写错误
-    private String incomeSoure;
+    String incomeSoure;
 
-    private String fileName;
+    String fileName;
 
-    private String acctMonth;
+    String acctMonth;
 
-    private Integer userId;
+    Integer userId;
 
-    private Date importDate;
+    Date importDate;
 
-    private String status;
+    String status;
 
-    private String exportDesc;
+    String exportDesc;
+
+    String type;
 
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
+ * 通用VO
  * @author 漏水亦凡
  * @date 2017/9/22
  */
