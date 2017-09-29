@@ -22,7 +22,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableTransactionManagement
-@MapperScan(basePackages = {"com.loushuiyifan.da.dao"},
+@MapperScan(basePackages = {"com.loushuiyifan.data.dao"},
         sqlSessionFactoryRef = "secondarySqlSessionFactory")
 public class DBConfig2 {
     private static final Logger LOGGER = LoggerFactory.getLogger(DBConfig2.class);

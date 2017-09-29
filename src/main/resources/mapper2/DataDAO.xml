@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.data.dao.DataDAO">
+
+    <select id="da1" resultType="com.loushuiyifan.data.vo.MonthData">
+      select *
+      from total_main_income_FX
+      order by acct_month asc
+    </select>
+
+    <select id="da2" resultType="com.loushuiyifan.data.vo.DataAnalysis">
+        select *
+        from total_all_latn_main_income_FX
+        where acct_month = #{month}
+        order by order_id asc
+    </select>
+
+</mapper>

@@ -34,11 +34,11 @@ public class SysUserFilter extends AccessControlFilter {
             return false;
         }
 
-        //保存username
+        //每个请求保存username
         String username = (String) subject.getPrincipal();
         request.setAttribute(ShiroConfig.SYS_USERNAME, username);
 
-        //保存user
+        //全局session保存user
         HttpSession session = WebUtils.toHttp(request).getSession();
         Object user = session.getAttribute(ShiroConfig.SYS_USER);
         if (user == null) {

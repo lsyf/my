@@ -1,6 +1,6 @@
 package com.loushuiyifan.report.service;
 
-import com.loushuiyifan.poi.PoiRead;
+import com.loushuiyifan.config.poi.PoiRead;
 import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.bean.ExtImportLog;
 import com.loushuiyifan.report.bean.RptImportDataChennel;

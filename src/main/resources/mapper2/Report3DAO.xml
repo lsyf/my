@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.loushuiyifan.da.dao.Report3DAO">
+<mapper namespace="com.loushuiyifan.data.dao.Report3DAO">
 
 
-    <resultMap id="BaseResultMap_2" type="com.loushuiyifan.da.vo.ProductConfig">
+    <resultMap id="BaseResultMap_2" type="com.loushuiyifan.data.vo.ProductConfig">
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="conditions" jdbcType="VARCHAR" property="conditions"/>
     </resultMap>

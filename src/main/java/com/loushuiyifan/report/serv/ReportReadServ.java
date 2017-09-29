@@ -1,6 +1,6 @@
 package com.loushuiyifan.report.serv;
 
-import com.loushuiyifan.poi.AbstractPoiRead;
+import com.loushuiyifan.config.poi.AbstractPoiRead;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
