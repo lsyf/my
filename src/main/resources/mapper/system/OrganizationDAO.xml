@@ -79,4 +79,15 @@
         select *
         from user_company a
     </select>
+
+    <select id="getAllKidsByData" resultType="com.loushuiyifan.common.bean.Organization">
+        select a.*
+        from aweb_organization a
+        where a.parent_id =
+        (select id
+        from aweb_organization
+        where data = #{pData}
+        and type = #{type})
+        order by  a.lvl asc, a.sorting desc
+    </select>
 </mapper>

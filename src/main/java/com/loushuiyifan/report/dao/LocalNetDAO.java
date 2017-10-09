@@ -18,5 +18,17 @@ public interface LocalNetDAO extends MyMapper<Organization> {
                                         @Param("lvl") Integer lvl);
 
     List<Map> listByRootAndLvl(@Param("list") List<Organization> relatedList,
-                               @Param("lvl")  Integer lvl);
+                               @Param("lvl") Integer lvl);
+
+    /**
+     * TODO sql逻辑有点复杂，需要修改
+     * 根据用户 和 c2值 获取相关的 1,2,3级别的地市，
+     * 为接下来 获取该c2下属 关联做准备
+     *
+     * @param userId
+     * @param data
+     * @return
+     */
+    List<Organization> preForC3(@Param("userId") Long userId,
+                                @Param("data") String data);
 }

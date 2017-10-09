@@ -1,5 +1,6 @@
 package com.loushuiyifan.report.controller;
 
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
 import com.loushuiyifan.report.serv.LocalNetService;
@@ -34,13 +35,28 @@ public class LocalNetController {
      * @param request
      * @return
      */
-    @PostMapping("listByUser")
-    public JsonResult listByUser(Integer lvl,HttpServletRequest request) {
+    @PostMapping("listAllByUser")
+    public JsonResult listAllByUser(Integer lvl,HttpServletRequest request) {
         HttpSession session = WebUtils.toHttp(request).getSession();
         User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
         Long userId = user.getId();
 
-        List<Map> list = localNetService.listByUser(userId,lvl);
+        List<Map> list = localNetService.listAllByUser(userId,lvl);
+        return JsonResult.success(list);
+    }
+
+    /**
+     * 根据用户 获取仅限股份下列表
+     * @param request
+     * @return
+     */
+    @PostMapping("listForC5")
+    public JsonResult listForC5(HttpServletRequest request) {
+        HttpSession session = WebUtils.toHttp(request).getSession();
+        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
+        Long userId = user.getId();
+
+        List<Organization> list = localNetService.listForC5(userId);
         return JsonResult.success(list);
     }
 

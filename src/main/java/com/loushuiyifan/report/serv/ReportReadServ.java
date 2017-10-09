@@ -1,6 +1,7 @@
 package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.config.poi.AbstractPoiRead;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -51,7 +52,14 @@ public abstract class ReportReadServ<E> extends AbstractPoiRead<E> {
      * @param sheet
      * @return
      */
-    abstract protected boolean checkSheet(Sheet sheet);
+    protected boolean checkSheet(Sheet sheet) {
+        String name = sheet.getSheetName();
+        if (StringUtils.isEmpty(name) || name.startsWith("$")
+                || name.indexOf("-") == -1) {
+            return false;
+        }
+        return true;
+    }
 
 
 }

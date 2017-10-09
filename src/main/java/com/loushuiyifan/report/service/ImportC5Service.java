@@ -3,9 +3,9 @@ package com.loushuiyifan.report.service;
 import com.loushuiyifan.config.poi.PoiRead;
 import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.bean.ExtImportLog;
-import com.loushuiyifan.report.bean.RptImportDataICT;
+import com.loushuiyifan.report.bean.RptImportDataC5;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportDataICTDAO;
+import com.loushuiyifan.report.dao.RptImportDataC5DAO;
 import com.loushuiyifan.report.dto.CheckDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
@@ -36,13 +36,13 @@ import java.util.List;
  * @date 2017/9/22
  */
 @Service
-public class ImportICTService {
+public class ImportC5Service {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportICTService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportC5Service.class);
 
 
     @Autowired
-    RptImportDataICTDAO rptImportDataICTDAO;
+    RptImportDataC5DAO rptImportDataC5DAO;
 
     @Autowired
     ExtImportLogDAO extImportLogDAO;
@@ -66,7 +66,7 @@ public class ImportICTService {
         String filename = path.getFileName().toString();
 
         //首先将文件解析成bean
-        List<RptImportDataICT> list = getRptImportDataICTs(path);
+        List<RptImportDataC5> list = getRptImportDataC5s(path);
 
         //校验数据是否为空
         int size = list.size();
@@ -79,7 +79,7 @@ public class ImportICTService {
 
         //然后保存解析的数据
         Long logId = extImportLogDAO.nextvalKey();
-        importDataByGroup(list, logId, month);
+        importDataByGroup(list, logId, month, latnId);
 
         //最后保存日志数据
         ExtImportLog log = new ExtImportLog();
@@ -90,16 +90,15 @@ public class ImportICTService {
         log.setExportDesc(remark);
         log.setStatus("Y");
         log.setImportDate(Date.from(Instant.now()));
-        String incomeSource = list.get(0).getIncomeSource();
-        log.setIncomeSoure(incomeSource);
+        log.setIncomeSoure("-1j");
         log.setFileName(filename);
-        log.setType(ReportConfig.RptImportType.ICT.toString());
+        log.setType(ReportConfig.RptImportType.C5.toString());
         extImportLogDAO.insert(log);
 
         //校验导入数据指标
         CheckDataDTO dto = new CheckDataDTO();
         dto.setLogId(logId);
-        rptImportDataICTDAO.checkImportData(dto);
+        rptImportDataC5DAO.checkImportData(dto);
         Integer code = dto.getRtnCode();
         //TODO 统一更改存过返回值
         if (code != 0) {//非0为失败
@@ -124,14 +123,14 @@ public class ImportICTService {
      * @param path
      * @return
      */
-    public List<RptImportDataICT> getRptImportDataICTs(Path path) throws Exception {
+    public List<RptImportDataC5> getRptImportDataC5s(Path path) throws Exception {
 
-        PoiRead read = new RptImportDataICTRead()
+        PoiRead read = new RptImportDataC5Read()
                 .load(path.toFile())
                 .multi(true)//excel数据可以解析多sheet
                 .startWith(0, 1);
 
-        List<RptImportDataICT> list = read.read();
+        List<RptImportDataC5> list = read.read();
         return list;
     }
 
@@ -141,17 +140,20 @@ public class ImportICTService {
      * @param list
      * @param logId
      * @param month
+     * @param latnId
      */
-    public void importDataByGroup(List<RptImportDataICT> list, Long logId, String month) {
+    public void importDataByGroup(List<RptImportDataC5> list, Long logId, String month, Integer latnId) {
 
         final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
             logger.debug("批量插入数量: {}", list.size());
 
-            for (final RptImportDataICT data : list) {
+            for (final RptImportDataC5 data : list) {
                 data.setLogId(logId);
                 data.setAcctMonth(month);
-                rptImportDataICTDAO.insertSelective(data);
+                data.setLatnid(latnId);
+                data.setIncomeSource("-1");
+                rptImportDataC5DAO.insertSelective(data);
             }
             sqlSession.commit();
         } finally {
@@ -169,7 +171,7 @@ public class ImportICTService {
      */
     public List<ImportDataLogVO> list(Long userId, String month) {
         String type = ReportConfig.RptImportType.ICT.toString();
-        return rptImportDataICTDAO.listICTLog(userId, month, type);
+        return rptImportDataC5DAO.listICTLog(userId, month, type);
     }
 
 
@@ -183,7 +185,7 @@ public class ImportICTService {
         DeleteImportDataDTO dto = new DeleteImportDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
-        rptImportDataICTDAO.deleteImportData(dto);
+        rptImportDataC5DAO.deleteImportData(dto);
         int code = dto.getRtnCode();
         //TODO 统一更改存过返回值
         if (code != 0) {//非0为失败
@@ -195,20 +197,20 @@ public class ImportICTService {
     /**
      * ICT数据解析类
      */
-    static class RptImportDataICTRead extends ReportReadServ<RptImportDataICT> {
+    static class RptImportDataC5Read extends ReportReadServ<RptImportDataC5> {
 
 
         @Override
-        protected List<RptImportDataICT> processSheet(Sheet sheet) {
+        protected List<RptImportDataC5> processSheet(Sheet sheet) {
             FormulaEvaluator evaluator = sheet
                     .getWorkbook()
                     .getCreationHelper()
                     .createFormulaEvaluator();
 
-            List<RptImportDataICT> list = new ArrayList<>();
+            List<RptImportDataC5> list = new ArrayList<>();
             for (int y = startY; y <= sheet.getLastRowNum(); y++) {
                 Row row = sheet.getRow(y);
-                RptImportDataICT bean = new RptImportDataICT();
+                RptImportDataC5 bean = new RptImportDataC5();
                 for (int x = startX; x <= row.getLastCellNum(); x++) {
                     String data = getCellData(row.getCell(x), evaluator);
                     if (StringUtils.isEmpty(data)) {
@@ -222,7 +224,7 @@ public class ImportICTService {
                             bean.setC5Id(Long.parseLong(data));
                             break;
                         case 4:
-                            bean.setIncomeSource(data);
+                            bean.setIncomeCode(data);
                             break;
                         case 6:
                             bean.setHorCode(data);
@@ -231,34 +233,14 @@ public class ImportICTService {
                             bean.setVerCode(data);
                             break;
                         case 10:
-                            bean.setSelfCode(Integer.parseInt(data));
+                            bean.setSelfCode(new Integer(data));
                             break;
                         case 12:
                             bean.setContractId(data);
                             break;
+
                         case 14:
-                            bean.setZzxiulf(data);
-                            break;
-                        case 15:
-                            bean.setZglks(data);
-                            break;
-                        case 16:
-                            bean.setIndexData(Double.parseDouble(data));
-                            break;
-                        case 17:
-                            bean.setTaxValue(Double.parseDouble(data));
-                            break;
-                        case 18://ICT合同号
-                            bean.setIctCode(data);
-                            break;
-                        case 19://hkont供应商
-                            bean.setHkont(data);
-                            break;
-                        case 20://ict名称
-                            bean.setItemCode(data);
-                            break;
-                        case 21://原始冲销数据标记
-                            bean.setRemark(data);
+                            bean.setIndexData(new Double(data));
                             break;
                     }
                 }

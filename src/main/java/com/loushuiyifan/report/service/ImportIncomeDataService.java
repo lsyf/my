@@ -190,7 +190,7 @@ public class ImportIncomeDataService {
         //查询日志账期，校验提交时间
         ExtImportLog log = extImportLogDAO.selectByPrimaryKey(logId);
         String month = log.getAcctMonth();
-        dateService.checkUploadIncomeData(month);
+        dateService.checkImportIncomeData(month);
 
         //切割
         IseeC4CutDTO iseeC4CutDTO = new IseeC4CutDTO();
@@ -301,16 +301,6 @@ public class ImportIncomeDataService {
                 list.add(bean);
             }
             return list;
-        }
-
-        @Override
-        protected boolean checkSheet(Sheet sheet) {
-            String name = sheet.getSheetName();
-            if (StringUtils.isEmpty(name) || name.startsWith("$")
-                    || name.indexOf("-") == -1) {
-                return false;
-            }
-            return true;
         }
 
 

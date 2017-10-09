@@ -83,7 +83,7 @@ function initSelect() {
         });
 
     //本地网加载
-    $.post(hostUrl + "localNet/listByUser", {lvl: 3})
+    $.post(hostUrl + "localNet/listAllByUser", {lvl: 3})
         .done(function (r) {
             if (r.state) {
                 console.log(r.data)

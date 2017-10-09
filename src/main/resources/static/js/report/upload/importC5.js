@@ -28,7 +28,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "importICT/upload",
+                url: hostUrl + "importIncomeData/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -83,7 +83,7 @@ function initSelect() {
         });
 
     //本地网加载
-    $.post(hostUrl + "localNet/listAllByUser", {lvl: 3})
+    $.post(hostUrl + "localNet/listForC5")
         .done(function (r) {
             if (r.state) {
                 console.log(r.data)
@@ -99,11 +99,36 @@ function initSelect() {
 }
 
 
+function commitData(row) {
+    editAlert('警告', '是否确定提交流水号: ' + row.logId, '提交', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "importIncomeData/commit",
+            data: {"logId": row.logId},
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('提交成功');
+                    hideAlert();
+                    table.refresh();
+                } else {
+                    toastr.error('提交失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
 function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "importICT/remove",
+            url: hostUrl + "importIncomeData/remove",
             data: {"logId": row.logId},
             dataType: "json",
             success: function (r) {
@@ -132,7 +157,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            url: hostUrl + 'importICT/list',         //请求后台的URL（*）
+            url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
             method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -181,6 +206,9 @@ var TableInit = function () {
                 field: 'remark',
                 title: '导入说明'
             }, {
+                field: 'action',
+                title: '提交状态'
+            }, {
                 field: 'operate',
                 title: '操作',
                 events: operateEvents,
@@ -194,6 +222,9 @@ var TableInit = function () {
     //操作 监听
     window.operateEvents = {
 
+        'click .commit': function (e, value, row, index) {
+            commitData(row);
+        },
         'click .remove': function (e, value, row, index) {
             removeData(row);
         }
@@ -202,7 +233,8 @@ var TableInit = function () {
     //操作显示format
     function operateFormatter(value, row, index) {
         return [
-            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
+            '<button type="button" class="commit btn btn-info btn-xs">提交</button> \
+             <button type="button" class="remove btn btn-danger btn-xs">删除</button>'
         ].join('');
     }
 
@@ -237,7 +269,7 @@ var OrgZtree = function () {
         datas.forEach(function (data) {
             var node = new Object();
             node.id = data.id;
-            node.pId = data.pId == null ? 0 : data.pId;
+            node.pId = data.parentId == null ? 0 : data.parentId;
             node.name = data.name;
             node.data = data.data;
             node.open = true;

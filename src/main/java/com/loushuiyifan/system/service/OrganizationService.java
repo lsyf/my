@@ -67,6 +67,7 @@ public class OrganizationService {
 
     /**
      * 查询所有组织数据
+     *
      * @return
      */
     public List<Organization> listAll() {
@@ -88,23 +89,48 @@ public class OrganizationService {
 
     /**
      * 根据组织类型查询所有 信息
+     *
      * @param type
      * @return
      */
-    public List<Organization> listByType(String type){
+    public List<Organization> listByType(String type) {
         return organizationDAO.listByType(type);
     }
 
 
     /**
      * 根据组织类型和lvl 查询(目前用来查询部门信息)
+     *
      * @param type
-     * @param i
+     * @param lvl
      * @return
      */
     public List<Organization> listByTypeAndLvl(String type, int lvl) {
-        return organizationDAO.listByTypeAndLvl(type,lvl);
+        return organizationDAO.listByTypeAndLvl(type, lvl);
     }
+
+
+    /**
+     * 根据组织类型 和值获取 数据
+     *
+     * @param type
+     * @param data
+     * @return
+     */
+    public Organization getByData(String type, String data) {
+        Organization org = new Organization();
+        org.setType(type);
+        org.setData(data);
+        return organizationMapper.selectOne(org);
+    }
+
+    /**
+     * 根据父data和type获取所有子节点
+     */
+    public List<Organization> getAllKidsByData(String pData, String type) {
+        return organizationDAO.getAllKidsByData(pData, type);
+    }
+
 
     /**
      * 从旧表(code_list_tax)中导入 地市 组织信息
