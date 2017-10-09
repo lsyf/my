@@ -2,12 +2,6 @@ package com.loushuiyifan.report.dao;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataC5;
-import com.loushuiyifan.report.bean.RptImportDataICT;
-import com.loushuiyifan.report.dto.CheckDataDTO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.vo.ImportDataLogVO;
-
-import java.util.List;
 
 /**
  * @author 漏水亦凡
@@ -16,9 +10,4 @@ import java.util.List;
 public interface RptImportDataC5DAO extends MyMapper<RptImportDataC5> {
 
 
-    void checkImportData(CheckDataDTO dto);
-
-    List<ImportDataLogVO> listICTLog(Long userId, String month, String type);
-
-    void deleteImportData(DeleteImportDataDTO dto);
 }

@@ -97,6 +97,7 @@ public class ImportIncomeDataService {
         log.setType(ReportConfig.RptImportType.INCOME_DATA.toString());
         extImportLogDAO.insert(log);
 
+        //TODO 待替代新存过
         //校验导入数据指标
         CheckDataDTO dto = new CheckDataDTO();
         dto.setLogId(logId);

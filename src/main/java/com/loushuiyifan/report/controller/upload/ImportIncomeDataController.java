@@ -94,13 +94,11 @@ public class ImportIncomeDataController {
                     Integer.parseInt(latnId),
                     remark);
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("解析入库失败", e);
+            logger.error("1解析入库失败", e);
             try {
                 Files.delete(path);
             } catch (IOException e1) {
-                e1.printStackTrace();
-                logger.error("删除文件失败", e1);
+                logger.error("1删除文件失败", e1);
             } finally {
                 throw new ReportException("导入失败: " + e.getMessage(), e);
             }
