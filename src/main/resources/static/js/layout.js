@@ -39,7 +39,7 @@ function toDecimal(x, n) {
 
     var temp = Math.pow(10, n);
     f = Math.round(x * temp) / temp;
-    return f;
+    return f.toFixed(n);
 }
 
 /**

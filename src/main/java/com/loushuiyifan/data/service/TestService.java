@@ -28,7 +28,7 @@ import java.util.Map;
  * @date 2017/6/6
  */
 @Service
-public class ReportService {
+public class TestService {
 
     @Autowired
     Report1DAO report1DAO;

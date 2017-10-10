@@ -79,7 +79,8 @@ var TableInit = function () {
                     title: '收入分类',
                     width: 150,
                     rowspan: 2,
-                    align: 'left'
+                    valign: 'middle',
+                    align: 'center'
                 }, {
                     title: '本月完成',
                     colspan: 3,

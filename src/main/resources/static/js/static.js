@@ -75,6 +75,9 @@ $(function () {
     $("#content-header-h1").click(function () {
         showPanel(1,1);
     });
+    
+    function showPanel() {
+    }
 });
 
 

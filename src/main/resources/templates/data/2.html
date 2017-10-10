@@ -11,9 +11,6 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
 
-
-
-
     <link rel="stylesheet"
           href="../../static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css"
           th:href="@{/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}">
@@ -36,11 +33,51 @@
 
     <script src="../../static/plugins/moment/moment-with-locales.min.js"
             th:src="@{/static/plugins/moment/moment-with-locales.min.js}"></script>
-
+    <script src="../../static/plugins/sort-by/sort-by.min.js"
+            th:src="@{/static/plugins/sort-by/sort-by.min.js}"></script>
 
     <script src="../../static/js/data/2.js"
             th:src="@{/static/js/data/2.js}"></script>
 
+
+    <style>
+        /*表格行样式*/
+        .tableRow {
+            color: black;
+            height: 20px;
+        }
+
+        #table thead tr {
+            background-color: #00B1F1;
+            border-bottom: 1px solid #ddd;
+            /*font-family: Microsoft YaHei UI;*/
+        }
+
+        #table thead tr th {
+            text-align: center !important;
+        }
+
+        /*表格cell样式*/
+        .th-inner {
+            padding: 0px !important;
+        }
+
+        /*地市栏样式*/
+        .latnName {
+            background-color: #00B1F1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /*标识高亮数据*/
+        .highlightData {
+            color: red;
+        }
+
+        .wrapper {
+            background-color: #ecf0f5;
+        }
+
+    </style>
 </head>
 
 
@@ -75,8 +112,22 @@
                 </div>
 
             </form>
+            <div id="panel1">
+                <div class="pull-right">单位(万元)</div>
+                <table id="table"></table>
+                <div style="height:400px;">
+                    <div class="col-sm-6">
+                        <div id="chart1" class="col-sm-12" style="height:300px;">
 
-            <table id="table"></table>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div id="chart2" class="col-sm-12" style="height:300px;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         </section>

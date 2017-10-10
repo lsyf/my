@@ -11,8 +11,6 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
 
-
-
     <link rel="stylesheet"
           href="../../static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css"
           th:href="@{/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}">
@@ -39,6 +37,20 @@
 
     <script src="../../static/js/data/1.js"
             th:src="@{/static/js/data/1.js}"></script>
+    <style>
+        .tableRow {
+            color: black;
+            height: 20px;
+        }
+
+        thead tr {
+            background-color: #00B1F1;
+        }
+
+        .th-inner {
+            padding: 4px !important;
+        }
+    </style>
 
 </head>
 
@@ -63,17 +75,7 @@
         <!-- Main content -->
         <section class="content">
 
-            <form id="formSearch" class="form-horizontal">
-                <div class="form-group " style="margin-top:15px">
-                    <label class="control-label col-sm-1" for="datepicker">区间</label>
-                    <div class="col-sm-3 ">
-                        <input type="text" id="datepicker" class="form-control" readonly>
-                    </div>
 
-                    <button id="btn_query" type="button" class="btn btn-primary ">查询</button>
-                </div>
-
-            </form>
 
             <table id="table"></table>
 

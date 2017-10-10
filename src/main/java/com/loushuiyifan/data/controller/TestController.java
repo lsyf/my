@@ -1,7 +1,7 @@
 package com.loushuiyifan.data.controller;
 
 
-import com.loushuiyifan.data.service.ReportService;
+import com.loushuiyifan.data.service.TestService;
 import com.loushuiyifan.data.vo.Report1;
 import com.loushuiyifan.data.vo.Report2;
 import com.loushuiyifan.data.vo.Report3;
@@ -17,10 +17,10 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("da0")
-public class ReportController {
+public class TestController {
 
     @Autowired
-    ReportService reportService;
+    TestService reportService;
 
     @GetMapping("{name}")
     public String report(@PathVariable String name) {
