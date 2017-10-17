@@ -74,5 +74,13 @@ public class DictionaryController {
         return JsonResult.success(num);
     }
 
+    @PostMapping("get")
+    @RequiresPermissions("system:dictionary:delete")
+    @ResponseBody
+    public JsonResult getParameter(String name) {
+        List<Dictionary> list = dictionaryService.getAllKidsByData(name);
+        return JsonResult.success(list);
+    }
+
 
 }

@@ -69,6 +69,12 @@ function titleContentHeader(txt) {
     $("#content-header-h1").text(txt);
 }
 
+function loading() {
+    $('#div_loader').show();
+}
+function loadEnd() {
+    $('#div_loader').hide();
+}
 
 $(function () {
     //点击标题切换到面板1,第二个参数为了兼容字典、组织等界面
@@ -76,8 +82,6 @@ $(function () {
         showPanel(1,1);
     });
     
-    function showPanel() {
-    }
 });
 
 

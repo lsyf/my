@@ -1,3 +1,7 @@
+.wrapper {
+    background-color: #ecf0f5;
+}
+
 .content-wrapper {
     margin-left: 0px;
 }
@@ -13,3 +17,5 @@
     border-color: #829dd2;
     z-index: 10;
 }
+
+

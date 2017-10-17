@@ -123,6 +123,51 @@ var createRadioGroup = function (div) {
     return group;
 }
 
+//创建 多选组
+var createCheckboxGroup = function (div) {
+    var group = new Object();
+    group.init = function (name, values) {
+        group.name = name;
+        group.values = values;
+        //首先清空div
+        div.empty();
+
+        values.forEach(function (v) {
+            var label = $('\
+                        <label class="checkbox-inline">  \
+                             <input type="checkbox" name="' + name + '" value="' + v.value + '">\
+                             ' + v.text + '\
+                        </label>');
+            div.append(label);
+        });
+
+        group.reset();
+    };
+    group.val = function (value) {
+
+        if (arguments.length == 0) {
+            var v = [];
+            var temp = div.find("input[type='checkbox'][name='" + group.name + "']:checked");
+            temp.each(function () {
+                v.push($(this).val());
+            });
+            return v;
+        } else {
+            value.forEach(function (v) {
+                div.find("input[type='checkbox'][name='" + group.name + "'][value=" + v + "]").prop("checked", true);
+            });
+        }
+    };
+    group.reset = function () {
+        div.find("input[type='checkbox']").prop('checked', false)
+    };
+
+    group.click = function (click) {
+        div.find("input[type='checkbox']").click(click);
+    };
+    return group;
+}
+
 
 
 

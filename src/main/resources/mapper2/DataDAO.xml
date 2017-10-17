@@ -15,4 +15,492 @@
         order by order_id asc
     </select>
 
+    <select id="da2_2" resultType="com.loushuiyifan.data.vo.DataAnalysis2">
+        select t.PARENT_CODE_ID as income_source_id,
+        t.PARENT_CODE_NAME as income_source_name,
+        f.last_amount as last_month,
+        t.this_amount as this_month,
+        round((t.this_amount - f.last_amount), 2) as month_Growth_Value,
+        case
+        when nvl(f.last_amount, 0) <![CDATA[<>]]> 0 then
+        round(((t.this_amount - f.last_amount) / f.last_amount), 4)
+        else
+        null
+        end as month_Growth_Rate
+        from (select round(sum(AFT_AMOUNT) / 10000, 2) this_amount,
+        b.PARENT_CODE_NAME,
+        b.PARENT_CODE_ID,
+        b.ORDER_PARENT_ID,
+        a.latn_Id
+        from income_source_pd_data_fx a, income_fx_source_config_new b
+        where a.acct_month = #{month}
+        and a.datasource_Id = b.code_id
+        and latn_Id = #{latnId}
+        group by b.PARENT_CODE_NAME,
+        b.PARENT_CODE_ID,
+        b.ORDER_PARENT_ID,
+        a.latn_Id
+        order by b.ORDER_PARENT_ID) t,
+        (select round(sum(AFT_AMOUNT) / 10000, 2) last_amount,
+        b.PARENT_CODE_NAME,
+        b.PARENT_CODE_ID,
+        b.ORDER_PARENT_ID,
+        a.latn_Id
+        from income_source_pd_data_fx a, income_fx_source_config_new b
+        where a.acct_month =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'yyyymm')
+        and a.datasource_Id = b.code_id
+        and latn_Id = #{latnId}
+        group by b.PARENT_CODE_NAME,
+        b.PARENT_CODE_ID,
+        b.ORDER_PARENT_ID,
+        a.latn_Id
+        order by b.ORDER_PARENT_ID) f
+        where t.PARENT_CODE_ID = f.PARENT_CODE_ID
+        and t.PARENT_CODE_NAME = f.PARENT_CODE_NAME
+        and t.latn_Id = f.latn_id
+        order by t.latn_id, t.ORDER_PARENT_ID
+
+    </select>
+
+    <select id="da2_3" resultType="com.loushuiyifan.data.vo.DataAnalysis2">
+        select
+        t.CODE_ID as income_source_id,
+        t.CODE_NAME as income_source_name,
+        f.last_amount as last_month,
+        t.this_amount as this_month,
+        round((t.this_amount - f.last_amount), 2) as month_Growth_Value,
+        case
+        when nvl(f.last_amount, 0) <![CDATA[<>]]>  0 then
+        round(((t.this_amount - f.last_amount) / f.last_amount), 4)
+        else
+        null
+        end as month_Growth_Rate
+        from (select round(sum(AFT_AMOUNT) / 10000, 2) this_amount,
+        b.CODE_NAME,
+        b.CODE_ID,
+        b.ORDER_PARENT_ID,
+        b.parent_code_id,
+        a.latn_Id
+        from income_source_pd_data_fx a, income_fx_source_config_new b
+        where a.acct_month = #{month}
+        and a.datasource_id = b.code_id
+        and a.latn_Id = #{latnId}
+        and b.parent_code_id = #{parentId}
+        group by b.CODE_NAME,
+        b.CODE_ID,
+        b.ORDER_PARENT_ID,
+        b.parent_code_id,
+        a.latn_Id
+        order by b.ORDER_PARENT_ID) t,
+        (select round(sum(AFT_AMOUNT) / 10000, 2) last_amount,
+        b.CODE_NAME,
+        b.CODE_ID,
+        b.ORDER_PARENT_ID,
+        b.parent_code_id,
+        a.latn_Id
+        from income_source_pd_data_fx a, income_fx_source_config_new b
+        where a.acct_month =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'yyyymm')
+        and a.datasource_id = b.code_id
+        and a.latn_Id = #{latnId}
+        and b.parent_code_id = #{parentId}
+        group by b.CODE_NAME,
+        b.CODE_ID,
+        b.ORDER_PARENT_ID,
+        b.parent_code_id,
+        a.latn_Id
+        order by b.ORDER_PARENT_ID) f
+        where t.CODE_ID = f.CODE_ID
+        and t.CODE_NAME = f.CODE_NAME
+        and t.latn_Id = f.latn_id
+        order by t.latn_id, t.CODE_ID
+
+    </select>
+
+    <select id="da2_4" resultType="com.loushuiyifan.data.vo.DataAnalysis2">
+        select a.index_name as income_source_name,
+        a.index_Id as income_source_id,
+        a.aft_amount_this as this_month,
+        b.aft_amount_last as last_month,
+        a.aft_amount_this - b.aft_amount_last as month_Growth_Value,
+        case
+        when nvl(b.aft_amount_last, 0) <![CDATA[<>]]> 0 then
+        round(((a.aft_amount_this - b.aft_amount_last) / b.aft_amount_last),
+        4)
+        else
+        null
+        end as month_Growth_Rate
+        from (select round(sum(AFT_AMOUNT) / 10000, 2) as aft_amount_this,
+        index_id,
+        code_id,
+        b.code_name,
+        a.index_name
+        from income_source_pd_data_fx a, income_fx_source_config_new b
+        where a.acct_month = #{month}
+        and a.latn_Id = #{latnId}
+        and a.datasource_id = b.code_id
+        and b.code_Id = #{parentId}
+        group by code_id, b.code_name, a.index_name, index_Id) a,
+
+        (select round(sum(AFT_AMOUNT) / 10000, 2) as aft_amount_last,
+        index_Id,
+        code_id,
+        b.code_name,
+        a.index_name
+        from income_source_pd_data_fx a, income_fx_source_config_new b
+        where a.acct_month =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'yyyymm')
+        and a.latn_Id = #{latnId}
+        and a.datasource_id = b.code_id
+        and b.code_Id =  #{parentId}
+        group by code_id, b.code_name, a.index_name, a.index_id) b
+        where a.index_id = b.index_id
+        order by income_source_id
+
+    </select>
+
+    <select id="da2_listIncomeSource" resultType="com.loushuiyifan.data.vo.DataAnalysis3">
+        select
+        <choose>
+            <when test="sourceId!=null and !sourceId.isEmpty()">
+                CODE_ID as "id",
+                CODE_NAME as "name",
+            </when>
+            <otherwise>
+                b.parent_code_name as "name",
+                b.parent_code_id as "id",
+            </otherwise>
+        </choose>
+        sum(case
+        when substr(a.acct_month, 5, 2) = '01' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a01",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '02' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a02",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '03' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a03",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '04' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a04",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '05' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a05",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '06' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a06",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '07' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a07",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '08' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a08",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '09' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a09",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '10' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a10",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '11' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a11",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '12' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a12"
+        from income_source_pd_data_fx a, income_fx_source_config_new b
+        where a.datasource_id = b.code_id
+        and a.acct_month <![CDATA[ >= ]]>
+        to_char(trunc(to_date(#{month}, 'yyyymm'), 'yyyy'), 'yyyymm')
+        and a.acct_month <![CDATA[ <= ]]> #{month}
+        <if test="productId!=null and !productId.isEmpty()">
+            and index_Id=#{productId}
+        </if>
+        <if test="latnId!=null and !latnId.isEmpty()">
+            and latn_id=#{latnId}
+        </if>
+        <if test="latnId2!=null and !latnId2.isEmpty()">
+            and area_id=#{latnId2}
+        </if>
+        <if test="sourceId!=null and !sourceId.isEmpty()">
+            and b.parent_code_id=#{sourceId}
+        </if>
+        group by b.parent_code_name,
+        b.parent_code_id,
+        ORDER_PARENT_ID
+        <choose>
+            <when test="sourceId!=null and !sourceId.isEmpty()">
+                ,
+                CODE_ID,
+                CODE_NAME
+                order by b.CODE_ID asc
+            </when>
+            <otherwise>
+                order by ORDER_PARENT_ID asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="da2_listProduct" resultType="com.loushuiyifan.data.vo.DataAnalysis3">
+        select b.index_name as "name",
+        b.index_Id as "id",
+        b.type_flg as "type",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '01' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a01",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '02' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a02",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '03' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a03",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '04' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a04",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '05' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a05",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '06' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a06",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '07' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a07",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '08' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a08",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '09' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a09",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '10' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a10",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '11' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a11",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '12' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a12"
+        from income_source_pd_data_fx    a,
+        income_fx_source_pd_config  b
+        <if test="sourceId!=null and !sourceId.isEmpty()">
+        ,
+        income_fx_source_config_new c
+        </if>
+        where a.index_Id = b.index_Id
+        and a.acct_month <![CDATA[ >= ]]>
+        to_char(trunc(to_date(#{month}, 'yyyymm'), 'yyyy'), 'yyyymm')
+        and a.acct_month <![CDATA[ <= ]]> #{month}
+        <if test="latnId!=null and !latnId.isEmpty()">
+            and latn_id = #{latnId}
+        </if>
+        <if test="latnId2!=null and !latnId2.isEmpty()">
+            and area_id = #{latnId2}
+        </if>
+        <if test="sourceId!=null and !sourceId.isEmpty()">
+            and a.datasource_id = c.code_id
+            and c.parent_code_id = #{sourceId}
+        </if>
+        <if test="sourceId2!=null and !sourceId2.isEmpty()">
+            and c.code_id = #{sourceId2}
+        </if>
+        group by b.index_name, b.index_Id, b.type_flg, b.order_Id
+        order by b.index_Id
+    </select>
+
+    <select id="da2_listLatn" resultType="com.loushuiyifan.data.vo.DataAnalysis3">
+        select
+        <choose>
+            <when test="latnId!=null and !latnId.isEmpty()">
+                a.area_id as "id",
+                b.area_name_c4 as "name",
+            </when>
+            <otherwise>
+                b.area_name_lv3 as "name",
+                a.latn_Id as "id",
+            </otherwise>
+        </choose>
+        sum(case
+        when substr(a.acct_month, 5, 2) = '01' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a01",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '02' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a02",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '03' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a03",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '04' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a04",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '05' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a05",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '06' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a06",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '07' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a07",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '08' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a08",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '09' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a09",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '10' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a10",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '11' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a11",
+        sum(case
+        when substr(a.acct_month, 5, 2) = '12' then
+        AFT_AMOUNT
+        else
+        0
+        end) as "a12"
+        from income_source_pd_data_fx    a,
+        dim_c4_map_only_area  b
+        <if test="sourceId!=null and !sourceId.isEmpty()">
+        ,
+        income_fx_source_config_new c
+        </if>
+        where a.area_Id = b.area_Id_c4
+        and a.acct_month <![CDATA[ >= ]]>
+        to_char(trunc(to_date(#{month}, 'yyyymm'), 'yyyy'), 'yyyymm')
+        and a.acct_month <![CDATA[ <= ]]> #{month}
+        <if test="latnId!=null and !latnId.isEmpty()">
+            and a.latn_id = #{latnId}
+        </if>
+        <if test="productId!=null and !productId.isEmpty()">
+            and index_Id = #{productId}
+        </if>
+        <if test="sourceId!=null and !sourceId.isEmpty()">
+            and a.datasource_id = c.code_id
+            and c.parent_code_id = #{sourceId}
+        </if>
+        <if test="sourceId2!=null and !sourceId2.isEmpty()">
+            and c.code_id = #{sourceId2}
+        </if>
+        group by b.area_name_lv3,
+        a.latn_Id,
+        <choose>
+            <when test="latnId!=null and !latnId.isEmpty()">
+                a.area_id,
+                b.area_name_c4
+                order by a.area_id asc
+            </when>
+            <otherwise>
+                b.c3_order_Id
+                order by b.c3_order_Id asc
+            </otherwise>
+        </choose>
+    </select>
+
+
 </mapper>
