@@ -9,6 +9,7 @@ function init() {
 }
 
 var check_detail;
+var radio_unit;
 /**
  * 初始化日期
  */
@@ -31,6 +32,15 @@ function initDatePicker() {
     var details = [{text: '地市', value: 1}, {text: '来源', value: 2}];
     check_detail.init('detail', details);
     check_detail.val([1, 2]);
+
+    radio_unit = createRadioGroup($('#radio_unit'));
+    var units = [{text: '元', value: 1}, {text: '万元', value: 10000}];
+    radio_unit.init('unit', units, '单位: ');
+    radio_unit.val(1);
+    radio_unit.click(function (a, b) {
+        unit = radio_unit.val();
+        $('#table').bootstrapTable('updateByUniqueId', {id: -1});//仅为更新
+    });
 
     //模式下拉框加载
     $.post(hostUrl + "dictionary/get", {name: "dataAnalysisMode1"})
@@ -97,17 +107,8 @@ function initEvent() {
 
     });
 
-
-    //切换单位
-    $('#changeUnit').on('click', function () {
-        unit = unit == 1 ? 10000 : 1;
-        var txt = unit == 1 ? '单位(元)' : '单位(万元)';
-        $('#changeUnit').text(txt);
-        $('#table').bootstrapTable('updateByUniqueId', {id: -1});//仅为更新
-    });
-
-
 }
+
 
 function transMode(mode, detail) {
     var detail_area = $.inArray('1', detail) != -1;

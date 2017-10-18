@@ -86,12 +86,14 @@ var isScroll = function (el) {
 //创建 单选组
 var createRadioGroup = function (div) {
     var group = new Object();
-    group.init = function (name, values) {
+    group.init = function (name, values, title) {
         group.name = name;
         group.values = values;
         //首先清空div
         div.empty();
-
+        if (title != null) {
+            div.text(title);
+        }
         values.forEach(function (v) {
             var label = $('\
                         <label class="radio-inline">  \
