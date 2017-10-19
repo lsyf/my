@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -16,33 +17,35 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 /**
- * 主数据源
+ * 合并数据源,仅使用数据分析
+ *
  * @author 漏水亦凡
  * @date 2017/9/18
  */
-//@Configuration
+@Configuration
 @EnableTransactionManagement
 @MapperScan(basePackages = {
         "com.loushuiyifan.common.mapper",
         "com.loushuiyifan.system.dao",
-        "com.loushuiyifan.report.dao"},
-        sqlSessionFactoryRef = "primarySqlSessionFactory")
-public class DBConfig {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DBConfig.class);
+        "com.loushuiyifan.report.dao",
+        "com.loushuiyifan.data.dao"},
+        sqlSessionFactoryRef = "sqlSessionFactory")
+public class DBConfig_12 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DBConfig_12.class);
 
-    static final String MAPPER_LOCATION = "classpath*:mapper/**/*.xml";
+    static final String MAPPER_LOCATION = "classpath*:mapper*/**/*.xml";
 
     @Primary
-    @Bean("primaryDataSource")
-    @ConfigurationProperties("spring.datasource.druid.primary")
-    public DataSource primaryDataSource() {
-        LOGGER.info("---------------------->primaryDataSource");
+    @Bean("dataSource")
+    @ConfigurationProperties("spring.datasource.druid.secondary")
+    public DataSource dataSource() {
+        LOGGER.info("---------------------->DataSource");
         return DruidDataSourceBuilder.create().build();
     }
 
     @Primary
-    @Bean("primarySqlSessionFactory")
-    public SqlSessionFactory primarySqlSessionFactory(@Qualifier("primaryDataSource") DataSource dataSource)
+    @Bean("sqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource)
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
@@ -53,7 +56,7 @@ public class DBConfig {
         c.setMapUnderscoreToCamelCase(true); //驼峰命名转换
         sessionFactory.setConfiguration(c);
 
-        LOGGER.debug("---------------------->primarySqlSessionFactory");
+        LOGGER.debug("---------------------->SqlSessionFactory");
         return sessionFactory.getObject();
     }
 

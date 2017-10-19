@@ -17,34 +17,25 @@ public interface DataDAO extends MyMapper<DataAnalysis> {
 
     List<MonthData> da1();
 
-    List<DataAnalysis> da2(String month);
 
-    List<DataAnalysis2> da2_2(@Param("month") String month,
-                              @Param("latnId") String latnId);
-
-    List<DataAnalysis2> da2_3(@Param("month") String month,
-                              @Param("latnId") String latnId,
-                              @Param("parentId") String parentId);
-
-    List<DataAnalysis2> da2_4(@Param("month") String month,
-                              @Param("latnId") String latnId,
-                              @Param("parentId") String parentId);
-
-    List<DataAnalysis3> da2_listIncomeSource(@Param("month") String month,
+    List<DataAnalysis2> da2_listIncomeSource(@Param("month") String month,
                                              @Param("latnId") String latnId,
                                              @Param("latnId2") String latnId2,
                                              @Param("productId") String productId,
                                              @Param("sourceId") String sourceId);
 
-    List<DataAnalysis3> da2_listProduct(@Param("month") String month,
-                                             @Param("latnId") String latnId,
-                                             @Param("latnId2") String latnId2,
-                                             @Param("sourceId") String sourceId,
-                                             @Param("sourceId2") String sourceId2);
-
-    List<DataAnalysis3> da2_listLatn(@Param("month") String month,
+    List<DataAnalysis2> da2_listProduct(@Param("month") String month,
                                         @Param("latnId") String latnId,
-                                        @Param("productId") String productId,
+                                        @Param("latnId2") String latnId2,
                                         @Param("sourceId") String sourceId,
                                         @Param("sourceId2") String sourceId2);
+
+    List<DataAnalysis2> da2_listLatn(@Param("month") String month,
+                                     @Param("latnId") String latnId,
+                                     @Param("productId") String productId,
+                                     @Param("sourceId") String sourceId,
+                                     @Param("sourceId2") String sourceId2);
+
+    List<DataAnalysis3> da3(@Param("month") String month,
+                            @Param("latnId") String latnId);
 }

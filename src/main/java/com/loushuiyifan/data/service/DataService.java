@@ -2,9 +2,8 @@ package com.loushuiyifan.data.service;
 
 import com.google.common.collect.Maps;
 import com.loushuiyifan.data.dao.DataDAO;
-import com.loushuiyifan.data.vo.DataAnalysis;
-import com.loushuiyifan.data.vo.DataAnalysis2;
 import com.loushuiyifan.data.vo.DataAnalysis3;
+import com.loushuiyifan.data.vo.DataAnalysis2;
 import com.loushuiyifan.data.vo.MonthData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,34 +83,22 @@ public class DataService {
     }
 
 
-    public List<DataAnalysis> da2(String month) {
-        return dataDAO.da2(month);
-    }
-
-    public List<DataAnalysis2> da2_2(String month, String latnId) {
-        return dataDAO.da2_2(month, latnId);
-    }
-
-    public List<DataAnalysis2> da2_3(String month, String latnId, String parentId) {
-        return dataDAO.da2_3(month, latnId, parentId);
-    }
-
-    public List<DataAnalysis2> da2_4(String month, String latnId, String parentId) {
-        return dataDAO.da2_4(month, latnId, parentId);
-    }
-
-    public List<DataAnalysis3> da2_listIncomeSource(String month, String latnId, String latnId2,
+    public List<DataAnalysis2> da2_listIncomeSource(String month, String latnId, String latnId2,
                                                     String productId, String sourceId) {
         return dataDAO.da2_listIncomeSource(month, latnId, latnId2, productId, sourceId);
     }
 
-    public List<DataAnalysis3> da2_listProduct(String month, String latnId, String latnId2,
-                                                    String sourceId, String sourceId2) {
+    public List<DataAnalysis2> da2_listProduct(String month, String latnId, String latnId2,
+                                               String sourceId, String sourceId2) {
         return dataDAO.da2_listProduct(month, latnId, latnId2, sourceId, sourceId2);
     }
 
-    public List<DataAnalysis3> da2_listLatn(String month, String latnId, String productId,
+    public List<DataAnalysis2> da2_listLatn(String month, String latnId, String productId,
                                             String sourceId, String sourceId2) {
         return dataDAO.da2_listLatn(month, latnId, productId, sourceId, sourceId2);
+    }
+
+    public List<DataAnalysis3> da3(String month, String latnId) {
+        return dataDAO.da3(month, latnId);
     }
 }
