@@ -1,10 +1,7 @@
 package com.loushuiyifan.data.dao;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
-import com.loushuiyifan.data.vo.DataAnalysis;
-import com.loushuiyifan.data.vo.DataAnalysis2;
-import com.loushuiyifan.data.vo.DataAnalysis3;
-import com.loushuiyifan.data.vo.MonthData;
+import com.loushuiyifan.data.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -38,4 +35,22 @@ public interface DataDAO extends MyMapper<DataAnalysis> {
 
     List<DataAnalysis3> da3(@Param("month") String month,
                             @Param("latnId") String latnId);
+
+    List<DataAnalysis4> da4_listLatn1(@Param("month") String month,
+                                      @Param("discountId") String discountId);
+
+    List<DataAnalysis4> da4_listLatn2(@Param("month") String month,
+                                      @Param("discountId") String discountId,
+                                      @Param("billId") String billId);
+
+    List<DataAnalysis4> da4_listBill(@Param("month") String month,
+                                     @Param("latnId") String latnId,
+                                     @Param("discountId") String discountId);
+
+    List<DataAnalysis4> da4_listDiscount1(@Param("month") String month,
+                                          @Param("latnId") String latnId);
+
+    List<DataAnalysis4> da4_listDiscount2(@Param("month") String month,
+                                          @Param("latnId") String latnId,
+                                          @Param("billId") String billId);
 }

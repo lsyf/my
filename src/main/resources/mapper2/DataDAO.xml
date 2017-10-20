@@ -387,4 +387,250 @@ select
  order by order_id
     </select>
 
+    <select id="da4_listLatn1" resultType="com.loushuiyifan.data.vo.DataAnalysis4">
+        select a.latn_id as "id",
+        b.c3_name as "name",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount1",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
+        sl
+        else
+        0
+        end) as "count1",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount2",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'mm') then
+        sl
+        else
+        0
+        end) as "count2",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount3",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        sl
+        else
+        0
+        end) as "count3"
+
+        from Tcft_Share_Summary_Log_fx_2 a, v_dim_c3_map b
+        where a.latn_id = b.latn_id_ocs
+        and a.BILLING_CYCLE <![CDATA[ >= ]]>
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'yyyymm')
+        and a.BILLING_CYCLE <![CDATA[ <= ]]> #{month}
+        <if test="discountId!=null and !discountId.isEmpty()">
+            and DISCOUNT_ID = #{discountId}
+        </if>
+        group by a.latn_id, b.c3_name, b.c3_order_id
+        order by b.c3_order_id
+    </select>
+
+    <select id="da4_listLatn2" resultType="com.loushuiyifan.data.vo.DataAnalysis4">
+        select a.latn_id as "id",
+        b.c3_name as "name",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount1",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount2",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount3"
+
+        from tcft_share_summary_log_fx a, v_dim_c3_map b
+        where a.latn_id = b.latn_id_ocs
+        and a.BILLING_CYCLE <![CDATA[ >= ]]>
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'yyyymm')
+        and a.BILLING_CYCLE <![CDATA[ <= ]]> #{month}
+        <if test="discountId!=null and !discountId.isEmpty()">
+            and DISCOUNT_ID = #{discountId}
+        </if>
+        <if test="billId!=null and !billId.isEmpty()">
+            and ACCT_ITEM_TYPE_CODE = #{billId}
+        </if>
+        group by a.latn_id, b.c3_name, b.c3_order_id
+        order by b.c3_order_id;
+    </select>
+
+    <select id="da4_listBill" resultType="com.loushuiyifan.data.vo.DataAnalysis4">
+        select ACCT_ITEM_TYPE_CODE as "id",
+        b.ACCT_ITEM_NAME_01_NEW as "name",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount1",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount2",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount3"
+        from tcft_share_summary_log_fx a, BILL_ACCT_ITEM_DEF_FX b
+        where billing_cycle <![CDATA[  >= ]]>
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'yyyymm')
+        and billing_cycle <![CDATA[  <= ]]> #{month}
+        <if test="latnId!=null and !latnId.isEmpty()">
+            and a.latn_Id = #{latnId}
+        </if>
+        <if test="discountId!=null and !discountId.isEmpty()">
+            and a.discount_id = #{discountId}
+        </if>
+        and a.ACCT_ITEM_TYPE_CODE = b.ACCT_ITEM_ID_01(+)
+        group by ACCT_ITEM_TYPE_CODE, b.ACCT_ITEM_NAME_01_NEW, b.order_id
+        order by b.order_id
+
+    </select>
+
+    <select id="da4_listDiscount1" resultType="com.loushuiyifan.data.vo.DataAnalysis4">
+        select a.discount_Id as "id",
+        b.spe_rule_name as "name",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount1",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
+        sl
+        else
+        0
+        end) as "count1",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount2",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'mm') then
+        sl
+        else
+        0
+        end) as "count2",
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount3",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        sl
+        else
+        0
+        end) as "count3"
+
+        from Tcft_Share_Summary_Log_fx_2 a, tb_spe_rule_fx b
+        where a.discount_Id = b.ofr_id(+)
+        and a.BILLING_CYCLE  <![CDATA[ >= ]]>
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'yyyymm')
+        and a.BILLING_CYCLE  <![CDATA[ <= ]]>  #{month}
+        <if test="latnId!=null and !latnId.isEmpty()">
+            and latn_Id = #{latnId}
+        </if>
+        group by a.discount_Id, b.spe_rule_name, b.order_id
+        order by b.order_Id
+
+    </select>
+
+    <select id="da4_listDiscount2" resultType="com.loushuiyifan.data.vo.DataAnalysis4">
+        select a.discount_Id,
+        b.spe_rule_name,
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount1",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount2",
+
+        sum(case
+        when substr(a.BILLING_CYCLE, 5, 2) =
+        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        NEW_DISCOUNT
+        else
+        0
+        end) as "amount3"
+
+        from Tcft_Share_Summary_Log_fx a, tb_spe_rule_fx b
+        where a.discount_Id = b.ofr_id(+)
+        and a.BILLING_CYCLE  <![CDATA[ >= ]]>
+        to_char(add_months(to_date(#{month}, 'yyyymm'), -1), 'yyyymm')
+        and a.BILLING_CYCLE <![CDATA[ <= ]]> #{month}
+        <if test="billId!=null and !billId.isEmpty()">
+            and ACCT_ITEM_TYPE_CODE = #{billId}
+        </if>
+        group by a.discount_Id, b.spe_rule_name, b.order_id
+        order by b.order_Id
+
+    </select>
+
 </mapper>

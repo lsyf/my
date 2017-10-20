@@ -8,7 +8,6 @@ function init() {
 
 }
 
-var check_detail;
 var radio_unit;
 /**
  * 初始化日期
@@ -27,11 +26,6 @@ function initDatePicker() {
     m_this = moment().add(-2, 'M').format('YYYYMM');
     $('#datepicker').val(m_this);
 
-    //多选框列表
-    check_detail = createCheckboxGroup($('#check_detail'));
-    var details = [{text: '地市', value: 1}, {text: '来源', value: 2}];
-    check_detail.init('detail', details);
-    check_detail.val([1, 2]);
 
     radio_unit = createRadioGroup($('#radio_unit'));
     var units = [{text: '元', value: 1}, {text: '万元', value: 10000}];
@@ -43,7 +37,7 @@ function initDatePicker() {
     });
 
     //模式下拉框加载
-    $.post(hostUrl + "dictionary/get", {name: "dataAnalysisMode1"})
+    $.post(hostUrl + "dictionary/get", {name: "dataAnalysisMode2"})
         .done(function (r) {
             if (r.state) {
                 var data = r.data;
@@ -74,12 +68,11 @@ function initDatePicker() {
 function initEvent() {
     $('#btn_query').on('click', function () {
 
-        var detail = check_detail.val();//是否详细
         var title = $('#select_mode').find("option:selected").text();//name
         var mode = $('#select_mode').val();//模式
         var month = $('#datepicker').val().trim();//月份
 
-        var modes = transMode(mode, detail);
+        var modes = mode.split('_');
 
         //设置标题
         $('#table_title').text(month + ' ' + title + ' 数据分析');
@@ -94,7 +87,7 @@ function initEvent() {
                     $('#btn_query').button("loading");
                 }
             }).done(function (r) {
-                kidTable.Init(title, month, detail, mode, modes, r.data);
+                kidTable.Init(title, month, mode, modes, r.data);
             }).fail(function () {
                 toastr.error('加载失败，请重试');
             }).always(function () {
@@ -115,39 +108,25 @@ function initEvent() {
 }
 
 
-function transMode(mode, detail) {
-    var detail_area = $.inArray('1', detail) != -1;
-    var detail_source = $.inArray('2', detail) != -1;
-
-    //拆分成 area  pd  source
-    var modes = mode.split('_');
-    if (detail_area) {
-        var i = modes.indexOf('area');
-        modes.splice(i + 1, 0, 'area2');
-    }
-    if (detail_source) {
-        var i = modes.indexOf('source');
-        modes.splice(i + 1, 0, 'source2');
-    }
-    return modes;
-}
-
 function getUrl(modes, lvl) {
     //根据modes和lvl确定接口
     var type = modes[lvl - 1];
 
+    //四级账目是否在前面
+    var flag = ($.inArray('bill', modes) + 1) < lvl;
+
     var url;
     switch (type) {
         case 'area':
-        case 'area2':
-            url = 'data/da2_listLatn';
+            if (flag) url = 'data/da4_listLatn2';
+            else url = 'data/da4_listLatn1';
             break;
-        case 'source':
-        case 'source2':
-            url = 'data/da2_listIncomeSource';
+        case 'sale':
+            if (flag) url = 'data/da4_listDiscount2';
+            else url = 'data/da4_listDiscount1';
             break;
-        case 'pd':
-            url = 'data/da2_listProduct';
+        case 'bill':
+            url = 'data/da4_listBill';
             break;
     }
     return url;
@@ -165,15 +144,14 @@ var KidTableInit = function () {
     var keyId = 1;//类似主键自增长，保证每条数据id唯一性
 
     var state = 0;//处理状态，防止加载过程中多次操作
-    var month, detail, mode;//月份，详细状态，钻取模式，防止筛选条件更改影响加载数据
+    var month, mode;//月份，详细状态，钻取模式，防止筛选条件更改影响加载数据
     var modes;//分类顺序数组
 
     //初始化Table
-    oTableInit.Init = function (title, a, b, c, d, data) {
+    oTableInit.Init = function (title, a, b, c, data) {
         month = a;
-        detail = b;
-        mode = c;
-        modes = d
+        mode = b;
+        modes = c
         level = modes.length;
         createColor(level);
         kidCache = new Map();
@@ -214,9 +192,26 @@ var KidTableInit = function () {
                 events: testEvents
             },
             {
+                class: 'table_colum2',
+                field: 'amount1',
+                title: toMonth(-2) + ' 金额',
+                formatter: dataRound,
+                halign: 'center',
+                align: 'right',
+                cellStyle: testCellStyle
+            },
+            {
+                class: 'table_colum2',
+                field: 'count1',
+                title: toMonth(-2) + ' 用户数',
+                halign: 'center',
+                align: 'right',
+                cellStyle: testCellStyle
+            },
+            {
                 class: 'table_colum3',
-                field: 'monthGrowthValue',
-                title: '环比增加额',
+                field: 'amount2',
+                title: toMonth(-1) + ' 金额',
                 formatter: dataRound,
                 halign: 'center',
                 align: 'right',
@@ -224,28 +219,31 @@ var KidTableInit = function () {
             },
             {
                 class: 'table_colum3',
-                field: 'monthGrowthRate',
-                title: '环比增加率',
-                formatter: dataPercent,
+                field: 'count2',
+                title: toMonth(-1) + ' 用户数',
+                halign: 'center',
+                align: 'right',
+                cellStyle: testCellStyle
+            },
+            {
+                class: 'table_colum4',
+                field: 'amount3',
+                title: toMonth(0) + ' 金额',
+                formatter: dataRound,
+                halign: 'center',
+                align: 'right',
+                cellStyle: testCellStyle
+            },
+            {
+                class: 'table_colum4',
+                field: 'count3',
+                title: toMonth(0) + ' 用户数',
                 halign: 'center',
                 align: 'right',
                 cellStyle: testCellStyle
             }
         ];
-        var m = moment(month, 'YYYYMM').month();//获取月份下标
-        for (var i = 0; i <= m; i++) {
-            var temp = moment(month, 'YYYYMM').add(-i, 'M')
-            var col = {
-                class: 'table_colum2',
-                field: 'a' + (temp.format('MM')),
-                title: temp.format('YYYYMM'),
-                formatter: dataRound,
-                halign: 'center',
-                align: 'right',
-                cellStyle: testCellStyle
-            };
-            cols.splice(1, 0, col);
-        }
+
 
         return cols;
     }
@@ -256,12 +254,13 @@ var KidTableInit = function () {
         };
     }
 
-    var colors1, colors2, colors3;
+    var colors1, colors2, colors3, colors4;
 
     function createColor(lvl) {
-        colors1 = gradientColor('#7AB1E7', '#FFFFFF', lvl);
-        colors2 = gradientColor('#7AD6B8', '#FFFFFF', lvl);
-        colors3 = gradientColor('#B5DC62', '#FFFFFF', lvl);
+        colors1 = gradientColor('#7AB1E7', '#FFFFFF', lvl + 1);
+        colors2 = gradientColor('#7AD6B8', '#FFFFFF', lvl + 1);
+        colors3 = gradientColor('#B5DC62', '#FFFFFF', lvl + 1);
+        colors4 = gradientColor('#E8CF66', '#FFFFFF', lvl + 1);
     }
 
     function testCellStyle(value, row, index, field) {
@@ -271,11 +270,12 @@ var KidTableInit = function () {
         if (field == 'name') {
             clas = "column_name";
             color = colors1[i];
-        } else if (field.indexOf('a') == 0) {
+        } else if (field == 'amount1' || field == 'count1') {
             color = colors2[i];
-        } else {
+        } else if (field == 'amount2' || field == 'count2') {
             color = colors3[i];
-            clas = highlightData(value, row, index, field);
+        } else {
+            color = colors4[i];
         }
 
         if (row.type == 'total') {
@@ -427,27 +427,19 @@ var KidTableInit = function () {
         var parent = new Object();
         parent.month = row.month;
         parent.latnId = row.latnId;
-        parent.latnId2 = row.latnId2;
-        parent.productId = row.productId;
-        parent.sourceId = row.sourceId;
-        parent.sourceId2 = row.sourceId2;
+        parent.discountId = row.discountId;
+        parent.billId = row.billId;
 
         var type = modes[lvl - 1];
         switch (type) {
             case 'area':
                 parent.latnId = row.id;
                 break;
-            case 'area2':
-                parent.latnId2 = row.id;
+            case 'sale':
+                parent.discountId = row.id;
                 break;
-            case 'source':
-                parent.sourceId = row.id;
-                break;
-            case 'source2':
-                parent.sourceId2 = row.id;
-                break;
-            case 'pd':
-                parent.productId = row.id;
+            case 'bill':
+                parent.billId = row.id;
                 break;
         }
         return parent;
@@ -486,26 +478,11 @@ var KidTableInit = function () {
         }
 
         var total = {
-                keyId: getId(),
-                name: '合计',
-                type: 'total',
-                lvl: lvl
-            },
-            total1 = {
-                keyId: getId(),
-                name: '移动合计',
-                type: 'total',
-                lvl: lvl
-            },
-            total2 = {
-                keyId: getId(),
-                name: '固网合计',
-                type: 'total',
-                lvl: lvl
-            };
-        var totals = [total, total1, total2];
-        var offset1 = 0,
-            offset2 = 0;
+            keyId: getId(),
+            name: '合计',
+            type: 'total',
+            lvl: lvl
+        };
         data.forEach(function (d, i) {
             d.keyId = getId();
             d.lvl = lvl;
@@ -528,45 +505,29 @@ var KidTableInit = function () {
             //通过父类增加属性  来源、地区、产品
             d.month = parent.month;
             d.latnId = parent.latnId;
-            d.latnId2 = parent.latnId2;
-            d.productId = parent.productId;
-            d.sourceId = parent.sourceId;
-            d.sourceId2 = parent.sourceId2;
+            d.discountId = parent.discountId;
+            d.billId = parent.billId;
+
 
             //合计
-            for (var x = 1; x <= 12; x++) {
-                var feild = 'a' + padNumber(x, 2);
-                //首次赋值
-                if (i == 0) {
-                    total[feild] = 0;
-                    total1[feild] = 0;
-                    total2[feild] = 0;
-                }
-                //分别计算
-                total[feild] += d[feild];
-                if (d.type == '1') {
-                    total1[feild] += d[feild];
-                } else if (d.type == '2') {
-                    total2[feild] += d[feild];
-                    if (offset2 == 0) {
-                        offset2 = i;
-                    }
-                }
-            }
-        });
+            //首次赋值
+            if (i == 0) {
+                total.amount1 = d.amount1;
+                total.amount2 = d.amount2;
+                total.amount3 = d.amount3;
+                total.count1 = d.count1;
+                total.count2 = d.count2;
+                total.count3 = d.count3;
 
-        totals.forEach(function (d, i) {
-            var thisMonth = moment(month, 'YYYYMM');
-            var m2 = thisMonth.format('MM');
-            if (m2 != '01') {
-                var m1 = thisMonth.add(-1, 'M').format('MM');
-                var _last = d['a' + m1];
-                var _this = d['a' + m2];
-                d.monthGrowthValue = _this - _last;
-                if (_last != null && _last != 0 && _this != 0) {
-                    d.monthGrowthRate = d.monthGrowthValue / _last;
-                }
             }
+            //分别计算
+            total.amount1 += d.amount1;
+            total.amount2 += d.amount2;
+            total.amount3 += d.amount3;
+            total.count1 += d.count1;
+            total.count2 += d.count2;
+            total.count3 += d.count3;
+
         });
 
 
@@ -585,10 +546,6 @@ var KidTableInit = function () {
         }
 
 
-        if (data[0].type == '1' || data[0].type == '2') {
-            data.splice(offset1, 0, total1);
-            data.splice(offset2 + 1, 0, total2);
-        }
         if (lvl == 1) {
             data.push(total);
         }

@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.loushuiyifan.data.dao.DataDAO;
 import com.loushuiyifan.data.vo.DataAnalysis3;
 import com.loushuiyifan.data.vo.DataAnalysis2;
+import com.loushuiyifan.data.vo.DataAnalysis4;
 import com.loushuiyifan.data.vo.MonthData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,5 +101,26 @@ public class DataService {
 
     public List<DataAnalysis3> da3(String month, String latnId) {
         return dataDAO.da3(month, latnId);
+    }
+
+    public List<DataAnalysis4> da4_listLatn1(String month, String discountId) {
+        return dataDAO.da4_listLatn1(month, discountId);
+    }
+
+    public List<DataAnalysis4> da4_listLatn2(String month, String discountId, String billId) {
+        return dataDAO.da4_listLatn2(month, discountId, billId);
+    }
+
+
+    public List<DataAnalysis4> da4_listBill(String month, String latnId, String discountId) {
+        return dataDAO.da4_listBill(month, latnId, discountId);
+    }
+
+    public List<DataAnalysis4> da4_listDiscount1(String month, String latnId) {
+        return dataDAO.da4_listDiscount1(month, latnId);
+    }
+
+    public List<DataAnalysis4> da4_listDiscount2(String month, String latnId, String billId) {
+        return dataDAO.da4_listDiscount2(month, latnId, billId);
     }
 }

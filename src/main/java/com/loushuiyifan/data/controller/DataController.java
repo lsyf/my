@@ -1,8 +1,9 @@
 package com.loushuiyifan.data.controller;
 
 import com.loushuiyifan.data.service.DataService;
-import com.loushuiyifan.data.vo.DataAnalysis3;
 import com.loushuiyifan.data.vo.DataAnalysis2;
+import com.loushuiyifan.data.vo.DataAnalysis3;
+import com.loushuiyifan.data.vo.DataAnalysis4;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,4 +67,38 @@ public class DataController {
         return JsonResult.success(list);
     }
 
+    @PostMapping("da4_listLatn1")
+    @ResponseBody
+    public JsonResult da4_listLatn1(String month, String discountId) {
+        List<DataAnalysis4> list = dataService.da4_listLatn1(month, discountId);
+        return JsonResult.success(list);
+    }
+
+    @PostMapping("da4_listLatn2")
+    @ResponseBody
+    public JsonResult da4_listLatn2(String month, String discountId, String billId) {
+        List<DataAnalysis4> list = dataService.da4_listLatn2(month, discountId, billId);
+        return JsonResult.success(list);
+    }
+
+    @PostMapping("da4_listBill")
+    @ResponseBody
+    public JsonResult da4_listBill(String month, String latnId, String discountId) {
+        List<DataAnalysis4> list = dataService.da4_listBill(month, latnId, discountId);
+        return JsonResult.success(list);
+    }
+
+    @PostMapping("da4_listDiscount1")
+    @ResponseBody
+    public JsonResult da4_listDiscount1(String month, String latnId) {
+        List<DataAnalysis4> list = dataService.da4_listDiscount1(month, latnId);
+        return JsonResult.success(list);
+    }
+
+    @PostMapping("da4_listDiscount2")
+    @ResponseBody
+    public JsonResult da4_listDiscount2(String month, String latnId, String billId) {
+        List<DataAnalysis4> list = dataService.da4_listDiscount2(month, latnId, billId);
+        return JsonResult.success(list);
+    }
 }
