@@ -20,7 +20,7 @@ public class ReportConfig {
     public enum RptAppParam {
         ROOT("RptAppParam"),//参数表root
         MONTH_IMPORT_INCOME_DATA("MONTH_IMPORT_INCOME_DATA"),//财务导入账期限制
-        TIME_IMPORT_INCOME_DATA("CWRPT_IMPORT_DEADLINE"),//财务导入时间限制
+        TIME_IMPORT_INCOME_DATA("TIME_IMPORT_INCOME_DATA"),//财务导入时间限制
         MONTH_IMPORT_C5("CWRPT_IMPORT_C5"),//C5导入账期限制
         TIME_IMPORT_C5("CWRPT_IMPORT_DEADLINE_NEW");//C5导入时间限制
 

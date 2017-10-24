@@ -28,7 +28,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "importICT/upload",
+                url: hostUrl + "importIncomeData/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -103,7 +103,7 @@ function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "importICT/remove",
+            url: hostUrl + "importIncomeData/remove",
             data: {"logId": row.logId},
             dataType: "json",
             success: function (r) {
@@ -132,7 +132,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            url: hostUrl + 'importICT/list',         //请求后台的URL（*）
+            url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
             method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
