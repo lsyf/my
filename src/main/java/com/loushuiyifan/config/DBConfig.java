@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -20,7 +21,7 @@ import javax.sql.DataSource;
  * @author 漏水亦凡
  * @date 2017/9/18
  */
-//@Configuration
+@Configuration
 @EnableTransactionManagement
 @MapperScan(basePackages = {
         "com.loushuiyifan.common.mapper",
