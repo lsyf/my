@@ -163,6 +163,7 @@ var KidTableInit = function () {
 
         var columns = testColumns(mode);
 
+        $table.bootstrapTable('destroy');
         $table.bootstrapTable({
             classes: "table-condensed table-hover",
             striped: true,                      //是否显示行间隔色
@@ -183,13 +184,19 @@ var KidTableInit = function () {
             data: []
         });
     };
+    oTableInit.refresh = function () {
+        oTableInit.init($table, $title, type);
+    };
     oTableInit.load = function (data, param) {
+
         if (data == null || data.length == 0) {
             toastr.error('无数据');
             return;
         }
 
         title(param);
+        oTableInit.init($table, $title, type);
+
         data = processData(data, param);
         $table.bootstrapTable('load', data);
     };
@@ -222,10 +229,6 @@ var KidTableInit = function () {
 
     }
 
-    oTableInit.refresh = function () {
-        $table.bootstrapTable('refresh');
-    };
-
 
     //动态列标题配置
     function testColumns(mode) {
@@ -243,7 +246,7 @@ var KidTableInit = function () {
             {
                 class: 'table_colum2',
                 field: 'amount1',
-                title: toMonth(-2) + ' 金额',
+                title: toMonth(month, -2) + ' 金额',
                 formatter: dataRound,
                 halign: 'center',
                 align: 'right',
@@ -252,7 +255,7 @@ var KidTableInit = function () {
             {
                 class: 'table_colum2',
                 field: 'count1',
-                title: toMonth(-2) + ' 用户数',
+                title: toMonth(month, -2) + ' 用户数',
                 halign: 'center',
                 align: 'right',
                 cellStyle: testCellStyle
@@ -260,7 +263,7 @@ var KidTableInit = function () {
             {
                 class: 'table_colum3',
                 field: 'amount2',
-                title: toMonth(-1) + ' 金额',
+                title: toMonth(month, -1) + ' 金额',
                 formatter: dataRound,
                 halign: 'center',
                 align: 'right',
@@ -269,7 +272,7 @@ var KidTableInit = function () {
             {
                 class: 'table_colum3',
                 field: 'count2',
-                title: toMonth(-1) + ' 用户数',
+                title: toMonth(month, -1) + ' 用户数',
                 halign: 'center',
                 align: 'right',
                 cellStyle: testCellStyle
@@ -277,7 +280,7 @@ var KidTableInit = function () {
             {
                 class: 'table_colum4',
                 field: 'amount3',
-                title: toMonth(0) + ' 金额',
+                title: toMonth(month, 0) + ' 金额',
                 formatter: dataRound,
                 halign: 'center',
                 align: 'right',
@@ -286,7 +289,7 @@ var KidTableInit = function () {
             {
                 class: 'table_colum4',
                 field: 'count3',
-                title: toMonth(0) + ' 用户数',
+                title: toMonth(month, 0) + ' 用户数',
                 halign: 'center',
                 align: 'right',
                 cellStyle: testCellStyle
@@ -614,8 +617,10 @@ function dataPercent(a) {
  * 根据偏移,生成账期
  * @param v
  */
-function toMonth(v) {
-    month = $('#datepicker').val().trim();
+function toMonth(month, v) {
+    if (month == null) {
+        month = $('#datepicker').val().trim();
+    }
     return moment(month, 'YYYYMM').add(v, 'months').format('YYYYMM');
 }
 
