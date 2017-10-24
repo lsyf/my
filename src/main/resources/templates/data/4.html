@@ -70,6 +70,7 @@
         .table_colum3 {
             background-color: #B5DC62;
         }
+
         .table_colum4 {
             background-color: #E8CF66;
         }
@@ -130,23 +131,51 @@
 
                     <label class="control-label col-sm-1">模式</label>
                     <div class="col-sm-2">
-                        <select type="text" class="form-control" id="select_mode"></select>
+                        <select type="text" class="form-control" id="select_mode">
+                            <option value=1>地区</option>
+                            <option value=2>销售品</option>
+                            <option value=3>账目</option>
+                        </select>
                     </div>
-
 
 
                     <button id="btn_query" type="button" class="btn btn-primary ">查询</button>
                 </div>
+                <div class="pull-right" id="radio_unit"></div>
 
             </form>
 
+
+
             <div>
-                <h4 style="text-align: center;"><b id="table_title"></b>
-                </h4>
-                <div class="pull-right" id="radio_unit">单位</div>
+                <ul class="nav nav-tabs nav-justified" role="tablist" id="tabs">
+                    <li role="presentation" class="active"><a href="#tab_area" aria-controls="tab_area" role="tab"
+                                                              data-toggle="tab">地区</a></li>
+                    <li role="presentation"><a href="#tab_sale" aria-controls="tab_sale" role="tab"
+                                               data-toggle="tab">销售品</a></li>
+                    <li role="presentation"><a href="#tab_bill" aria-controls="tab_bill" role="tab"
+                                               data-toggle="tab">账目</a></li>
+                </ul>
+
+                <div class="tab-content" id="tab_panels">
+                    <div role="tabpanel" class="tab-pane active" id="tab_area">
+                        <h4 style="text-align: center;"><b id="title_area"></b>
+                        </h4>
+                        <table id="table_area" class="table_data"></table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="tab_sale">
+                        <h4 style="text-align: center;"><b id="title_sale"></b>
+                        </h4>
+                        <table id="table_sale" class="table_data"></table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="tab_bill">
+                        <h4 style="text-align: center;"><b id="title_bill"></b>
+                        </h4>
+                        <table id="table_bill" class="table_data"></table>
+                    </div>
+                </div>
             </div>
 
-            <table id="table" class="table_data"></table>
         </section>
 
 

@@ -76,13 +76,34 @@
 </head>
 <body class="hold-transition">
 
+<ul class="nav nav-tabs nav-justified" role="tablist" id="tabs">
+    <li role="presentation" class="active"><a href="#tab_latn" aria-controls="tab_latn" role="tab"
+                                              data-toggle="tab">地区</a></li>
+    <li role="presentation"><a href="#tab_sale" aria-controls="tab_sale" role="tab"
+                               data-toggle="tab">销售品</a></li>
+    <li role="presentation"><a href="#tab_bill" aria-controls="tab_bill" role="tab"
+                               data-toggle="tab">四级账目</a></li>
+</ul>
 
-<div id="test" class="col-lg-3">
+<div class="tab-content" id="tab_panels">
+    <div role="tabpanel" class="tab-pane active" id="tab_latn">
+        地区
+    </div>
+    <div role="tabpanel" class="tab-pane" id="tab_sale">
+        销售品
+    </div>
+    <div role="tabpanel" class="tab-pane" id="tab_bill">
+        四级账目
+    </div>
 </div>
 
+<button id="btn"   onclick="test()">测试</button>
 <script>
 
-        console.log(moment('201702','YYYYMM').format('MM'))
+    function test() {
+        $('#tabs').find('a:eq(0)').trigger('click');
+
+    }
 
 
 </script>

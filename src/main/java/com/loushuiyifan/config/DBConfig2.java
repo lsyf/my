@@ -7,7 +7,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -29,7 +28,7 @@ public class DBConfig2 {
     static final String MAPPER_LOCATION = "classpath*:mapper2/**/*.xml";
 
     @Bean("secondaryDataSource")
-    @ConfigurationProperties("spring.datasource.druid.secondary")
+//    @ConfigurationProperties("spring.datasource.druid.secondary")
     public DataSource secondaryDataSource() {
         LOGGER.info("---------------------->secondaryDataSource");
         return DruidDataSourceBuilder.create().build();

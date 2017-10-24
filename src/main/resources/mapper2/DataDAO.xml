@@ -420,9 +420,11 @@ select
         else
         0
         end) as "count2",
+
         sum(case
         when substr(a.BILLING_CYCLE, 5, 2) =
-        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        to_char(to_date(#{month}, 'yyyymm'), 'mm')
+        then
         NEW_DISCOUNT
         else
         0
@@ -430,7 +432,8 @@ select
 
         sum(case
         when substr(a.BILLING_CYCLE, 5, 2) =
-        to_char(to_date(#{month}, 'yyyymm'), 'mm') then
+        to_char(to_date(#{month}, 'yyyymm'), 'mm')
+        then
         sl
         else
         0
@@ -488,7 +491,7 @@ select
             and ACCT_ITEM_TYPE_CODE = #{billId}
         </if>
         group by a.latn_id, b.c3_name, b.c3_order_id
-        order by b.c3_order_id;
+        order by b.c3_order_id
     </select>
 
     <select id="da4_listBill" resultType="com.loushuiyifan.data.vo.DataAnalysis4">
@@ -594,8 +597,8 @@ select
     </select>
 
     <select id="da4_listDiscount2" resultType="com.loushuiyifan.data.vo.DataAnalysis4">
-        select a.discount_Id,
-        b.spe_rule_name,
+        select a.discount_Id as "id",
+        b.spe_rule_name as "name",
         sum(case
         when substr(a.BILLING_CYCLE, 5, 2) =
         to_char(add_months(to_date(#{month}, 'yyyymm'), -2), 'mm') then
