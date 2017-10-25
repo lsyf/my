@@ -96,12 +96,13 @@ public class ImportICTService {
         log.setType(ReportConfig.RptImportType.ICT.toString());
         extImportLogDAO.insert(log);
 
+        //TODO 待替代新存过(旧存过不可用,测试可注释)
         //校验导入数据指标
         CheckDataDTO dto = new CheckDataDTO();
         dto.setLogId(logId);
         rptImportDataICTDAO.checkImportData(dto);
         Integer code = dto.getRtnCode();
-        //TODO 统一更改存过返回值
+        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
             String error = "";
             try {
@@ -185,7 +186,7 @@ public class ImportICTService {
         dto.setLogId(logId);
         rptImportDataICTDAO.deleteImportData(dto);
         int code = dto.getRtnCode();
-        //TODO 统一更改存过返回值
+        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
             throw new ReportException("数据删除失败:  " + dto.getRtnMeg());
         }
