@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class CheckDataDTO {
     Long logId;
+    String month;
     Integer rtnCode;
     String rtnMeg;
 }
