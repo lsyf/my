@@ -64,6 +64,10 @@ var OrgZtree = function (id, div, input) {
     };
 
 
+    oZtree.val = function () {
+        return $('#' + oZtree.input).next().val();
+    };
+
     function onBodyDown(event) {
         if (!( event.target.id == oZtree.input
             || event.target.id == oZtree.div

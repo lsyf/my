@@ -2,13 +2,12 @@ var table;
 var table2;
 var orgTree;
 function initC5() {
+    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
+
     table = new TableInit();
     table.Init();
     table2 = new TableInit2();
     table2.Init();
-
-
-    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
 
 
     initSelect();
@@ -43,7 +42,7 @@ function initForm() {
                     if (r.state) {
                         $(form).resetForm();
                         toastr.info('提交成功');
-                        table.refresh();
+                        list();
                     } else {
                         toastr.error('提交失败:' + r.msg);
                     }
@@ -95,8 +94,10 @@ function initSelect() {
     $.post(hostUrl + "localNet/listForC5")
         .done(function (r) {
             if (r.state) {
-                console.log(r.data)
+                // console.log(r.data)
                 orgTree.Init(r.data);
+
+                //TODO 本地网加载完成后 才可以导入数据
             } else {
                 toastr.error('本地网加载失败');
                 toastr.error(r.msg);
@@ -133,6 +134,29 @@ function removeData(row) {
     showAlert();
 }
 
+function list() {
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "importC5/list",
+        data: {
+            month: $("#upload_month").val(),
+            latnId: orgTree.val()
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                table.load(r.data);
+            } else {
+                toastr.error('加载失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+}
+
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
@@ -141,14 +165,14 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            url: hostUrl + 'importC5/list',         //请求后台的URL（*）
-            method: 'post',                      //请求方式（*）
+            // url: hostUrl + 'importC5/list',         //请求后台的URL（*）
+            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: false,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
-            queryParams: oTableInit.queryParams,//传递参数（*）
+            // queryParams: oTableInit.queryParams,//传递参数（*）
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
@@ -212,17 +236,11 @@ var TableInit = function () {
     }
 
     //刷新数据
-    oTableInit.refresh = function () {
-        $('#table_upload').bootstrapTable('refresh');
+    oTableInit.load = function (data) {
+        $('#table_upload').bootstrapTable('load', data);
     };
 
-    //得到查询的参数
-    oTableInit.queryParams = function (params) {
-        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-            month: $("#upload_month").val()
-        };
-        return temp;
-    };
+
     return oTableInit;
 };
 
@@ -235,8 +253,8 @@ var TableInit2 = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload2').bootstrapTable({
-            url: hostUrl + 'importC5/list2',         //请求后台的URL（*）
-            method: 'post',                      //请求方式（*）
+            // url: hostUrl + 'importC5/list2',         //请求后台的URL（*）
+            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: false,                   //是否显示分页（*）
@@ -286,15 +304,17 @@ var TableInit2 = function () {
 
     };
 
+
     //刷新数据
-    oTableInit.refresh = function () {
-        $('#table_upload').bootstrapTable('refresh');
+    oTableInit.load = function (data) {
+        $('#table_upload').bootstrapTable('load', data);
     };
 
     //得到查询的参数
     oTableInit.queryParams = function (params) {
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-            month: $("#upload_month").val()
+            month: $("#upload_month").val(),
+            latnId: orgTree.val()
         };
         return temp;
     };

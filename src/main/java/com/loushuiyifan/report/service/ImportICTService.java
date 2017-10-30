@@ -110,7 +110,7 @@ public class ImportICTService {
             } catch (Exception e) {
                 error = "校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("导入数据校验失败: {}; {}", dto.getRtnMeg(), error);
+                error = String.format("导入数据校验失败: %s; %s", dto.getRtnMeg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }
@@ -188,7 +188,7 @@ public class ImportICTService {
         int code = dto.getRtnCode();
         //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
-            throw new ReportException("数据删除失败:  " + dto.getRtnMeg());
+            throw new ReportException("2数据删除失败:  " + dto.getRtnMeg());
         }
     }
 

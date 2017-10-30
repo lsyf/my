@@ -1,10 +1,11 @@
 package com.loushuiyifan.report.service;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.alibaba.druid.util.StringUtils;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.bean.RptImportDataGroup;
+import com.loushuiyifan.report.dao.RptImportGroupDataDAO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.ReportReadServ;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,13 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.druid.util.StringUtils;
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.bean.RptImportDataCut;
-import com.loushuiyifan.report.bean.RptImportDataGroup;
-import com.loushuiyifan.report.dao.RptImportGroupDataDAO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.ReportReadServ;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class ImportGroupService {
@@ -122,7 +120,7 @@ public class ImportGroupService {
 		} catch (Exception e) {
 			logger.error("导入指标组配置时发生异常", e);
 			try {
-				rptImportGroupDataDAO.delete(latnId,groupId);
+				rptImportGroupDataDAO.deleteGroup(latnId,groupId);
 			} catch (Exception e2) {
 				e.printStackTrace();
 			}

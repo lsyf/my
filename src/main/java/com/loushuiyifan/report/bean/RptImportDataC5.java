@@ -27,7 +27,7 @@ public class RptImportDataC5 {
 
     Long c5Id;
 
-    Integer latnId;
+    Integer latnid;
     String incomeCode;
 
     Double taxValue;

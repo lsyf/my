@@ -22,9 +22,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 销售一线C5报表导入
@@ -39,8 +37,10 @@ public class ImportC5Controller {
 
     @Autowired
     DateService dateService;
+
     @Autowired
     LocalNetService localNetService;
+
     @Autowired
     ReportStorageService reportStorageService;
 
@@ -86,7 +86,9 @@ public class ImportC5Controller {
         dateService.checkImportC5(month);
 
         Long userId = user.getId();
-//TODO  用户所在地市判断
+
+        //TODO  用户所在地市判断
+
         //存储
         Path path = reportStorageService.store(file);
 
@@ -122,11 +124,7 @@ public class ImportC5Controller {
     @ResponseBody
     public JsonResult listC5(String month, String latnId, @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("month", month);
-		param.put("latnId", Integer.parseInt(latnId));
         List<ImportDataLogVO> list = importC5Service.list(userId, month);
-
         return JsonResult.success(list);
     }
 
