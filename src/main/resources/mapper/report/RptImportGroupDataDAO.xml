@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptImportGroupDataDAO">
+	<select id="findSubcode" resultType="String">		
+		SELECT INDEX_CODE
+  			FROM RPT_REPFIELD_DEF_CHANNEL P
+ 			WHERE P.RPT_NO = '1701'
+   			AND GROUP_ID = '0'
+   			and index_code=#{subcode}	
+	</select>
+	
+	<delete id="delete" >
+		delete from charge.dim_sub_group 
+		where latn_id=#{latnId} 
+		and group_id = #{groupId}
+	
+	</delete>
+
+
+
+
+
+
+
+
+
+
+</mapper>

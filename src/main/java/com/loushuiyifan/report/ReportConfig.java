@@ -19,10 +19,12 @@ public class ReportConfig {
      */
     public enum RptAppParam {
         ROOT("RptAppParam"),//参数表root
-        MONTH_IMPORT_INCOME_DATA("MONTH_IMPORT_INCOME_DATA"),//财务导入账期限制
-        TIME_IMPORT_INCOME_DATA("TIME_IMPORT_INCOME_DATA"),//财务导入时间限制
-        MONTH_IMPORT_C5("CWRPT_IMPORT_C5"),//C5导入账期限制
-        TIME_IMPORT_C5("CWRPT_IMPORT_DEADLINE_NEW");//C5导入时间限制
+        MONTH_IMPORT_INCOME_DATA("MONTH_IMPORT_INCOME_DATA"), //财务导入账期限制
+        TIME_IMPORT_INCOME_DATA("TIME_IMPORT_INCOME_DATA"),   //财务导入时间限制
+        MONTH_IMPORT_C5("MONTH_IMPORT_C5"),      //C5导入账期限制
+        TIME_IMPORT_C5("TIME_IMPORT_C5"),        //C5导入时间限制
+    	MONTH_IMPORT_Cut("MONTH_IMPORT_CUT"),    //切割比例导入账期限制
+        TIME_IMPORT_Cut("TIME_IMPORT_CUT");      //切割比例导入时间限制
 
         private String data;
 
@@ -42,8 +44,8 @@ public class ReportConfig {
     public enum RptImportType {
         INCOME_DATA("rpt_import_data_channel"),
         ICT("rpt_import_data_ict"),
-        C5("rpt_import_data_c5");
-
+        C5("rpt_import_data_c5"),
+        CUT("rpt_import_data_cut");
         private String data;
 
         RptImportType(String data) {

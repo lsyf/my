@@ -205,6 +205,7 @@ public class ImportIncomeDataService {
         }
 
         //提交
+        //TODO　提交更改log状态(目前是更新数据中action)
         CheckDataDTO dto = new CheckDataDTO();
         dto.setLogId(logId);
         rptImportDataChennelDAO.commitRptImportData(dto);
