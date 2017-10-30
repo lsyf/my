@@ -11,6 +11,73 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
 
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../../../static/bootstrap/css/bootstrap.min.css"
+          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../static/plugins/font-awesome/css/font-awesome.css"
+          th:href="@{/static/plugins/font-awesome/css/font-awesome.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../../static/dist/css/AdminLTE.min.css"
+          th:href="@{/static/dist/css/AdminLTE.min.css}">
+    <link rel="stylesheet" href="../../../static/dist/css/skins/skin-blue.min.css"
+          th:href="@{/static/dist/css/skins/skin-blue.min.css}">
+
+    <!--全局css-->
+    <link rel="stylesheet" href="../../../static/css/layout.css"
+          th:href="@{/static/css/layout.css}">
+    <link rel="stylesheet" href="../../../static/css/static.css"
+          th:href="@{/static/css/static.css}">
+    <link rel="stylesheet" href="../../../static/css/loader.css"
+          th:href="@{/static/css/loader.css}">
+
+    <!-- REQUIRED JS SCRIPTS -->
+
+    <!-- jQuery 2.2.3 -->
+    <script src="../../../static/plugins/jQuery/jquery-2.2.3.min.js"
+            th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="../../../static/bootstrap/js/bootstrap.min.js"
+            th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- AdminLTE App -->
+    <script src="../../../static/dist/js/app.min.js"
+            th:src="@{/static/dist/js/app.min.js}"></script>
+
+
+    <!--表单检查-->
+    <script src="../../../static/plugins/jQuery-validate/jquery.validate.min.js"
+            th:src="@{/static/plugins/jQuery-validate/jquery.validate.min.js}"></script>
+    <script src="../../../static/plugins/jQuery-form/jquery.form.min.js"
+            th:src="@{/static/plugins/jQuery-form/jquery.form.min.js}"></script>
+
+    <!--toastr-->
+    <link rel="stylesheet" href="../../../static/plugins/toastr/toastr.min.css"
+          th:href="@{/static/plugins/toastr/toastr.min.css}">
+    <script src="../../../static/plugins/toastr/toastr.min.js"
+            th:src="@{/static/plugins/toastr/toastr.min.js}"></script>
+
+
+    <!--通用js-->
+    <script src="../../../static/js/common/map.js"
+            th:src="@{/static/js/common/map.js}"></script>
+
+    <script src="../../../static/js/common/color.js"
+            th:src="@{/static/js/common/color.js}"></script>
+    <script src="../../../static/js/layout.js"
+            th:src="@{/static/js/layout.js}"></script>
+
+    <script src="../../../static/js/static.js"
+            th:src="@{/static/js/static.js}"></script>
+
+
+    <!--配置-->
+    <script th:inline="javascript">
+        //主机URL
+        var hostUrl = "";
+
+    </script>
+
+
     <link rel="stylesheet"
           href="../../../static/plugins/bootstrap-table/bootstrap-table.min.css"
           th:href="@{/static/plugins/bootstrap-table/bootstrap-table.min.css}">
@@ -41,6 +108,9 @@
     <script src="../../../static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"
             th:src="@{/static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js}"></script>
 
+
+    <script src="../../../static/js/report/common.js"
+            th:src="@{/static/js/report/common.js}"></script>
     <script src="../../../static/js/report/upload/importC5.js"
             th:src="@{/static/js/report/upload/importC5.js}"></script>
 
@@ -66,13 +136,13 @@
 
         <script>
             $(function () {
-                initIncomeData();
+                initC5();
             });
         </script>
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1 >
+            <h1>
                 销售一线C5导入
                 <!--<small>仪表盘</small>-->
             </h1>
@@ -140,7 +210,8 @@
                         </form>
                         <div class="form-horizontal col-sm-4">
                             <p>
-                                导入提示: ---> <a th:href="@{/download/template/importC5}" target="_blank"><b>模板下载</b></a><br/>
+                                导入提示: ---> <a th:href="@{/download/template/importC5}"
+                                              target="_blank"><b>模板下载</b></a><br/>
                                 1、excel版本只支持2003版格式，后缀必须为.xls<br/>
                                 2、导入的科目编码、来源编码、渠道编码区域编码必须为最底层编码<br/>
                                 3、系统只导入sheet名中带有“-”符号的数据。如 “101-杭州市本级" .对于sheet1 的没有“-”的sheet数据不处理。<br/>
@@ -156,12 +227,31 @@
             <div id="form-table">
                 <div class="box box-primary">
                     <div class="box-header">
-                        稽核汇总
+                        <ul class="nav nav-tabs" role="tablist" id="tabs">
+                            <li role="presentation" class="active">
+                                <a href="#tab_table1" aria-controls="tab_table1"
+                                   role="tab" data-toggle="tab">稽核汇总</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab_table2" aria-controls="tab_table2"
+                                   role="tab" data-toggle="tab">区域统计</a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="box-body">
-                        <table id="table_upload"></table>
+                        <div class="tab-content" id="tab_panels">
+                            <div role="tabpanel" class="tab-pane active" id="tab_table1">
+                                <table id="table_upload" class="table_data"></table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tab_table2">
+                                <table id="table_upload2" class="table_data"></table>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+
+
             </div>
 
             <div id="menuContent" class="menuContent">

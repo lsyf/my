@@ -1,6 +1,6 @@
 var table;
 var orgTree;
-function initIncomeData() {
+function initGroup() {
     table = new TableInit();
     table.Init();
 
@@ -99,31 +99,6 @@ function initSelect() {
 }
 
 
-function commitData(row) {
-    editAlert('警告', '是否确定提交流水号: ' + row.logId, '提交', function () {
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "importIncomeData/commit",
-            data: {"logId": row.logId},
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('提交成功');
-                    hideAlert();
-                    table.refresh();
-                } else {
-                    toastr.error('提交失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
-            }
-        });
-    });
-    showAlert();
-}
-
 function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
@@ -206,9 +181,6 @@ var TableInit = function () {
                 field: 'remark',
                 title: '导入说明'
             }, {
-                field: 'action',
-                title: '提交状态'
-            }, {
                 field: 'operate',
                 title: '操作',
                 events: operateEvents,
@@ -222,9 +194,6 @@ var TableInit = function () {
     //操作 监听
     window.operateEvents = {
 
-        'click .commit': function (e, value, row, index) {
-            commitData(row);
-        },
         'click .remove': function (e, value, row, index) {
             removeData(row);
         }
@@ -233,8 +202,7 @@ var TableInit = function () {
     //操作显示format
     function operateFormatter(value, row, index) {
         return [
-            '<button type="button" class="commit btn btn-info btn-xs">提交</button> \
-             <button type="button" class="remove btn btn-danger btn-xs">删除</button>'
+            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
         ].join('');
     }
 

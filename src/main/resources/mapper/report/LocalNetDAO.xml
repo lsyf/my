@@ -16,7 +16,7 @@
         select
             a.name as "name",
             a.data as "data",
-            a.parent_id as "pId",
+            a.parent_id as "parentId",
             a.id as "id"
         from(
             select *
