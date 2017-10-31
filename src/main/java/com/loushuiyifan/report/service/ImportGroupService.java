@@ -42,32 +42,26 @@ public class ImportGroupService {
 			         Integer latnId,            		 
 			         String userId ,
             		 String remark
-            		 ){
+            		 ) throws Exception {
 		String filename = path.getFileName().toString();
-		try {
-			//首先将文件解析成bean
-			List<RptImportDataGroup> list = getRptImportDataGroup(path);
-			//校验数据是否为空
-			int size = list.size();
-			if (size == 0){
-	           String error = "文件数据为空，请检查后导入！: " + filename;
-	           logger.error(error);
-	           throw new ReportException(error);
-			}
 		
-			saveImportGroupDataByGroup(list, month, 
-					Integer.parseInt(userId),
-					 latnId, 
-					(new Date()).toString()
-					);
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		//首先将文件解析成bean
+		List<RptImportDataGroup> list = getRptImportDataGroup(path);
+		//校验数据是否为空
+		int size = list.size();
+		if (size == 0){
+           String error = "文件数据为空，请检查后导入！: " + filename;
+           logger.error(error);
+           throw new ReportException(error);
 		}
-		
-		
-		
+	
+		saveImportGroupDataByGroup(	list, 
+									month, 
+									Integer.parseInt(userId),
+									 latnId, 
+									(new Date()).toString()
+									);
+
 	}
 	
 	
@@ -92,11 +86,11 @@ public class ImportGroupService {
 	 * 保存excel数据
 	 */
 	public void saveImportGroupDataByGroup(	List<RptImportDataGroup> list,
-									String month,
-									Integer userId,
-									Integer latnId ,
-									String lstUpd
-			                       ){
+											String month,
+											Integer userId,
+											Integer latnId ,
+											String lstUpd
+					                       ) throws Exception{
 		final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);	
 		logger.debug("批量插入数量: {}", list.size());
 		Long groupId = 0L;
@@ -117,15 +111,14 @@ public class ImportGroupService {
 			}
 			
 			sqlSession.commit();
-		} catch (Exception e) {
-			logger.error("导入指标组配置时发生异常", e);
-			try {
-				rptImportGroupDataDAO.deleteGroup(latnId,groupId);
-			} catch (Exception e2) {
-				e.printStackTrace();
-			}
-			
-			
+
+//			logger.error("导入指标组配置时发生异常", e);
+//			try {
+//				rptImportGroupDataDAO.deleteGroup(latnId,groupId);
+//			} catch (Exception e2) {
+//				e.printStackTrace();
+//			}
+						
 		}finally {
 			sqlSession.close();
             logger.debug("批量插入结束");

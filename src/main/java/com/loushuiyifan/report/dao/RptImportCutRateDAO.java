@@ -14,16 +14,18 @@ import com.loushuiyifan.report.vo.CutRateVO;
  */
 public interface RptImportCutRateDAO extends MyMapper<RptImportCutRate>{
 	Double cutRateJihetype(String ruleId,String month);
+	
 	List<CutRateVO> cutRateJihetype2(String ruleId,String month);
+	
 	List<CutDataListVO> cutRateList(String month,
-			Integer latnId,
-            String incomeSource,
-            Integer shareType,
-            String type);
+									Integer latnId,
+						            String incomeSource,
+						            Integer shareType,
+						            String type);
 	void cutRateDel(Integer latnId,
-            String incomeSource,
-            Integer shareType,
-            String userName,
-            String activeFlag);
+		            String incomeSource,
+		            Integer shareType,
+		            String userName,
+		            String activeFlag);
 	
 }

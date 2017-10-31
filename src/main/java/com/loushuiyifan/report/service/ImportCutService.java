@@ -65,35 +65,28 @@ public class ImportCutService {
 					String incomeSource,
 					String shareType,
 					String userName,
-					String remark ){
+					String remark ) throws Exception{
 		String filename = path.getFileName().toString();
-    	
-		try {
-			//首先将文件解析成bean
-			List<Map<String,Object>> list = getRptImportDataCut(path);
-			//校验数据是否为空
-			int size = list.size();
-			if (size == 0){
-	           String error = "文件数据为空: " + filename;
-	           logger.error(error);
-	           throw new ReportException(error);
-			}
-			//然后保存解析的数据   		
-    		RptImportDataCut cut = new RptImportDataCut();
-    		cut.setChgWho(userName);
-    		cut.setShareType(Integer.parseInt(shareType));
-    		cut.setLatnId(Integer.parseInt(latnId));
-    		cut.setIncomeSource(incomeSource);
-    		cut.setActiveFlag("Y");
-    		
-    		saveCutDataByGroup(list, month,cut);
-    		
-    		
-		} catch (Exception e) {
-			e.printStackTrace();
+    			
+		//首先将文件解析成bean
+		List<Map<String,Object>> list = getRptImportDataCut(path);
+		//校验数据是否为空
+		int size = list.size();
+		if (size == 0){
+           String error = "文件数据为空: " + filename;
+           logger.error(error);
+           throw new ReportException(error);
 		}
+		//然后保存解析的数据   		
+		RptImportDataCut cut = new RptImportDataCut();
+		cut.setChgWho(userName);
+		cut.setShareType(Integer.parseInt(shareType));
+		cut.setLatnId(Integer.parseInt(latnId));
+		cut.setIncomeSource(incomeSource);
+		cut.setActiveFlag("Y");
 		
-		
+		saveCutDataByGroup(list, month,cut);
+    				
 	}
 	
 	/**
@@ -155,7 +148,7 @@ public class ImportCutService {
 	public void saveCutDataByGroup(	List<Map<String,Object>> list,
 									String month,									
 									RptImportDataCut cut
-			                       ){
+			                       ) throws Exception{
 		final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
             logger.debug("批量插入数量: {}", list.size());
@@ -215,15 +208,14 @@ public class ImportCutService {
  	
             }
             sqlSession.commit();
-        }catch (Exception e){
-        		
+               		
         	// 若发生异常则删除导入的数据
-        	rptImportCutRateDAO.cutRateDel(cut.getLatnId(),
-        			                       cut.getIncomeSource(),
-        			                       cut.getShareType(),        			                       
-        			                       cut.getChgWho(),
-        			                       "N");
-        	rptImportCutDataDAO.jihefaild(cut);
+//        	rptImportCutRateDAO.cutRateDel(cut.getLatnId(),
+//        			                       cut.getIncomeSource(),
+//        			                       cut.getShareType(),        			                       
+//        			                       cut.getChgWho(),
+//        			                       "N");
+//        	rptImportCutDataDAO.jihefaild(cut);
         } finally {
             sqlSession.close();
             logger.debug("批量插入结束");

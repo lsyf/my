@@ -122,9 +122,9 @@ public class ImportC5Controller {
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult listC5(String month, String latnId, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
-        List<ImportDataLogVO> list = importC5Service.list(userId, month);
+    public JsonResult listC5(String month, String latnId) {
+        
+        List<ImportDataLogVO> list = importC5Service.list(month, Integer.parseInt(latnId));
         return JsonResult.success(list);
     }
 

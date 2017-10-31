@@ -104,6 +104,13 @@ public class ImportCutController {
             logger.error("4解析入库失败", e);
             try {
                 Files.delete(path);
+            	// 若发生异常则删除导入的数据
+//            	rptImportCutRateDAO.cutRateDel(cut.getLatnId(),
+//            			                       cut.getIncomeSource(),
+//            			                       cut.getShareType(),        			                       
+//            			                       cut.getChgWho(),
+//            			                       "N");
+//            	rptImportCutDataDAO.jihefaild(cut);
             } catch (IOException e1) {
                 e1.printStackTrace();
                 logger.error("4删除文件失败", e1);

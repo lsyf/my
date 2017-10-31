@@ -150,9 +150,9 @@ public class ImportC5Service {
      * @param month
      * @return
      */
-    public List<ImportDataLogVO> list(Long userId, String month) {
-
-        //TODO 结构调整，待完成
+    public List<ImportDataLogVO> list(String month, Integer latnId) {
+    	//TODO 地市id 用作权限控制
+    	String type = ReportConfig.RptImportType.C5.toString();
 
         return null;
     }
