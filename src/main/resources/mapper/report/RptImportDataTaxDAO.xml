@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptImportDataTaxDAO">
+    <select id="listTax" resultType="com.loushuiyifan.report.vo.ImportLogDomTaxVO">
+			select 
+	       a.LOG_ID as logId,
+	       count(*) as count,       
+	       b.user_id as userId,
+	       b.file_name as fileName,
+	       b.import_date as importDate,
+	       SUM(a.AFT_TAX_VALUE) as sum,
+	       decode(a.action, null, 'N', 'Y') as status
+	  from Rpt_Import_Datatax a, Ext_import_log b
+	 where a.acct_month = #{month}
+	   and a.log_id = b.log_id	  
+	   and b.user_id = #{userId}		
+	   and a.FTGZ IS NULL
+	 group by a.acct_month, a.LOG_ID, a.ACTION, b.user_id,b.file_name, b.import_date	
+	</select>
+
+    <delete id="deleteGroup">
+		delete from charge.dim_sub_group 
+		where latn_id=#{latnId} 
+		and group_id = #{groupId}
+	</delete>
+	
+	<select id="checkPullStates" resultType="String">
+		select distinct t.action from
+		Rpt_import_datatax t where t.log_id = #{logId}
+	</select>
+	
+	<select id="checkTaxData" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+            statementType="CALLABLE">
+        {call tax_data_check(
+         #{logId,mode=IN,jdbcType=NUMERIC},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+
+	<select id="selectTax" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+            statementType="CALLABLE">
+        {call PKG_CUT_TAXDATA.RPT_TAX_CUT(
+         #{logId,mode=IN,jdbcType=NUMERIC},
+         #{msg ,mode=OUT,jdbcType=NUMERIC},
+         #{iRetMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+    
+    
+</mapper>

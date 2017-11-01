@@ -94,13 +94,7 @@ public class ImportCutController {
             logger.error("4解析入库失败", e);
             try {
                 Files.delete(path);
-            	// 若发生异常则删除导入的数据
-//            	rptImportCutRateDAO.cutRateDel(cut.getLatnId(),
-//            			                       cut.getIncomeSource(),
-//            			                       cut.getShareType(),        			                       
-//            			                       cut.getChgWho(),
-//            			                       "N");
-//            	rptImportCutDataDAO.jihefaild(cut);
+ 
             } catch (IOException e1) {
                 e1.printStackTrace();
                 logger.error("4删除文件失败", e1);
@@ -119,12 +113,12 @@ public class ImportCutController {
     @PostMapping("listCut")
     @ResponseBody
     public JsonResult listCut(
-            String month,
-            String latnId,
-            String incomeSource,
-            String shareType,
-            String remark,
-            @ModelAttribute("user") User user) {
+				            String month,
+				            String latnId,
+				            String incomeSource,
+				            String shareType,
+				            String remark,
+				            @ModelAttribute("user") User user) {
         //校验账期，本地网，收入来源不能为空
         // 地市id 用作权限控制
         Long userId = user.getId();

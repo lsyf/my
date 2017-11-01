@@ -1,9 +1,12 @@
 package com.loushuiyifan.report.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataGroup;
-
-import java.util.List;
+import com.loushuiyifan.report.vo.ImportDataGroupVO;
 
 /**
  * @author yxk
@@ -14,6 +17,10 @@ public interface RptImportGroupDataDAO extends MyMapper<RptImportDataGroup> {
     void deleteGroup(Integer latnId, Long groupId);
 
     List<String> findSubcode(Long subcode);
+   
+    List<ImportDataGroupVO> listData(@Param("latnid") Integer latnid,
+							         @Param("groupid") Long groupid,
+							         @Param("type") String type);
 
 
 }

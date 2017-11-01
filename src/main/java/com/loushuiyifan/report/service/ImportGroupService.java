@@ -1,11 +1,10 @@
 package com.loushuiyifan.report.service;
 
-import com.alibaba.druid.util.StringUtils;
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.bean.RptImportDataGroup;
-import com.loushuiyifan.report.dao.RptImportGroupDataDAO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.ReportReadServ;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -18,10 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.druid.util.StringUtils;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.ReportConfig;
+import com.loushuiyifan.report.bean.RptImportDataGroup;
+import com.loushuiyifan.report.dao.RptImportGroupDataDAO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.ImportDataGroupVO;
 
 @Service
 public class ImportGroupService {
@@ -41,7 +44,7 @@ public class ImportGroupService {
 			         String month,
 			         Integer latnId,            		 
 			         String userId ,
-            		 String remark
+            		 String groupId
             		 ) throws Exception {
 		String filename = path.getFileName().toString();
 		
@@ -69,17 +72,19 @@ public class ImportGroupService {
 	 * 稽核
 	 * 
 	 */
-	public List<String> list(){
-		List<String> list =null;
-	return list	;
+	public List<ImportDataGroupVO> list(Integer latnId, Long groupId){
+		String type = ReportConfig.RptImportType.GROUP.toString();
+		return rptImportGroupDataDAO.listData(latnId, groupId, type);
 	}
 	
 	/**
 	 * 删除
 	 */	
-	public void delete(){
-		
-		
+	public void delete(Integer latnId, Long groupId)throws Exception{
+		RptImportDataGroup data = new RptImportDataGroup();
+		data.setGroupId(groupId);
+		data.setLatnId(latnId);
+		rptImportGroupDataDAO.deleteGroup(latnId, groupId);
 	}
 	
 	/**
@@ -106,19 +111,16 @@ public class ImportGroupService {
 					data.setLstUpd(lstUpd);
 					rptImportGroupDataDAO.insertSelective(data);
 					
-				}
-				
+				}				
 			}
-			
-			sqlSession.commit();
-
+						
 //			logger.error("导入指标组配置时发生异常", e);
 //			try {
 //				rptImportGroupDataDAO.deleteGroup(latnId,groupId);
 //			} catch (Exception e2) {
 //				e.printStackTrace();
 //			}
-						
+			sqlSession.commit();			
 		}finally {
 			sqlSession.close();
             logger.debug("批量插入结束");
@@ -186,25 +188,5 @@ public class ImportGroupService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 }
-

@@ -1,12 +1,11 @@
-package com.loushuiyifan.report.bean;
+package com.loushuiyifan.report.vo;
 
 import javax.persistence.Table;
 
 import lombok.Data;
 
 @Data
-@Table(name="dim_sub_group" ,schema="charge")
-public class RptImportDataGroup {
+public class ImportDataGroupVO {
 	
 	 Long groupId;
 	 Integer latnId;
