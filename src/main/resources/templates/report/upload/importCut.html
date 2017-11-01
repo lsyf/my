@@ -68,13 +68,13 @@
 
         <script>
             $(function () {
-                initIncomeData();
+                initCut();
             });
         </script>
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1 >
+            <h1>
                 切割比例配置
                 <!--<small>仪表盘</small>-->
             </h1>
@@ -97,29 +97,37 @@
                         <form id="form_upload" class="form-horizontal col-sm-12">
 
                             <div class="form-group form-group-sm">
-                                <label for="upload_month" class="col-sm-1 control-label">月份</label>
-                                <div class="col-sm-2">
-                                    <select class="form-control" name="month" id="upload_month">
-                                    </select>
+                                <div class="col-sm-3 form-group form-group-rm">
+                                    <label for="upload_month" class="col-sm-4 control-label">月份</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="month" id="upload_month">
+                                        </select>
+                                    </div>
                                 </div>
+                                <div class="col-sm-3 form-group form-group-rm">
+                                    <label for="upload_latnId" class="col-sm-4 control-label">本地网</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="upload_latnId" readonly>
+                                        <input class="form-control" name="latnId" type="hidden">
+                                    </div>
 
-                                <label for="upload_latnId" class="col-sm-1 control-label">本地网</label>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="upload_latnId" readonly>
-                                    <input class="form-control" name="latnId" type="hidden">
                                 </div>
-
-                                <label for="upload_incomeSource" class="col-sm-1 control-label">收入来源</label>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="upload_incomeSource" readonly>
-                                    <input class="form-control" name="incomeSource" type="hidden">
+                                <div class="col-sm-3 form-group form-group-rm">
+                                    <label for="upload_incomeSource" class="col-sm-4 control-label">收入来源</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="upload_incomeSource" readonly>
+                                        <input class="form-control" name="incomeSource" type="hidden">
+                                    </div>
                                 </div>
+                                <div class="col-sm-3 form-group form-group-rm">
 
-                                <label for="upload_cutType" class="col-sm-1 control-label">切割类型</label>
-                                <div class="col-sm-2">
-                                    <select class="form-control" name="cutType" id="upload_cutType">
-
-                                    </select>
+                                    <label for="upload_cutType" class="col-sm-4 control-label">切割类型</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="cutType" id="upload_cutType">
+                                            <option value="1">c4切割</option>
+                                            <option value="2">c5切割</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                             </div>
@@ -143,7 +151,7 @@
 
                             <div class="form-group  form-group-sm">
                                 <button class="btn btn-danger pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryLog()">
+                                        type="button" id="btn_query">
                                     稽核
                                 </button>
                                 <button id="btn_upload" type="submit"
@@ -155,9 +163,10 @@
                         </form>
                         <div class="form-horizontal col-sm-12">
                             <p>
-                                导入提示: ---> <a th:href="@{/download/template/importIncomeData}" target="_blank"><b>模板下载</b></a><br/>
+                                导入提示: ---> <a th:href="@{/download/template/importIncomeData}"
+                                              target="_blank"><b>模板下载</b></a><br/>
                                 1、excel版本只支持2003版格式，后缀必须为.xls<br/>
-                               
+
                             </p>
 
                         </div>
