@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.CodeListTaxDAO">
+
+    <select id="listByType" resultType="map">
+      select a.code_id        as "id",
+       a.code_name      as "name",
+       a.code_id        as "data",
+       a.parent_code_id as "parentId"
+       from code_list_tax a
+        where a.type_code= #{type}
+        order by a.code_level asc ,a.sorting desc
+    </select>
+
+    <select id="listFromCodeListTax" resultType="com.loushuiyifan.report.bean.CodeListTax">
+        select * from code_list_tax a
+        where a.type_code= #{type}
+        and a.code_level = #{lvl}
+    </select>
+
+
+</mapper>

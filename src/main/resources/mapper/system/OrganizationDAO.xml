@@ -71,7 +71,7 @@
       and t.lvl = #{lvl}
     </select>
 
-    <select id="listFromCodeListTax" resultType="com.loushuiyifan.system.vo.CodeListTax">
+    <select id="listFromCodeListTax" resultType="com.loushuiyifan.system.vo.CodeListTaxDTO">
         select * from code_list_tax a where a.type_code='local_net' and a.code_level = #{lvl}
     </select>
 

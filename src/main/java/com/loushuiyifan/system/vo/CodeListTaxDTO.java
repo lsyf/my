@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2017/9/12
  */
 @Data
-public class CodeListTax {
+public class CodeListTaxDTO {
     private String codeId;
     private String codeName;
     private String parentCodeId;

@@ -11,7 +11,7 @@
 }
 
 /*zTree下拉框样式*/
-#menuContent {
+.menuContent {
     display: none;
     position: absolute;
     border-color: #829dd2;

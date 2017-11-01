@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>指标组导入</title>
+    <title>切割比例配置</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -43,8 +43,8 @@
 
     <script src="../../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../../static/js/report/upload/importGroup.js"
-            th:src="@{/static/js/report/upload/importGroup.js}"></script>
+    <script src="../../../static/js/report/upload/importCut.js"
+            th:src="@{/static/js/report/upload/importCut.js}"></script>
 
 
     <style>
@@ -68,19 +68,19 @@
 
         <script>
             $(function () {
-                initGroup();
+                initIncomeData();
             });
         </script>
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1 >
-                指标组导入
+                切割比例配置
                 <!--<small>仪表盘</small>-->
             </h1>
             <ol class="breadcrumb" id="content-header-ol">
                 <li><a href="#"><i class="fa fa-dashboard"></i> 文件导入</a></li>
-                <li class="active">指标组导入</li>
+                <li class="active">切割比例配置</li>
             </ol>
         </section>
 
@@ -94,34 +94,47 @@
                     </div>
                     <div class="box-body">
 
-                        <form id="form_upload" class="form-horizontal col-sm-8">
+                        <form id="form_upload" class="form-horizontal col-sm-12">
 
                             <div class="form-group form-group-sm">
-                                <label for="upload_month" class="col-sm-2 control-label">月份</label>
-                                <div class="col-sm-4">
+                                <label for="upload_month" class="col-sm-1 control-label">月份</label>
+                                <div class="col-sm-2">
                                     <select class="form-control" name="month" id="upload_month">
                                     </select>
                                 </div>
 
-                                <label for="upload_latnId" class="col-sm-2 control-label">本地网</label>
-                                <div class="col-sm-4">
+                                <label for="upload_latnId" class="col-sm-1 control-label">本地网</label>
+                                <div class="col-sm-2">
                                     <input type="text" class="form-control" id="upload_latnId" readonly>
                                     <input class="form-control" name="latnId" type="hidden">
+                                </div>
+
+                                <label for="upload_incomeSource" class="col-sm-1 control-label">收入来源</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="upload_incomeSource" readonly>
+                                    <input class="form-control" name="incomeSource" type="hidden">
+                                </div>
+
+                                <label for="upload_cutType" class="col-sm-1 control-label">切割类型</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="cutType" id="upload_cutType">
+
+                                    </select>
                                 </div>
 
                             </div>
 
                             <div class="form-group form-group-sm">
-                                <label for="upload_file" class="col-sm-2 control-label">文件</label>
-                                <div class="col-sm-10">
+                                <label for="upload_file" class="col-sm-1 control-label">文件</label>
+                                <div class="col-sm-7">
                                     <input id="upload_file" name="file" type="file" class="file form-control"
                                            data-show-preview="false" data-show-remove="false" data-language="zh"
                                            data-show-upload="false" data-browse-class="btn-sm btn-primary">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm">
-                                <label for="upload_remark" class="col-sm-2 control-label">备注</label>
-                                <div class="col-sm-10">
+                                <label for="upload_remark" class="col-sm-1 control-label">备注</label>
+                                <div class="col-sm-7">
                                     <textarea id="upload_remark" name="remark" type="text"
                                               class="form-control"></textarea>
                                 </div>
@@ -140,13 +153,11 @@
 
                             </div>
                         </form>
-                        <div class="form-horizontal col-sm-4">
+                        <div class="form-horizontal col-sm-12">
                             <p>
                                 导入提示: ---> <a th:href="@{/download/template/importIncomeData}" target="_blank"><b>模板下载</b></a><br/>
                                 1、excel版本只支持2003版格式，后缀必须为.xls<br/>
-                                2、导入的科目编码、来源编码、渠道编码区域编码必须为最底层编码<br/>
-                                3、系统只导入sheet名中带有“-”符号的数据。如 “101-杭州市本级" .对于sheet1 的没有“-”的sheet数据不处理。<br/>
-                                4、请勿随意改动模板的sheet名 导入失败后，请从以上4点检查excel
+                               
                             </p>
 
                         </div>
@@ -170,6 +181,9 @@
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
 
+            <div id="menuContent2" class="menuContent">
+                <ul id="treeOrg2" class="ztree"></ul>
+            </div>
 
         </section>
 

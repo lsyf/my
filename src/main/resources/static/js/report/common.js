@@ -17,7 +17,7 @@ var OrgZtree = function (id, div, input) {
             node.pId = data.parentId == null ? 0 : data.parentId;
             node.name = data.name;
             node.data = data.data;
-            node.open = true;
+            node.open = false;
             nodes.push(node)
         });
 

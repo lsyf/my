@@ -1,11 +1,12 @@
 var table;
 var orgTree;
-function initGroup() {
+var isTree;
+function initIncomeData() {
     table = new TableInit();
     table.Init();
 
     orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
-
+    isTree = new OrgZtree("treeOrg2", "menuContent2", "upload_incomeSource");
 
     initSelect();
     initForm();
@@ -90,6 +91,36 @@ function initSelect() {
                 orgTree.Init(r.data);
             } else {
                 toastr.error('本地网加载失败');
+                toastr.error(r.msg);
+            }
+        })
+        .fail(function () {
+            toastr.error('发送请求失败');
+        });
+
+    //本地网加载
+    $.post(hostUrl + "localNet/listAllByUser", {lvl: 3})
+        .done(function (r) {
+            if (r.state) {
+                console.log(r.data)
+                orgTree.Init(r.data);
+            } else {
+                toastr.error('本地网加载失败');
+                toastr.error(r.msg);
+            }
+        })
+        .fail(function () {
+            toastr.error('发送请求失败');
+        });
+
+    //本地网加载
+    $.post(hostUrl + "codeListTax/listByType", {type: 'income_source2017'})
+        .done(function (r) {
+            if (r.state) {
+                console.log(r.data)
+                isTree.Init(r.data);
+            } else {
+                toastr.error('收入来源加载失败');
                 toastr.error(r.msg);
             }
         })
