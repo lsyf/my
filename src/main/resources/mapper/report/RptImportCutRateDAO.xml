@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptImportCutRateDAO">
-	<select id="cutRateJihetype" 
-	        resultType="java.lang.Double">
-		select sum(rate) from charge.dim_cut_rate a
+    <select id="calcRateSum" resultType="java.lang.Double">
+		select sum(rate)
+		from charge.dim_cut_rate a
 		Where a.rule_id= #{ruleId}
 		and a.acct_month = #{month}
 	</select>
-	
-	<select id="Dim_Cut_Rate_exp_jihetype2" 
-	        resultType="com.loushuiyifan.report.vo.CutRateVO">
+
+    <select id="Dim_Cut_Rate_exp_jihetype2"
+            resultType="com.loushuiyifan.report.vo.CutRateVO">
 		Select area_id, sum(rate) from charge.dim_cut_rate a
 		Where a.rule_id= #{ruleId}
 		and a.acct_month = #{month}
 		Group by area_id
 		<![CDATA[
 			Having sum(rate)<>1
-		]]>
-	</select>
-		
-	<delete id="cutRateDel" >
+
+
+
+        ]]>
+    </select>
+
+    <delete id="cutRateDel">
 		delete from charge.dim_cut_rate b where b.rule_id in 
 		(select a.rule_id from charge.dim_cut_cfg a 
 		where a.latn_id=#{latnId} and a.share_type=#{shareType} 
 		and a.income_source=#{incomeSource} and a.chg_who=#{userName})
 	</delete>
 
-	<select id="cutRateList"   resultType="com.loushuiyifan.report.vo.CutDataListVO" >
+    <select id="cutRateList" resultType="com.loushuiyifan.report.vo.CutDataListVO">
 	select b.acct_month as acctMonth,
        a.rule_id as ruleId,
        a.is_active as activeFlag,

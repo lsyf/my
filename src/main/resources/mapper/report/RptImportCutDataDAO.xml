@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptImportCutDataDAO">
-	<select  id="queryCut" parameterType="String" 
-	         resultType="com.loushuiyifan.report.bean.RptImportDataCut"> 
-		select * from charge.dim_cut_cfg a where a.rule_id = #{ruleId} 
-	</select>
-	<update id="jihefaild" 
-	        parameterType="com.loushuiyifan.report.bean.RptImportDataCut">
-		update charge.dim_cut_cfg a set a.is_active = #{activeFlag}
-		where a.latn_id=#{latnId} and a.share_type=#{shareType} 
-		and a.income_source=#{incomeSource} and a.chg_who={userName}
+
+    <update id="updataCutFlag"
+            parameterType="com.loushuiyifan.report.bean.RptImportDataCut">
+		update charge.dim_cut_cfg a
+		set a.is_active = #{activeFlag}
+		where a.latn_id=#{latnId}
+		and a.share_type=#{shareType}
+		and a.income_source=#{incomeSource}
+		and a.chg_who=#{chgWho}
 	</update>
-	
-	<select id="checkCut" 
-	        resultType="java.lang.String">
-		select a.chg_who from charge.dim_cut_cfg a where
-		 a.latn_id=#{latnId}
+
+    <select id="checkCut"
+            resultType="java.lang.String">
+		select a.chg_who
+		from charge.dim_cut_cfg a
+		where a.latn_id=#{latnId}
 		 and a.share_type=#{shareType} 
 		 and a.income_source=#{incomeSource} 
 		 and a.chg_who=#{userName}

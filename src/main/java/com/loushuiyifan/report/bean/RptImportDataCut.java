@@ -1,20 +1,25 @@
 package com.loushuiyifan.report.bean;
 
-import javax.persistence.Table;
-
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
+
 @Data
-@Table(name="dim_cut_cfg",schema="charge")
+@Table(name = "dim_cut_cfg", schema = "charge")
 public class RptImportDataCut {
-	
-	 String ruleId;
-	 Integer latnId;
-	 String incomeSource;
-	 Integer shareType;
-	 String express;
-	 String activeFlag;
-	 String chgWho;
-	 String lstUpd;
-	 String groupId;
+
+    @Id
+    String ruleId;
+    Integer latnId;
+    String incomeSource;
+    Integer shareType;
+    String express;
+    @Column(name = "is_active")
+    String activeFlag;
+    String chgWho;
+    Date lstUpd;
+    String groupId;
 }

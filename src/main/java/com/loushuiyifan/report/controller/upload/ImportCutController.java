@@ -69,14 +69,16 @@ public class ImportCutController {
                              String month,
                              String latnId,
                              String incomeSource,
-                             String shareType,
+                             String cutType,
                              String remark,
                              @ModelAttribute("user") User user) {
 
         //首先校验能否导入
         dateService.checkImportCut(month);
-        String userName = user.getUsername();
-        //TODO  用户所在地市判断
+        String username = user.getUsername();
+
+        //TODO  用户所在地市判断是否有权限导入
+
         //存储
         Path path = reportStorageService.store(file);
 
@@ -84,10 +86,10 @@ public class ImportCutController {
         try {
             importCutService.save(path,
                     month,
-                    latnId,
+                    Integer.parseInt(latnId),
                     incomeSource,
-                    shareType,
-                    userName,
+                    Integer.parseInt(cutType),
+                    username,
                     remark);
         } catch (Exception e) {
             e.printStackTrace();
