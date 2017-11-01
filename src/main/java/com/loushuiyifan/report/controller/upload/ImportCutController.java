@@ -1,28 +1,5 @@
 package com.loushuiyifan.report.controller.upload;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.shiro.web.util.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
 import com.loushuiyifan.report.exception.ReportException;
@@ -31,6 +8,20 @@ import com.loushuiyifan.report.serv.ReportStorageService;
 import com.loushuiyifan.report.service.ImportCutService;
 import com.loushuiyifan.report.vo.CutDataListVO;
 import com.loushuiyifan.system.vo.JsonResult;
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 @Controller
 @RequestMapping("importCut")
@@ -68,7 +59,6 @@ public class ImportCutController {
      * @param month
      * @param latnId
      * @param incomeSource
-     * @param cutType
      * @param remark
      * @param user
      * @return

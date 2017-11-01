@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.mapper.OrganizationMapper;
 import com.loushuiyifan.system.dao.OrganizationDAO;
-import com.loushuiyifan.system.vo.CodeListTax;
+import com.loushuiyifan.system.vo.CodeListTaxDTO;
 import com.loushuiyifan.system.vo.UserCompany;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,7 +142,7 @@ public class OrganizationService {
 
         //遍历各个等级组织
         for (int i = 0; i < 10; i++) {
-            List<CodeListTax> list = organizationDAO.listFromCodeListTax(i);
+            List<CodeListTaxDTO> list = organizationDAO.listFromCodeListTax(i);
 
             LOGGER.info("--{}--", i);
             LOGGER.info("num: {}", list.size());
@@ -152,7 +152,7 @@ public class OrganizationService {
             }
 
             //先进行插入组织数据
-            for (CodeListTax t : list) {
+            for (CodeListTaxDTO t : list) {
                 Organization o = new Organization();
                 o.setName(t.getCodeName());
                 o.setData(t.getCodeId());

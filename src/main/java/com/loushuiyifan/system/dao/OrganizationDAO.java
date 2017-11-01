@@ -2,7 +2,7 @@ package com.loushuiyifan.system.dao;
 
 
 import com.loushuiyifan.common.bean.Organization;
-import com.loushuiyifan.system.vo.CodeListTax;
+import com.loushuiyifan.system.vo.CodeListTaxDTO;
 import com.loushuiyifan.system.vo.UserCompany;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,7 +28,7 @@ public interface OrganizationDAO {
      * @param lvl
      * @return
      */
-    List<CodeListTax> listFromCodeListTax(int lvl);
+    List<CodeListTaxDTO> listFromCodeListTax(int lvl);
 
     /**
      * 查询user_company表中 所有部门组织信息
