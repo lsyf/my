@@ -5,16 +5,16 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Data
-@Table(name="charge.dim_cut_cfg")
+@Table(name="dim_cut_cfg",schema="charge")
 public class RptImportDataCut {
 	
-	private String ruleId;
-	private Integer latnId;
-	private String incomeSource;
-	private Integer shareType;
-	private String express;
-	private String activeFlag;
-	private String chgWho;
-	private String lstUpd;
-	private String groupId;
+	 String ruleId;
+	 Integer latnId;
+	 String incomeSource;
+	 Integer shareType;
+	 String express;
+	 String activeFlag;
+	 String chgWho;
+	 String lstUpd;
+	 String groupId;
 }

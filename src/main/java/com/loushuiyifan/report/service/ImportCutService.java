@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +28,6 @@ import com.loushuiyifan.report.bean.RptImportDataCut;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportCutDataDAO;
 import com.loushuiyifan.report.dao.RptImportCutRateDAO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.CutDataListVO;
