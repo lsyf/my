@@ -43,7 +43,7 @@ public class ImportGroupService {
 	public void save(Path path,
 			         String month,
 			         Integer latnId,            		 
-			         String userId ,
+			         Long userId,
             		 String groupId
             		 ) throws Exception {
 		String filename = path.getFileName().toString();
@@ -58,12 +58,7 @@ public class ImportGroupService {
            throw new ReportException(error);
 		}
 	
-		saveImportGroupDataByGroup(	list, 
-									month, 
-									Integer.parseInt(userId),
-									 latnId, 
-									(new Date()).toString()
-									);
+		saveImportGroupDataByGroup(list,month, Math.toIntExact(userId),latnId);
 
 	}
 	
@@ -73,8 +68,8 @@ public class ImportGroupService {
 	 * 
 	 */
 	public List<ImportDataGroupVO> list(Integer latnId, Long groupId){
-		String type = ReportConfig.RptImportType.GROUP.toString();
-		return rptImportGroupDataDAO.listData(latnId, groupId, type);
+		
+		return rptImportGroupDataDAO.listData(latnId, groupId);
 	}
 	
 	/**
@@ -82,7 +77,7 @@ public class ImportGroupService {
 	 */	
 	public void delete(Integer latnId, Long groupId)throws Exception{
 		RptImportDataGroup data = new RptImportDataGroup();
-		data.setGroupId(groupId);
+		data.setGroupId(groupId); //指标编码groupId 为空时删除按latnId
 		data.setLatnId(latnId);
 		rptImportGroupDataDAO.deleteGroup(latnId, groupId);
 	}
@@ -90,36 +85,27 @@ public class ImportGroupService {
 	/**
 	 * 保存excel数据
 	 */
-	public void saveImportGroupDataByGroup(	List<RptImportDataGroup> list,
+	public void saveImportGroupDataByGroup( List<RptImportDataGroup> list,
 											String month,
 											Integer userId,
-											Integer latnId ,
-											String lstUpd
-					                       ) throws Exception{
+											Integer latnId	) throws Exception{
 		final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);	
 		logger.debug("批量插入数量: {}", list.size());
-		Long groupId = 0L;
+		
 		try {
 			for(RptImportDataGroup data : list){
-				groupId =data.getGroupId();
+				//判断指标编码是否为空
 				List<String> l =rptImportGroupDataDAO.findSubcode(data.getSubCode());
 				if(l ==null){
 					 throw new ReportException("导入的数据中，指标编码：" + data.getSubCode() + " 为非明细指标，请检查后重新导入！");	
 				}else{
 					data.setUserId(userId);
 					data.setLatnId(latnId);
-					data.setLstUpd(lstUpd);
-					rptImportGroupDataDAO.insertSelective(data);
-					
+					data.setLstUpd(new Date());
+					rptImportGroupDataDAO.insertSelective(data);					
 				}				
 			}
 						
-//			logger.error("导入指标组配置时发生异常", e);
-//			try {
-//				rptImportGroupDataDAO.deleteGroup(latnId,groupId);
-//			} catch (Exception e2) {
-//				e.printStackTrace();
-//			}
 			sqlSession.commit();			
 		}finally {
 			sqlSession.close();

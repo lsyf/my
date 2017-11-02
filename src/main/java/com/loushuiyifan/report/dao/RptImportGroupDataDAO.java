@@ -14,13 +14,14 @@ import com.loushuiyifan.report.vo.ImportDataGroupVO;
  */
 public interface RptImportGroupDataDAO extends MyMapper<RptImportDataGroup> {
 
-    void deleteGroup(Integer latnId, Long groupId);
+    void deleteGroup(@Param("latnid")Integer latnId, 
+    		         @Param("groupid")Long groupId);
 
     List<String> findSubcode(Long subcode);
    
-    List<ImportDataGroupVO> listData(@Param("latnid") Integer latnid,
-							         @Param("groupid") Long groupid,
-							         @Param("type") String type);
+    List<ImportDataGroupVO> listData(@Param("latnId") Integer latnId,
+							         @Param("groupId") Long groupId
+							         );
 
 
 }

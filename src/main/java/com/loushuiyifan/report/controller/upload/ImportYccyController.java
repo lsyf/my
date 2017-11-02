@@ -23,45 +23,48 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
-import com.loushuiyifan.report.dao.RptImportGroupDataDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportStorageService;
-import com.loushuiyifan.report.service.ImportGroupService;
-import com.loushuiyifan.report.vo.ImportDataGroupVO;
+import com.loushuiyifan.report.service.ImportYccyService;
+import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
+/**
+ * 业财差异
+ * @author Administrator
+ *
+ */
 @Controller
-@RequestMapping("importGroup")
-public class ImportGroupController {
-    private static final Logger logger = LoggerFactory.getLogger(ImportGroupController.class);
+@RequestMapping("importYccy")
+public class ImportYccyController {
+	private static final Logger logger = LoggerFactory.getLogger(ImportYccyController.class);
+
+	@Autowired
+    DateService dateService;
 
     @Autowired
-    DateService dateService;
-    
-    @Autowired
     ReportStorageService reportStorageService;
-    
+
     @Autowired
-    ImportGroupService importGroupService;
-  
+    ImportYccyService importYccyService;
+
     @ModelAttribute("user")
     public User user(HttpServletRequest request) {
         HttpSession session = WebUtils.toHttp(request).getSession();
         User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
         return user;
     }
-
+    
     /**
-     * 指标组配置页面
-     *
+     * 导入界面
      * @return
      */
     @GetMapping
     public String index() {
-        return "report/upload/importGroup";
+        return "report/upload/importYccy";
     }
-
+    
     /**
      * 导入
      */
@@ -69,80 +72,60 @@ public class ImportGroupController {
     @ResponseBody
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String month,
+                             String remark,
                              String latnId,
-                             String groupId,
                              @ModelAttribute("user") User user) {
-    	Long userId = user.getId();
-        if (latnId.equals("0")) {
-            throw new ReportException("请选择正确的地市");
-        }
+
+        Long userId = user.getId();
+
         //首先校验能否导入
-        dateService.checkImportGroup(month);
+        dateService.checkImportYccy(month);
+
         //然后保存
         Path path = reportStorageService.store(file);
+
+        //最后解析入库(失败则删除文件)
         try {
-        	importGroupService.save(path, month, Integer.parseInt(latnId), userId, groupId);
-        } catch (Exception e) {          			
-        	e.printStackTrace();
-            logger.error("5解析入库失败", e);
-            
+        	importYccyService.save(path,
+				                    userId,
+				                    month,
+				                    remark);
+        } catch (Exception e) {
+            logger.error("7解析入库失败", e);
             try {
                 Files.delete(path);
-                
             } catch (IOException e1) {
-                e1.printStackTrace();
-                logger.error("5删除文件失败", e1);
+                logger.error("7删除文件失败", e1);
             } finally {
                 throw new ReportException("导入失败: " + e.getMessage(), e);
             }
         }
         return JsonResult.success();
     }
-
-
+    
     /**
-     * 稽核
-     *
+     * 查询
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult listGroup(String latnId,
-    							String groupId, 
-    							@ModelAttribute("user") User user) {
+    public JsonResult list(String month, @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        //TODO 权限不足,非本地导入员无法查询其他地市导入数据
-        //groupId 指标组编码若为空，则按本地网查询
-        List<ImportDataGroupVO> list =importGroupService
-        		.list(Integer.parseInt(latnId), Long.parseLong(groupId));
+        List<ImportLogDomTaxVO> list = importYccyService
+                .list(userId, month);
 
         return JsonResult.success(list);
     }
-
+    
     /**
      * 删除
      */
     @PostMapping("remove")
     @ResponseBody
-    public JsonResult remove(String latnId,
-    		                 String groupId,
-    		                 String month
-                             ) {
-        
-        if (latnId.equals("0")) {
-            throw new ReportException("请选择正确的地市");
-        }
-        //首先校验能否导入
-        dateService.checkImportGroup(month);
-        //groupId 指标组编码若为空，则按本地网删除
-        try {
-        	importGroupService.delete(Integer.parseInt(latnId), Long.parseLong(groupId));
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ReportException("删除导入时发生异常");
-			
-		}
-        
+    public JsonResult remove(Long logId,
+                             @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+        importYccyService.delete(Math.toIntExact(userId), logId);
         return JsonResult.success();
     }
-
+    
 }

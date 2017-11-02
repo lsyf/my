@@ -13,9 +13,9 @@ import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 	public interface RptImportDataTaxDAO extends MyMapper<RptImportDataTax> {
 		void deleteTax(DeleteImportDataDTO dto);
 		void checkTaxData(CheckDataDTO dto);
-		String checkPullStates(Long userId);
-		void selectTax(CheckDataDTO dto);
 		
+		void selectTax(CheckDataDTO dto);
+		String checkPullStates(Long userId);
 		List<ImportLogDomTaxVO> listTax(@Param("userId") Long userId,
 						                @Param("month") String month,
 						                @Param("type") String type); 

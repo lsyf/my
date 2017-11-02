@@ -15,5 +15,16 @@
 		and group_id = #{groupId}
 	</delete>
 
-
+	<select id="listData" resultType="com.loushuiyifan.report.vo.ImportDataGroupVO">
+		select group_id,
+	       group_name,
+	       sub_code,
+	       sub_name,
+	       user_id,
+	       to_char(lst_upd, 'yyyy-MM-dd hh24:mi:ss') as lst_upd,
+	       latn_id
+	  from charge.dim_sub_group
+	 where latn_id = #{latnId}
+	   and group_id = #{groupId}
+	</select>
 </mapper>

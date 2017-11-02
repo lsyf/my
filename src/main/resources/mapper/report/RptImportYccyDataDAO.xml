@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptImportYccyDataDAO">
+
+    <select id="checkRptImportData" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+            statementType="CALLABLE">
+        {call data_check_2017(
+         #{logId,mode=IN,jdbcType=NUMERIC},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+
+    <delete id="deleteByLogId">
+        delete
+        from rpt_import_data_channel
+        where log_id =#{logId}
+    </delete>
+
+    <select id="listDataLog" resultType="com.loushuiyifan.report.vo.ImportLogDomTaxVO">
+        select 
+       a.LOG_ID as logId,
+       count(*) as count,       
+       b.user_id as userId,
+       b.file_name as fileName,
+       b.import_date as importDate,
+       SUM(a.INDEX_DATA) as sum
+  from rpt_import_data_ssc a, LOG_rpt_import_data_ssc b
+ where a.acct_month = #{month}
+   and a.log_id = b.log_id
+   and b.user_id = #{userId}
+ group by a.acct_month, a.LOG_ID , b.user_id,b.file_name, b.import_date
+    </select>
+
+    
+    <select id="selectAction" resultType="String">
+        select distinct t.action
+        from Rpt_Import_Data_Channel t
+		where t.log_id = #{logId}
+    </select>
+
+    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.DeleteYccyDataDTO"
+            statementType="CALLABLE">
+        {call ssc_ychd_del_data(
+        #{userId,mode=IN,jdbcType=NUMERIC},
+        #{logId,mode=IN,jdbcType=NUMERIC},
+        #{iSts,mode=OUT,jdbcType=NUMERIC},
+        #{iRetMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+
+</mapper>
+
+

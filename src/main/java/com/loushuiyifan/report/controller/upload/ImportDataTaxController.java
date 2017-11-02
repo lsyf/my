@@ -96,11 +96,11 @@ public class ImportDataTaxController {
         try {
         	importTaxService.save(path, userId, month, remark);
         } catch (Exception e) {
-            logger.error("1解析入库失败", e);
+            logger.error("6解析入库失败", e);
             try {
                 Files.delete(path);
             } catch (IOException e1) {
-                logger.error("1删除文件失败", e1);
+                logger.error("6删除文件失败", e1);
             } finally {
                 throw new ReportException("导入失败: " + e.getMessage(), e);
             }
