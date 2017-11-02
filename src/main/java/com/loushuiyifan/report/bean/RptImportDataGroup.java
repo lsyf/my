@@ -1,5 +1,7 @@
 package com.loushuiyifan.report.bean;
 
+import java.util.Date;
+
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -14,5 +16,5 @@ public class RptImportDataGroup {
 	 Long subCode;
 	 String subName;
 	 Integer userId;
-	 String lstUpd;
+	 Date lstUpd;
 }

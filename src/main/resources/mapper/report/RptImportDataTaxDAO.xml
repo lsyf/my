@@ -12,7 +12,8 @@
 	       decode(a.action, null, 'N', 'Y') as status
 	  from Rpt_Import_Datatax a, Ext_import_log b
 	 where a.acct_month = #{month}
-	   and a.log_id = b.log_id	  
+	   and a.log_id = b.log_id
+	   and b.type = #{type} 
 	   and b.user_id = #{userId}		
 	   and a.FTGZ IS NULL
 	 group by a.acct_month, a.LOG_ID, a.ACTION, b.user_id,b.file_name, b.import_date	

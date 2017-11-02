@@ -107,9 +107,9 @@ public class ImportTaxService {
             try {
                 delete(userId, logId);
             } catch (Exception e) {
-                error = "6校验失败后删除数据异常: " + e.getMessage();
+                error = "校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("6导入数据校验失败: %s ; %s", dto.getRtnMeg(), error);
+                error = String.format("导入数据校验失败: %s ; %s", dto.getRtnMeg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }
