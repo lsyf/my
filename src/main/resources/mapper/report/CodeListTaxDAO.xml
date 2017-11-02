@@ -6,7 +6,8 @@
       select a.code_id        as "id",
        a.code_name      as "name",
        a.code_id        as "data",
-       a.parent_code_id as "parentId"
+       a.parent_code_id as "parentId",
+       a.code_level as "lvl"
        from code_list_tax a
         where a.type_code= #{type}
         order by a.code_level asc ,a.sorting desc

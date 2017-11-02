@@ -1,14 +1,22 @@
 var table;
 var orgTree;
-function initIncomeData() {
+function initICT() {
     table = new TableInit();
     table.Init();
 
-    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
+    buildSelect('upload_month', months);
+
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
+    orgTree.Init(orgs);
 
 
-    initSelect();
     initForm();
+}
+
+function queryLog() {
+    //TODO 待完成
+    toastr.info('查询导入');
+
 }
 
 function initForm() {
@@ -37,7 +45,9 @@ function initForm() {
                 success: function (r) {
                     $('#btn_upload').button("reset");
                     if (r.state) {
-                        $(form).resetForm();
+                        $('#form_upload').resetForm();
+                        orgTree.reset();
+
                         toastr.info('提交成功');
                         table.refresh();
                     } else {
@@ -60,76 +70,12 @@ function initForm() {
 
 }
 
-function queryLog() {
-    table.refresh();
-}
-
-function initSelect() {
-    $.post(hostUrl + "date/aroundMonths", {num: 5})
-        .done(function (r) {
-            if (r.state) {
-                $('#upload_month').empty();
-                r.data.forEach(function (d) {
-                    var option = '<option value="' + d.data + '">' + d.name + '</option>';
-                    $('#upload_month').append(option);
-                });
-            } else {
-                toastr.error('月份加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-
-    //本地网加载
-    $.post(hostUrl + "localNet/listAllByUser", {lvl: 3})
-        .done(function (r) {
-            if (r.state) {
-                console.log(r.data)
-                orgTree.Init(r.data);
-            } else {
-                toastr.error('本地网加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-}
-
-
-function commitData(row) {
-    editAlert('警告', '是否确定提交流水号: ' + row.logId, '提交', function () {
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "importIncomeData/commit",
-            data: {"logId": row.logId},
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('提交成功');
-                    hideAlert();
-                    table.refresh();
-                } else {
-                    toastr.error('提交失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
-            }
-        });
-    });
-    showAlert();
-}
-
 function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
             type: "POST",
             url: hostUrl + "importIncomeData/remove",
-            data: {"logId": row.logId},
+            data: {logId: row.logId},
             dataType: "json",
             success: function (r) {
                 if (r.state) {
@@ -153,18 +99,17 @@ function removeData(row) {
 var TableInit = function () {
     var oTableInit = new Object();
 
-
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
-            method: 'post',                      //请求方式（*）
+            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
+            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: false,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
-            queryParams: oTableInit.queryParams,//传递参数（*）
+            // queryParams: oTableInit.queryParams,//传递参数（*）
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
@@ -184,6 +129,7 @@ var TableInit = function () {
             rowStyle: function () {
                 return 'table-row';
             },
+            data: [],
             columns: [{
                 field: 'logId',
                 title: '流水号'
@@ -206,9 +152,6 @@ var TableInit = function () {
                 field: 'remark',
                 title: '导入说明'
             }, {
-                field: 'action',
-                title: '提交状态'
-            }, {
                 field: 'operate',
                 title: '操作',
                 events: operateEvents,
@@ -219,12 +162,13 @@ var TableInit = function () {
 
     };
 
+    //加载数据
+    oTableInit.load = function (data) {
+        $('#table_upload').bootstrapTable('load', data);
+    };
+
     //操作 监听
     window.operateEvents = {
-
-        'click .commit': function (e, value, row, index) {
-            commitData(row);
-        },
         'click .remove': function (e, value, row, index) {
             removeData(row);
         }
@@ -233,23 +177,11 @@ var TableInit = function () {
     //操作显示format
     function operateFormatter(value, row, index) {
         return [
-            '<button type="button" class="commit btn btn-info btn-xs">提交</button> \
-             <button type="button" class="remove btn btn-danger btn-xs">删除</button>'
+            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
         ].join('');
     }
 
-    //刷新数据
-    oTableInit.refresh = function () {
-        $('#table_upload').bootstrapTable('refresh');
-    };
 
-    //得到查询的参数
-    oTableInit.queryParams = function (params) {
-        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-            month: $("#upload_month").val()
-        };
-        return temp;
-    };
     return oTableInit;
 };
 

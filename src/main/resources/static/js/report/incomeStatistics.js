@@ -1,7 +1,7 @@
 var orgTree;
 function initIncomeStatistics() {
 
-    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
 
 
     initSelect();

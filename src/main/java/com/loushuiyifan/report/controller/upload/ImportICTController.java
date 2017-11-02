@@ -1,22 +1,20 @@
 package com.loushuiyifan.report.controller.upload;
 
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.config.shiro.ShiroConfig;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.ReportStorageService;
 import com.loushuiyifan.report.service.ImportICTService;
+import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
-import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,22 +28,13 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("importICT")
-public class ImportICTController {
+public class ImportICTController extends BaseImportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportICTController.class);
 
 
     @Autowired
-    ReportStorageService reportStorageService;
-
-    @Autowired
     ImportICTService importICTService;
 
-    @ModelAttribute("user")
-    public User user(HttpServletRequest request) {
-        HttpSession session = WebUtils.toHttp(request).getSession();
-        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
-        return user;
-    }
 
     /**
      * ICT导入界面
@@ -53,7 +42,15 @@ public class ImportICTController {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(ModelMap map, @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+
+        //页面条件
+        List<Organization> orgs = localNetService.listAllByUser(userId, 3);
+        List<CommonVO> months = dateService.aroundMonths(5);
+
+        map.put("orgs", orgs);
+        map.put("months", months);
         return "report/upload/importICT";
     }
 

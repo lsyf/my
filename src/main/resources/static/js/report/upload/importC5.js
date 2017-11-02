@@ -2,7 +2,7 @@ var table;
 var table2;
 var orgTree;
 function initC5() {
-    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
 
     table = new TableInit();
     table.Init();

@@ -5,7 +5,6 @@ import com.loushuiyifan.config.mybatis.MyMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -17,7 +16,7 @@ public interface LocalNetDAO extends MyMapper<Organization> {
     List<Organization> listByUserAndLvl(@Param("userId") Long userId,
                                         @Param("lvl") Integer lvl);
 
-    List<Map> listByRootAndLvl(@Param("list") List<Organization> relatedList,
+    List<Organization> listByRootAndLvl(@Param("list") List<Organization> relatedList,
                                @Param("lvl") Integer lvl);
 
     /**

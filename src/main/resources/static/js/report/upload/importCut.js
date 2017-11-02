@@ -5,8 +5,8 @@ function initCut() {
     table = new TableInit();
     table.Init();
 
-    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
-    isTree = new OrgZtree("treeOrg2", "menuContent2", "upload_incomeSource");
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId",50);
+    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource",90);
 
     initSelect();
     initForm();
