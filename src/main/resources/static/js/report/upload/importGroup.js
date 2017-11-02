@@ -35,7 +35,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "importCut/upload",
+                url: hostUrl + "importGroup/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -69,25 +69,9 @@ function initForm() {
 
 
 function initSelect() {
-    $.post(hostUrl + "date/aroundMonths", {num: 5})
-        .done(function (r) {
-            if (r.state) {
-                $('#upload_month').empty();
-                r.data.forEach(function (d) {
-                    var option = '<option value="' + d.data + '">' + d.name + '</option>';
-                    $('#upload_month').append(option);
-                });
-            } else {
-                toastr.error('月份加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
 
     //本地网加载
-    $.post(hostUrl + "localNet/listAllByUser", {lvl: 3})
+    $.post(hostUrl + "localNet/listForC5")
         .done(function (r) {
             if (r.state) {
                 console.log(r.data)
@@ -108,7 +92,7 @@ function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "importIncomeData/remove",
+            url: hostUrl + "importGroup/remove",
             data: {"logId": row.logId},
             dataType: "json",
             success: function (r) {
@@ -137,7 +121,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
+            // url: hostUrl + 'importGroup/list',         //请求后台的URL（*）
             // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）

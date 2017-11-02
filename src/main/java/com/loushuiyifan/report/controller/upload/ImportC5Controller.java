@@ -123,7 +123,7 @@ public class ImportC5Controller {
     @PostMapping("list")
     @ResponseBody
     public JsonResult listC5(String month, String latnId) {
-        
+        //TODO 统计待校验
         List<ImportDataLogVO> list = importC5Service.list(month, Integer.parseInt(latnId));
         return JsonResult.success(list);
     }

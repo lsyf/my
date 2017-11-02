@@ -1,20 +1,19 @@
 package com.loushuiyifan.report.bean;
 
-import java.util.Date;
-
-import javax.persistence.Table;
-
 import lombok.Data;
 
+import javax.persistence.Table;
+import java.util.Date;
+
 @Data
-@Table(name="dim_sub_group" ,schema="charge")
+@Table(name = "dim_sub_group", schema = "charge")
 public class RptImportDataGroup {
-	
-	 Long groupId;
-	 Integer latnId;
-	 String groupName;
-	 Long subCode;
-	 String subName;
-	 Integer userId;
-	 Date lstUpd;
+
+    Long groupId;
+    Integer latnId;
+    String groupName;
+    String subCode;
+    String subName;
+    Integer userId;
+    Date lstUpd;
 }
