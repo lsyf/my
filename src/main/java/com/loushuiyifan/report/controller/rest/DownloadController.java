@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.controller;
+package com.loushuiyifan.report.controller.rest;
 
 import com.loushuiyifan.report.exception.DownloadException;
 import com.loushuiyifan.report.properties.StorageProperties;
@@ -6,10 +6,10 @@ import com.loushuiyifan.report.serv.DownloadService;
 import com.loushuiyifan.system.service.DictionaryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +20,7 @@ import java.nio.file.Paths;
  * @author 漏水亦凡
  * @date 2017/9/20
  */
-@Controller
+@RestController
 @RequestMapping("download")
 public class DownloadController {
 

@@ -1,6 +1,6 @@
 package com.loushuiyifan;
 
-import com.loushuiyifan.report.service.CodeListTaxService;
+import com.loushuiyifan.report.serv.CodeListTaxService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

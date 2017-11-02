@@ -1,11 +1,10 @@
-package com.loushuiyifan.report.controller;
+package com.loushuiyifan.report.controller.rest;
 
-import com.loushuiyifan.report.service.CodeListTaxService;
+import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,7 +28,6 @@ public class CodeListTaxController {
      * 根据用户 获取本地网列表
      */
     @PostMapping("listByType")
-    @ResponseBody
     public JsonResult listByType(String type) {
         List<Map> list = codeListTaxService.listByType(type);
         return JsonResult.success(list);

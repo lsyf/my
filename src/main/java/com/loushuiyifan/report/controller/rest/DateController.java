@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.controller;
+package com.loushuiyifan.report.controller.rest;
 
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.vo.CommonVO;
