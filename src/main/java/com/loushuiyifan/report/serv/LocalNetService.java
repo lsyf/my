@@ -60,9 +60,10 @@ public class LocalNetService {
      * @param userId
      * @return
      */
-    public List<Organization> listForC5(Long userId) {
+    public List<Organization> listForC4(Long userId) {
         String type = OrganizationService.TYPE_CITY;
-        String data = "0";
+        String data = "0";//该data代表股份值
+
         //首先根据用户获取所有 相关股份的地市信息
         List<Organization> orgs = localNetDAO.preForC3(userId, data);
         if (orgs == null || orgs.size() == 0) {

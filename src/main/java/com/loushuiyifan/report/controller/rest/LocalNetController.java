@@ -54,7 +54,7 @@ public class LocalNetController {
     public JsonResult listForC5(@ModelAttribute("user") User user) {
         Long userId = user.getId();
 
-        List<Organization> list = localNetService.listForC5(userId);
+        List<Organization> list = localNetService.listForC4(userId);
         return JsonResult.success(list);
     }
 

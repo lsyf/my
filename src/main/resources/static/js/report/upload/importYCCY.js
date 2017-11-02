@@ -1,6 +1,6 @@
 var table;
 
-function initDataTax() {
+function initYCCY() {
     table = new TableInit();
     table.Init();
 
@@ -39,7 +39,7 @@ function initForm() {
                     $('#btn_upload').button("reset");
                     if (r.state) {
                         $(form).resetForm();
-
+                       
                         toastr.info('提交成功');
                         table.refresh();
                     } else {

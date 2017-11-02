@@ -5,19 +5,17 @@ function initCut() {
     table = new TableInit();
     table.Init();
 
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId",50);
-    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource",90);
+    buildSelect('upload_month', months);
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId", 50);
+    orgTree.Init(orgs);
+    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource", 90);
+    isTree.Init(incomeSources);
 
-    initSelect();
+
     initForm();
-    initEvent();
+
 }
 
-function initEvent() {
-    $('#btn_query').click(function () {
-
-    });
-}
 
 function initForm() {
     initValidator();
@@ -46,6 +44,9 @@ function initForm() {
                     $('#btn_upload').button("reset");
                     if (r.state) {
                         $(form).resetForm();
+                        orgTree.reset();
+                        isTree.reset();
+
                         toastr.info('提交成功');
                         table.refresh();
                     } else {
@@ -68,96 +69,6 @@ function initForm() {
 
 }
 
-
-function initSelect() {
-    $.post(hostUrl + "date/aroundMonths", {num: 5})
-        .done(function (r) {
-            if (r.state) {
-                $('#upload_month').empty();
-                r.data.forEach(function (d) {
-                    var option = '<option value="' + d.data + '">' + d.name + '</option>';
-                    $('#upload_month').append(option);
-                });
-            } else {
-                toastr.error('月份加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-
-    //本地网加载
-    $.post(hostUrl + "localNet/listAllByUser", {lvl: 3})
-        .done(function (r) {
-            if (r.state) {
-                console.log(r.data)
-                orgTree.Init(r.data);
-            } else {
-                toastr.error('本地网加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-
-    //本地网加载
-    $.post(hostUrl + "localNet/listAllByUser", {lvl: 3})
-        .done(function (r) {
-            if (r.state) {
-                console.log(r.data)
-                orgTree.Init(r.data);
-            } else {
-                toastr.error('本地网加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-
-    //本地网加载
-    $.post(hostUrl + "codeListTax/listByType", {type: 'income_source2017'})
-        .done(function (r) {
-            if (r.state) {
-                console.log(r.data)
-                isTree.Init(r.data);
-            } else {
-                toastr.error('收入来源加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-}
-
-
-function removeData(row) {
-    editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "importIncomeData/remove",
-            data: {"logId": row.logId},
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('删除成功');
-                    hideAlert();
-                    table.refresh();
-                } else {
-                    toastr.error('提删除失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
-            }
-        });
-    });
-    showAlert();
-}
 
 //Table初始化
 var TableInit = function () {

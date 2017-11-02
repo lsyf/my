@@ -2,6 +2,7 @@ package com.loushuiyifan.report.controller.upload;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
+import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.LocalNetService;
 import com.loushuiyifan.report.serv.ReportStorageService;
@@ -24,6 +25,9 @@ public abstract class BaseImportController {
 
     @Autowired
     LocalNetService localNetService;
+
+    @Autowired
+    CodeListTaxService codeListTaxService;
 
     @Autowired
     ReportStorageService reportStorageService;
