@@ -15,19 +15,21 @@ import org.apache.ibatis.annotations.Param;
 public interface RptImportCutRateDAO extends MyMapper<RptImportCutRate> {
     Double calcRateSum(@Param("ruleId") String ruleId,
                        @Param("month") String month);
-
-    List<CutRateVO> cutRateJihetype2(String ruleId, String month);
-
-    List<CutDataListVO> cutRateList(String month,
-                                    Integer latnId,
-                                    String incomeSource,
-                                    Integer shareType,
-                                    String type);
-
-    void cutRateDel(Integer latnId,
-                    String incomeSource,
-                    Integer shareType,
-                    String userName,
-                    String activeFlag);
+    //统计切割比例之和
+    List<CutRateVO> sumRateByRuleId(@Param("ruleId")String ruleId, 
+    		                        @Param("month")String month);
+    //查询导入数据 
+    List<CutDataListVO> cutRateList(@Param("month")String month,
+    		@Param("latnId") Integer latnId,
+    		@Param("incomeSource")String incomeSource,
+    		@Param("shareType")Integer shareType,
+    		@Param("type")String type);
+    
+    //删除导入数据
+    void cutRateDel(@Param("latnId") Integer latnId,
+    		        @Param("incomeSource") String incomeSource,
+                    @Param("shareType") Integer shareType,
+                    @Param("userName") String userName,
+                    @Param("activeFlag") String activeFlag);
 
 }

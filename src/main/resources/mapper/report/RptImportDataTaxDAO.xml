@@ -38,7 +38,7 @@
          #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
-	<select id="selectTax" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+	<select id="pkgCutTaxData" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
             statementType="CALLABLE">
         {call PKG_CUT_TAXDATA.RPT_TAX_CUT(
          #{logId,mode=IN,jdbcType=NUMERIC},

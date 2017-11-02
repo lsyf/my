@@ -4,7 +4,9 @@ import java.nio.file.Path;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -166,7 +168,21 @@ public class ImportYccyService {
      * @return
      */
     public List<ImportLogDomTaxVO> list(Long userId, String month) {
-        
+    	List<ImportLogDomTaxVO> list =rptImportYccyDataDAO.listDataLog(userId, month);
+    	int count = 0;
+		double total = 0;
+		for (int i = 0; i < list.size(); i++) {
+			ImportLogDomTaxVO tmp = list.get(i);
+			count += tmp.getCount();
+			total += tmp.getSum();
+		}
+		ImportLogDomTaxVO tmp = new ImportLogDomTaxVO();
+		tmp.setCount(count);
+		tmp.setSum(total);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("count", tmp);
+		result.put("list", list);
+		//TODO 返回结果待定
         return rptImportYccyDataDAO.listDataLog(userId, month);
     }
     

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,9 +73,9 @@ public class ImportGroupService {
      * 删除
      */
     public void delete(Integer latnId, Long groupId) throws Exception {
-        RptImportDataGroup data = new RptImportDataGroup();
-        data.setGroupId(groupId); //指标编码groupId 为空时删除按latnId
-        data.setLatnId(latnId);
+        
+         //TODO 指标编码groupId 为空时删除按latnId
+       
         rptImportGroupDataDAO.deleteGroup(latnId, groupId);
     }
 
@@ -96,7 +97,7 @@ public class ImportGroupService {
                 } else {
                     data.setUserId(userId);
                     data.setLatnId(latnId);
-                    data.setLstUpd(new Date());
+                    data.setLstUpd(Date.from(Instant.now())); //TODO 时间
                     rptImportGroupDataDAO.insert(data);
                 }
             }
