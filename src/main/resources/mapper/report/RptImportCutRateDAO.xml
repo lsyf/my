@@ -8,7 +8,7 @@
 		and a.acct_month = #{month}
 	</select>
 
-    <select id="Dim_Cut_Rate_exp_jihetype2"
+    <select id="sumRateByRuleId"
             resultType="com.loushuiyifan.report.vo.CutRateVO">
 		Select area_id, sum(rate) from charge.dim_cut_rate a
 		Where a.rule_id= #{ruleId}
@@ -16,9 +16,6 @@
 		Group by area_id
 		<![CDATA[
 			Having sum(rate)<>1
-
-
-
         ]]>
     </select>
 

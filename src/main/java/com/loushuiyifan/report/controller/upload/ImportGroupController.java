@@ -84,11 +84,12 @@ public class ImportGroupController {
 
             try {
                 Files.delete(path);
-
+                //TODO 导入失败删除数据库数据
+                importGroupService.delete(Integer.parseInt(latnId), Long.parseLong(groupId));
             } catch (IOException e1) {
                 e1.printStackTrace();
                 logger.error("5删除文件失败", e1);
-            } finally {
+            }finally {
                 throw new ReportException("导入失败: " + e.getMessage(), e);
             }
         }
@@ -121,7 +122,7 @@ public class ImportGroupController {
     public JsonResult remove(String latnId,
                              String groupId,
                              String month
-    ) {
+        ) {
 
         if (latnId.equals("0")) {
             throw new ReportException("请选择正确的地市");

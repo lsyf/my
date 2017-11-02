@@ -79,7 +79,7 @@ public class ImportYccyController {
         Long userId = user.getId();
 
         //首先校验能否导入
-        dateService.checkImportYccy(month);
+        dateService.checkImportYccy();
 
         //然后保存
         Path path = reportStorageService.store(file);
@@ -122,8 +122,11 @@ public class ImportYccyController {
     @PostMapping("remove")
     @ResponseBody
     public JsonResult remove(Long logId,
+    		                 String month,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();
+        //TODO 时间校验待修改
+        dateService.checkDelYccy(month);
         importYccyService.delete(Math.toIntExact(userId), logId);
         return JsonResult.success();
     }

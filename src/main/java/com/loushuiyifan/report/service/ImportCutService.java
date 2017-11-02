@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -166,7 +167,7 @@ public class ImportCutService {
         try {
             logger.debug("批量插入数量: {}", list.size());
 
-            Date now = new Date();
+            Date now = Date.from(Instant.now());
 
             for (Map<String, Object> temp : list) {
                 String sheetName = temp.get("name").toString();

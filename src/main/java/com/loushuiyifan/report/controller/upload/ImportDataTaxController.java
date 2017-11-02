@@ -118,6 +118,7 @@ public class ImportDataTaxController {
     @ResponseBody
     public JsonResult list(String month, @ModelAttribute("user") User user) {
         Long userId = user.getId();
+       //TODO 已完成，待验证 map是否可用
         List<Map<String,Object>> list = importTaxService.list(month, userId);
                 
         return JsonResult.success(list);

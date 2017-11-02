@@ -12,12 +12,13 @@ import java.util.List;
  * @data 2017/10/26
  */
 public interface RptImportGroupDataDAO extends MyMapper<RptImportDataGroup> {
-
+	//删除
     void deleteGroup(@Param("latnid") Integer latnId,
                      @Param("groupid") Long groupId);
-
+    //判断指标编码
     List<String> findSubcode(String subcode);
 
+    //查询数据
     List<ImportDataGroupVO> listData(@Param("latnId") Integer latnId,
                                      @Param("groupId") Long groupId
     );
