@@ -44,9 +44,11 @@ function initValidator() {
         },
         highlight: function (e, a) {
             $(e).closest(".form-group").addClass("has-error");
+            // $(e).closest(".form-validation").addClass("has-error");
         },
         success: function (e, a) {
             $(e).closest(".form-group").removeClass("has-error");
+            // $(e).closest(".form-validation").removeClass("has-error");
             $(e).remove();
         }
     });
