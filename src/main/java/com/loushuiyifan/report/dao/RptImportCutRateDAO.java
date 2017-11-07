@@ -13,7 +13,8 @@ import org.apache.ibatis.annotations.Param;
  * @data 2017/10/26
  */
 public interface RptImportCutRateDAO extends MyMapper<RptImportCutRate> {
-    Double calcRateSum(@Param("ruleId") String ruleId,
+    //查询比例是否存在
+	Double calcRateSum(@Param("ruleId") String ruleId,
                        @Param("month") String month);
     //统计切割比例之和
     List<CutRateVO> sumRateByRuleId(@Param("ruleId")String ruleId, 
@@ -21,15 +22,16 @@ public interface RptImportCutRateDAO extends MyMapper<RptImportCutRate> {
     //查询导入数据 
     List<CutDataListVO> cutRateList(@Param("month")String month,
     		@Param("latnId") Integer latnId,
-    		@Param("incomeSource")String incomeSource,
-    		@Param("shareType")Integer shareType,
-    		@Param("type")String type);
+    		@Param("incomeSource") String incomeSource,
+    		@Param("shareType") Integer shareType,
+    		@Param("remark") String remark
+    		);
     
     //删除导入数据
     void cutRateDel(@Param("latnId") Integer latnId,
     		        @Param("incomeSource") String incomeSource,
                     @Param("shareType") Integer shareType,
-                    @Param("userName") String userName,
-                    @Param("activeFlag") String activeFlag);
+                    @Param("username") String username
+                   );
 
 }

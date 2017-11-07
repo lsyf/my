@@ -16,7 +16,9 @@ public interface RptImportGroupDataDAO extends MyMapper<RptImportDataGroup> {
     void deleteGroup(@Param("latnid") Integer latnId,
                      @Param("groupid") Long groupId);
     //判断指标编码
-    List<String> findSubcode(String subcode);
+    List<String> findSubcode(@Param("subcode") String subcode,
+    		                 @Param("rptNo") String rptNo,
+    		                 @Param("groupId") Long groupId);
 
     //查询数据
     List<ImportDataGroupVO> listData(@Param("latnId") Integer latnId,

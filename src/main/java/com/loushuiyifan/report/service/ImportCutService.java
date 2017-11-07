@@ -1,16 +1,12 @@
 package com.loushuiyifan.report.service;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.ReportConfig;
-import com.loushuiyifan.report.bean.RptImportCutRate;
-import com.loushuiyifan.report.bean.RptImportDataCut;
-import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportCutDataDAO;
-import com.loushuiyifan.report.dao.RptImportCutRateDAO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.CutDataListVO;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -24,12 +20,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.ReportConfig;
+import com.loushuiyifan.report.bean.RptImportCutRate;
+import com.loushuiyifan.report.bean.RptImportDataCut;
+import com.loushuiyifan.report.dao.ExtImportLogDAO;
+import com.loushuiyifan.report.dao.RptImportCutDataDAO;
+import com.loushuiyifan.report.dao.RptImportCutRateDAO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.CutDataListVO;
+import com.loushuiyifan.report.vo.CutRateVO;
 
 @Service
 public class ImportCutService {
@@ -70,36 +72,10 @@ public class ImportCutService {
         }
 
         //然后保存解析的数据
-        saveCutDataByGroup(list, month, username, latnId, incomeSource, shareType, remark);
+        saveCutDataByGroup(list, month, username, latnId, incomeSource, shareType, remark);       
+       
 
         
-        //根据切割类型稽核
-        
-        //
-//        if (cut.getShareType() == 1) { //c4
-//            Double result2 = rptImportCutRateDAO.cutRateJihetype(cut.getRuleId(), month);
-//            if (result2 != 1) {
-//                cut.setActiveFlag("N");
-//                rptImportCutDataDAO.jihefaild(cut);
-//                throw new ReportException("导入数据比例合计不等于1");
-//            }
-//        } else {
-//            List<CutRateVO> l_rate = rptImportCutRateDAO.cutRateJihetype2(cut.getRuleId(), month);
-//            if (l_rate.size() != 0) {
-//                cut.setActiveFlag("N");
-//                rptImportCutDataDAO.jihefaild(cut);
-//                throw new ReportException("导入数据比例合计不等于1,请检查数据比例合计；\n若比例合计为1,请查询是否因多次导入造成数据重复，\n请先执行删除操作再尝试重新导入");
-//            }
-//        }
-
-        // 若发生异常则删除导入的数据
-//        	rptImportCutRateDAO.cutRateDel(cut.getLatnId(),
-//        			                       cut.getIncomeSource(),
-//        			                       cut.getShareType(),
-//        			                       cut.getChgWho(),
-//        			                       "N");
-//        	rptImportCutDataDAO.jihefaild(cut);
-
 
     }
 
@@ -109,15 +85,16 @@ public class ImportCutService {
     public List<CutDataListVO> queryList(String month,
                                          Integer latnId,
                                          String incomeSource,
-                                         Integer shareType) {
-        String type = ReportConfig.RptImportType.CUT.toString();
-
+                                         Integer shareType,
+                                         String remark) {
+        
         List<CutDataListVO> list = rptImportCutRateDAO
                 .cutRateList(month,
                         latnId,
                         incomeSource,
                         shareType,
-                        type);
+                        remark
+                        );
 
         return list;
     }
@@ -134,18 +111,17 @@ public class ImportCutService {
         sb.append(latnId).append(incomeSource).append(shareType);
         String ruleId = sb.toString();
         try {
-            RptImportDataCut cut = new RptImportDataCut();
-            cut.setChgWho(userName);
-            cut.setShareType(shareType);
-            cut.setLatnId(latnId);
-            cut.setIncomeSource(incomeSource);
-            cut.setActiveFlag("N");
+
             //TODO 待修改 查询用户名
             List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName, ruleId);
 
             if (check.size() != 0) {
-                rptImportCutDataDAO.updataCutFlag(cut); // 更新（Y/N）is_active
-                rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName, "N");
+            	rptImportCutDataDAO.updataCutFlag(latnId, 
+                		incomeSource, 
+                		shareType, 
+                		userName,
+                		"Y"); // 更新（Y/N）is_active
+                rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName);
             } else {
                 throw new ReportException("您没有权限删除此记录");
             }
@@ -165,16 +141,13 @@ public class ImportCutService {
                                    String incomeSource,
                                    Integer shareType,
                                    String remark) throws Exception {
-        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+        String msg = null;
         try {
-            logger.debug("批量插入数量: {}", list.size());
-
             Date now = Date.from(Instant.now());
-
             for (Map<String, Object> temp : list) {
                 String sheetName = temp.get("name").toString();
                 String str = sheetName.substring(0, sheetName.indexOf("-"));
-
+                
                 RptImportDataCut cut = new RptImportDataCut();
                 cut.setChgWho(username);
                 cut.setShareType(shareType);
@@ -185,9 +158,9 @@ public class ImportCutService {
 
                 // 形成ruleId
                 StringBuffer sb = new StringBuffer();
-                sb.append(cut.getLatnId()).append("-")
-                        .append(cut.getIncomeSource()).append("-")
-                        .append(cut.getShareType()).append("-")
+                sb.append(latnId).append("-")
+                        .append(incomeSource).append("-")
+                        .append(shareType).append("-")
                         .append(str);
                 String ruleId = sb.toString();
 
@@ -200,9 +173,12 @@ public class ImportCutService {
                 if (exist_cut == null) {
                     rptImportCutDataDAO.insertSelective(cut);
                 } else {//如果数据已存在 则更新状态
-                    rptImportCutDataDAO.updataCutFlag(cut);
+                    rptImportCutDataDAO.updataCutFlag(latnId, 
+			                    		incomeSource, 
+			                    		shareType, 
+			                    		username,
+			                    		"Y");
                 }
-
 
                 //统计切割数据为null
                 //TODO 直接改为 判断数据是否存在
@@ -217,14 +193,36 @@ public class ImportCutService {
                 } else {
                     throw new ReportException("该配置已存在，请先执行删除操作");
                 }
-
+                
+                //根据切割类型稽核  
+                if (shareType == 1) { //c4
+                    Double result2 = rptImportCutRateDAO.calcRateSum(cut.getRuleId(), month);
+                    if (result2 != 1) {
+                       
+                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"N");
+                        throw new ReportException("导入数据比例合计不等于1");
+                    }
+                } else {
+                    List<CutRateVO> l_rate = rptImportCutRateDAO.sumRateByRuleId(cut.getRuleId(), month);
+                    if (l_rate.size() != 0) {
+                    	rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"N");
+                        throw new ReportException("导入数据比例合计不等于1,请检查数据比例合计；\n若比例合计为1,请查询是否因多次导入造成数据重复，\n请先执行删除操作再尝试重新导入");
+                    }
+                }
             }
-            sqlSession.commit();
 
-
+        }catch(Exception e ){
+        	e.printStackTrace();
+        	msg = e.getMessage();
         } finally {
-            sqlSession.close();
-            logger.debug("批量插入结束");
+            if(msg!=null){
+            	//TODO 删除
+            	// 若发生异常则删除导入的数据
+            	rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, username);
+            	rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"N");
+  	
+            	throw new ReportException(msg);
+            }
         }
     }
 

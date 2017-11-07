@@ -1,7 +1,5 @@
 package com.loushuiyifan.report.vo;
 
-import javax.persistence.Table;
-
 import lombok.Data;
 
 @Data

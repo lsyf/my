@@ -147,20 +147,12 @@ public class ImportIncomeDataService {
      */
     public void importDataByGroup(List<RptImportDataChennel> list, Long logId, String month) {
 
-        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        try {
-            logger.debug("批量插入数量: {}", list.size());
-
             for (final RptImportDataChennel data : list) {
                 data.setLogId(logId);
                 data.setAcctMonth(month);
                 rptImportDataChennelDAO.insertSelective(data);
             }
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
-            logger.debug("批量插入结束");
-        }
+            logger.debug("批量插入数量: {}", list.size());
     }
 
     /**

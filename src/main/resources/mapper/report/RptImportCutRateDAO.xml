@@ -23,20 +23,20 @@
 		delete from charge.dim_cut_rate b where b.rule_id in 
 		(select a.rule_id from charge.dim_cut_cfg a 
 		where a.latn_id=#{latnId} and a.share_type=#{shareType} 
-		and a.income_source=#{incomeSource} and a.chg_who=#{userName})
+		and a.income_source=#{incomeSource} and a.chg_who=#{username})
 	</delete>
 
     <select id="cutRateList" resultType="com.loushuiyifan.report.vo.CutDataListVO">
-	select b.acct_month as acctMonth,
-       a.rule_id as ruleId,
-       a.is_active as activeFlag,
+	select b.acct_month 	as acctMonth,
+       a.rule_id        	as ruleId,
+       a.is_active      	as activeFlag,
        decode(a.share_type,'1','C4','2','C5') as shareType,
-       a.income_source as incomeSource,
-       d.code_name as codeName, 
-       c.area_id as areaId, 
-       c.area_name as areaName,
-       c.bureau_id as bureauId,
-       c.bureau_name as bureauName,
+       a.income_source		as incomeSource,
+       d.code_name       	as codeName, 
+       c.area_id         	as areaId, 
+       c.area_name  	 	as areaName,
+       c.bureau_id 			as bureauId,
+       c.bureau_name 		as bureauName,
        b.rate
   		from charge.dim_cut_cfg a,
        charge.dim_cut_rate      b,
@@ -48,7 +48,12 @@
   		 and a.income_source = d.code_id
   		 and d.type_code = 'income_source2017'
   		 and b.acct_month = #{month}
-  		  
+  		 <if test="latnId !=0">
+  		 and a.latn_id = #{latnId}
+  		 </if>
+  		 <if test="remark !=null and remark !='' ">
+  		 and a.express like #{remark}
+  		 </if> 
   		 and a.share_type = #{shareType}
   		 and a.income_source = #{incomeSource}
 	</select>

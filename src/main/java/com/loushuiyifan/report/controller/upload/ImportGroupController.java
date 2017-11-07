@@ -25,11 +25,8 @@ import java.util.List;
 public class ImportGroupController extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportGroupController.class);
 
-
     @Autowired
     ImportGroupService importGroupService;
-
-
 
     /**
      * 指标组配置页面
@@ -57,6 +54,7 @@ public class ImportGroupController extends BaseReportController {
                              String groupId,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();
+        //TODO 是否需要判断
         if (latnId.equals("0")) {
             throw new ReportException("请选择正确的地市");
         }
@@ -96,11 +94,9 @@ public class ImportGroupController extends BaseReportController {
     @PostMapping("list")
     @ResponseBody
     public JsonResult listGroup(String latnId,
-                                String groupId,
-                                @ModelAttribute("user") User user) {
-        Long userId = user.getId();
-        //TODO 权限不足,非本地导入员无法查询其他地市导入数据
-        //groupId 指标组编码若为空，则按本地网查询
+                                String groupId
+                                ) {
+        
         List<ImportDataGroupVO> list = importGroupService
                 .list(Integer.parseInt(latnId), Long.parseLong(groupId));
 
@@ -120,9 +116,8 @@ public class ImportGroupController extends BaseReportController {
         if (latnId.equals("0")) {
             throw new ReportException("请选择正确的地市");
         }
-        //首先校验能否导入
+        //首先校验能否导入 超过删除时限，禁止删除
         dateService.checkImportGroup();
-        //groupId 指标组编码若为空，则按本地网删除
         try {
             importGroupService.delete(Integer.parseInt(latnId), Long.parseLong(groupId));
         } catch (Exception e) {

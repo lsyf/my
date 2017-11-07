@@ -13,10 +13,14 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface RptImportCutDataDAO extends MyMapper<RptImportDataCut> {
 
-
-    void updataCutFlag(RptImportDataCut cut);
-    //删除前验证
-    
+    //重新导入更新is_active
+    void updataCutFlag(@Param("latnId") Integer latnId,
+	        @Param("incomeSource") String incomeSource,
+            @Param("shareType") Integer shareType,
+            @Param("userName") String userName,
+            @Param("activeFlag") String activeFlag
+            );
+    //删除前验证   
     List<String> checkCut(@Param("month") String month,
     		@Param("latnId") Integer latnId,
 	        @Param("incomeSource") String incomeSource,

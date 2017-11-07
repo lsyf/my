@@ -9,7 +9,7 @@
 		where a.latn_id=#{latnId}
 		and a.share_type=#{shareType}
 		and a.income_source=#{incomeSource}
-		and a.chg_who=#{chgWho}
+		and a.chg_who=#{userName}
 	</update>
 
     <select id="checkCut"

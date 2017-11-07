@@ -85,28 +85,22 @@ public class ImportGroupService {
     public void saveImportGroupDataByGroup(List<RptImportDataGroup> list,
                                            Integer userId,
                                            Integer latnId) throws Exception {
-        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        logger.debug("批量插入数量: {}", list.size());
-
-        try {
+             
             for (RptImportDataGroup data : list) {
                 //判断指标编码是否为空
-                List<String> l = rptImportGroupDataDAO.findSubcode(data.getSubCode());
+                List<String> l = rptImportGroupDataDAO.findSubcode(data.getSubCode(), "1701", Long.parseLong("0"));
                 if (l == null) {
                     throw new ReportException("导入的数据中，指标编码：" + data.getSubCode() + " 为非明细指标，请检查后重新导入！");
                 } else {
                     data.setUserId(userId);
                     data.setLatnId(latnId);
                     data.setLstUpd(Date.from(Instant.now())); //TODO 时间
-                    rptImportGroupDataDAO.insert(data);
+                    //rptImportGroupDataDAO.insert(data); 
+                    rptImportGroupDataDAO.insertSelective(data);
                 }
             }
-
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
-            logger.debug("批量插入结束");
-        }
+      
+            logger.debug("批量插入结束"+ list.size());     
     }
 
     /**

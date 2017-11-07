@@ -126,11 +126,6 @@ public class ImportC5Service {
      * @param month
      */
     public void saveC5DataByGroup(List<RptImportDataC5> list, Long logId, String month, Integer latnId) {
-
-        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        try {
-            logger.debug("批量插入数量: {}", list.size());
-
             for (final RptImportDataC5 data : list) {
                 //解析不到收入来源，默认为-1
                 data.setIncomeSource("-1");
@@ -139,11 +134,6 @@ public class ImportC5Service {
                 data.setAcctMonth(month);
                 rptImportDataC5DAO.insertSelective(data);
             }
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
-            logger.debug("批量插入结束");
-        }
     }
 
     /**

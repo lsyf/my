@@ -117,16 +117,12 @@ public class ImportCutController extends BaseReportController {
             String latnId,
             String incomeSource,
             String shareType,
-            String remark,
-            @ModelAttribute("user") User user) {
-        //校验账期，本地网，收入来源不能为空
-        // 地市id 用作权限控制
-        Long userId = user.getId();
-
+            String remark
+            ) {
+       
         List<CutDataListVO> list = importCutService.queryList(month, Integer.parseInt(latnId),
-                incomeSource, Integer.parseInt(shareType));
-        //Map<String, Object> result = new HashMap<String, Object>();
-        //result.put("l_fail_file", list);
+                incomeSource, Integer.parseInt(shareType),remark);
+        
         return JsonResult.success(list);
     }
 
