@@ -7,10 +7,24 @@ import org.apache.ibatis.annotations.Param;
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportYccyData;
 import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 
 public interface RptImportYccyDataDAO extends MyMapper<RptImportYccyData>{
-	 void deleteImportData(DeleteYccyDataDTO dto);
+	
+	/**
+	 * 删除存过
+	 * ssc_ychd_del_data
+	 * @param dto
+	 */
+	void deleteImportData(DeleteYccyDataDTO dto);
+	 
+	 /**
+	  *校验存过 
+	  * ssc_ychd_check
+	  * @param dto
+	  */
+	 void checkYCCYData(SPDataDTO dto);
 	 
 	 
 	 List<ImportLogDomTaxVO> listDataLog(@Param("userId") Long userId,

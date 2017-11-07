@@ -76,7 +76,6 @@ public class ImportYccyService {
             throw new ReportException(error);
         }
 
-
         //然后保存解析的数据
         Long logId = extImportYccyLogDAO.nextvalKey();
         importDataByGroup(list, logId, month);
@@ -94,21 +93,18 @@ public class ImportYccyService {
         log.setFileName(filename);
         extImportYccyLogDAO.insert(log);
 
-        //TODO 待替代新存过(旧存过不可用,测试可注释)
-        //校验导入数据指标
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
-        
+        rptImportYccyDataDAO.checkYCCYData(dto);
         Integer code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
             String error = "";
             try {
                 delete(Math.toIntExact(userId), logId);
             } catch (Exception e) {
-                error = "1校验失败后删除数据异常: " + e.getMessage();
+                error = "8校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("1导入数据校验失败: %s ; %s", dto.getRtnMsg(), error);
+                error = String.format("8导入数据校验失败: %s ; %s", dto.getRtnMsg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }
@@ -142,7 +138,6 @@ public class ImportYccyService {
      * @param month
      */
     public void importDataByGroup(List<RptImportYccyData> list, Long logId, String month) {
-
        
             for (final RptImportYccyData data : list) {
                 data.setLogId(logId);
@@ -161,7 +156,7 @@ public class ImportYccyService {
      * @param month
      * @return
      */
-    public List<ImportLogDomTaxVO> list(Long userId, String month) {
+    public Map<String, Object> list(Long userId, String month) {
     	List<ImportLogDomTaxVO> list =rptImportYccyDataDAO.listDataLog(userId, month);
     	int count = 0;
 		double total = 0;
@@ -177,7 +172,7 @@ public class ImportYccyService {
 		result.put("count", tmp);
 		result.put("list", list);
 		//TODO 返回结果待定
-        return rptImportYccyDataDAO.listDataLog(userId, month);
+        return result;
     }
     
     /**
@@ -193,7 +188,7 @@ public class ImportYccyService {
         dto.setLogId(logId);
         rptImportYccyDataDAO.deleteImportData(dto);
         int code = dto.getISts();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
+        
         if (code != 0) {//非0为失败
             throw new ReportException("1数据删除失败: " + dto.getIRetMsg());
         }

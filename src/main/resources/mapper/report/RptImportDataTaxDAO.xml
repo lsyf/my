@@ -35,30 +35,31 @@
         {call tax_data_check(
          #{logId,mode=IN,jdbcType=NUMERIC},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
-
+ 	<select id="deleteTax" parameterType="com.loushuiyifan.report.dto.DeleteImportDataDTO"
+            statementType="CALLABLE">
+        {call IRPT_DEL_TAXDATA(
+         #{userId,mode=IN,jdbcType=NUMERIC},
+         #{logId,mode=IN,jdbcType=NUMERIC},
+         #{rtnCode ,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+    
 	<select id="pkgCutTaxData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call PKG_CUT_TAXDATA.RPT_TAX_CUT(
          #{logId,mode=IN,jdbcType=NUMERIC},
-         #{msg ,mode=OUT,jdbcType=NUMERIC},
-         #{iRetMsg,mode=OUT,jdbcType=VARCHAR})}
-    </select>
-    <select id="tijiaoTax" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
-            statementType="CALLABLE">
-        {call PKG_CUT_TAXDATA.RPT_TAX_CUT(
-         #{logId,mode=IN,jdbcType=NUMERIC},
-         #{msg ,mode=OUT,jdbcType=NUMERIC},
+         #{rtnCode ,mode=OUT,jdbcType=NUMERIC},
          #{iRetMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
     
-    <select id="insertTaxGroup" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+    <select id="insertTaxGroup" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call MSS_STAT_TO_TAX(
          #{l_remark,mode=IN,jdbcType=NUMERIC},
          #{rtnCode ,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
     
     <select id="selectBatchIds"

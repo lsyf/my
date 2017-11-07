@@ -97,21 +97,17 @@ public class ImportTaxService {
         log.setType(ReportConfig.RptImportType.TAX.toString());
         extImportLogDAO.insert(log);
 
-        //TODO 待替代新存过(旧存过不可用,测试可注释)
-        //校验导入数据指标
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataTaxDAO.checkTaxData(dto);
-
-        //TODO 2待修改 存过 PKG_CUT_TAXDATA.RPT_TAX_CUT
-        DeleteYccyDataDTO dyto = new DeleteYccyDataDTO();
-        dyto.setLogId(logId);
-        rptImportDataTaxDAO.tijiaoTax(dyto);
-        Integer cod = dyto.getISts();
-
         Integer code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
-        if (code != 0) {//非0为失败
+        
+        SPDataDTO dyto = new SPDataDTO();
+        dyto.setLogId(logId);
+        rptImportDataTaxDAO.pkgCutTaxData(dyto);
+        Integer code2 = dto.getRtnCode();
+       
+        if (code != 0 && code2 !=0) {//非0为失败
             String error = "";
             try {
                 delete(userId, logId);
@@ -129,7 +125,7 @@ public class ImportTaxService {
     /**
      * 查询
      */
-    public List<Map<String, Object>> list(String month, Long userId) {
+    public Map<String, Object> list(String month, Long userId) {
         String type = ReportConfig.RptImportType.TAX.toString();
         List<ImportLogDomTaxVO> list = rptImportDataTaxDAO.listTax(userId, month, type);
         int count = 0;
@@ -150,10 +146,8 @@ public class ImportTaxService {
         } else {
             result.put("msg", "查询结果为空");
         }
-        List<Map<String, Object>> alist = new ArrayList<>();
-        alist.add(result);
-
-        return alist;
+        
+        return result;
     }
 
 
@@ -170,7 +164,7 @@ public class ImportTaxService {
         //存过 IRPT_DEL_TAXDATA
         rptImportDataTaxDAO.deleteTax(dto);
         int code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
+       
         if (code != 0) {//非0为失败
             throw new ReportException("1数据删除失败: " + dto.getRtnMeg());
         }

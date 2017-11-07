@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 业财差异
@@ -59,7 +60,6 @@ public class ImportYccyController extends BaseReportController {
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String month,
                              String remark,
-                             String latnId,
                              @ModelAttribute("user") User user) {
 
         Long userId = user.getId();
@@ -96,7 +96,7 @@ public class ImportYccyController extends BaseReportController {
     @ResponseBody
     public JsonResult list(String month, @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        List<ImportLogDomTaxVO> list = importYccyService
+        Map<String, Object> list = importYccyService
                 .list(userId, month);
 
         return JsonResult.success(list);
@@ -111,7 +111,7 @@ public class ImportYccyController extends BaseReportController {
                              String month,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        //TODO 时间校验待修改
+       
         dateService.checkDelYccy(month);
         importYccyService.delete(Math.toIntExact(userId), logId);
         return JsonResult.success();

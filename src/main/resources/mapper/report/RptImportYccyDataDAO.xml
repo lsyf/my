@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptImportYccyDataDAO">
 
-    <select id="checkRptImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+    <select id="checkTaxData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
-        {call data_check_2017(
+        {call ssc_ychd_check(
          #{logId,mode=IN,jdbcType=NUMERIC},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
     <delete id="deleteByLogId">

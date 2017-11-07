@@ -7,27 +7,38 @@ import org.apache.ibatis.annotations.Param;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataTax;
-import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 
 	public interface RptImportDataTaxDAO extends MyMapper<RptImportDataTax> {
+		/**
+		 * 删除存过
+		 * IRPT_DEL_TAXDATA
+		 * @param dto
+		 */
 		void deleteTax(DeleteImportDataDTO dto);
-		//导入校验
+		
+		/**
+		 * 导入校验
+		 * tax_data_check
+		 * @param dto
+		 */		
 		void checkTaxData(SPDataDTO dto);
-		//提交数据
-		void pkgCutTaxData(SPDataDTO dto);
-		//数据是否提交
+		
+		//查询数据是否提交
 		String checkPullStates(Long userId);
 		
 		//查询数据
 		List<ImportLogDomTaxVO> listTax(@Param("userId") Long userId,
 						                @Param("month") String month,
 						                @Param("type") String type); 
-		
-		//提交  
-		void tijiaoTax(DeleteYccyDataDTO dto);
+		/**
+		 * 提交
+		 * PKG_CUT_TAXDATA.RPT_TAX_CUT
+		 * @param dyto
+		 */
+		void pkgCutTaxData(SPDataDTO dto);
 		
 		//生成税务
 		 void insertTaxGroup();
