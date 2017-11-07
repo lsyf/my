@@ -3,12 +3,13 @@ package com.loushuiyifan.report.controller;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.service.RptQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.system.vo.JsonResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,9 @@ import java.util.Map;
 public class RptQueryController extends BaseReportController {
 
 
+    @Autowired
+    RptQueryService rptQueryService;
+
     @GetMapping
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
@@ -37,6 +41,22 @@ public class RptQueryController extends BaseReportController {
         map.put("months", months);
         map.put("incomeSources", incomeSources);
         return "report/rptQuery";
+    }
+
+    /**
+     * 报表查询
+     *
+     * @param month
+     * @param latnId
+     * @param incomeSource
+     * @param type
+     * @return
+     */
+    @PostMapping("list")
+    @ResponseBody
+    public JsonResult listC5(String month, String latnId, String incomeSource, String type) {
+        Map<String, Object> map = rptQueryService.list(month, latnId, incomeSource, type);
+        return JsonResult.success(map);
     }
 
 

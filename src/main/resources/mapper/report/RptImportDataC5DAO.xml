@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptImportDataC5DAO">
-	<!-- C5导入校验 -->
-	<select id="checkC5Data" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+    <!-- C5导入校验 -->
+    <select id="checkC5Data" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call update_tax_c5_2015(
          #{logId,mode=IN,jdbcType=NUMERIC},
@@ -10,9 +10,9 @@
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
          #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
-	
-	<!-- C5删除 -->
-	<select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+
+    <!-- C5删除 -->
+    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call IRPT_DEL_DATA_FOR_MGMT_C5(
         #{userId,mode=IN,jdbcType=NUMERIC},
@@ -20,26 +20,27 @@
         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
-    
-    <select id="jiheSum"  resultType="com.loushuiyifan.report.vo.ImportDataLogVO">
+
+    <select id="jiheSum" resultType="com.loushuiyifan.report.vo.ImportDataLogVO">
         select b.log_id as logId,
-         b.file_name as fileName,
-         count(*) as num,
-         sum(a.index_data) as sum,
-		 d.name as city
-		from rpt_import_data_c5 a, EXT_IMPORT_LOG b ,s_dept d
-		where a.acct_month=#{month}
-		and a.log_id=b.log_id
-		and d.id = a.latnid
-		and b.type ='rpt_import_data_c5'
-		<if test="latnId !=0 ">
-		and a.LATNID = #{latnId}
-		</if>		
-		group by b.log_id,b.file_name,d.name
-        
+        b.file_name as fileName,
+        count(*) as num,
+        sum(a.index_data) as sum,
+        d.name as city,
+        b.user_id as userId
+        from rpt_import_data_c5 a, EXT_IMPORT_LOG b ,s_dept d
+        where a.acct_month=#{month}
+        and a.log_id=b.log_id
+        and d.id = a.latnid
+        and b.type ='rpt_import_data_c5'
+        <if test="latnId !=0 ">
+            and a.LATNID = #{latnId}
+        </if>
+        group by b.log_id,b.file_name,d.name,b.user_id
+
     </select>
-	
-	<select id="areaCount"  resultType="com.loushuiyifan.report.vo.ImportDataLogVO">
+
+    <select id="areaCount" resultType="com.loushuiyifan.report.vo.ImportC5DataVO">
        select b.latn_name as latnName,
        b.area_id as c5Id,
        b.area_name as c5Name,
@@ -50,7 +51,9 @@
 	 where a.area_id = b.area_id(+)
 	   and a.c5_id = b.bureau_id(+)
 	   and a.acct_month = #{month}
+        <if test="latnId !=0 ">
 	   and a.latnid = #{latnId}
+        </if>
 	 group by b.latn_name, b.area_id, b.area_name, b.bureau_id, b.bureau_name
                
     </select>

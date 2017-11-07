@@ -1,13 +1,17 @@
 package com.loushuiyifan.report.service;
 
-import java.nio.file.Path;
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.ReportConfig;
+import com.loushuiyifan.report.bean.ExtImportLog;
+import com.loushuiyifan.report.bean.RptImportDataC5;
+import com.loushuiyifan.report.dao.ExtImportLogDAO;
+import com.loushuiyifan.report.dao.RptImportDataC5DAO;
+import com.loushuiyifan.report.dto.SPDataDTO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.DateService;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.ImportC5DataVO;
+import com.loushuiyifan.report.vo.ImportDataLogVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -21,18 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.ReportConfig;
-import com.loushuiyifan.report.bean.ExtImportLog;
-import com.loushuiyifan.report.bean.RptImportDataC5;
-import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportDataC5DAO;
-import com.loushuiyifan.report.dto.SPDataDTO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.ImportC5DataVO;
-import com.loushuiyifan.report.vo.ImportDataLogVO;
+import java.nio.file.Path;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -95,7 +94,7 @@ public class ImportC5Service {
         log.setType(ReportConfig.RptImportType.C5.toString());
         extImportLogDAO.insert(log);
 
-        // TODO 存过待修改
+
         //校验导入数据指标
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
@@ -109,9 +108,9 @@ public class ImportC5Service {
             try {
                 delete(userId, logId);
             } catch (Exception e) {
-                error = "校验失败后删除数据异常: " + e.getMessage();
+                error = "3校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("导入数据校验失败: %s; %s", dto.getRtnMsg(), error);
+                error = String.format("3导入数据校验失败: %s; %s", dto.getRtnMsg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }
@@ -149,19 +148,15 @@ public class ImportC5Service {
 
     /**
      * 稽核数据
-     *
-     * @param userId
-     * @param month
-     * @return
      */
-    public Map<String,Object> list(String month, Integer latnId) {
-    	
-    	String type = ReportConfig.RptImportType.C5.toString();
-    	Map<String,Object> map = new HashMap<>();
-    	List<ImportDataLogVO> l_jihe =rptImportDataC5DAO.jiheSum(month, latnId,type);
-    	List<ImportC5DataVO> l_area =rptImportDataC5DAO.areaCount(month, latnId);
-    	map.put("l_jihe", l_jihe);
-    	map.put("l_area", l_area);
+    public Map<String, Object> list(String month, Integer latnId) {
+
+        String type = ReportConfig.RptImportType.C5.toString();
+        Map<String, Object> map = new HashMap<>();
+        List<ImportDataLogVO> l_jihe = rptImportDataC5DAO.jiheSum(month, latnId, type);
+        List<ImportC5DataVO> l_area = rptImportDataC5DAO.areaCount(month, latnId);
+        map.put("list", l_jihe);
+        map.put("c5", l_area);
         return map;
     }
 
@@ -172,12 +167,12 @@ public class ImportC5Service {
      * @param logId
      */
     public void delete(Long userId, Long logId) {
-    	SPDataDTO dto = new SPDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
         rptImportDataC5DAO.deleteImportData(dto);
         int code = dto.getRtnCode();
-        
+
         if (code != 0) {//非0为失败
             throw new ReportException("3数据删除失败: " + dto.getRtnMsg());
         }

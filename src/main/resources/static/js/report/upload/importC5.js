@@ -16,6 +16,32 @@ function initC5() {
     initForm();
 }
 
+function queryLog() {
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "importC5/list",
+        data: {
+            month: $("#upload_month").val(),
+            latnId: orgTree.val()
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                var data = r.data;
+                table.load(data.list);
+                table2.load(data.c5);
+            } else {
+                toastr.error('查询失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+
+}
+
 function initForm() {
     initValidator();
 
@@ -46,7 +72,7 @@ function initForm() {
                         orgTree.reset();
 
                         toastr.info('导入成功');
-                        list();
+                        queryLog()
                     } else {
                         toastr.error('导入失败:' + r.msg);
                     }
@@ -70,8 +96,6 @@ function initForm() {
 }
 
 
-
-
 function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
@@ -83,7 +107,8 @@ function removeData(row) {
                 if (r.state) {
                     toastr.info('删除成功');
                     hideAlert();
-                    table.refresh();
+
+                    queryLog()
                 } else {
                     toastr.error('提删除失败');
                     toastr.error(r.msg);
@@ -97,33 +122,11 @@ function removeData(row) {
     showAlert();
 }
 
-function list() {
-    $.ajax({
-        type: "POST",
-        url: hostUrl + "importC5/list",
-        data: {
-            month: $("#upload_month").val(),
-            latnId: orgTree.val()
-        },
-        dataType: "json",
-        success: function (r) {
-            if (r.state) {
-                table.load(r.data);
-            } else {
-                toastr.error('加载失败');
-                toastr.error(r.msg);
-            }
-        },
-        error: function (result) {
-            toastr.error('发送请求失败');
-        }
-    });
-}
+
 
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
-
 
     //初始化Table
     oTableInit.Init = function () {
@@ -239,22 +242,22 @@ var TableInit2 = function () {
                 return 'table-row';
             },
             columns: [{
-                field: 'logId',
+                field: 'latnName',
                 title: '本地网'
             }, {
-                field: 'city',
+                field: 'c5Id',
                 title: 'C5ID'
             }, {
-                field: 'fileName',
+                field: 'c5Name',
                 title: 'C5名称'
             }, {
-                field: 'num',
-                title: 'C5ID'
+                field: 'c4Id',
+                title: 'C4ID'
             }, {
-                field: 'sum',
+                field: 'c4Name',
                 title: 'C4名称'
             }, {
-                field: 'userId',
+                field: 'sum',
                 title: '金额'
             }]
         });
@@ -265,7 +268,7 @@ var TableInit2 = function () {
 
     //刷新数据
     oTableInit.load = function (data) {
-        $('#table_upload').bootstrapTable('load', data);
+        $('#table_upload2').bootstrapTable('load', data);
     };
 
     //得到查询的参数

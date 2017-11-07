@@ -6,7 +6,6 @@ import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportC5Service;
 import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.report.vo.ImportDataLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,9 +113,9 @@ public class ImportC5Controller extends BaseReportController {
     @PostMapping("list")
     @ResponseBody
     public JsonResult listC5(String month, String latnId) {
-        //TODO
-        Map<String,Object> list = importC5Service.list(month, Integer.parseInt(latnId));
-        
+
+        Map<String, Object> list = importC5Service.list(month, Integer.parseInt(latnId));
+
         return JsonResult.success(list);
     }
 
@@ -129,8 +128,8 @@ public class ImportC5Controller extends BaseReportController {
     @PostMapping("remove")
     @ResponseBody
     public JsonResult remove(Long logId, @ModelAttribute("user") User user) {
-       //TODO 待修改 存过update_tax_c5_2015
-    	Long userId = user.getId();
+        //TODO 待修改 存过update_tax_c5_2015
+        Long userId = user.getId();
         importC5Service.delete(userId, logId);
         return JsonResult.success();
     }
