@@ -1,12 +1,19 @@
 package com.loushuiyifan.report.service;
 
-import java.nio.file.Path;
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.druid.util.StringUtils;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.ReportConfig;
+import com.loushuiyifan.report.bean.ExtImportLog;
+import com.loushuiyifan.report.bean.RptImportDataTax;
+import com.loushuiyifan.report.dao.ExtImportLogDAO;
+import com.loushuiyifan.report.dao.RptImportDataTaxDAO;
+import com.loushuiyifan.report.dto.DeleteImportDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.DateService;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -19,20 +26,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.druid.util.StringUtils;
-import com.google.common.collect.Maps;
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.ReportConfig;
-import com.loushuiyifan.report.bean.ExtImportLog;
-import com.loushuiyifan.report.bean.RptImportDataTax;
-import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportDataTaxDAO;
-import com.loushuiyifan.report.dto.CheckDataDTO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import java.nio.file.Path;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ImportTaxService {
@@ -96,7 +95,7 @@ public class ImportTaxService {
 
         //TODO 待替代新存过(旧存过不可用,测试可注释)
         //校验导入数据指标
-        CheckDataDTO dto = new CheckDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataTaxDAO.checkTaxData(dto);
 
@@ -109,7 +108,7 @@ public class ImportTaxService {
             } catch (Exception e) {
                 error = "校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("导入数据校验失败: %s ; %s", dto.getRtnMeg(), error);
+                error = String.format("导入数据校验失败: %s ; %s", dto.getRtnMsg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }

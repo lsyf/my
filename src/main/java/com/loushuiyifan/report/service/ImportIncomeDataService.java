@@ -6,7 +6,7 @@ import com.loushuiyifan.report.bean.ExtImportLog;
 import com.loushuiyifan.report.bean.RptImportDataChennel;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataChennelDAO;
-import com.loushuiyifan.report.dto.CheckDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 import com.loushuiyifan.report.dto.IseeC4CutDTO;
 import com.loushuiyifan.report.exception.ReportException;
@@ -99,7 +99,7 @@ public class ImportIncomeDataService {
 
         //TODO 待替代新存过(旧存过不可用,测试可注释)
         //校验导入数据指标
-        CheckDataDTO dto = new CheckDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataChennelDAO.checkRptImportData(dto);
 
@@ -112,7 +112,7 @@ public class ImportIncomeDataService {
             } catch (Exception e) {
                 error = "1校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("1导入数据校验失败: %s ; %s", dto.getRtnMeg(), error);
+                error = String.format("1导入数据校验失败: %s ; %s", dto.getRtnMsg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }
@@ -206,13 +206,13 @@ public class ImportIncomeDataService {
 
         //提交
         //TODO　提交更改log状态(目前是更新数据中action)
-        CheckDataDTO dto = new CheckDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataChennelDAO.commitRptImportData(dto);
         code = dto.getRtnCode();
         //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
-            throw new ReportException("数据提交失败: " + dto.getRtnMeg());
+            throw new ReportException("数据提交失败: " + dto.getRtnMsg());
         }
 
     }

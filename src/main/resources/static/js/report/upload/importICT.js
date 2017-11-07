@@ -9,13 +9,29 @@ function initICT() {
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
     orgTree.Init(orgs);
 
-
     initForm();
 }
 
 function queryLog() {
-    //TODO 待完成
-    toastr.info('查询导入');
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "importICT/list",
+        data: {
+            month: $("#upload_month").val()
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                table.load(r.data);
+            } else {
+                toastr.error('查询失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
 
 }
 
@@ -36,7 +52,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "importIncomeData/upload",
+                url: hostUrl + "importICT/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -48,15 +64,17 @@ function initForm() {
                         $('#form_upload').resetForm();
                         orgTree.reset();
 
-                        toastr.info('提交成功');
-                        table.refresh();
+                        toastr.info('导入成功');
+
+                        queryLog();
+
                     } else {
-                        toastr.error('提交失败:' + r.msg);
+                        toastr.error('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastr.error('提交失败');
+                    toastr.error('导入失败');
                     toastr.error(r);
                 }
             });
@@ -74,14 +92,15 @@ function removeData(row) {
     editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "importIncomeData/remove",
+            url: hostUrl + "importICT/remove",
             data: {logId: row.logId},
             dataType: "json",
             success: function (r) {
                 if (r.state) {
                     toastr.info('删除成功');
                     hideAlert();
-                    table.refresh();
+
+                    queryLog();
                 } else {
                     toastr.error('提删除失败');
                     toastr.error(r.msg);
@@ -102,14 +121,11 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
-            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: false,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
-            // queryParams: oTableInit.queryParams,//传递参数（*）
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页

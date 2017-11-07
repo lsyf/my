@@ -1,13 +1,16 @@
 package com.loushuiyifan.report.service;
 
-import java.nio.file.Path;
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.bean.ExtImportYccyLog;
+import com.loushuiyifan.report.bean.RptImportYccyData;
+import com.loushuiyifan.report.dao.ExtImportYccyLogDAO;
+import com.loushuiyifan.report.dao.RptImportYccyDataDAO;
+import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.DateService;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -21,17 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.bean.ExtImportYccyLog;
-import com.loushuiyifan.report.bean.RptImportYccyData;
-import com.loushuiyifan.report.dao.ExtImportYccyLogDAO;
-import com.loushuiyifan.report.dao.RptImportYccyDataDAO;
-import com.loushuiyifan.report.dto.CheckDataDTO;
-import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import java.nio.file.Path;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -97,7 +96,7 @@ public class ImportYccyService {
 
         //TODO 待替代新存过(旧存过不可用,测试可注释)
         //校验导入数据指标
-        CheckDataDTO dto = new CheckDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         
         Integer code = dto.getRtnCode();
@@ -109,7 +108,7 @@ public class ImportYccyService {
             } catch (Exception e) {
                 error = "1校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("1导入数据校验失败: %s ; %s", dto.getRtnMeg(), error);
+                error = String.format("1导入数据校验失败: %s ; %s", dto.getRtnMsg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }

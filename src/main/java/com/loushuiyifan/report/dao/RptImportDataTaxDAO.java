@@ -6,16 +6,16 @@ import org.apache.ibatis.annotations.Param;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataTax;
-import com.loushuiyifan.report.dto.CheckDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 
 	public interface RptImportDataTaxDAO extends MyMapper<RptImportDataTax> {
 		void deleteTax(DeleteImportDataDTO dto);
 		//导入校验
-		void checkTaxData(CheckDataDTO dto);
+		void checkTaxData(SPDataDTO dto);
 		//提交数据
-		void pkgCutTaxData(CheckDataDTO dto);
+		void pkgCutTaxData(SPDataDTO dto);
 		//数据是否提交
 		String checkPullStates(Long userId);
 		

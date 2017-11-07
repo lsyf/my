@@ -2,7 +2,7 @@ package com.loushuiyifan.report.dao;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataC5;
-import com.loushuiyifan.report.dto.CheckDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 
 /**
@@ -11,7 +11,7 @@ import com.loushuiyifan.report.dto.DeleteImportDataDTO;
  */
 public interface RptImportDataC5DAO extends MyMapper<RptImportDataC5> {
 
-	void checkC5Data(CheckDataDTO dto);
+	void checkC5Data(SPDataDTO dto);
 	void deleteImportData(DeleteImportDataDTO dto);
 	
 	//稽核

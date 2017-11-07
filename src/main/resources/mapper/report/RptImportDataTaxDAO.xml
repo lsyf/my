@@ -30,7 +30,7 @@
 		Rpt_import_datatax t where t.log_id = #{logId}
 	</select>
 	
-	<select id="checkTaxData" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+	<select id="checkTaxData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call tax_data_check(
          #{logId,mode=IN,jdbcType=NUMERIC},
@@ -38,7 +38,7 @@
          #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
-	<select id="pkgCutTaxData" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+	<select id="pkgCutTaxData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call PKG_CUT_TAXDATA.RPT_TAX_CUT(
          #{logId,mode=IN,jdbcType=NUMERIC},

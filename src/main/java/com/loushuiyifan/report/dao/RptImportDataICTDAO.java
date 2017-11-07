@@ -2,9 +2,9 @@ package com.loushuiyifan.report.dao;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataICT;
-import com.loushuiyifan.report.dto.CheckDataDTO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,9 +14,32 @@ import java.util.List;
  */
 public interface RptImportDataICTDAO extends MyMapper<RptImportDataICT> {
 
-    void checkImportData(CheckDataDTO dto);
+    /**
+     * 校验数据
+     * 存过: PRO_DATA_CHECK_ICTHIS
+     *
+     * @param dto
+     */
+    void checkImportData(SPDataDTO dto);
 
-    void deleteImportData(DeleteImportDataDTO dto);
+    /**
+     * 删除数据
+     * 存过: IRPT_DEL_ICTDATA
+     *
+     * @param dto
+     */
+    void deleteImportData(SPDataDTO dto);
 
-    List<ImportDataLogVO> listICTLog(Long userId, String month, String type);
+
+    /**
+     * 根据用户 和账期 查询ICT导入日志
+     *
+     * @param userId
+     * @param month
+     * @param type
+     * @return
+     */
+    List<ImportDataLogVO> listICTLog(@Param("userId") Long userId,
+                                     @Param("month") String month,
+                                     @Param("type") String type);
 }

@@ -2,7 +2,7 @@ package com.loushuiyifan.report.dao;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataChennel;
-import com.loushuiyifan.report.dto.CheckDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 import com.loushuiyifan.report.dto.IseeC4CutDTO;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
@@ -17,7 +17,7 @@ import java.util.List;
 public interface RptImportDataChennelDAO extends MyMapper<RptImportDataChennel> {
 
 
-    void checkRptImportData(CheckDataDTO dto);
+    void checkRptImportData(SPDataDTO dto);
 
     int deleteByLogId(Long logId);
 
@@ -30,7 +30,7 @@ public interface RptImportDataChennelDAO extends MyMapper<RptImportDataChennel> 
 
     void iseeC4Cut(IseeC4CutDTO dto);
 
-    void commitRptImportData(CheckDataDTO dto);
+    void commitRptImportData(SPDataDTO dto);
 
     void deleteImportData(DeleteImportDataDTO dto);
 

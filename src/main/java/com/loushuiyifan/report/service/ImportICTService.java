@@ -6,8 +6,7 @@ import com.loushuiyifan.report.bean.ExtImportLog;
 import com.loushuiyifan.report.bean.RptImportDataICT;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataICTDAO;
-import com.loushuiyifan.report.dto.CheckDataDTO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
@@ -96,13 +95,13 @@ public class ImportICTService {
         log.setType(ReportConfig.RptImportType.ICT.toString());
         extImportLogDAO.insert(log);
 
-        //TODO 待替代新存过(旧存过不可用,测试可注释)
+
         //校验导入数据指标
-        CheckDataDTO dto = new CheckDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataICTDAO.checkImportData(dto);
         Integer code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
+
         if (code != 0) {//非0为失败
             String error = "";
             try {
@@ -110,7 +109,7 @@ public class ImportICTService {
             } catch (Exception e) {
                 error = "校验失败后删除数据异常: " + e.getMessage();
             } finally {
-                error = String.format("导入数据校验失败: %s; %s", dto.getRtnMeg(), error);
+                error = String.format("导入数据校验失败: %s; %s", dto.getRtnMsg(), error);
                 logger.error(error);
                 throw new ReportException(error);
             }
@@ -181,14 +180,14 @@ public class ImportICTService {
      * @param logId
      */
     public void delete(Long userId, Long logId) {
-        DeleteImportDataDTO dto = new DeleteImportDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
         rptImportDataICTDAO.deleteImportData(dto);
+
         int code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
-            throw new ReportException("2数据删除失败:  " + dto.getRtnMeg());
+            throw new ReportException("2数据删除失败:  " + dto.getRtnMsg());
         }
     }
 

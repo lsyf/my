@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptImportDataC5DAO">
 	<!-- C5导入校验 -->
-	<select id="checkC5Data" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+	<select id="checkC5Data" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call update_tax_c5_2015(
          #{logId,mode=IN,jdbcType=NUMERIC},

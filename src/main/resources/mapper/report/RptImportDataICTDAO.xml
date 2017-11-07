@@ -3,21 +3,21 @@
 <mapper namespace="com.loushuiyifan.report.dao.RptImportDataICTDAO">
 
 
-    <select id="checkImportData" parameterType="com.loushuiyifan.report.dto.CheckDataDTO"
+    <select id="checkImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call pro_data_check_icthis(
         #{logId,mode=IN,jdbcType=NUMERIC},
         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-        #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
-    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.DeleteImportDataDTO"
+    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call IRPT_DEL_ICTDATA(
         #{userId,mode=IN,jdbcType=NUMERIC},
         #{logId,mode=IN,jdbcType=NUMERIC},
         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-        #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
     <select id="listICTLog" resultType="com.loushuiyifan.report.vo.ImportDataLogVO">
