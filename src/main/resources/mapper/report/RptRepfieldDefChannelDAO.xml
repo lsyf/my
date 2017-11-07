@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.loushuiyifan.report.dao.RptCustDefChannelDAO">
+<mapper namespace="com.loushuiyifan.report.dao.RptRepfieldDefChannelDAO">
 
 
-    <select id="list" resultType="com.loushuiyifan.report.bean.RptCustDefChannel">
+    <select id="list" resultType="com.loushuiyifan.report.bean.RptRepfieldDefChannel">
       select *
-      from rpt_cust_def_channel
+      from rpt_repfield_def_channel
       where  rpt_no = #{rptNo}
-      order by index_code
+      order by index_id
     </select>
 
     <select id="listMap" resultType="map">
         select indexCode as "id",
                indexName as "name"
-        from rpt_cust_def_channel
+        from rpt_repfield_def_channel
         where  rpt_no = #{rptNo}
-        order by index_code
+        order by index_id
     </select>
 
 </mapper>

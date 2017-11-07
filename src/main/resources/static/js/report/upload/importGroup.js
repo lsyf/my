@@ -13,6 +13,73 @@ function initGroup() {
 
 }
 
+function queryLog() {
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "importGroup/list",
+        data: {
+
+            latnId: orgTree.val(),
+            incomeSource: isTree.val(),
+            shareType: $("#upload_cutType").val()
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                var data = r.data;
+                table.load(data);
+
+            } else {
+                toastr.error('查询失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+
+}
+
+
+function removeData() {
+    var month = $("#upload_month").val();
+    var latnId = orgTree.val();
+    var incomeSource = isTree.val();
+    var shareType = $("#upload_cutType").val();
+
+    editAlert('警告', '是否确定删除:  账期' + month + ", 地市" + latnId
+        + ', 收入来源' + incomeSource + ', 切割类型' + shareType, '删除', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "importGroup/remove",
+            data: {
+                month: month,
+                latnId: latnId,
+                incomeSource: incomeSource,
+                shareType: shareType
+            },
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('删除成功');
+                    hideAlert();
+
+                    queryLog()
+                } else {
+                    toastr.error('提删除失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
+
 
 function initForm() {
     initValidator();
@@ -31,7 +98,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "importCut/upload",
+                url: hostUrl + "importGroup/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -45,7 +112,7 @@ function initForm() {
 
 
                         toastr.info('提交成功');
-                        table.refresh();
+                       queryLog()
                     } else {
                         toastr.error('提交失败:' + r.msg);
                     }
@@ -75,11 +142,9 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
-            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-            pagination: false,                   //是否显示分页（*）
+            pagination: true,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
             contentType: 'application/x-www-form-urlencoded',
@@ -134,20 +199,7 @@ var TableInit = function () {
 
     };
 
-    //操作 监听
-    window.operateEvents = {
 
-        'click .remove': function (e, value, row, index) {
-            removeData(row);
-        }
-    };
-
-    //操作显示format
-    function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
-        ].join('');
-    }
 
     //刷新数据
     oTableInit.load = function (data) {

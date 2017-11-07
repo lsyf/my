@@ -27,34 +27,34 @@
 	</delete>
 
     <select id="cutRateList" resultType="com.loushuiyifan.report.vo.CutDataListVO">
-	select b.acct_month 	as acctMonth,
-       a.rule_id        	as ruleId,
-       a.is_active      	as activeFlag,
-       decode(a.share_type,'1','C4','2','C5') as shareType,
-       a.income_source		as incomeSource,
-       d.code_name       	as codeName, 
-       c.area_id         	as areaId, 
-       c.area_name  	 	as areaName,
-       c.bureau_id 			as bureauId,
-       c.bureau_name 		as bureauName,
-       b.rate
-  		from charge.dim_cut_cfg a,
-       charge.dim_cut_rate      b,
-       charge.dim_bureau_new    c,
-       code_list d
- 	where a.rule_id = b.rule_id
-  		 and b.area_id = c.area_id
-  		 and b.bureau_id = c.bureau_id
-  		 and a.income_source = d.code_id
-  		 and d.type_code = 'income_source2017'
-  		 and b.acct_month = #{month}
-  		 <if test="latnId !=0">
-  		 and a.latn_id = #{latnId}
-  		 </if>
-  		 <if test="remark !=null and remark !='' ">
-  		 and a.express like #{remark}
-  		 </if> 
-  		 and a.share_type = #{shareType}
-  		 and a.income_source = #{incomeSource}
-	</select>
+        select b.acct_month as acctMonth,
+        a.rule_id as ruleId,
+        a.is_active as activeFlag,
+        decode(a.share_type,'1','C4','2','C5') as shareType,
+        a.income_source as incomeSource,
+        d.code_name as codeName,
+        c.area_id as areaId,
+        c.area_name as areaName,
+        c.bureau_id as bureauId,
+        c.bureau_name as bureauName,
+        b.rate
+        from charge.dim_cut_cfg a,
+        charge.dim_cut_rate b,
+        charge.dim_bureau_new c,
+        code_list d
+        where a.rule_id = b.rule_id
+        and b.area_id = c.area_id
+        and b.bureau_id = c.bureau_id
+        and a.income_source = d.code_id
+        and d.type_code = 'income_source2017'
+        and b.acct_month = #{month}
+        <if test="latnId !=0">
+            and a.latn_id = #{latnId}
+        </if>
+        <if test="remark !=null and remark !='' ">
+            and a.express like #{remark}
+        </if>
+        and a.share_type = #{shareType}
+        and a.income_source = #{incomeSource}
+    </select>
 </mapper>

@@ -16,6 +16,34 @@ function initCut() {
 
 }
 
+function queryLog() {
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "importCut/listCut",
+        data: {
+            month: $("#upload_month").val(),
+            latnId: orgTree.val(),
+            incomeSource: isTree.val(),
+            shareType: $("#upload_cutType").val()
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                var data = r.data;
+                table.load(data);
+
+            } else {
+                toastr.error('查询失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+
+}
+
 
 function initForm() {
     initValidator();
@@ -47,15 +75,16 @@ function initForm() {
                         orgTree.reset();
                         isTree.reset();
 
-                        toastr.info('提交成功');
-                        table.refresh();
+                        toastr.info('导入成功');
+                        queryLog()
+
                     } else {
-                        toastr.error('提交失败:' + r.msg);
+                        toastr.error('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastr.error('提交失败');
+                    toastr.error('导入失败');
                     toastr.error(r);
                 }
             });
@@ -70,6 +99,44 @@ function initForm() {
 }
 
 
+function removeData() {
+    var month = $("#upload_month").val();
+    var latnId = orgTree.val();
+    var incomeSource = isTree.val();
+    var shareType = $("#upload_cutType").val();
+
+    editAlert('警告', '是否确定删除:  账期' + month + ", 地市" + latnId
+        + ', 收入来源' + incomeSource + ', 切割类型' + shareType, '删除', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "importCut/remove",
+            data: {
+                month: month,
+                latnId: latnId,
+                incomeSource: incomeSource,
+                shareType: shareType
+            },
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('删除成功');
+                    hideAlert();
+
+                    queryLog()
+                } else {
+                    toastr.error('提删除失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
+
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
@@ -78,11 +145,9 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
-            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-            pagination: false,                   //是否显示分页（*）
+            pagination: true,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
             contentType: 'application/x-www-form-urlencoded',
@@ -106,51 +171,44 @@ var TableInit = function () {
             },
             data: [],
             columns: [{
-                field: 'logId',
-                title: '流水号'
+                field: 'ruleId',
+                title: '编号'
             }, {
-                field: 'city',
-                title: '地市'
+                field: 'acctMonth',
+                title: '账期'
             }, {
-                field: 'fileName',
-                title: '导入文件'
+                field: 'areaId',
+                title: 'c4Id'
             }, {
-                field: 'num',
-                title: '记录数'
+                field: 'areaName',
+                title: 'c4名称'
             }, {
-                field: 'sum',
-                title: '金额'
+                field: 'bureauId',
+                title: 'c5Id'
             }, {
-                field: 'userId',
-                title: '操作人ID'
+                field: 'bureauName',
+                title: 'c5Id'
             }, {
-                field: 'remark',
-                title: '导入说明'
+                field: 'incomeSource',
+                title: '收入来源'
             }, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
+                field: 'codeName',
+                title: '收入来源名称'
+            }, {
+                field: 'activeFlag',
+                title: '是否有效'
+            }, {
+                field: 'shareType',
+                title: '切割粒度'
+            }, {
+                field: 'rate',
+                title: '比例'
             }]
         });
 
 
     };
 
-    //操作 监听
-    window.operateEvents = {
-
-        'click .remove': function (e, value, row, index) {
-            removeData(row);
-        }
-    };
-
-    //操作显示format
-    function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
-        ].join('');
-    }
 
     //刷新数据
     oTableInit.load = function (data) {

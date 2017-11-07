@@ -66,7 +66,7 @@ public class DefaultStorageService implements StorageService {
     @Override
     public void init() {
         try {
-            logger.debug("创建文件存储目录: {}", rootLocation.getFileName());
+            logger.debug("初始化文件存储目录: {}", rootLocation.getFileName());
             if (!Files.exists(rootLocation)) {
                 Files.createDirectory(rootLocation);
             }

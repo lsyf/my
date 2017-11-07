@@ -7,8 +7,6 @@ import com.loushuiyifan.report.dao.RptImportGroupDataDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.ImportDataGroupVO;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -40,8 +38,7 @@ public class ImportGroupService {
     @Transactional
     public void save(Path path,
                      Integer latnId,
-                     Long userId,
-                     String groupId) throws Exception {
+                     Long userId) throws Exception {
         String filename = path.getFileName().toString();
 
         //首先将文件解析成bean
@@ -65,7 +62,6 @@ public class ImportGroupService {
      * 稽核
      */
     public List<ImportDataGroupVO> list(Integer latnId, Long groupId) {
-
         return rptImportGroupDataDAO.listData(latnId, groupId);
     }
 
@@ -74,7 +70,7 @@ public class ImportGroupService {
      */
     public void delete(Integer latnId, Long groupId) throws Exception {
         
-         //TODO 指标编码groupId 为空时删除按latnId
+         //指标编码groupId 为空时删除按latnId
        
         rptImportGroupDataDAO.deleteGroup(latnId, groupId);
     }
@@ -95,7 +91,6 @@ public class ImportGroupService {
                     data.setUserId(userId);
                     data.setLatnId(latnId);
                     data.setLstUpd(Date.from(Instant.now())); //TODO 时间
-                    //rptImportGroupDataDAO.insert(data); 
                     rptImportGroupDataDAO.insertSelective(data);
                 }
             }

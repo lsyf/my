@@ -155,7 +155,12 @@
 
                             <div class="form-group  form-group-sm">
                                 <button class="btn btn-danger pull-right btn-sm btn-form"
-                                        type="button" id="btn_query">
+                                        type="button" id="btn_delete" onclick="removeData()">
+                                    删除
+                                </button>
+
+                                <button class="btn btn-danger pull-right btn-sm btn-form"
+                                        type="button" id="btn_query" onclick="queryLog()">
                                     稽核
                                 </button>
                                 <button id="btn_upload" type="submit"
@@ -168,8 +173,8 @@
                         <div class="form-horizontal col-sm-12">
                             <p>
                                 导入提示: ---> <a th:href="@{/download/template/importCut}"
-                                              target="_blank"><b>模板下载</b></a><br/>
-                                1、excel版本只支持2003版格式，后缀必须为.xls<br/>
+                                              target="_blank"><b>模板下载</b></a>
+                                1、excel版本只支持2003版格式，后缀必须为.xls
 
                             </p>
 

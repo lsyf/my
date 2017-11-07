@@ -10,26 +10,26 @@
 	</select>
 
     <delete id="deleteGroup">
-		delete from charge.dim_sub_group 
-		where latn_id=#{latnId} 
-		<if test="groupId !=null and groupId !='' ">
-	   and group_id = #{groupId}
-	   </if>
-	</delete>
+        delete from charge.dim_sub_group
+        where latn_id=#{latnId}
+        <if test="groupId !=null and groupId !='' ">
+            and group_id = #{groupId}
+        </if>
+    </delete>
 
-	<select id="listData" resultType="com.loushuiyifan.report.vo.ImportDataGroupVO">
-		select group_id		as groupId,
-	       group_name 		as groupName,
-	       sub_code 		as subCode,
-	       sub_name 		as subName,
-	       user_id 			as userId,
-	       to_char(lst_upd, 'yyyy-MM-dd hh24:mi:ss') as lstUpd,
-	       latn_id 			as latnId
-	  from charge.dim_sub_group
-	 where latn_id = #{latnId}
-	   <if test="groupId !=null and groupId !='' ">
-	   and group_id = #{groupId}
-	   </if>
-	   
-	</select>
+    <select id="listData" resultType="com.loushuiyifan.report.vo.ImportDataGroupVO">
+        select group_id as groupId,
+        group_name as groupName,
+        sub_code as subCode,
+        sub_name as subName,
+        user_id as userId,
+        to_char(lst_upd, 'yyyy-MM-dd hh24:mi:ss') as lstUpd,
+        latn_id as latnId
+        from charge.dim_sub_group
+        where latn_id = #{latnId}
+        <if test="groupId !=null and groupId !='' ">
+            and group_id = #{groupId}
+        </if>
+
+    </select>
 </mapper>

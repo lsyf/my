@@ -51,7 +51,6 @@ public class ImportGroupController extends BaseReportController {
     @ResponseBody
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String latnId,
-                             String groupId,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();
         //TODO 是否需要判断
@@ -67,20 +66,19 @@ public class ImportGroupController extends BaseReportController {
         try {
             importGroupService.save(path,
                     Integer.parseInt(latnId),
-                    userId,
-                    groupId);
+                    userId);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("5解析入库失败", e);
 
             try {
                 Files.delete(path);
-                //TODO 导入失败删除数据库数据
-                importGroupService.delete(Integer.parseInt(latnId), Long.parseLong(groupId));
+                //TODO 加入到事务中 导入失败删除数据库数据
+                //importGroupService.delete(Integer.parseInt(latnId), Long.parseLong(groupId));
             } catch (IOException e1) {
                 e1.printStackTrace();
                 logger.error("5删除文件失败", e1);
-            }finally {
+            } finally {
                 throw new ReportException("导入失败: " + e.getMessage(), e);
             }
         }
@@ -94,9 +92,8 @@ public class ImportGroupController extends BaseReportController {
     @PostMapping("list")
     @ResponseBody
     public JsonResult listGroup(String latnId,
-                                String groupId
-                                ) {
-        
+                                String groupId) {
+
         List<ImportDataGroupVO> list = importGroupService
                 .list(Integer.parseInt(latnId), Long.parseLong(groupId));
 
@@ -109,9 +106,7 @@ public class ImportGroupController extends BaseReportController {
     @PostMapping("remove")
     @ResponseBody
     public JsonResult remove(String latnId,
-                             String groupId,
-                             String month
-        ) {
+                             String groupId) {
 
         if (latnId.equals("0")) {
             throw new ReportException("请选择正确的地市");

@@ -1,15 +1,17 @@
 package com.loushuiyifan.report.service;
 
-import java.nio.file.Path;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Maps;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.bean.RptImportCutRate;
+import com.loushuiyifan.report.bean.RptImportDataCut;
+import com.loushuiyifan.report.dao.ExtImportLogDAO;
+import com.loushuiyifan.report.dao.RptImportCutDataDAO;
+import com.loushuiyifan.report.dao.RptImportCutRateDAO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.CutDataListVO;
+import com.loushuiyifan.report.vo.CutRateVO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -20,18 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.ReportConfig;
-import com.loushuiyifan.report.bean.RptImportCutRate;
-import com.loushuiyifan.report.bean.RptImportDataCut;
-import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportCutDataDAO;
-import com.loushuiyifan.report.dao.RptImportCutRateDAO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.CutDataListVO;
-import com.loushuiyifan.report.vo.CutRateVO;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ImportCutService {
@@ -72,10 +68,8 @@ public class ImportCutService {
         }
 
         //然后保存解析的数据
-        saveCutDataByGroup(list, month, username, latnId, incomeSource, shareType, remark);       
-       
+        saveCutDataByGroup(list, month, username, latnId, incomeSource, shareType, remark);
 
-        
 
     }
 
@@ -87,14 +81,12 @@ public class ImportCutService {
                                          String incomeSource,
                                          Integer shareType,
                                          String remark) {
-        
-        List<CutDataListVO> list = rptImportCutRateDAO
-                .cutRateList(month,
-                        latnId,
-                        incomeSource,
-                        shareType,
-                        remark
-                        );
+
+        List<CutDataListVO> list = rptImportCutRateDAO.cutRateList(month,
+                latnId,
+                incomeSource,
+                shareType,
+                remark);
 
         return list;
     }
@@ -112,15 +104,14 @@ public class ImportCutService {
         String ruleId = sb.toString();
         try {
 
-            //TODO 待修改 查询用户名
             List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName, ruleId);
 
             if (check.size() != 0) {
-            	rptImportCutDataDAO.updataCutFlag(latnId, 
-                		incomeSource, 
-                		shareType, 
-                		userName,
-                		"Y"); // 更新（Y/N）is_active
+                rptImportCutDataDAO.updataCutFlag(latnId,
+                        incomeSource,
+                        shareType,
+                        userName,
+                        "N"); // 更新（Y/N）is_active //TODO 待校验
                 rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName);
             } else {
                 throw new ReportException("您没有权限删除此记录");
@@ -144,10 +135,11 @@ public class ImportCutService {
         String msg = null;
         try {
             Date now = Date.from(Instant.now());
-            for (Map<String, Object> temp : list) {
+            for (int i = 0; i < list.size(); i++) {
+                Map<String, Object> temp = list.get(i);
                 String sheetName = temp.get("name").toString();
                 String str = sheetName.substring(0, sheetName.indexOf("-"));
-                
+
                 RptImportDataCut cut = new RptImportDataCut();
                 cut.setChgWho(username);
                 cut.setShareType(shareType);
@@ -173,15 +165,14 @@ public class ImportCutService {
                 if (exist_cut == null) {
                     rptImportCutDataDAO.insertSelective(cut);
                 } else {//如果数据已存在 则更新状态
-                    rptImportCutDataDAO.updataCutFlag(latnId, 
-			                    		incomeSource, 
-			                    		shareType, 
-			                    		username,
-			                    		"Y");
+                    rptImportCutDataDAO.updataCutFlag(latnId,
+                            incomeSource,
+                            shareType,
+                            username,
+                            "Y");
                 }
 
                 //统计切割数据为null
-                //TODO 直接改为 判断数据是否存在
                 Double sum = rptImportCutRateDAO.calcRateSum(ruleId, month);
                 if (sum == null) {
                     List<RptImportCutRate> l = (List<RptImportCutRate>) temp.get("data");
@@ -193,35 +184,33 @@ public class ImportCutService {
                 } else {
                     throw new ReportException("该配置已存在，请先执行删除操作");
                 }
-                
+
                 //根据切割类型稽核  
                 if (shareType == 1) { //c4
                     Double result2 = rptImportCutRateDAO.calcRateSum(cut.getRuleId(), month);
                     if (result2 != 1) {
-                       
-                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"N");
+
+                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username, "N");
                         throw new ReportException("导入数据比例合计不等于1");
                     }
                 } else {
                     List<CutRateVO> l_rate = rptImportCutRateDAO.sumRateByRuleId(cut.getRuleId(), month);
                     if (l_rate.size() != 0) {
-                    	rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"N");
+                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username, "N");
                         throw new ReportException("导入数据比例合计不等于1,请检查数据比例合计；\n若比例合计为1,请查询是否因多次导入造成数据重复，\n请先执行删除操作再尝试重新导入");
                     }
                 }
             }
 
-        }catch(Exception e ){
-        	e.printStackTrace();
-        	msg = e.getMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = e.getMessage();
         } finally {
-            if(msg!=null){
-            	//TODO 删除
-            	// 若发生异常则删除导入的数据
-            	rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, username);
-            	rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"N");
-  	
-            	throw new ReportException(msg);
+            if (msg != null) {
+                // 若发生异常则删除导入的数据
+                rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, username);
+                rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username, "N");
+                throw new ReportException(msg);
             }
         }
     }
@@ -245,7 +234,6 @@ public class ImportCutService {
     }
 
     static class RptImportDataCutRead extends ReportReadServ<Map<String, Object>> {
-        List<Map<String, Object>> result = new ArrayList<>();
 
         @Override
         protected boolean checkSheet(Sheet sheet) {
@@ -261,6 +249,7 @@ public class ImportCutService {
         protected List<Map<String, Object>> processSheet(Sheet sheet) {
             FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
 
+            List<Map<String, Object>> result = new ArrayList<>();
 
             Map<String, Object> map = Maps.newHashMap();
             map.put("name", sheet.getSheetName());

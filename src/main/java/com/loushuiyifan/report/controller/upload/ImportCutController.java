@@ -75,7 +75,8 @@ public class ImportCutController extends BaseReportController {
                              @ModelAttribute("user") User user) {
 
         //首先校验能否导入
-        dateService.checkImportCut(month);
+        //TODO 未完成
+//        dateService.checkImportCut(month);
         String username = user.getUsername();
 
         //存储
@@ -112,17 +113,19 @@ public class ImportCutController extends BaseReportController {
      */
     @PostMapping("listCut")
     @ResponseBody
-    public JsonResult listCut(
-            String month,
-            String latnId,
-            String incomeSource,
-            String shareType,
-            String remark
-            ) {
-       
-        List<CutDataListVO> list = importCutService.queryList(month, Integer.parseInt(latnId),
-                incomeSource, Integer.parseInt(shareType),remark);
-        
+    public JsonResult listCut(String month,
+                              String latnId,
+                              String incomeSource,
+                              String shareType,
+                              String remark) {
+        //TODO 去除remark
+        List<CutDataListVO> list = importCutService.queryList(
+                month,
+                Integer.parseInt(latnId),
+                incomeSource,
+                Integer.parseInt(shareType),
+                remark);
+
         return JsonResult.success(list);
     }
 
