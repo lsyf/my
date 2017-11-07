@@ -143,21 +143,15 @@ public class ImportICTService {
      * @param month
      */
     public void importDataByGroup(List<RptImportDataICT> list, Long logId, String month) {
-
-        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        try {
-            logger.debug("批量插入数量: {}", list.size());
-
+      
             for (final RptImportDataICT data : list) {
                 data.setLogId(logId);
                 data.setAcctMonth(month);
                 rptImportDataICTDAO.insertSelective(data);
             }
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
+       
             logger.debug("批量插入结束");
-        }
+        
     }
 
     /**

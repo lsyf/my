@@ -232,20 +232,14 @@ public class ImportTaxService {
      */
     public void importDataByGroup(List<RptImportDataTax> list, Long logId, String month) {
 
-        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        try {
-            logger.debug("批量插入数量: {}", list.size());
-
             for (final RptImportDataTax data : list) {
                 data.setLogId(logId);
                 data.setAcctMonth(month);
                 rptImportDataTaxDAO.insertSelective(data);
             }
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
+         
             logger.debug("批量插入结束");
-        }
+        
     }
 
     static class RptImportDataTaxRead extends ReportReadServ<RptImportDataTax> {

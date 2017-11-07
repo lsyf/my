@@ -143,20 +143,15 @@ public class ImportYccyService {
      */
     public void importDataByGroup(List<RptImportYccyData> list, Long logId, String month) {
 
-        final SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        try {
-            logger.debug("批量插入数量: {}", list.size());
-
+       
             for (final RptImportYccyData data : list) {
                 data.setLogId(logId);
                 data.setAcctMonth(month);
                 rptImportYccyDataDAO.insertSelective(data);
             }
-            sqlSession.commit();
-        } finally {
-            sqlSession.close();
+         
             logger.debug("批量插入结束");
-        }
+        
     }
 
     /**
