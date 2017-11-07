@@ -45,16 +45,15 @@ function initForm() {
                         $(form).resetForm();
                         orgTree.reset();
 
-
-                        toastr.info('提交成功');
+                        toastr.info('导入成功');
                         list();
                     } else {
-                        toastr.error('提交失败:' + r.msg);
+                        toastr.error('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastr.error('提交失败');
+                    toastr.error('导入失败');
                     toastr.error(r);
                 }
             });
@@ -129,14 +128,11 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importC5/list',         //请求后台的URL（*）
-            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: false,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
-            // queryParams: oTableInit.queryParams,//传递参数（*）
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
@@ -217,8 +213,6 @@ var TableInit2 = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload2').bootstrapTable({
-            // url: hostUrl + 'importC5/list2',         //请求后台的URL（*）
-            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: false,                   //是否显示分页（*）
