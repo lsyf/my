@@ -2,7 +2,9 @@ package com.loushuiyifan;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 public class AppTests {
 
@@ -10,11 +12,10 @@ public class AppTests {
 
     @Test
     public void test() {
-        ArrayList<Integer> list = new ArrayList();
-        for (int i=0;i<10;i++) {
-            list.add(i);
-        }
-        list.toArray();
+        ArrayDeque<Integer> list = new ArrayDeque();
+        TreeMap treeMap = new TreeMap();
+
+        HashMap map = new HashMap();
     }
 
 

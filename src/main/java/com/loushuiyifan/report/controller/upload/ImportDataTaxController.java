@@ -1,6 +1,7 @@
 package com.loushuiyifan.report.controller.upload;
 
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportTaxService;
 import com.loushuiyifan.report.vo.CommonVO;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("importDataTax")
-public class ImportDataTaxController extends BaseImportController {
+public class ImportDataTaxController extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportDataTaxController.class);
 
 

@@ -2,6 +2,7 @@ package com.loushuiyifan.report.controller.upload;
 
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportIncomeDataService;
 import com.loushuiyifan.report.vo.CommonVO;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("importIncomeData")
-public class ImportIncomeDataController extends BaseImportController {
+public class ImportIncomeDataController extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportIncomeDataController.class);
 
 

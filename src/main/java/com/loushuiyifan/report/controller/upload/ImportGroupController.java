@@ -2,6 +2,7 @@ package com.loushuiyifan.report.controller.upload;
 
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportGroupService;
 import com.loushuiyifan.report.vo.ImportDataGroupVO;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("importGroup")
-public class ImportGroupController extends BaseImportController {
+public class ImportGroupController extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportGroupController.class);
 
 

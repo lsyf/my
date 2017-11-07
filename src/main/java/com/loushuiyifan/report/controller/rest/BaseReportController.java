@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.controller.upload;
+package com.loushuiyifan.report.controller.rest;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
@@ -19,18 +19,18 @@ import javax.servlet.http.HttpSession;
  * @date 2017/11/2
  */
 @Controller
-public abstract class BaseImportController {
+public abstract class BaseReportController {
     @Autowired
-    DateService dateService;
+    public DateService dateService;
 
     @Autowired
-    LocalNetService localNetService;
+    public LocalNetService localNetService;
 
     @Autowired
-    CodeListTaxService codeListTaxService;
+    public CodeListTaxService codeListTaxService;
 
     @Autowired
-    ReportStorageService reportStorageService;
+    public ReportStorageService reportStorageService;
 
     @ModelAttribute("user")
     public User user(HttpServletRequest request) {

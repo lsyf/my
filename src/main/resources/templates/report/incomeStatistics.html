@@ -47,7 +47,10 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" layout:fragment="content">
 
-        <script>
+        <script th:inline="javascript">
+            //页面传值
+            var orgs = [[${orgs}]];
+            var months = [[${months}]];
             $(function () {
                 initIncomeStatistics();
             });

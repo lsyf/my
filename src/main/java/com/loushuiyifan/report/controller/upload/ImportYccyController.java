@@ -1,6 +1,7 @@
 package com.loushuiyifan.report.controller.upload;
 
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportYccyService;
 import com.loushuiyifan.report.vo.CommonVO;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("importYCCY")
-public class ImportYccyController extends BaseImportController {
+public class ImportYccyController extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportYccyController.class);
 
 

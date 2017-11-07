@@ -1,10 +1,11 @@
 var orgTree;
 function initIncomeStatistics() {
 
+
+    buildSelect('upload_month', months);
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
+    orgTree.Init(orgs);
 
-
-    initSelect();
     initForm();
 }
 
@@ -81,37 +82,3 @@ function log(txt, id) {
     $('#div_console').append($p);
 }
 
-
-function initSelect() {
-    $.post(hostUrl + "date/aroundMonths", {num: 5})
-        .done(function (r) {
-            if (r.state) {
-                $('#upload_month').empty();
-                r.data.forEach(function (d) {
-                    var option = '<option value="' + d.data + '">' + d.name + '</option>';
-                    $('#upload_month').append(option);
-                });
-            } else {
-                toastr.error('月份加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-
-    //本地网加载
-    $.post(hostUrl + "localNet/listForC5")
-        .done(function (r) {
-            if (r.state) {
-                console.log(r.data)
-                orgTree.Init(r.data);
-            } else {
-                toastr.error('本地网加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-}
