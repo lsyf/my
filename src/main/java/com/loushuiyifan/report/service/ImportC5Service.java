@@ -1,16 +1,13 @@
 package com.loushuiyifan.report.service;
 
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.ReportConfig;
-import com.loushuiyifan.report.bean.ExtImportLog;
-import com.loushuiyifan.report.bean.RptImportDataC5;
-import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportDataC5DAO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.ImportDataLogVO;
+import java.nio.file.Path;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -24,11 +21,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.ReportConfig;
+import com.loushuiyifan.report.bean.ExtImportLog;
+import com.loushuiyifan.report.bean.RptImportDataC5;
+import com.loushuiyifan.report.dao.ExtImportLogDAO;
+import com.loushuiyifan.report.dao.RptImportDataC5DAO;
+import com.loushuiyifan.report.dto.SPDataDTO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.DateService;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.ImportC5DataVO;
+import com.loushuiyifan.report.vo.ImportDataLogVO;
 
 /**
  * @author 漏水亦凡
@@ -93,26 +97,26 @@ public class ImportC5Service {
 
         // TODO 存过待修改
         //校验导入数据指标
-//        CheckDataDTO dto = new CheckDataDTO();
-//        dto.setLogId(logId);
-//        dto.setMonth(month);
-//        rptImportDataC5DAO.checkC5Data(dto);
-//
-//        //TODO 统一更改存过返回值(0为失败，1为成功)
-//        Integer code = dto.getRtnCode();
-//        if (code != 0) {
-//            String error = "";
-//            try {
-//                delete(userId, logId);
-//            } catch (Exception e) {
-//                error = "校验失败后删除数据异常: " + e.getMessage();
-//            } finally {
-//                error = String.format("导入数据校验失败: %s ; %s", dto.getRtnMeg(), error);
-//                logger.error(error);
-//                throw new ReportException(error);
-//            }
-//
-//        }
+        SPDataDTO dto = new SPDataDTO();
+        dto.setLogId(logId);
+        dto.setMonth(month);
+        rptImportDataC5DAO.checkC5Data(dto);
+
+        //存过返回值(非0为失败)
+        Integer code = dto.getRtnCode();
+        if (code != 0) {
+            String error = "";
+            try {
+                delete(userId, logId);
+            } catch (Exception e) {
+                error = "校验失败后删除数据异常: " + e.getMessage();
+            } finally {
+                error = String.format("导入数据校验失败: %s; %s", dto.getRtnMsg(), error);
+                logger.error(error);
+                throw new ReportException(error);
+            }
+
+        }
 
 
     }
@@ -150,11 +154,15 @@ public class ImportC5Service {
      * @param month
      * @return
      */
-    public List<ImportDataLogVO> list(String month, Integer latnId) {
-    	//TODO 地市id 用作权限控制
+    public Map<String,Object> list(String month, Integer latnId) {
+    	
     	String type = ReportConfig.RptImportType.C5.toString();
-
-        return null;
+    	Map<String,Object> map = new HashMap<>();
+    	List<ImportDataLogVO> l_jihe =rptImportDataC5DAO.jiheSum(month, latnId,type);
+    	List<ImportC5DataVO> l_area =rptImportDataC5DAO.areaCount(month, latnId);
+    	map.put("l_jihe", l_jihe);
+    	map.put("l_area", l_area);
+        return map;
     }
 
     /**
@@ -164,14 +172,14 @@ public class ImportC5Service {
      * @param logId
      */
     public void delete(Long userId, Long logId) {
-        DeleteImportDataDTO dto = new DeleteImportDataDTO();
+    	SPDataDTO dto = new SPDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
         rptImportDataC5DAO.deleteImportData(dto);
         int code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
+        
         if (code != 0) {//非0为失败
-            throw new ReportException("3数据删除失败: " + dto.getRtnMeg());
+            throw new ReportException("3数据删除失败: " + dto.getRtnMsg());
         }
     }
 

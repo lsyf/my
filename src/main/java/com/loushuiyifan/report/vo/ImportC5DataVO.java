@@ -15,5 +15,5 @@ public class ImportC5DataVO {
     String c5Name;
     String c4Id;
     String c4Name;
-    String sum;
+    Double sum;
 }

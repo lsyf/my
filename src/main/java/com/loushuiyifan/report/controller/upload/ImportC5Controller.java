@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 销售一线C5报表导入
@@ -114,7 +115,8 @@ public class ImportC5Controller extends BaseReportController {
     @ResponseBody
     public JsonResult listC5(String month, String latnId) {
         //TODO
-        List<ImportDataLogVO> list = importC5Service.list(month, Integer.parseInt(latnId));
+        Map<String,Object> list = importC5Service.list(month, Integer.parseInt(latnId));
+        
         return JsonResult.success(list);
     }
 
