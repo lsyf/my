@@ -72,8 +72,10 @@ public class ImportCutService {
         //然后保存解析的数据
         saveCutDataByGroup(list, month, username, latnId, incomeSource, shareType, remark);
 
-
+        
         //根据切割类型稽核
+        
+        //
 //        if (cut.getShareType() == 1) { //c4
 //            Double result2 = rptImportCutRateDAO.cutRateJihetype(cut.getRuleId(), month);
 //            if (result2 != 1) {
@@ -138,11 +140,11 @@ public class ImportCutService {
             cut.setLatnId(latnId);
             cut.setIncomeSource(incomeSource);
             cut.setActiveFlag("N");
-            //TODO 待修改
+            //TODO 待修改 查询用户名
             List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName, ruleId);
 
             if (check.size() != 0) {
-                rptImportCutDataDAO.updataCutFlag(cut);
+                rptImportCutDataDAO.updataCutFlag(cut); // 更新（Y/N）is_active
                 rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName, "N");
             } else {
                 throw new ReportException("您没有权限删除此记录");

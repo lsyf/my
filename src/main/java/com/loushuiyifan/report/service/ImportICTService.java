@@ -180,6 +180,7 @@ public class ImportICTService {
      * @param logId
      */
     public void delete(Long userId, Long logId) {
+
         SPDataDTO dto = new SPDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);

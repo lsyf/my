@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * @author 漏水亦凡
  * @date 2017/9/25
@@ -43,3 +45,4 @@ public interface RptImportDataICTDAO extends MyMapper<RptImportDataICT> {
                                      @Param("month") String month,
                                      @Param("type") String type);
 }
+

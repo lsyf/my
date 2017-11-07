@@ -1,6 +1,5 @@
 package com.loushuiyifan.report.service;
 
-import com.alibaba.druid.util.StringUtils;
 import com.google.common.collect.Maps;
 import com.loushuiyifan.config.poi.PoiRead;
 import com.loushuiyifan.report.ReportConfig;
@@ -8,12 +7,15 @@ import com.loushuiyifan.report.bean.ExtImportLog;
 import com.loushuiyifan.report.bean.RptImportDataTax;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataTaxDAO;
+import com.loushuiyifan.report.dto.CheckDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
+import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -33,11 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 public class ImportTaxService {
-	private static final Logger logger = LoggerFactory.getLogger(ImportTaxService.class);
-	
-	@Autowired
+    private static final Logger logger = LoggerFactory.getLogger(ImportTaxService.class);
+
+    @Autowired
     ExtImportLogDAO extImportLogDAO;
 
     @Autowired
@@ -45,10 +48,11 @@ public class ImportTaxService {
 
     @Autowired
     DateService dateService;
-    
+
     @Autowired
     RptImportDataTaxDAO rptImportDataTaxDAO;
-	/**
+
+    /**
      * 解析入库
      */
     @Transactional
@@ -74,10 +78,10 @@ public class ImportTaxService {
         Long logId = extImportLogDAO.nextvalKey();
         //判断是否提交
         String states = rptImportDataTaxDAO.checkPullStates(logId);
-        if (states != null){
-        	throw new ReportException("数据已提交");
-        } 
-        	
+        if (states != null) {
+            throw new ReportException("数据已提交");
+        }
+
         importDataByGroup(list, logId, month);
 
         //最后保存日志数据
@@ -89,7 +93,7 @@ public class ImportTaxService {
         log.setExportDesc(remark);
         log.setIncomeSoure("0");
         log.setStatus("Y");
-        log.setImportDate(Date.from(Instant.now()));        
+        log.setImportDate(Date.from(Instant.now()));
         log.setType(ReportConfig.RptImportType.TAX.toString());
         extImportLogDAO.insert(log);
 
@@ -98,6 +102,12 @@ public class ImportTaxService {
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataTaxDAO.checkTaxData(dto);
+
+        //TODO 2待修改 存过 PKG_CUT_TAXDATA.RPT_TAX_CUT
+        DeleteYccyDataDTO dyto = new DeleteYccyDataDTO();
+        dyto.setLogId(logId);
+        rptImportDataTaxDAO.tijiaoTax(dyto);
+        Integer cod = dyto.getISts();
 
         Integer code = dto.getRtnCode();
         //TODO 统一更改存过返回值(0为失败，1为成功)
@@ -115,56 +125,49 @@ public class ImportTaxService {
         }
 
     }
-    
+
     /**
      * 查询
      */
-    public List<Map<String,Object>> list(String month,Long userId){
-    	String type = ReportConfig.RptImportType.TAX.toString();
-    	List<ImportLogDomTaxVO> list =rptImportDataTaxDAO.listTax(userId, month, type);   
-    	int count = 0;
-		double total = 0;
-		for (int i = 0; i < list.size(); i++) {
-			ImportLogDomTaxVO tmp = list.get(i);
-			count += tmp.getCount();
-			total += tmp.getSum();
-		}
-		ImportLogDomTaxVO tmp = new ImportLogDomTaxVO();
-		tmp.setCount(count);
-		tmp.setSum(total);
-		Map<String, Object> result =Maps.newHashMap();
-		result.put("count", tmp);
-		result.put("list", list);
-		if (list != null && list.size() == 0) {
-			result.put("msg", "查询成功");
-		} else {
-			result.put("msg", "查询结果为空");
-		}
-		List<Map<String,Object>> alist = new ArrayList<>();
-		alist.add(result);
-		
-		return alist;
-     }
-    
-    /**
-     * 切割提交
-     */
-    public void commit(Long logId){
-    //TODO 待做	
-    	
-    	
+    public List<Map<String, Object>> list(String month, Long userId) {
+        String type = ReportConfig.RptImportType.TAX.toString();
+        List<ImportLogDomTaxVO> list = rptImportDataTaxDAO.listTax(userId, month, type);
+        int count = 0;
+        double total = 0;
+        for (int i = 0; i < list.size(); i++) {
+            ImportLogDomTaxVO tmp = list.get(i);
+            count += tmp.getCount();
+            total += tmp.getSum();
+        }
+        ImportLogDomTaxVO tmp = new ImportLogDomTaxVO();
+        tmp.setCount(count);
+        tmp.setSum(total);
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("count", tmp);
+        result.put("list", list);
+        if (list != null && list.size() == 0) {
+            result.put("msg", "查询成功");
+        } else {
+            result.put("msg", "查询结果为空");
+        }
+        List<Map<String, Object>> alist = new ArrayList<>();
+        alist.add(result);
+
+        return alist;
     }
-    
+
+
     /**
      * 删除数据
      *
      * @param userId
      * @param logId
      */
-    public void delete(Long userId, Long logId) {
+    public void delete(Long userId, Long logId) throws Exception {
         DeleteImportDataDTO dto = new DeleteImportDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
+        //存过 IRPT_DEL_TAXDATA
         rptImportDataTaxDAO.deleteTax(dto);
         int code = dto.getRtnCode();
         //TODO 统一更改存过返回值(0为失败，1为成功)
@@ -172,8 +175,37 @@ public class ImportTaxService {
             throw new ReportException("1数据删除失败: " + dto.getRtnMeg());
         }
     }
-    
-    
+
+    /**
+     * 税务导入-生成税务
+     *
+     * @return
+     */
+    public void taxFile(String month, String type) throws Exception {
+        //TODO 税务插入到stat_to_group  存过输入修改MSS_STAT_TO_TAX
+        CheckDataDTO dto = new CheckDataDTO();
+        dto.setLogId(Long.parseLong(type));
+        rptImportDataTaxDAO.insertTaxGroup();
+        int rtnCode = dto.getRtnCode();
+        String rtnMeg = dto.getRtnMeg();
+        if (rtnCode != 0) {
+            System.out.println(rtnMeg);
+        }
+
+        ArrayList<String> list = rptImportDataTaxDAO.selectBatchIds(month);
+
+        logger.info("tax to create file:" + list.size());
+        if (list.size() == 0)
+            return;
+        int i = 0;
+        for (String batchId : list) {
+            i++;
+            String num = String.format("%05d", i);
+
+
+        }
+    }
+
     /**
      * 解析数据
      *
@@ -190,7 +222,7 @@ public class ImportTaxService {
         List<RptImportDataTax> list = read.read();
         return list;
     }
-    
+
     /**
      * 在一个session中批量 插入
      *
@@ -215,41 +247,40 @@ public class ImportTaxService {
             logger.debug("批量插入结束");
         }
     }
-    
-    static class RptImportDataTaxRead extends ReportReadServ<RptImportDataTax>{
-    	
-    	protected  List<RptImportDataTax> processSheet(Sheet sheet){
-    		FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();	
-    		List<RptImportDataTax> list = new ArrayList<RptImportDataTax>();
-    		for (int y = startY; y <= sheet.getLastRowNum(); y++){
-    			Row row = sheet.getRow(y);
-    			RptImportDataTax bean = new RptImportDataTax();
-    			
-    			for (int x = startX; x <= row.getLastCellNum(); x++){
-    				
-    				String data = getCellData(row.getCell(x), evaluator);
+
+    static class RptImportDataTaxRead extends ReportReadServ<RptImportDataTax> {
+
+        protected List<RptImportDataTax> processSheet(Sheet sheet) {
+            FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
+            List<RptImportDataTax> list = new ArrayList<RptImportDataTax>();
+            for (int y = startY; y <= sheet.getLastRowNum(); y++) {
+                Row row = sheet.getRow(y);
+                RptImportDataTax bean = new RptImportDataTax();
+
+                for (int x = startX; x <= row.getLastCellNum(); x++) {
+
+                    String data = getCellData(row.getCell(x), evaluator);
                     if (StringUtils.isEmpty(data)) {
                         continue;
                     }
-                    
-                    switch (x) {
-					case 0:
-						bean.setPrctr(data);
-						break;
 
-					case 1:
-						bean.setAftTaxValue(Double.parseDouble(data));
-						break;						    			
+                    switch (x) {
+                        case 0:
+                            bean.setPrctr(data);
+                            break;
+
+                        case 1:
+                            bean.setAftTaxValue(Double.parseDouble(data));
+                            break;
                     }
-    			}
-    			list.add(bean);
-    		}
-    		
-    	return list;	
-    	}
-    	
-    } 
-    
-    
-     
+                }
+                list.add(bean);
+            }
+
+            return list;
+        }
+
+    }
+
+
 }

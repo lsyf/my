@@ -124,7 +124,8 @@ public class ImportICTController extends BaseReportController {
     @PostMapping("remove")
     @ResponseBody
     public JsonResult remove(Long logId, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
+    	 //TODO 待修改 存过  IRPT_DEL_ICTDATA
+    	Long userId = user.getId();
         importICTService.delete(userId, logId);
         return JsonResult.success();
     }
