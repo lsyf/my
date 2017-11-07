@@ -66,7 +66,9 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" layout:fragment="content">
 
-        <script>
+        <script th:inline="javascript">
+            //页面传值
+            var months = [[${months}]];
             $(function () {
                 initDataTax();
             });
@@ -97,8 +99,8 @@
                         <form id="form_upload" class="form-horizontal col-sm-12">
 
                             <div class="form-group form-group-sm">
-                                <label for="upload_month" class="col-sm-4 control-label">月份</label>
-                                <div class="col-sm-8">
+                                <label for="upload_month" class="col-sm-1 control-label">月份</label>
+                                <div class="col-sm-3">
                                     <select class="form-control" name="month" id="upload_month">
                                     </select>
                                 </div>
@@ -135,7 +137,7 @@
                         </form>
                         <div class="form-horizontal col-sm-12">
                             <p>
-                                导入提示: ---> <a th:href="@{/download/template/importIncomeData}"
+                                导入提示: ---> <a th:href="@{/download/template/importDataTax}"
                                               target="_blank"><b>模板下载</b></a><br/>
                                 1、excel版本只支持2003版格式，后缀必须为.xls<br/>
 
@@ -158,7 +160,7 @@
                 </div>
             </div>
 
-           
+         
         </section>
 
 

@@ -24,6 +24,10 @@ public class CodeListTaxService {
     @Autowired
     CodeListTaxDAO codeListTaxDAO;
 
+    public List<Map> listIncomeSource(String type) {
+        return codeListTaxDAO.listByType(type);
+    }
+
     public List<Map> listByType(String type) {
         return codeListTaxDAO.listByType(type);
     }

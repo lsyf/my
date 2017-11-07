@@ -22,4 +22,13 @@
     margin: 0 !important;
 }
 
+.form-validation.has-error  .form-control, .form-group.has-error .input-group-addon {
+    border-color: #dd4b39;
+    box-shadow: none;
+}
+
+.form-validation.has-error label {
+    color: #dd4b39;
+}
+
 

@@ -1,50 +1,58 @@
 /**
- * 组织ztree
+ * ztree下拉框
  */
-var OrgZtree = function (id, div, input) {
+var ZtreeSelect = function (a, b, c, d) {
     var oZtree = new Object();
-    oZtree.id = id;//zTree id
-    oZtree.div = div;//容器 id
-    oZtree.input = input;//输入框 id
+    var ztreeId = a;//zTree id
+    var divId = b;//容器 id
+    var inputId = c;//输入框 id
+
+    var data = null;//缓存
+    var first = null;//第一个值
+
+    var xWidth = d == null ? 0 : d;//额外宽度
 
     //初始化数据
     oZtree.Init = function (datas) {
-        oZtree.data = datas;
+        data = datas;
         var nodes = [];
-        datas.forEach(function (data) {
+        datas.forEach(function (data, i) {
+            if (i == 0) {
+                first = data;
+            }
             var node = new Object();
             node.id = data.id;
             node.pId = data.parentId == null ? 0 : data.parentId;
             node.name = data.name;
             node.data = data.data;
-            node.open = false;
+            node.open = data.lvl > first.lvl ? false : true;
             nodes.push(node)
         });
 
-        $.fn.zTree.init($("#" + oZtree.id), treeSetting, nodes);
+        $.fn.zTree.init($("#" + ztreeId), treeSetting, nodes);
 
         //添加监听
-        $('#' + oZtree.input).unbind('focus');
-        $('#' + oZtree.input).val('');
-        $('#' + oZtree.input).on('focus', function () {
-            oZtree.showMenu($('#' + oZtree.input));
+        $('#' + inputId).unbind('focus');
+        $('#' + inputId).val(first.name);
+        $('#' + inputId).next().val(first.data);
+        $('#' + inputId).on('focus', function () {
+            oZtree.showMenu($('#' + inputId));
         });
 
     };
 
-
     //初始化 多选框
     oZtree.reset = function () {
-        oZtree.Init(oZtree.data);
+        oZtree.Init(data);
     };
 
     //显示下拉菜单
     oZtree.showMenu = function (input) {
         var inputOffset = input.offset();
         //设置ztree宽度
-        $("#" + oZtree.id).css({width: input.outerWidth() + "px"});
+        $("#" + ztreeId).css({width: (input.outerWidth() + xWidth) + "px"});
         //设置下拉框位置
-        $("#" + oZtree.div).css({
+        $("#" + divId).css({
             left: inputOffset.left + "px",
             top: inputOffset.top + input.outerHeight() + "px"
         }).slideDown("fast");
@@ -52,26 +60,28 @@ var OrgZtree = function (id, div, input) {
         $("body").bind("mousedown", onBodyDown);
     };
 
+    //隐藏下拉菜单
     oZtree.hideMenu = function () {
-        $("#" + oZtree.div).fadeOut("fast");
+        $("#" + divId).fadeOut("fast");
         $("body").unbind("mousedown", onBodyDown);
     };
 
     //全部展开下拉列表
     oZtree.expand = function (flag) {
-        var treeObj = $.fn.zTree.getZTreeObj(oZtree.id);
-        treeObj.expandAll(flag == null ? false : flag);
+        var treeObj = $.fn.zTree.getZTreeObj(ztreeId);
+        treeObj.expandAll(flag == null ? true : flag);
     };
 
-
+    //获取值
     oZtree.val = function () {
-        return $('#' + oZtree.input).next().val();
+        return $('#' + inputId).next().val();
     };
+
 
     function onBodyDown(event) {
-        if (!( event.target.id == oZtree.input
-            || event.target.id == oZtree.div
-            || $(event.target).parents("#" + oZtree.div).length > 0)) {
+        if (!( event.target.id == inputId
+            || event.target.id == divId
+            || $(event.target).parents("#" + divId).length > 0)) {
             oZtree.hideMenu();
         }
     }
@@ -93,10 +103,28 @@ var OrgZtree = function (id, div, input) {
     };
 
     function zTreeOnClick(event, treeId, treeNode) {
-        $('#' + oZtree.input).val(treeNode.name);
-        $('#' + oZtree.input).next().val(treeNode.data);
-        $('#' + oZtree.input).next().change();
+        $('#' + inputId).val(treeNode.name);
+        $('#' + inputId).next().val(treeNode.data);
+        $('#' + inputId).next().change();
     };
 
     return oZtree;
 }
+
+/**
+ * 配置下拉框,填充option
+ * @param id
+ * @param data
+ */
+var buildSelect = function (id, data) {
+    var $select = $('#' + id);
+    $select.empty();
+    data = data == null ? [] : data;
+    data.forEach(function (d) {
+        var option = '<option value="' + d.data + '">' + d.name + '</option>';
+        $select.append(option);
+    });
+};
+
+
+

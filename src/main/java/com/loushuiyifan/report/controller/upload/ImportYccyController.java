@@ -1,70 +1,56 @@
 package com.loushuiyifan.report.controller.upload;
 
+import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.service.ImportYccyService;
+import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import com.loushuiyifan.system.vo.JsonResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.shiro.web.util.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.config.shiro.ShiroConfig;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportStorageService;
-import com.loushuiyifan.report.service.ImportYccyService;
-import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
-import com.loushuiyifan.system.vo.JsonResult;
-
 /**
  * 业财差异
- * @author Administrator
  *
+ * @author Administrator
  */
 @Controller
-@RequestMapping("importYccy")
-public class ImportYccyController {
-	private static final Logger logger = LoggerFactory.getLogger(ImportYccyController.class);
+@RequestMapping("importYCCY")
+public class ImportYccyController extends BaseReportController {
+    private static final Logger logger = LoggerFactory.getLogger(ImportYccyController.class);
 
-	@Autowired
-    DateService dateService;
-
-    @Autowired
-    ReportStorageService reportStorageService;
 
     @Autowired
     ImportYccyService importYccyService;
 
-    @ModelAttribute("user")
-    public User user(HttpServletRequest request) {
-        HttpSession session = WebUtils.toHttp(request).getSession();
-        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
-        return user;
-    }
-    
+
     /**
      * 导入界面
+     *
      * @return
      */
     @GetMapping
-    public String index() {
-        return "report/upload/importYccy";
+    public String index(ModelMap map, @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+
+        //页面条件
+        List<CommonVO> months = dateService.aroundMonths(5);
+        map.put("months", months);
+
+        return "report/upload/importYCCY";
     }
-    
+
     /**
      * 导入
      */
@@ -86,10 +72,10 @@ public class ImportYccyController {
 
         //最后解析入库(失败则删除文件)
         try {
-        	importYccyService.save(path,
-				                    userId,
-				                    month,
-				                    remark);
+            importYccyService.save(path,
+                    userId,
+                    month,
+                    remark);
         } catch (Exception e) {
             logger.error("7解析入库失败", e);
             try {
@@ -102,7 +88,7 @@ public class ImportYccyController {
         }
         return JsonResult.success();
     }
-    
+
     /**
      * 查询
      */
@@ -115,14 +101,14 @@ public class ImportYccyController {
 
         return JsonResult.success(list);
     }
-    
+
     /**
      * 删除
      */
     @PostMapping("remove")
     @ResponseBody
     public JsonResult remove(Long logId,
-    		                 String month,
+                             String month,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();
         //TODO 时间校验待修改
@@ -130,5 +116,5 @@ public class ImportYccyController {
         importYccyService.delete(Math.toIntExact(userId), logId);
         return JsonResult.success();
     }
-    
+
 }

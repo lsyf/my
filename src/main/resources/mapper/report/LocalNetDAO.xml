@@ -12,12 +12,8 @@
         and a.type = 'local_net'
     </select>
 
-    <select id="listByRootAndLvl" resultType="Map">
-        select
-            a.name as "name",
-            a.data as "data",
-            a.parent_id as "parentId",
-            a.id as "id"
+    <select id="listByRootAndLvl" resultType="com.loushuiyifan.common.bean.Organization">
+        select  *
         from(
             select *
             from aweb_organization a

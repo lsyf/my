@@ -1,10 +1,15 @@
 var table;
-
-function initDataTax() {
+var orgTree;
+var isTree;
+function initRptQuery() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId", 50);
+    orgTree.Init(orgs);
+    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource", 90);
+    isTree.Init(incomeSources);
 
 
     initForm();
@@ -39,6 +44,8 @@ function initForm() {
                     $('#btn_upload').button("reset");
                     if (r.state) {
                         $(form).resetForm();
+                        orgTree.reset();
+                        isTree.reset();
 
                         toastr.info('提交成功');
                         table.refresh();
@@ -70,7 +77,7 @@ var TableInit = function () {
 
     //初始化Table
     oTableInit.Init = function () {
-        $('#table_upload').bootstrapTable({
+        $('#table_query').bootstrapTable({
             // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
             // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色

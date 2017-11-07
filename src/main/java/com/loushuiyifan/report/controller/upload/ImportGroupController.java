@@ -1,23 +1,20 @@
 package com.loushuiyifan.report.controller.upload;
 
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.config.shiro.ShiroConfig;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportStorageService;
 import com.loushuiyifan.report.service.ImportGroupService;
 import com.loushuiyifan.report.vo.ImportDataGroupVO;
 import com.loushuiyifan.system.vo.JsonResult;
-import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,24 +22,14 @@ import java.util.List;
 
 @Controller
 @RequestMapping("importGroup")
-public class ImportGroupController {
+public class ImportGroupController extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportGroupController.class);
 
-    @Autowired
-    DateService dateService;
-
-    @Autowired
-    ReportStorageService reportStorageService;
 
     @Autowired
     ImportGroupService importGroupService;
 
-    @ModelAttribute("user")
-    public User user(HttpServletRequest request) {
-        HttpSession session = WebUtils.toHttp(request).getSession();
-        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
-        return user;
-    }
+
 
     /**
      * 指标组配置页面
@@ -50,7 +37,13 @@ public class ImportGroupController {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(ModelMap map, @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+
+        //页面条件
+        List<Organization> orgs = localNetService.listForC4(userId);
+        map.put("orgs", orgs);
+
         return "report/upload/importGroup";
     }
 

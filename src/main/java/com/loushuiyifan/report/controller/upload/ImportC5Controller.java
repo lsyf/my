@@ -1,24 +1,21 @@
 package com.loushuiyifan.report.controller.upload;
 
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.config.shiro.ShiroConfig;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.LocalNetService;
-import com.loushuiyifan.report.serv.ReportStorageService;
 import com.loushuiyifan.report.service.ImportC5Service;
+import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
-import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,27 +29,13 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("importC5")
-public class ImportC5Controller {
+public class ImportC5Controller extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportC5Controller.class);
 
-    @Autowired
-    DateService dateService;
-
-    @Autowired
-    LocalNetService localNetService;
-
-    @Autowired
-    ReportStorageService reportStorageService;
 
     @Autowired
     ImportC5Service importC5Service;
 
-    @ModelAttribute("user")
-    public User user(HttpServletRequest request) {
-        HttpSession session = WebUtils.toHttp(request).getSession();
-        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
-        return user;
-    }
 
     /**
      * 销售一线C5导入界面
@@ -60,7 +43,16 @@ public class ImportC5Controller {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(ModelMap map, @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+
+        //页面条件
+        List<Organization> orgs = localNetService.listForC4(userId);
+        List<CommonVO> months = dateService.aroundMonths(5);
+
+        map.put("orgs", orgs);
+        map.put("months", months);
+
         return "report/upload/importC5";
     }
 
@@ -86,8 +78,6 @@ public class ImportC5Controller {
         dateService.checkImportC5(month);
 
         Long userId = user.getId();
-
-        //TODO  用户所在地市判断
 
         //存储
         Path path = reportStorageService.store(file);
@@ -123,7 +113,7 @@ public class ImportC5Controller {
     @PostMapping("list")
     @ResponseBody
     public JsonResult listC5(String month, String latnId) {
-         //TODO
+        //TODO
         List<ImportDataLogVO> list = importC5Service.list(month, Integer.parseInt(latnId));
         return JsonResult.success(list);
     }

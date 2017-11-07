@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -24,13 +23,14 @@ public class LocalNetService {
     OrganizationService organizationService;
 
     /**
-     * 根据用户获取所有本地网信息
+     * 通用
+     * 根据用户获取本地网信息(所有)
      *
      * @param userId
      * @param lvl
      * @return
      */
-    public List<Map> listAllByUser(Long userId, Integer lvl) {
+    public List<Organization> listAllByUser(Long userId, Integer lvl) {
 
         //首先 获取所有关联的地市
         List<Organization> relatedList = localNetDAO.listByUserAndLvl(userId, lvl);
@@ -48,20 +48,22 @@ public class LocalNetService {
         }
 
         //最后进行判断所属地市 及子集
-        List<Map> list = localNetDAO.listByRootAndLvl(relatedList, lvl);
+        List<Organization> list = localNetDAO.listByRootAndLvl(relatedList, lvl);
 
         return list;
     }
 
     /**
+     *
      * 根据用户 获取 所有股份下地市
      *
      * @param userId
      * @return
      */
-    public List<Organization> listForC5(Long userId) {
+    public List<Organization> listForC4(Long userId) {
         String type = OrganizationService.TYPE_CITY;
-        String data = "0";
+        String data = "0";//该data代表股份值
+
         //首先根据用户获取所有 相关股份的地市信息
         List<Organization> orgs = localNetDAO.preForC3(userId, data);
         if (orgs == null || orgs.size() == 0) {

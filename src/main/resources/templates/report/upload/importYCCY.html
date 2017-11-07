@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>切割比例配置</title>
+    <title>业财差异导入</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -43,8 +43,8 @@
 
     <script src="../../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../../static/js/report/upload/importCut.js"
-            th:src="@{/static/js/report/upload/importCut.js}"></script>
+    <script src="../../../static/js/report/upload/importYCCY.js"
+            th:src="@{/static/js/report/upload/importYCCY.js}"></script>
 
 
     <style>
@@ -68,23 +68,21 @@
 
         <script th:inline="javascript">
             //页面传值
-            var orgs = [[${orgs}]];
             var months = [[${months}]];
-            var incomeSources = [[${incomeSources}]];
             $(function () {
-                initCut();
+                initYCCY();
             });
         </script>
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                切割比例配置
+                业财差异导入
                 <!--<small>仪表盘</small>-->
             </h1>
             <ol class="breadcrumb" id="content-header-ol">
                 <li><a href="#"><i class="fa fa-dashboard"></i> 文件导入</a></li>
-                <li class="active">切割比例配置</li>
+                <li class="active">业财差异导入</li>
             </ol>
         </section>
 
@@ -101,39 +99,11 @@
                         <form id="form_upload" class="form-horizontal col-sm-12">
 
                             <div class="form-group form-group-sm">
-                                <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="upload_month" class="col-sm-4 control-label">月份</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" name="month" id="upload_month">
-                                        </select>
-                                    </div>
+                                <label for="upload_month" class="col-sm-1 control-label">月份</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" name="month" id="upload_month">
+                                    </select>
                                 </div>
-                                <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="upload_latnId" class="col-sm-4 control-label">本地网</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="upload_latnId" readonly>
-                                        <input class="form-control" name="latnId" type="hidden">
-                                    </div>
-
-                                </div>
-                                <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="upload_incomeSource" class="col-sm-4 control-label">收入来源</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="upload_incomeSource" readonly>
-                                        <input class="form-control" name="incomeSource" type="hidden">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 form-group form-group-rm">
-
-                                    <label for="upload_cutType" class="col-sm-4 control-label">切割类型</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" name="cutType" id="upload_cutType">
-                                            <option value="1">c4切割</option>
-                                            <option value="2">c5切割</option>
-                                        </select>
-                                    </div>
-                                </div>
-
                             </div>
 
                             <div class="form-group form-group-sm">
@@ -167,7 +137,7 @@
                         </form>
                         <div class="form-horizontal col-sm-12">
                             <p>
-                                导入提示: ---> <a th:href="@{/download/template/importCut}"
+                                导入提示: ---> <a th:href="@{/download/template/importYCCY}"
                                               target="_blank"><b>模板下载</b></a><br/>
                                 1、excel版本只支持2003版格式，后缀必须为.xls<br/>
 
@@ -190,13 +160,6 @@
                 </div>
             </div>
 
-            <div id="menuContent" class="menuContent">
-                <ul id="treeOrg" class="ztree"></ul>
-            </div>
-
-            <div id="menuContent2" class="menuContent">
-                <ul id="treeOrg2" class="ztree"></ul>
-            </div>
 
         </section>
 

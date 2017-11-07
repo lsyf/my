@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/static}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>一键汇总</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+    <script src="../../static/plugins/moment/moment-with-locales.min.js"
+            th:src="@{/static/plugins/moment/moment-with-locales.min.js}"></script>
+
+
+    <link rel="stylesheet"
+          href="../../static/plugins/zTree/zTreeStyle.css"
+          th:href="@{/static/plugins/zTree/zTreeStyle.css}">
+    <script src="../../static/plugins/zTree/jquery.ztree.all.min.js"
+            th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
+
+
+    <script src="../../static/js/report/common.js"
+            th:src="@{/static/js/report/common.js}"></script>
+    <script src="../../static/js/report/incomeStatistics.js"
+            th:src="@{/static/js/report/incomeStatistics.js}"></script>
+
+
+    <style>
+        .btn-form {
+            margin-right: 20px;
+        }
+
+        .table-row {
+            /*height: 30px;*/
+        }
+    </style>
+
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content">
+
+        <script th:inline="javascript">
+            //页面传值
+            var orgs = [[${orgs}]];
+            var months = [[${months}]];
+            $(function () {
+                initIncomeStatistics();
+            });
+        </script>
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                一键汇总
+                <!--<small>仪表盘</small>-->
+            </h1>
+            <ol class="breadcrumb" id="content-header-ol">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 文件导入</a></li>
+                <li class="active">一键汇总</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div id="form-panel">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        查询条件
+                    </div>
+                    <div class="box-body" style="height: 500px;">
+
+                        <form id="form_upload" class="form-horizontal ">
+
+                            <div class="form-group form-group-sm">
+                                <label for="upload_month" class="col-sm-1 control-label">月份</label>
+                                <div class="col-sm-3 form-validation">
+                                    <select class="form-control" name="month" id="upload_month">
+                                    </select>
+                                </div>
+
+                                <label for="upload_latnId" class="col-sm-1 control-label">本地网</label>
+                                <div class="col-sm-3 form-validation">
+                                    <input type="text" class="form-control" id="upload_latnId" readonly>
+                                    <input class="form-control" name="latnId" type="hidden">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <button class="btn btn-danger btn-sm"
+                                            type="submit" id="btn_exec">
+                                        汇总
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                        <div id="div_console" class="form-group form-group-sm col-sm-offset-1">
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div id="menuContent" class="menuContent">
+                <ul id="treeOrg" class="ztree"></ul>
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+</div>
+</body>
+</html>

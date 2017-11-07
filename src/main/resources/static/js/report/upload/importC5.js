@@ -2,7 +2,10 @@ var table;
 var table2;
 var orgTree;
 function initC5() {
-    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
+    buildSelect('upload_month', months);
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
+    orgTree.Init(orgs);
+
 
     table = new TableInit();
     table.Init();
@@ -10,7 +13,6 @@ function initC5() {
     table2.Init();
 
 
-    initSelect();
     initForm();
 }
 
@@ -41,6 +43,9 @@ function initForm() {
                     $('#btn_upload').button("reset");
                     if (r.state) {
                         $(form).resetForm();
+                        orgTree.reset();
+
+
                         toastr.info('提交成功');
                         list();
                     } else {
@@ -65,48 +70,7 @@ function initForm() {
 
 }
 
-function queryLog() {
-    table.refresh();
-}
 
-/**
- * 初始化下拉选项
- */
-function initSelect() {
-    $.post(hostUrl + "date/aroundMonths", {num: 5})
-        .done(function (r) {
-            if (r.state) {
-                $('#upload_month').empty();
-                r.data.forEach(function (d) {
-                    var option = '<option value="' + d.data + '">' + d.name + '</option>';
-                    $('#upload_month').append(option);
-                });
-            } else {
-                toastr.error('月份加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-
-    //本地网加载
-    $.post(hostUrl + "localNet/listForC5")
-        .done(function (r) {
-            if (r.state) {
-                // console.log(r.data)
-                orgTree.Init(r.data);
-
-                //TODO 本地网加载完成后 才可以导入数据
-            } else {
-                toastr.error('本地网加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-}
 
 
 function removeData(row) {

@@ -1,34 +1,24 @@
 package com.loushuiyifan.report.controller.upload;
 
+import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.service.ImportTaxService;
+import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.system.vo.JsonResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.shiro.web.util.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.config.shiro.ShiroConfig;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportStorageService;
-import com.loushuiyifan.report.service.ImportTaxService;
-import com.loushuiyifan.system.vo.JsonResult;
 
 /**
  * 财务报表导入
@@ -38,24 +28,13 @@ import com.loushuiyifan.system.vo.JsonResult;
  */
 @Controller
 @RequestMapping("importDataTax")
-public class ImportDataTaxController {
+public class ImportDataTaxController extends BaseReportController {
     private static final Logger logger = LoggerFactory.getLogger(ImportDataTaxController.class);
 
-    @Autowired
-    DateService dateService;
-
-    @Autowired
-    ReportStorageService reportStorageService;
 
     @Autowired
     ImportTaxService importTaxService;
 
-    @ModelAttribute("user")
-    public User user(HttpServletRequest request) {
-        HttpSession session = WebUtils.toHttp(request).getSession();
-        User user = (User) session.getAttribute(ShiroConfig.SYS_USER);
-        return user;
-    }
 
     /**
      * 税务导入界面
@@ -63,7 +42,13 @@ public class ImportDataTaxController {
      * @return
      */
     @GetMapping
-    public String index() {
+    public String index(ModelMap map, @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+
+        //页面条件
+        List<CommonVO> months = dateService.aroundMonths(5);
+        map.put("months", months);
+
         return "report/upload/importDataTax";
     }
 
@@ -74,7 +59,6 @@ public class ImportDataTaxController {
      * @param file
      * @param month
      * @param remark
-     * @param latnId
      * @return
      */
     @PostMapping("upload")
@@ -94,7 +78,7 @@ public class ImportDataTaxController {
 
         //最后解析入库(失败则删除文件)
         try {
-        	importTaxService.save(path, userId, month, remark);
+            importTaxService.save(path, userId, month, remark);
         } catch (Exception e) {
             logger.error("6解析入库失败", e);
             try {
@@ -118,9 +102,9 @@ public class ImportDataTaxController {
     @ResponseBody
     public JsonResult list(String month, @ModelAttribute("user") User user) {
         Long userId = user.getId();
-       //TODO 已完成，待验证 map是否可用
-        List<Map<String,Object>> list = importTaxService.list(month, userId);
-                
+        //TODO 已完成，待验证 map是否可用
+        List<Map<String, Object>> list = importTaxService.list(month, userId);
+
         return JsonResult.success(list);
     }
 

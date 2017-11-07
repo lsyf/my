@@ -1,22 +1,18 @@
 var table;
 var orgTree;
-
 function initGroup() {
     table = new TableInit();
     table.Init();
 
-    orgTree = new OrgZtree("treeOrg", "menuContent", "upload_latnId");
 
-    initSelect();
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
+    orgTree.Init(orgs);
+
+
     initForm();
-    initEvent();
+
 }
 
-function initEvent() {
-    $('#btn_query').click(function () {
-
-    });
-}
 
 function initForm() {
     initValidator();
@@ -35,7 +31,7 @@ function initForm() {
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "importGroup/upload",
+                url: hostUrl + "importCut/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -45,6 +41,9 @@ function initForm() {
                     $('#btn_upload').button("reset");
                     if (r.state) {
                         $(form).resetForm();
+                        orgTree.reset();
+
+
                         toastr.info('提交成功');
                         table.refresh();
                     } else {
@@ -68,51 +67,6 @@ function initForm() {
 }
 
 
-function initSelect() {
-
-    //本地网加载
-    $.post(hostUrl + "localNet/listForC5")
-        .done(function (r) {
-            if (r.state) {
-                console.log(r.data)
-                orgTree.Init(r.data);
-            } else {
-                toastr.error('本地网加载失败');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
-
-}
-
-
-function removeData(row) {
-    editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "importGroup/remove",
-            data: {"logId": row.logId},
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('删除成功');
-                    hideAlert();
-                    table.refresh();
-                } else {
-                    toastr.error('提删除失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
-            }
-        });
-    });
-    showAlert();
-}
-
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
@@ -121,7 +75,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importGroup/list',         //请求后台的URL（*）
+            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
             // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
