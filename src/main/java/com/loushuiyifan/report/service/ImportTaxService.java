@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
 import com.google.common.collect.Maps;
@@ -29,6 +31,7 @@ import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataTaxDAO;
 import com.loushuiyifan.report.dto.CheckDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
+import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
@@ -99,7 +102,13 @@ public class ImportTaxService {
         CheckDataDTO dto = new CheckDataDTO();
         dto.setLogId(logId);
         rptImportDataTaxDAO.checkTaxData(dto);
-
+        
+        //TODO 2待修改 存过 PKG_CUT_TAXDATA.RPT_TAX_CUT
+        DeleteYccyDataDTO dyto = new DeleteYccyDataDTO();
+        dyto.setLogId(logId);
+    	rptImportDataTaxDAO.tijiaoTax(dyto);
+    	Integer cod =dyto.getISts();
+    	
         Integer code = dto.getRtnCode();
         //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
@@ -147,25 +156,18 @@ public class ImportTaxService {
 		return alist;
      }
     
-    /**
-     * 切割提交
-     */
-    public void commit(Long logId){
-    //TODO 待做	
-    	
-    	
-    }
-    
+   
     /**
      * 删除数据
      *
      * @param userId
      * @param logId
      */
-    public void delete(Long userId, Long logId) {
+    public void delete(Long userId, Long logId) throws Exception{
         DeleteImportDataDTO dto = new DeleteImportDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
+        //存过 IRPT_DEL_TAXDATA
         rptImportDataTaxDAO.deleteTax(dto);
         int code = dto.getRtnCode();
         //TODO 统一更改存过返回值(0为失败，1为成功)
@@ -174,6 +176,35 @@ public class ImportTaxService {
         }
     }
     
+    /**
+     * 税务导入-生成税务
+     *
+     * @return
+     */
+    public void taxFile(String month, String type)throws Exception{
+    	//TODO 税务插入到stat_to_group  存过输入修改MSS_STAT_TO_TAX
+    	CheckDataDTO dto = new CheckDataDTO();
+    	dto.setLogId(Long.parseLong(type));
+    	rptImportDataTaxDAO.insertTaxGroup();
+    	int rtnCode = dto.getRtnCode();
+		String rtnMeg =dto.getRtnMeg();
+		if (rtnCode != 0) {
+			System.out.println(rtnMeg);
+		}
+    	
+		ArrayList<String> list = rptImportDataTaxDAO.selectBatchIds(month);
+		
+		logger.info("tax to create file:" + list.size());
+		if (list.size() == 0)
+			return;
+		int i = 0;
+		for (String batchId : list){
+			i++;
+			String num = String.format("%05d", i);
+			
+			
+		}
+    }
     
     /**
      * 解析数据

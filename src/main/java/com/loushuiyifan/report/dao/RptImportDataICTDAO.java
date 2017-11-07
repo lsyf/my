@@ -8,6 +8,8 @@ import com.loushuiyifan.report.vo.ImportDataLogVO;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * @author 漏水亦凡
  * @date 2017/9/25
@@ -18,5 +20,7 @@ public interface RptImportDataICTDAO extends MyMapper<RptImportDataICT> {
 
     void deleteImportData(DeleteImportDataDTO dto);
 
-    List<ImportDataLogVO> listICTLog(Long userId, String month, String type);
+    List<ImportDataLogVO> listICTLog(@Param("userId") Long userId, 
+    		@Param("month") String month, 
+    		@Param("type") String type);
 }

@@ -133,8 +133,32 @@ public class ImportDataTaxController {
     @ResponseBody
     public JsonResult remove(Long logId,
                              @ModelAttribute("user") User user) {
-        Long userId = user.getId();
-        importTaxService.delete(userId, logId);
+    	//TODO 待修改 存过  IRPT_DEL_TAXDATA
+    	Long userId = user.getId();
+       try {
+    	   importTaxService.delete(userId, logId);
+       } catch (Exception e) {
+		e.printStackTrace();
+       } 
         return JsonResult.success();
     }
+    
+    /**
+     * 税务导入-生成税务
+     *
+     * @return
+     */
+    @PostMapping("createTax")
+    @ResponseBody
+    public JsonResult createTaxData(String month) {
+    	//TODO 待修改 存过  IRPT_DEL_TAXDATA
+    	
+    	try {
+    		importTaxService.taxFile(month,"007");
+        } catch (Exception e) {
+ 		e.printStackTrace();
+        } 
+        return JsonResult.success();
+    }
+    
 }

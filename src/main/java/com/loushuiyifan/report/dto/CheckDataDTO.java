@@ -8,8 +8,8 @@ import lombok.Data;
  */
 @Data
 public class CheckDataDTO {
-    Long logId;
-    String month;
+	String month;
+	Long logId;
     Integer rtnCode;
     String rtnMeg;
 }

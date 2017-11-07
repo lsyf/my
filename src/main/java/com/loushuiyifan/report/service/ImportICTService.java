@@ -181,7 +181,8 @@ public class ImportICTService {
      * @param logId
      */
     public void delete(Long userId, Long logId) {
-        DeleteImportDataDTO dto = new DeleteImportDataDTO();
+       
+    	DeleteImportDataDTO dto = new DeleteImportDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
         rptImportDataICTDAO.deleteImportData(dto);

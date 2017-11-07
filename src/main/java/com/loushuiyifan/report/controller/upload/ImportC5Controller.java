@@ -137,7 +137,8 @@ public class ImportC5Controller {
     @PostMapping("remove")
     @ResponseBody
     public JsonResult remove(Long logId, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
+       //TODO 待修改 存过update_tax_c5_2015
+    	Long userId = user.getId();
         importC5Service.delete(userId, logId);
         return JsonResult.success();
     }
