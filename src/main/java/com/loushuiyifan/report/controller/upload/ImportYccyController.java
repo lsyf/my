@@ -5,7 +5,6 @@ import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportYccyService;
 import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +64,8 @@ public class ImportYccyController extends BaseReportController {
         Long userId = user.getId();
 
         //首先校验能否导入
-        dateService.checkImportYccy();
+        //TODO 待测试
+//        dateService.checkImportYccy();
 
         //然后保存
         Path path = reportStorageService.store(file);

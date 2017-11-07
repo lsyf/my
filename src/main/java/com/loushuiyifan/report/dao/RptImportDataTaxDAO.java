@@ -1,15 +1,14 @@
 package com.loushuiyifan.report.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataTax;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.ArrayList;
+import java.util.List;
 
 	public interface RptImportDataTaxDAO extends MyMapper<RptImportDataTax> {
 		/**
@@ -36,7 +35,6 @@ import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 		/**
 		 * 提交
 		 * PKG_CUT_TAXDATA.RPT_TAX_CUT
-		 * @param dyto
 		 */
 		void pkgCutTaxData(SPDataDTO dto);
 		

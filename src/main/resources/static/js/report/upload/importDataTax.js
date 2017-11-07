@@ -11,25 +11,73 @@ function initDataTax() {
 
 }
 
+function queryLog() {
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "importDataTax/list",
+        data: {
+            month: $("#upload_month").val()
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                var data = r.data;
+                table.load(data.list);
+
+            } else {
+                toastr.error('查询失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+
+}
+
+
+function removeData(row) {
+    editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "importDataTax/remove",
+            data: {"logId": row.logId},
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('删除成功');
+                    hideAlert();
+
+                    queryLog()
+                } else {
+                    toastr.error('提删除失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
 
 function initForm() {
     initValidator();
 
     validatorForm = $('#form_upload').validate({
         rules: {
-            file: 'required',
-            latnId: 'checkHidden',
-            incomeSource: 'checkHidden'
+            file: 'required'
         },
         messages: {
-            file: "必须选择文件",
-            incomeSource: "必须输入收入来源",
-            latnId: "必须选择本地网"
+            file: "必须选择文件"
         },
         ignore: "",
         submitHandler: function (form) {
             $(form).ajaxSubmit({
-                url: hostUrl + "importCut/upload",
+                url: hostUrl + "importDataTax/upload",
                 type: 'post',
                 contentType: 'multipart/form-data',
                 beforeSubmit: function () {
@@ -41,7 +89,8 @@ function initForm() {
                         $(form).resetForm();
 
                         toastr.info('提交成功');
-                        table.refresh();
+                        queryLog()
+
                     } else {
                         toastr.error('提交失败:' + r.msg);
                     }
@@ -71,8 +120,6 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
-            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: false,                   //是否显示分页（*）
@@ -101,14 +148,11 @@ var TableInit = function () {
             columns: [{
                 field: 'logId',
                 title: '流水号'
-            }, {
-                field: 'city',
-                title: '地市'
-            }, {
+            } , {
                 field: 'fileName',
                 title: '导入文件'
             }, {
-                field: 'num',
+                field: 'count',
                 title: '记录数'
             }, {
                 field: 'sum',
@@ -117,8 +161,11 @@ var TableInit = function () {
                 field: 'userId',
                 title: '操作人ID'
             }, {
-                field: 'remark',
-                title: '导入说明'
+                field: 'status',
+                title: '状态'
+            }, {
+                field: 'importDate',
+                title: '导入时间'
             }, {
                 field: 'operate',
                 title: '操作',

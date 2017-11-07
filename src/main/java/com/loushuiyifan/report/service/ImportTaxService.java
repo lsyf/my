@@ -9,15 +9,12 @@ import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataTaxDAO;
 import com.loushuiyifan.report.dto.CheckDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -95,7 +92,7 @@ public class ImportTaxService {
         log.setStatus("Y");
         log.setImportDate(Date.from(Instant.now()));
         log.setType(ReportConfig.RptImportType.TAX.toString());
-        extImportLogDAO.insert(log);
+        extImportLogDAO.insertSelective(log);
 
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
