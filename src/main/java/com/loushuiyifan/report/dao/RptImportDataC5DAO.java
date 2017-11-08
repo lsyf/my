@@ -15,8 +15,8 @@ import java.util.List;
  */
 public interface RptImportDataC5DAO extends MyMapper<RptImportDataC5> {
     /**
-     * c5导入-校验存过
-     * update_tax_c5_2015
+     * c5导入-校验新存过
+     * update_tax_c5_2015(原来的) -->update_tax_c5(新)
      *
      * @param dto
      */

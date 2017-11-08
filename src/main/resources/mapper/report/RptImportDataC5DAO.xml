@@ -4,7 +4,7 @@
     <!-- C5导入校验 -->
     <select id="checkC5Data" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
-        {call update_tax_c5_2015(
+        {call update_tax_c5(
          #{logId,mode=IN,jdbcType=NUMERIC},
          #{month,mode=IN,jdbcType=VARCHAR},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
