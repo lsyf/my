@@ -51,7 +51,7 @@
         {call PKG_CUT_TAXDATA.RPT_TAX_CUT(
          #{logId,mode=IN,jdbcType=NUMERIC},
          #{rtnCode ,mode=OUT,jdbcType=NUMERIC},
-         #{iRetMsg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
     
     <select id="insertTaxGroup" parameterType="com.loushuiyifan.report.dto.SPDataDTO"

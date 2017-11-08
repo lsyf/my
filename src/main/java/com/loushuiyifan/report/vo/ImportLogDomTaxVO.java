@@ -4,17 +4,17 @@ import lombok.Data;
 
 @Data
 public class ImportLogDomTaxVO {
-	 Long logId;
+    Long logId;
 
-	 String fileName;
+    String fileName;
 
-	 String userId;
+    String userId;
 
-	 String importDate;
+    String importDate;
 
-	 String status;
+    String status;
 
-	 Double sum;
+    Double sum;
 
-	 Integer count;
+    Integer count;
 }

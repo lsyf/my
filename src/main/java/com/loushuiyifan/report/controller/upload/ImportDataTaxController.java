@@ -71,7 +71,8 @@ public class ImportDataTaxController extends BaseReportController {
         Long userId = user.getId();
 
         //首先校验能否导入
-        dateService.checkImportTax(month);
+        //TODO 待校验
+//        dateService.checkImportTax(month);
 
         //然后保存
         Path path = reportStorageService.store(file);
@@ -117,16 +118,16 @@ public class ImportDataTaxController extends BaseReportController {
     @ResponseBody
     public JsonResult remove(Long logId,
                              @ModelAttribute("user") User user) {
-    	//TODO 待修改 存过  IRPT_DEL_TAXDATA
-    	Long userId = user.getId();
-       try {
-    	   importTaxService.delete(userId, logId);
-       } catch (Exception e) {
-		e.printStackTrace();
-       } 
+        //TODO 待修改 存过  IRPT_DEL_TAXDATA
+        Long userId = user.getId();
+        try {
+            importTaxService.delete(userId, logId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return JsonResult.success();
     }
-    
+
     /**
      * 税务导入-生成税务
      *
@@ -135,14 +136,15 @@ public class ImportDataTaxController extends BaseReportController {
     @PostMapping("createTax")
     @ResponseBody
     public JsonResult createTaxData(String month) {
-    	//TODO 待修改 存过  IRPT_DEL_TAXDATA
-    	
-    	try {
-    		importTaxService.taxFile(month,"007");
+        //TODO  未测试
+        //TODO 待修改 存过  IRPT_DEL_TAXDATA
+
+        try {
+            importTaxService.taxFile(month, "007");
         } catch (Exception e) {
- 		e.printStackTrace();
-        } 
+            e.printStackTrace();
+        }
         return JsonResult.success();
     }
-    
+
 }

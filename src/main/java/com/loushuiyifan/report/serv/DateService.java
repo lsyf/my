@@ -206,7 +206,6 @@ public class DateService {
     /**
      * 校验 能否导入业财差异数据
      *
-     * @param month
      */
     public void checkImportYccy() {
 
