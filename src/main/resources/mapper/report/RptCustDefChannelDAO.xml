@@ -11,8 +11,8 @@
     </select>
 
     <select id="listMap" resultType="map">
-        select indexCode as "id",
-               indexName as "name"
+        select index_Code as "id",
+               index_Name as "name"
         from rpt_cust_def_channel
         where  rpt_no = #{rptNo}
         order by index_code

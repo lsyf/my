@@ -1,9 +1,10 @@
 package com.loushuiyifan.report.service;
 
+import com.google.common.collect.Maps;
 import com.loushuiyifan.report.dao.RptCustDefChannelDAO;
 import com.loushuiyifan.report.dao.RptQueryDAO;
 import com.loushuiyifan.report.dao.RptRepfieldDefChannelDAO;
-import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.dto.ReportDataDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,20 +37,34 @@ public class RptQueryService {
         //客户群
         List<Map> custs = rptCustDefChannelDAO.listMap("1701");
         //指标
-        List<Map> fields = rptRepfieldDefChannelDAO.listMap("1701");
+        List<Map<String, String>> fields = rptRepfieldDefChannelDAO.listMap("1701");
+        //数据
+        List<ReportDataDTO> datas = rptQueryDAO.list(month, latnId, incomeSource, type);
 
-
-        switch (type) {
-            case "0":
-                break;
-            case "1":
-                break;
-            case "2":
-                break;
-            default:
-                throw new ReportException("无法确认税务类型");
+        //首先遍历指标
+        Map<String, Map<String, String>> fieldMap = Maps.newHashMapWithExpectedSize(3000);
+        for (int i = 0; i < fields.size(); i++) {
+            Map<String, String> temp = fields.get(i);
+            fieldMap.put(temp.get("id"), temp);
         }
 
-        return null;
+        //遍历数据，分别插入到指标数据中
+        for (int i = 0; i < datas.size(); i++) {
+            ReportDataDTO data = datas.get(i);
+            String x = data.getX();
+            Map<String, String> temp = fieldMap.get(x);
+            if (temp == null) {
+                continue;
+            }
+
+            String y = data.getY();
+            String v = data.getV();
+            temp.put(y, v);
+        }
+
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("titles", custs);
+        result.put("datas", fields);
+        return result;
     }
 }

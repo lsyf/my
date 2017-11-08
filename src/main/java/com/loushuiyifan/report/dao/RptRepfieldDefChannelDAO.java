@@ -14,6 +14,6 @@ public interface RptRepfieldDefChannelDAO extends MyMapper<RptRepfieldDefChannel
 
     List<RptRepfieldDefChannel> list(String rptNo);
 
-    List<Map> listMap(String rptNo);
+    List<Map<String,String>> listMap(String rptNo);
 
 }
