@@ -71,7 +71,7 @@ public class DownloadController {
         if (StringUtils.isEmpty(name)) {
             throw new DownloadException("未找到模板");
         }
-        Path file = Paths.get(storageProperties.getReportTemplate(), name);
+        Path file = Paths.get(storageProperties.getReportUploadTemplate(), name);
         downloadService.download(req, resp, file, name);
     }
 

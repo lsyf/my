@@ -12,19 +12,22 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class StorageProperties {
 
     //默认文件路径
-    private String location = "location";
+    private String location;
 
     //图片
-    private String image = "image";
+    private String image;
 
-    //报表模板
-    private String reportTemplate = "reportTemplate";
+    //报表上传模板
+    private String reportUploadTemplate;
 
     //报表上传(包括多种上传文件)
-    private String reportUpload = "reportUpload";
+    private String reportUpload;
+
+    //报表下载模板
+    private String reportDownloadTemplate;
 
     //报表下载
-    private String reportDownload = "reportDownload";
+    private String reportDownload;
 
 
 }

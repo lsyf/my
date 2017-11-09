@@ -2,14 +2,17 @@ package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.report.exception.StorageException;
 import com.loushuiyifan.report.properties.StorageProperties;
+import lombok.Data;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -25,19 +28,18 @@ import java.util.stream.Stream;
  * @author 漏水亦凡
  * @date 2017/9/20
  */
-public class DefaultStorageService implements StorageService {
+@Data
+public abstract class DefaultStorageService implements StorageService {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultStorageService.class);
 
+    @Autowired
+    protected StorageProperties properties;
+
     protected Path rootLocation;
+
     protected DateTimeFormatter nameSuffixFormatter
             = DateTimeFormatter.ofPattern("_yyyyMMddHHmmss.");
-
-
-    public DefaultStorageService(StorageProperties properties) {
-        this.rootLocation = Paths.get(configLocation(properties));
-        init();
-    }
 
 
     /**
@@ -60,13 +62,20 @@ public class DefaultStorageService implements StorageService {
         return path.resolve(name);
     }
 
+    @Override
+    public abstract String configLocation();
+
     /**
      * 初始化存储目录
      */
     @Override
+    @PostConstruct
     public void init() {
         try {
-            logger.debug("初始化文件存储目录: {}", rootLocation.getFileName());
+            rootLocation = Paths.get(configLocation());
+
+            logger.debug("初始化文件存储目录: {}", rootLocation);
+
             if (!Files.exists(rootLocation)) {
                 Files.createDirectory(rootLocation);
             }

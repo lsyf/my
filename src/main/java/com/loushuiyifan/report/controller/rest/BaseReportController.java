@@ -2,10 +2,7 @@ package com.loushuiyifan.report.controller.rest;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
-import com.loushuiyifan.report.serv.CodeListTaxService;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.LocalNetService;
-import com.loushuiyifan.report.serv.ReportStorageService;
+import com.loushuiyifan.report.serv.*;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +28,12 @@ public abstract class BaseReportController {
 
     @Autowired
     public ReportStorageService reportStorageService;
+
+    @Autowired
+    public ReportDownloadService reportDownloadService;
+
+    @Autowired
+    public DownloadService downloadService;
 
     @ModelAttribute("user")
     public User user(HttpServletRequest request) {

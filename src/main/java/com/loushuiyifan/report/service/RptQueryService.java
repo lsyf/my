@@ -5,9 +5,13 @@ import com.loushuiyifan.report.dao.RptCustDefChannelDAO;
 import com.loushuiyifan.report.dao.RptQueryDAO;
 import com.loushuiyifan.report.dao.RptRepfieldDefChannelDAO;
 import com.loushuiyifan.report.dto.ReportDataDTO;
+import com.loushuiyifan.report.serv.ReportDownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +21,9 @@ import java.util.Map;
  */
 @Service
 public class RptQueryService {
+
+    @Autowired
+    public ReportDownloadService reportDownloadService;
 
 
     @Autowired
@@ -66,5 +73,29 @@ public class RptQueryService {
         result.put("titles", custs);
         result.put("datas", fields);
         return result;
+    }
+
+    public String export(String month,
+                         String latnId,
+                         String incomeSource,
+                         String type,
+                         Boolean isMulti) throws Exception {
+        //客户群
+        List<Map> custs = rptCustDefChannelDAO.listMap("1701");
+        //指标
+        List<Map<String, String>> fields = rptRepfieldDefChannelDAO.listMap("1701");
+        //数据
+        List<ReportDataDTO> datas = rptQueryDAO.list(month, latnId, incomeSource, type);
+
+        String name = "CwRptExcelChannel2017.xls";
+        Path tempPath = Paths.get(reportDownloadService.configTemplateLocation(), name);
+        File file = tempPath.toFile();
+
+
+
+        reportDownloadService.store(file, month, name);
+
+
+        return null;
     }
 }

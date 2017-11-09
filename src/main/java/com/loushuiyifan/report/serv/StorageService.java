@@ -1,6 +1,5 @@
 package com.loushuiyifan.report.serv;
 
-import com.loushuiyifan.report.properties.StorageProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +15,7 @@ public interface StorageService {
 
     Path store(MultipartFile file);
 
-    default String configLocation(StorageProperties properties) {
-        return properties.getLocation();
-    }
+    String configLocation();
 
     default Path configPath(Path path, String name) throws IOException {
         return path.resolve(name);
