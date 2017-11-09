@@ -601,7 +601,7 @@ a.fc-more:hover {
 	margin-left: 0;
 }
 	
-/* title text */
+/* column text */
 
 .fc-toolbar h2 {
 	margin: 0;
@@ -902,7 +902,7 @@ be a descendant of the grid when it is being dragged.
 	overflow: hidden; /* don't let the bg flow over rounded corners */
 }
 
-.fc-time-grid-event > .fc-content { /* contains the time and title, but no bg and resizer */
+.fc-time-grid-event > .fc-content { /* contains the time and column, but no bg and resizer */
 	position: relative;
 	z-index: 2; /* above the bg */
 }
@@ -924,7 +924,7 @@ be a descendant of the grid when it is being dragged.
 	filter: alpha(opacity=25); /* for IE */
 }
 
-/* short mode, where time and title are on the same line */
+/* short mode, where time and column are on the same line */
 
 .fc-time-grid-event.fc-short .fc-content {
 	/* don't wrap to second line (now that contents will be inline) */
@@ -933,7 +933,7 @@ be a descendant of the grid when it is being dragged.
 
 .fc-time-grid-event.fc-short .fc-time,
 .fc-time-grid-event.fc-short .fc-title {
-	/* put the time and title on the same line */
+	/* put the time and column on the same line */
 	display: inline-block;
 	vertical-align: top;
 }
@@ -951,7 +951,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .fc-time-grid-event.fc-short .fc-title {
-	font-size: .85em; /* make the title text the same size as the time */
+	font-size: .85em; /* make the column text the same size as the time */
 	padding: 0; /* undo padding from above */
 }
 

@@ -24,7 +24,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ModelAndView processError(Exception e) {
         ModelAndView mv = new ModelAndView();
-        mv.addObject("title", "无权限访问");
+        mv.addObject("column", "无权限访问");
         mv.addObject("error", e);
         mv.setViewName("error");
         logger.error("error", e);

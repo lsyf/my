@@ -14,5 +14,5 @@ public interface RptCustDefChannelDAO extends MyMapper<RptCustDefChannel> {
 
     List<RptCustDefChannel> list(String rptNo);
 
-    List<Map> listMap(String rptNo);
+    List<Map<String,String>> listMap(String rptNo);
 }

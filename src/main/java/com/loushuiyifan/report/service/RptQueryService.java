@@ -5,13 +5,12 @@ import com.loushuiyifan.report.dao.RptCustDefChannelDAO;
 import com.loushuiyifan.report.dao.RptQueryDAO;
 import com.loushuiyifan.report.dao.RptRepfieldDefChannelDAO;
 import com.loushuiyifan.report.dto.ReportDataDTO;
-import com.loushuiyifan.report.serv.ReportDownloadService;
+import com.loushuiyifan.report.serv.ReportExportServ;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +21,6 @@ import java.util.Map;
 @Service
 public class RptQueryService {
 
-    @Autowired
-    public ReportDownloadService reportDownloadService;
 
 
     @Autowired
@@ -42,7 +39,7 @@ public class RptQueryService {
                                     String type) {
 
         //客户群
-        List<Map> custs = rptCustDefChannelDAO.listMap("1701");
+        List<Map<String, String>> custs = rptCustDefChannelDAO.listMap("1701");
         //指标
         List<Map<String, String>> fields = rptRepfieldDefChannelDAO.listMap("1701");
         //数据
@@ -81,21 +78,36 @@ public class RptQueryService {
                          String type,
                          Boolean isMulti) throws Exception {
         //客户群
-        List<Map> custs = rptCustDefChannelDAO.listMap("1701");
+        List<Map<String, String>> custs = rptCustDefChannelDAO.listMap("1701");
         //指标
         List<Map<String, String>> fields = rptRepfieldDefChannelDAO.listMap("1701");
         //数据
         List<ReportDataDTO> datas = rptQueryDAO.list(month, latnId, incomeSource, type);
 
-        String name = "CwRptExcelChannel2017.xls";
-        Path tempPath = Paths.get(reportDownloadService.configTemplateLocation(), name);
-        File file = tempPath.toFile();
-
-
-
-        reportDownloadService.store(file, month, name);
+//        String name = "CwRptExcelChannel2017.xls";
+//        Path tempPath = Paths.get(reportDownloadService.configTemplateLocation(), name);
+//        File file = tempPath.toFile();
+//
+//
+//
+//        reportDownloadService.store(file, month, name);
 
 
         return null;
+    }
+
+    @Component
+   public static class RptQueryExport extends ReportExportServ<ReportDataDTO>{
+
+
+        @Override
+        protected void processTitle(Sheet sheet, List<Map<String, String>> titles) throws Exception {
+
+        }
+
+        @Override
+        protected void processSheet(Sheet sheet, List<ReportDataDTO> data) throws Exception {
+
+        }
     }
 }
