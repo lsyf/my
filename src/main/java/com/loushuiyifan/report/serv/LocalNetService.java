@@ -7,6 +7,7 @@ import com.loushuiyifan.system.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,7 +55,6 @@ public class LocalNetService {
     }
 
     /**
-     *
      * 根据用户 获取 所有股份下地市
      *
      * @param userId
@@ -71,10 +71,30 @@ public class LocalNetService {
         }
         int min = orgs.get(0).getLvl();
         if (min < 3) {
-            orgs = organizationService.getAllKidsByData(data, type);
+            orgs = organizationService.getUnderKidsByData(data, type);
             Organization org = organizationService.getByData(type, data);
             orgs.add(0, org);
         }
         return orgs;
+    }
+
+    /**
+     * 获取地市信息(如果isMulti为true,则返回其下一层节点)
+     *
+     * @param latnId
+     * @param isMulti
+     * @return
+     */
+    public List<Organization> listUnderKids(String latnId, boolean isMulti) {
+        String type = OrganizationService.TYPE_CITY;
+
+        List<Organization> list = new ArrayList<>();
+        Organization org = organizationService.getByData(type, latnId);
+        list.add(org);
+        if (isMulti) {
+            List<Organization> kids = organizationService.getUnderKidsByData(latnId, type);
+            list.addAll(kids);
+        }
+        return list;
     }
 }

@@ -8,6 +8,7 @@ import lombok.Data;
  */
 @Data
 public class ReportDataDTO {
+    String key;
     String x;
     String y;
     String v;

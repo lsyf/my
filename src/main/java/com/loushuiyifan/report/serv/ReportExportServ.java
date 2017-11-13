@@ -3,11 +3,10 @@ package com.loushuiyifan.report.serv;
 import com.loushuiyifan.config.poi.AbstractPoiExport;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 /**
  * 报表导出
@@ -17,54 +16,80 @@ import java.util.Map;
  */
 public abstract class ReportExportServ<E> extends AbstractPoiExport<E> {
 
-    @Autowired
-    public ReportDownloadService reportDownloadService;
 
-    protected List<Map<String, String>> columns;
-    protected LinkedHashMap<String, List<E>> datas;
+    //列名(id+name)
+    protected List<Map<String, String>> reportColumns;
+    //行数据
+    protected List<Map<String, String>> reportRows;
+
+    //数据(sheetName->data[key->v])
+    protected LinkedHashMap<String, E> reportDatas;
 
     public ReportExportServ column(List<Map<String, String>> columns) {
-        this.columns = columns;
+        this.reportColumns = columns;
         return this;
     }
 
-    public ReportExportServ data(LinkedHashMap<String, List<E>> datas) {
-        this.datas = datas;
+    public ReportExportServ row(List<Map<String, String>> rows) {
+        this.reportRows = rows;
+        return this;
+    }
+
+    public ReportExportServ data(LinkedHashMap<String, E> datas) {
+        this.reportDatas = datas;
+        isMulti = datas.size() > 1;
+        return this;
+    }
+
+    public ReportExportServ template(String path) throws FileNotFoundException {
+        super.template(new File(path));
+        return this;
+    }
+
+    public ReportExportServ out(String path) throws FileNotFoundException {
+        super.out(new File(path));
         return this;
     }
 
 
     @Override
     protected void process(Workbook wb) throws Exception {
-        assert hasTemp;
 
-        //首先添加列名 并复制数据
+        //首先添加表头,复制sheet
+        List<String> ids = new ArrayList<>();
         int index = 0;
-        for (String key : datas.keySet()) {
+        for (String key : reportDatas.keySet()) {
             if (index == 0) {
-                wb.setSheetName(0, key);
+                wb.setSheetName(0, key);//设置sheet名
                 Sheet sheet = wb.getSheetAt(0);
-                processTitle(sheet, columns);
+                ids = processTitle(sheet, reportColumns);//设置表头
             } else {
-                wb.cloneSheet(0);
+                wb.cloneSheet(0);//复制sheet
                 wb.setSheetName(index, key);
             }
             index++;
         }
 
         //然后填充数据
-        for (Map.Entry<String, List<E>> e : datas.entrySet()) {
-            String name = e.getKey();
-            List<E> data = e.getValue();
-            Sheet sheet = wb.getSheet(name);
-            processSheet(sheet, data);
+        Iterator<String> it = reportDatas.keySet().iterator();
+        while (it.hasNext()) {
+            String name = it.next();
+            E data = reportDatas.get(name);
 
+            Sheet sheet = wb.getSheet(name);
+            processSheet(sheet, ids, reportRows, data);
+
+            it.remove();
         }
 
     }
 
-    abstract protected void processTitle(Sheet sheet, List<Map<String, String>> titles) throws Exception;
+    abstract protected List<String> processTitle(Sheet sheet,
+                                                 List<Map<String, String>> columns) throws Exception;
 
-    abstract protected void processSheet(Sheet sheet, List<E> data) throws Exception;
+    abstract protected void processSheet(Sheet sheet,
+                                         List<String> columns,
+                                         List<Map<String, String>> rows,
+                                         E datas) throws Exception;
 
 }

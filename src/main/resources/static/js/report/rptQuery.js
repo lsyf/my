@@ -49,7 +49,7 @@ function queryData() {
 
 }
 
-function exportData(isMulti) {
+function exportData(isMulti, btn) {
     var month = $("#form_month").val();
     var latnId = orgTree.val();
     var incomeSource = isTree.val();
@@ -58,14 +58,10 @@ function exportData(isMulti) {
     var names = ['month', 'latnId', 'incomeSource', 'type', 'isMulti'];
     var params = [month, latnId, incomeSource, type, isMulti];
 
-    var form = $("<form>");   //定义一个form表单
-    form.attr('style', 'display:none');   //下面为在form表单中添加查询参数
-    form.attr('target', '');
-    form.attr('method', 'post');
-    form.attr('action', hostUrl + '/rptQuery/export');
-    $('body').append(form);  //将表单放置在web中
-
-    names.forEach(function (v,i) {
+    var form = $("#form_export");   //定义一个form表单
+    form.attr('action', hostUrl + 'rptQuery/export');
+    form.empty();
+    names.forEach(function (v, i) {
         var input = $('<input>');
         input.attr('type', 'hidden');
         input.attr('name', v);
@@ -74,7 +70,11 @@ function exportData(isMulti) {
     });
 
     form.submit();   //表单提交
+
+
 }
+
+
 
 function initForm() {
     initValidator();

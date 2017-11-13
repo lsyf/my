@@ -125,10 +125,10 @@ public class OrganizationService {
     }
 
     /**
-     * 根据父data和type获取所有子节点
+     * 根据父data和type获取所有直属子节点
      */
-    public List<Organization> getAllKidsByData(String pData, String type) {
-        return organizationDAO.getAllKidsByData(pData, type);
+    public List<Organization> getUnderKidsByData(String pData, String type) {
+        return organizationDAO.getUnderKidsByData(pData, type);
     }
 
 
