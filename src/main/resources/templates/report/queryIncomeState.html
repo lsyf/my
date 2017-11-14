@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>收入来源传输日志</title>
+    <title>省公司集中处理来源完成进度</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -43,8 +43,8 @@
 
     <script src="../../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../../static/js/report/upload/queryTransLog.js"
-            th:src="@{/static/js/report/upload/queryTransLog.js}"></script>
+    <script src="../../../static/js/report/queryTransLog.js"
+            th:src="@{/static/js/report/queryTransLog.js}"></script>
 
 
     <style>
@@ -78,7 +78,7 @@
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>收入来源传输日志</h1>
+            <h1>省公司集中处理来源完成进度</h1>
         </section>
 
         <!-- Main content -->
@@ -101,24 +101,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="upload_latnId" class="col-sm-4 control-label">营业区</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="upload_latnId" readonly>
-                                        <input class="form-control" name="latnId" type="hidden">
-                                    </div>
-
-                                </div>
-                                <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="upload_incomeSource" class="col-sm-4 control-label">收入来源</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="upload_incomeSource" readonly>
-                                        <input class="form-control" name="incomeSource" type="hidden">
-                                    </div>
-                                </div>
+                                
                                 <div class="col-sm-3 form-group form-group-rm">
 
-                                    <label for="upload_taxtId" class="col-sm-4 control-label">数据类型</label>
+                                    <label for="upload_taxtId" class="col-sm-4 control-label">状态</label>
                                     <div class="col-sm-8">
                                         <select class="form-control" name="taxtId" id="upload_taxtId">
                                             <option value="1">凭证</option>

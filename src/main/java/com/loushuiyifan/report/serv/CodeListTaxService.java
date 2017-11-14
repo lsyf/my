@@ -53,6 +53,7 @@ public class CodeListTaxService {
     	Map ma =Maps.newHashMap();
     	ma.put("id","0");
 		ma.put("name", "汇总");
+		ma.put("data", "0");
 		list.add(ma);
     	
 		List<Map> l =codeListTaxDAO.codeListTax(lvl, type);
@@ -60,8 +61,8 @@ public class CodeListTaxService {
     		Map map =Maps.newHashMap();
     		map.put("id", m.get("id").toString());
     		map.put("name", m.get("id") +"-"+m.get("name"));
-    		list.add(map);
-    		
+    		map.put("data", m.get("data").toString());
+    		list.add(map);   		
     	}
     	return list;
     }

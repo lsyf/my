@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.controller.upload;
+package com.loushuiyifan.report.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class QueryIncomeStateController extends BaseReportController{
         List<CommonVO> months = dateService.aroundMonths(5);       
         map.put("months", months);
        
-        return "report/upload/queryIncomeState";
+        return "report/queryIncomeState";
     }
     
     

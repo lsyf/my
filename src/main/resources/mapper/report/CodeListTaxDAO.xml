@@ -14,8 +14,9 @@
     </select>
 
     <select id="codeListTax" resultType="map">
-		select 	a.code_id     as "id", 
-				a.code_name   as "name"
+		select 	a.code_id        as "id", 
+				a.code_name      as "name",
+				a.code_id        as "data"
            from code_list_tax a
           	where a.type_code = #{type}
             and a.code_level = #{lvl}

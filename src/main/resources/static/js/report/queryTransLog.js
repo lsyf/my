@@ -20,7 +20,7 @@ function queryLog() {
         data: {
             month: $("#upload_month").val(),
             latnId: orgTree.val(),
-            incomeSource: $("#upload_incomeSource").val(),
+            incomeSource: isTree.val(),
             taxtId: $("#upload_taxtId").val()
         },
         dataType: "json",

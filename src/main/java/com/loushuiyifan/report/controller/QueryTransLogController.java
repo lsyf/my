@@ -1,4 +1,4 @@
-package com.loushuiyifan.report.controller.upload;
+package com.loushuiyifan.report.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +49,7 @@ public class QueryTransLogController extends BaseReportController{
         map.put("orgs", orgs);
         map.put("months", months);
         map.put("incomeSources", incomeSources);
-        return "report/upload/queryTransLog";
+        return "report/queryTransLog";
     }
     
     
