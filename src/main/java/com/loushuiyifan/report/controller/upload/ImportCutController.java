@@ -71,12 +71,10 @@ public class ImportCutController extends BaseReportController {
                              String latnId,
                              String incomeSource,
                              String cutType,
-                             String remark,
                              @ModelAttribute("user") User user) {
 
         //首先校验能否导入
-        //TODO 未完成
-//        dateService.checkImportCut(month);
+        dateService.checkImportCut(month);
         String username = user.getUsername();
 
         //存储
@@ -89,8 +87,8 @@ public class ImportCutController extends BaseReportController {
                     Integer.parseInt(latnId),
                     incomeSource,
                     Integer.parseInt(cutType),
-                    username,
-                    remark);
+                    username
+                   );
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("4解析入库失败", e);
@@ -118,8 +116,8 @@ public class ImportCutController extends BaseReportController {
                               String incomeSource,
                               String shareType,
                               String remark) {
-        //TODO 去除remark
-        List<CutDataListVO> list = importCutService.queryList(
+
+    	List<CutDataListVO> list = importCutService.queryList(
                 month,
                 Integer.parseInt(latnId),
                 incomeSource,

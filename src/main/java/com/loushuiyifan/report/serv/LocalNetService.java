@@ -77,4 +77,9 @@ public class LocalNetService {
         }
         return orgs;
     }
+    
+    public String getCodeName(String typeCode, String codeId){
+    	
+    	return localNetDAO.getCodeNameById(typeCode, codeId) ;
+    }
 }

@@ -91,6 +91,10 @@ public class RptQueryController extends BaseReportController {
         String name = FilenameUtils.getName(path);
         downloadService.download(req, resp, file, name);
     }
-
+    
+    /**
+     * 导出excel
+     * 不带模板的导出
+     */
 
 }

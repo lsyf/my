@@ -1,16 +1,19 @@
 package com.loushuiyifan.report.serv;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.report.bean.CodeListTax;
-import com.loushuiyifan.report.dao.CodeListTaxDAO;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.report.bean.CodeListTax;
+import com.loushuiyifan.report.dao.CodeListTaxDAO;
+import com.loushuiyifan.report.vo.ZtreeVO;
 
 /**
  * @author 漏水亦凡
@@ -31,8 +34,43 @@ public class CodeListTaxService {
     public List<Map> listByType(String type) {
         return codeListTaxDAO.listByType(type);
     }
-
-
+    
+    /**
+     * 收入来源传输日志
+     * @param type
+     * @return
+     */
+    public List<Map> listTaxSource(int lvl,String type) {
+    	List<Map> list = new ArrayList<Map>();
+    	Map ma =Maps.newHashMap();
+    	ma.put("id","0");
+		ma.put("name", "汇总");
+		list.add(ma);
+    	
+		List<Map> l =codeListTaxDAO.codeListTax(lvl, type);
+    	for(Map m : l){
+    		Map map =Maps.newHashMap();
+    		map.put("id", m.get("id").toString());
+    		map.put("name", m.get("id") +"-"+m.get("name"));
+    		list.add(map);
+    		
+    	}
+    	return list;
+    }
+    
+    public String getAreaName(String type){
+    	return codeListTaxDAO.codeNameById(type) ;
+    }
+    
+    public String getName(Integer taxtId){
+		String str ="";
+		if(taxtId != 1){
+		str="电子档案";	
+		}else{
+			str ="凭证";
+		}
+		return str;
+	}
     /**
      *用来对现有数据 添加 parentIds
      */

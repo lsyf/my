@@ -97,14 +97,12 @@ public class ImportIncomeDataService {
         log.setType(ReportConfig.RptImportType.INCOME_DATA.toString());
         extImportLogDAO.insert(log);
 
-        //TODO 待替代新存过(旧存过不可用,测试可注释)
         //校验导入数据指标
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataChennelDAO.checkRptImportData(dto);
 
         Integer code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
             String error = "";
             try {
@@ -173,7 +171,7 @@ public class ImportIncomeDataService {
      * @param logId
      */
     public void commit(Long logId) {
-        //TODO 可以改为通过log表判断状态
+      
         //首先校验是否处于待提交状态
         String action = rptImportDataChennelDAO.selectAction(logId);
         if (action != null) {
@@ -191,18 +189,17 @@ public class ImportIncomeDataService {
         iseeC4CutDTO.setMonth(month);
         rptImportDataChennelDAO.iseeC4Cut(iseeC4CutDTO);
         Integer code = iseeC4CutDTO.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
+       
         if (code == 0) {//0为失败
             throw new ReportException("数据切割失败: " + iseeC4CutDTO.getRtnMeg());
         }
 
         //提交
-        //TODO　提交更改log状态(目前是更新数据中action)
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataChennelDAO.commitRptImportData(dto);
         code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
+     
         if (code != 0) {//非0为失败
             throw new ReportException("数据提交失败: " + dto.getRtnMsg());
         }
@@ -221,7 +218,7 @@ public class ImportIncomeDataService {
         dto.setLogId(logId);
         rptImportDataChennelDAO.deleteImportData(dto);
         int code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
+ 
         if (code != 0) {//非0为失败
             throw new ReportException("1数据删除失败: " + dto.getRtnMeg());
         }

@@ -52,8 +52,8 @@ public class ImportCutService {
                      Integer latnId,
                      String incomeSource,
                      Integer shareType,
-                     String username,
-                     String remark) throws Exception {
+                     String username
+                    ) throws Exception {
         String filename = path.getFileName().toString();
 
         //首先将文件解析成bean
@@ -68,7 +68,7 @@ public class ImportCutService {
         }
 
         //然后保存解析的数据
-        saveCutDataByGroup(list, month, username, latnId, incomeSource, shareType, remark);
+        saveCutDataByGroup(list, month, username, latnId, incomeSource, shareType);
 
 
     }
@@ -111,7 +111,7 @@ public class ImportCutService {
                         incomeSource,
                         shareType,
                         userName,
-                        "N"); // 更新（Y/N）is_active //TODO 待校验
+                        "N"); //TODO 更新（Y/N）is_active  待校验
                 rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName);
             } else {
                 throw new ReportException("您没有权限删除此记录");
@@ -130,8 +130,8 @@ public class ImportCutService {
                                    String username,
                                    Integer latnId,
                                    String incomeSource,
-                                   Integer shareType,
-                                   String remark) throws Exception {
+                                   Integer shareType
+                                   ) throws Exception {
         String msg = null;
         try {
             Date now = Date.from(Instant.now());
@@ -146,7 +146,6 @@ public class ImportCutService {
                 cut.setLatnId(latnId);
                 cut.setIncomeSource(incomeSource);
                 cut.setActiveFlag("Y");
-                cut.setExpress(remark);
 
                 // 形成ruleId
                 StringBuffer sb = new StringBuffer();

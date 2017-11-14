@@ -30,4 +30,10 @@ public interface LocalNetDAO extends MyMapper<Organization> {
      */
     List<Organization> preForC3(@Param("userId") Long userId,
                                 @Param("data") String data);
+    
+    /**
+     * 根据收入来源typeCode和codeId获得codeName
+     */
+    String getCodeNameById(@Param("typeCode") String typeCode,
+    		               @Param("codeId") String codeId);
 }

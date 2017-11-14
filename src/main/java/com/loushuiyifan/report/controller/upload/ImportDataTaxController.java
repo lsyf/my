@@ -71,8 +71,7 @@ public class ImportDataTaxController extends BaseReportController {
         Long userId = user.getId();
 
         //首先校验能否导入
-        //TODO 待校验
-//        dateService.checkImportTax(month);
+        dateService.checkImportTax(month);
 
         //然后保存
         Path path = reportStorageService.store(file);
@@ -103,7 +102,7 @@ public class ImportDataTaxController extends BaseReportController {
     @ResponseBody
     public JsonResult list(String month, @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        //TODO 已完成，待验证 map是否可用
+      
         Map<String, Object> list = importTaxService.list(month, userId);
 
         return JsonResult.success(list);
@@ -118,7 +117,7 @@ public class ImportDataTaxController extends BaseReportController {
     @ResponseBody
     public JsonResult remove(Long logId,
                              @ModelAttribute("user") User user) {
-        //TODO 待修改 存过  IRPT_DEL_TAXDATA
+       
         Long userId = user.getId();
         try {
             importTaxService.delete(userId, logId);

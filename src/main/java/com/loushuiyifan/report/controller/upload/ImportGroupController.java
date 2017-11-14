@@ -53,7 +53,7 @@ public class ImportGroupController extends BaseReportController {
                              String latnId,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        //TODO 是否需要判断
+       
         if (latnId.equals("0")) {
             throw new ReportException("请选择正确的地市");
         }
