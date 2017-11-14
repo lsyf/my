@@ -38,6 +38,32 @@
         order by a.lvl asc, a.sorting desc
     </select>
 
+    <select id="listForC3" resultType="com.loushuiyifan.common.bean.Organization">
+        select  *
+        from(
+        select *
+        from aweb_organization a
+        where a.type = 'local_net'
+        and a.lvl <![CDATA[<=]]> 3
+        and (
+        <foreach collection="list" item="org" separator="or">
+            a.parent_ids like #{org.parentIds}
+        </foreach>
+        )
+        union
+        select *
+        from aweb_organization a
+        where a.type = 'local_net'
+        and a.lvl <![CDATA[<=]]> 3
+        and id in (
+        <foreach collection="list" item="org" separator=",">
+            #{org.id},#{org.parentId}
+        </foreach>
+        )
+        ) a
+        order by a.lvl asc, a.sorting desc
+    </select>
+
 
     <select id="preForC3" resultType="com.loushuiyifan.common.bean.Organization">
 select a.*

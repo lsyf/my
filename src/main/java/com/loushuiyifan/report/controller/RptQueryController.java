@@ -35,7 +35,7 @@ public class RptQueryController extends BaseReportController {
         Long userId = user.getId();
 
         //页面条件
-        List<Organization> orgs = localNetService.listAllByUser(userId, 3);
+        List<Organization> orgs = localNetService.listAllByUser(userId, 4);
         List<CommonVO> months = dateService.aroundMonths(5);
         List<Map> incomeSources = codeListTaxService.listByType("income_source2017");
 

@@ -6,16 +6,14 @@ import com.loushuiyifan.report.bean.ExtImportLog;
 import com.loushuiyifan.report.bean.RptImportDataChennel;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataChennelDAO;
-import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.dto.DeleteImportDataDTO;
 import com.loushuiyifan.report.dto.IseeC4CutDTO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -72,9 +70,7 @@ public class ImportIncomeDataService {
         //校验数据是否为空
         int size = list.size();
         if (size == 0) {
-            String error = "文件数据为空: " + filename;
-            logger.error(error);
-            throw new ReportException(error);
+            throw new ReportException("1文件数据为空: " + filename);
         }
 
 
@@ -97,25 +93,14 @@ public class ImportIncomeDataService {
         log.setType(ReportConfig.RptImportType.INCOME_DATA.toString());
         extImportLogDAO.insert(log);
 
-        //TODO 待替代新存过(旧存过不可用,测试可注释)
         //校验导入数据指标
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataChennelDAO.checkRptImportData(dto);
 
         Integer code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
-            String error = "";
-            try {
-                delete(userId, logId);
-            } catch (Exception e) {
-                error = "1校验失败后删除数据异常: " + e.getMessage();
-            } finally {
-                error = String.format("1导入数据校验失败: %s ; %s", dto.getRtnMsg(), error);
-                logger.error(error);
-                throw new ReportException(error);
-            }
+            throw new ReportException("1导入数据校验失败: " + dto.getRtnMsg());
         }
 
     }
@@ -147,12 +132,12 @@ public class ImportIncomeDataService {
      */
     public void importDataByGroup(List<RptImportDataChennel> list, Long logId, String month) {
 
-            for (final RptImportDataChennel data : list) {
-                data.setLogId(logId);
-                data.setAcctMonth(month);
-                rptImportDataChennelDAO.insertSelective(data);
-            }
-            logger.debug("批量插入数量: {}", list.size());
+        for (final RptImportDataChennel data : list) {
+            data.setLogId(logId);
+            data.setAcctMonth(month);
+            rptImportDataChennelDAO.insertSelective(data);
+        }
+        logger.debug("批量插入数量: {}", list.size());
     }
 
     /**
@@ -221,7 +206,6 @@ public class ImportIncomeDataService {
         dto.setLogId(logId);
         rptImportDataChennelDAO.deleteImportData(dto);
         int code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
             throw new ReportException("1数据删除失败: " + dto.getRtnMeg());
         }

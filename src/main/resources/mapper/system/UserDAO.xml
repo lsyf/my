@@ -99,19 +99,15 @@
     </select>
 
     <select id="selectByNameOrRole" resultType="com.loushuiyifan.common.bean.User">
-        select
-        <include refid="Base_Column_List_a"></include>
-        from aweb_user a, aweb_user_role b, aweb_role c
-        where a.id = b.user_id
-        and c.id = b.role_id
-        and a.username like #{name}
+        select a.*
+        from aweb_user a
+        where  a.username like #{name}
+        or a.nickname like #{name}
         union
-        select
-        <include refid="Base_Column_List_a"></include>
+        select a.*
         from aweb_user a, aweb_user_role b, aweb_role c
         where a.id = b.user_id
         and c.id = b.role_id
-        and a.username not like #{name}
         and c.name like #{name}
     </select>
 
