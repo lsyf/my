@@ -64,5 +64,23 @@ public class ReportConfig {
         }
     }
 
+    /**
+     * 导出报表模板
+     */
+    public enum RptExportType {
+        PARENT("reportDownloadTemplate"),
+        RPT_QUERY("rpt_query");
+
+        private String data;
+
+        RptExportType(String data) {
+            this.data = data;
+        }
+
+        @Override
+        public String toString() {
+            return this.data;
+        }
+    }
 
 }

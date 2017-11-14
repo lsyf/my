@@ -2,12 +2,16 @@ package com.loushuiyifan.report.service;
 
 import com.google.common.collect.Maps;
 import com.loushuiyifan.common.bean.Organization;
+import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.dao.RptCustDefChannelDAO;
 import com.loushuiyifan.report.dao.RptQueryDAO;
 import com.loushuiyifan.report.dao.RptRepfieldDefChannelDAO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.LocalNetService;
 import com.loushuiyifan.report.serv.ReportDownloadService;
 import com.loushuiyifan.report.serv.ReportExportServ;
+import com.loushuiyifan.system.service.DictionaryService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,6 +20,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -39,6 +48,14 @@ public class RptQueryService {
     @Autowired
     LocalNetService localNetService;
 
+    @Autowired
+    CodeListTaxService codeListTaxService;
+
+    @Autowired
+    DictionaryService dictionaryService;
+
+    @Autowired
+    ReportDownloadService reportDownloadService;
 
     public Map<String, Object> list(String month,
                                     String latnId,
@@ -86,13 +103,17 @@ public class RptQueryService {
                          String incomeSource,
                          String type,
                          Boolean isMulti) throws Exception {
+        List<Organization> orgs = localNetService.listUnderKids(latnId, isMulti);
+        if (orgs == null || orgs.size() == 0) {
+            throw new ReportException("选择营业区错误,请重试");
+        }
+
         //客户群
         List<Map<String, String>> custs = rptCustDefChannelDAO.listMap("1701");
         //指标
         List<Map<String, String>> fields = rptRepfieldDefChannelDAO.listMap("1701");
 
         //数据
-        List<Organization> orgs = localNetService.listUnderKids(latnId, isMulti);
         LinkedHashMap reportData = new LinkedHashMap<>();
         for (Organization org : orgs) {
             String name = org.getName();
@@ -101,24 +122,74 @@ public class RptQueryService {
             reportData.put(name, data);
         }
 
-        String template = reportDownloadService.configTemplateLocation() + "/CwRptExcelChannel2017.xls";
-        String out = "d:/a.xls";
+        String latnName = orgs.get(0).getName();
+        String isName = codeListTaxService.
+                getIncomeSource("income_source2017", incomeSource).getCodeName();
+
+
+        String templatePath = configTemplatePath();
+        String outPath = configExportPath(month,
+                latnName, isName, type, isMulti);
 
 
         ReportExportServ export = new RptQueryExport();
-        export.template(template)
-                .out(out)
+        export.template(templatePath)
+                .out(outPath)
                 .column(custs)
                 .row(fields)
                 .data(reportData)
                 .export();
 
-        return out;
+        return outPath;
     }
 
+    public String configExportPath(String month,
+                                   String latnName,
+                                   String isName,
+                                   String type,
+                                   Boolean isMulti) throws IOException {
 
-    @Autowired
-    public ReportDownloadService reportDownloadService;
+        String sep = "_";
+        String suffix;
+        switch (type) {
+            case "0":
+                type = "价税合一(含税)";
+                break;
+            case "1":
+                type = "增值税";
+                break;
+            case "2":
+                type = "价(不含税)";
+                break;
+        }
+        if (isMulti) {
+            suffix = "多营业区.xls";
+        } else {
+            suffix = "报表.xls";
+        }
+
+        String fileName = new StringBuffer(latnName)
+                .append(sep).append(month)
+                .append(sep).append(isName)
+                .append(sep).append(type)
+                .append(sep).append(suffix)
+                .toString();
+
+        Path path = Paths.get(reportDownloadService.configLocation(), month);
+        if (!Files.exists(path)) {
+            Files.createDirectory(path);
+        }
+        return path.resolve(fileName).toString();
+    }
+
+    public String configTemplatePath() {
+        String sep = File.separator;
+        String templateName = dictionaryService.getKidDataByName(ReportConfig.RptExportType.PARENT.toString(),
+                ReportConfig.RptExportType.RPT_QUERY.toString());
+        return new StringBuffer(reportDownloadService.configTemplateLocation())
+                .append(sep).append(templateName).toString();
+    }
+
 
     public static class RptQueryExport extends ReportExportServ<Map<String, Map<String, String>>> {
 
