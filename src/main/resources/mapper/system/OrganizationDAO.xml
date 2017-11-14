@@ -80,7 +80,7 @@
         from user_company a
     </select>
 
-    <select id="getAllKidsByData" resultType="com.loushuiyifan.common.bean.Organization">
+    <select id="getUnderKidsByData" resultType="com.loushuiyifan.common.bean.Organization">
         select a.*
         from aweb_organization a
         where a.parent_id =

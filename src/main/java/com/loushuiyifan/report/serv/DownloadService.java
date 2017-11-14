@@ -1,6 +1,7 @@
 package com.loushuiyifan.report.serv;
 
 import com.loushuiyifan.report.exception.DownloadException;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author 漏水亦凡
@@ -22,6 +24,14 @@ import java.nio.file.Path;
 public class DownloadService {
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadService.class);
+
+    public void download(HttpServletRequest req,
+                         HttpServletResponse resp,
+                         String path) throws Exception {
+        Path file = Paths.get(path);
+        String name = FilenameUtils.getName(path);
+        download(req, resp, file, name);
+    }
 
     public void download(HttpServletRequest req,
                          HttpServletResponse resp,

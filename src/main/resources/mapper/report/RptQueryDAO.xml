@@ -2,18 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptQueryDAO">
 
-    <select id="list" resultType="com.loushuiyifan.report.dto.ReportDataDTO">
-        select a.zb_code as "x",
-        a.cust_id as "y",
+    <select id="listAsMap" resultType="Map">
+        select
+        a.zb_code || '_' || a.cust_id as "key",
         <choose>
             <when test="type=='0'">
-                to_char(a.zb_value, 'fm999999999990.00') as "v"
+                to_char(a.zb_value, 'fm999999999990.00') as "data"
             </when>
             <when test="type=='1'">
-                to_char(a.tax_value, 'fm999999999990.00') as "v"
+                to_char(a.tax_value, 'fm999999999990.00') as "data"
             </when>
             <otherwise>
-                to_char(a.aft_tax_value, 'fm999999999990.00') as "v"
+                to_char(a.aft_tax_value, 'fm999999999990.00') as "data"
             </otherwise>
         </choose>
         from stat_repfield_content_channel a

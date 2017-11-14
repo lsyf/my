@@ -31,6 +31,14 @@ public class CodeListTaxService {
         return codeListTaxDAO.listByType(type);
     }
 
+    public CodeListTax getIncomeSource(String type,String data) {
+        CodeListTax param = new CodeListTax();
+        param.setTypeCode(type);
+        param.setCodeId(data);
+        return codeListTaxDAO.selectOne(param);
+    }
+
+
     public List<Map> listByType(String type) {
         return codeListTaxDAO.listByType(type);
     }

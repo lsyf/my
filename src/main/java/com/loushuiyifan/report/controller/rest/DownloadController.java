@@ -34,7 +34,7 @@ public class DownloadController {
     DictionaryService dictionaryService;
 
     //数据字典中 对应 模板字典的值
-    public static final String TEMPLATE_DOWNLOAD = "templateDownload";
+    public static final String TEMPLATE_DOWNLOAD = "reportUploadTemplate";
 
     /**
      * 下载 图片

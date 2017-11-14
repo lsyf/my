@@ -6,7 +6,6 @@ import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.service.RptQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -87,9 +84,8 @@ public class RptQueryController extends BaseReportController {
                 incomeSource,
                 type,
                 isMulti);
-        Path file = Paths.get(path);
-        String name = FilenameUtils.getName(path);
-        downloadService.download(req, resp, file, name);
+
+        downloadService.download(req, resp, path);
     }
     
     /**

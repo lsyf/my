@@ -2,10 +2,10 @@ package com.loushuiyifan.report.dao;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.report.dto.ReportDataDTO;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -13,9 +13,10 @@ import java.util.List;
  */
 public interface RptQueryDAO extends MyMapper<CommonVO> {
 
-    List<ReportDataDTO> list(@Param("month") String month,
-                             @Param("incomeSource") String incomeSource,
-                             @Param("latnId")  String latnId,
-                             @Param("type")  String type);
+    @MapKey("key")
+    Map<String, Map<String, String>> listAsMap(@Param("month") String month,
+                                  @Param("incomeSource") String incomeSource,
+                                  @Param("latnId") String latnId,
+                                  @Param("type") String type);
 
 }

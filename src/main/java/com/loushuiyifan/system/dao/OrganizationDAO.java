@@ -46,6 +46,6 @@ public interface OrganizationDAO {
     List<Organization> listByTypeAndLvl(@Param("type") String type,
                                         @Param("lvl") int lvl);
 
-    List<Organization> getAllKidsByData(@Param("pData")String pData,
+    List<Organization> getUnderKidsByData(@Param("pData")String pData,
                                         @Param("type")String type);
 }
