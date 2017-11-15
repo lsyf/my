@@ -110,9 +110,8 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult list(String month, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
-        List<ImportDataLogVO> list = importIncomeDataService.list(userId, month);
+    public JsonResult list(String month, String latnId) {
+        List<ImportDataLogVO> list = importIncomeDataService.list(latnId, month);
 
         return JsonResult.success(list);
     }

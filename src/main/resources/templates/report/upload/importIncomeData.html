@@ -132,17 +132,7 @@
                             </div>
 
 
-                            <div class="form-group  form-group-sm">
-                                <button class="btn btn-danger pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryLog()">
-                                    稽核
-                                </button>
-                                <button id="btn_upload" type="submit"
-                                        class="btn btn-success pull-right btn-form btn-sm">
-                                    导入
-                                </button>
 
-                            </div>
                         </form>
                         <div class="form-horizontal col-sm-4">
                             <p>
@@ -153,6 +143,31 @@
                                 3、系统只导入sheet名中带有“-”符号的数据。如 “101-杭州市本级" .对于sheet1 的没有“-”的sheet数据不处理。<br/>
                                 4、请勿随意改动模板的sheet名 导入失败后，请从以上4点检查excel
                             </p>
+
+                        </div>
+
+                        <div class="form-group  form-group-sm">
+
+                            <button id="btn_itsm" type="button"  onclick="itsmData()"
+                                    class="btn btn-danger pull-right btn-form btn-sm">
+                                ITSM送审
+                            </button>
+                            <button id="btn_remove" type="button"  onclick="removeData()"
+                                    class="btn btn-danger pull-right btn-form btn-sm">
+                                删除
+                            </button>
+                            <button class="btn btn-info pull-right btn-sm btn-form"
+                                    type="button" id="btn_commit" onclick="commitData()">
+                                提交
+                            </button>
+                            <button class="btn btn-info pull-right btn-sm btn-form"
+                                    type="button" id="btn_query" onclick="queryLog()">
+                                稽核
+                            </button>
+                            <button id="btn_upload" type="submit"
+                                    class="btn btn-success pull-right btn-form btn-sm">
+                                导入
+                            </button>
 
                         </div>
                     </div>

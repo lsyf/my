@@ -102,20 +102,17 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-            // url: hostUrl + 'importIncomeData/list',         //请求后台的URL（*）
-            // method: 'post',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-            pagination: false,                   //是否显示分页（*）
+            pagination: true,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
-            // queryParams: oTableInit.queryParams,//传递参数（*）
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 10,                       //每页的记录行数（*）
             pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-            // search: true,                       //是否显示表格搜索
+            search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮
@@ -131,6 +128,11 @@ var TableInit = function () {
             },
             data: [],
             columns: [{
+                field: 'check',
+                checkbox: true,
+                align: 'center',
+                valign: 'middle'
+            },{
                 field: 'logId',
                 title: '流水号'
             }, {
@@ -151,11 +153,6 @@ var TableInit = function () {
             }, {
                 field: 'remark',
                 title: '导入说明'
-            }, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
             }]
         });
 
@@ -167,19 +164,6 @@ var TableInit = function () {
         $('#table_upload').bootstrapTable('load', data);
     };
 
-    //操作 监听
-    window.operateEvents = {
-        'click .remove': function (e, value, row, index) {
-            removeData(row);
-        }
-    };
-
-    //操作显示format
-    function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
-        ].join('');
-    }
 
 
     return oTableInit;

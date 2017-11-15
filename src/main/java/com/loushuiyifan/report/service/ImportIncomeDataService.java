@@ -6,8 +6,6 @@ import com.loushuiyifan.report.bean.ExtImportLog;
 import com.loushuiyifan.report.bean.RptImportDataChennel;
 import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataChennelDAO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.dto.IseeC4CutDTO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
@@ -85,7 +83,7 @@ public class ImportIncomeDataService {
         log.setAcctMonth(month);
         log.setLatnId(latnId);
         log.setExportDesc(remark);
-        log.setStatus("Y");
+        log.setStatus("N");
         log.setImportDate(Date.from(Instant.now()));
         String incomeSource = list.get(0).getIncomeSource();
         log.setIncomeSoure(incomeSource);
@@ -137,19 +135,17 @@ public class ImportIncomeDataService {
             data.setAcctMonth(month);
             rptImportDataChennelDAO.insertSelective(data);
         }
-        logger.debug("批量插入数量: {}", list.size());
     }
 
     /**
      * 查询该用户某账期所有导入记录
      *
-     * @param userId
      * @param month
      * @return
      */
-    public List<ImportDataLogVO> list(Long userId, String month) {
+    public List<ImportDataLogVO> list(String latnId, String month) {
         String type = ReportConfig.RptImportType.INCOME_DATA.toString();
-        return rptImportDataChennelDAO.listIncomeDataLog(userId, month, type);
+        return rptImportDataChennelDAO.listIncomeDataLog(latnId, month, type);
     }
 
     /**
@@ -158,36 +154,33 @@ public class ImportIncomeDataService {
      * @param logId
      */
     public void commit(Long logId) {
-        //TODO 可以改为通过log表判断状态
+        ExtImportLog log = extImportLogDAO.selectByPrimaryKey(logId);
+
         //首先校验是否处于待提交状态
-        String action = rptImportDataChennelDAO.selectAction(logId);
-        if (action != null) {
+        String status = log.getStatus();
+        if (status != "Y") {
             throw new ReportException("该条记录已经提交");
         }
 
         //查询日志账期，校验提交时间
-        ExtImportLog log = extImportLogDAO.selectByPrimaryKey(logId);
         String month = log.getAcctMonth();
         dateService.checkImportIncomeData(month);
 
         //切割
-        IseeC4CutDTO iseeC4CutDTO = new IseeC4CutDTO();
+        SPDataDTO iseeC4CutDTO = new SPDataDTO();
         iseeC4CutDTO.setLogId(logId);
         iseeC4CutDTO.setMonth(month);
         rptImportDataChennelDAO.iseeC4Cut(iseeC4CutDTO);
         Integer code = iseeC4CutDTO.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
-        if (code == 0) {//0为失败
-            throw new ReportException("数据切割失败: " + iseeC4CutDTO.getRtnMeg());
+        if (code != 0) {//非0为失败
+            throw new ReportException("数据切割失败: " + iseeC4CutDTO.getRtnMsg());
         }
 
         //提交
-        //TODO　提交更改log状态(目前是更新数据中action)
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportDataChennelDAO.commitRptImportData(dto);
         code = dto.getRtnCode();
-        //TODO 统一更改存过返回值(0为失败，1为成功)
         if (code != 0) {//非0为失败
             throw new ReportException("数据提交失败: " + dto.getRtnMsg());
         }
@@ -201,13 +194,13 @@ public class ImportIncomeDataService {
      * @param logId
      */
     public void delete(Long userId, Long logId) {
-        DeleteImportDataDTO dto = new DeleteImportDataDTO();
+        SPDataDTO dto = new SPDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
         rptImportDataChennelDAO.deleteImportData(dto);
         int code = dto.getRtnCode();
         if (code != 0) {//非0为失败
-            throw new ReportException("1数据删除失败: " + dto.getRtnMeg());
+            throw new ReportException("1数据删除失败: " + dto.getRtnMsg());
         }
     }
 
@@ -216,7 +209,6 @@ public class ImportIncomeDataService {
      * 收入数据解析类
      */
     static class RptImportDataChennelRead extends ReportReadServ<RptImportDataChennel> {
-
 
         @Override
         protected List<RptImportDataChennel> processSheet(Sheet sheet) {
