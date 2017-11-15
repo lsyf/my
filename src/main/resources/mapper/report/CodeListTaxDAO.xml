@@ -13,17 +13,25 @@
         order by a.code_level asc ,a.sorting desc
     </select>
 
-    <select id="codeListTax" resultType="map">
-		select 	a.code_id        as "id", 
-				a.code_name      as "name",
-				a.code_id        as "data"
-           from code_list_tax a
-          	where a.type_code = #{type}
-            and a.code_level = #{lvl}
+    <select id="listFromCodeListTax" resultType="com.loushuiyifan.report.bean.CodeListTax">
+        select *
+        from code_list_tax a
+        where a.type_code = #{type}
+        and a.code_level = #{lvl}
 
     </select>
 
-	<select id="codeNameById" resultType="java.lang.String">
+    <select id="listIncomeSourceByLvl" resultType="map">
+		select 	a.code_id        as "id", 
+				a.code_id ||'-'||a.code_name      as "name",
+				a.code_id        as "data"
+           from code_list_tax a
+          	where a.type_code = #{type}
+            and a.code_level <![CDATA[ <= ]]> #{lvl}
+        order by a.code_level   ,a.code_id
+    </select>
+
+    <select id="codeNameById" resultType="java.lang.String">
 		select a.code_name  as codeName
 		  from code_list_tax a
 		 where a.type_code = 'local_net'

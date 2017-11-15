@@ -1,52 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.QueryTransLogDAO">
-   
+
     <select id="queryLogList" resultType="com.loushuiyifan.report.vo.TransLogVO">
-        select a.acct_month  as month,
-       a.income_source       as incomeSource,
-       b.code_name           as incomeName,
-       c.code_name           as codeName,
-       a.batchid    			as batchId,
-       a.subid      as subId,
+        select a.acct_month as month,
+        a.income_source as incomeSource,
+        b.code_name as incomeName,
+        c.code_name as codeName,
+        a.batchid as batchId,
+        a.subid as subId,
         d.status_name as status,
-       to_char(a.createdate, 'yyyy-mm-dd hh24:mi:ss') as createDate,
-       to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as lstUpd,
-       a.voucher_code as voucherCode
-   from STAT_TO_GROUP        a,
-       code_list_tax         b,
-       code_list_tax_2016    c,
-       cfg_sts_define        d
- where  b.type_code = 'income_source2016'
-   and a.income_source = b.code_id
-   and c.type_code = 'local_net'
-   and a.latn_id = c.code_num
-   and c.code_level = 2
-   and a.status=d.status
-   and a.acct_month= #{month}
-   and a.rpt_type= #{taxtId}
- 
-     <if test=" incomeSource !=0 ">
-     and b.code_id= #{incomeSource} 
-     </if>
-     <if test=" latnId =='0' ">
-     and c.parent_code_id= #{latnId}
-     </if>
-   	<if test=" latnId !='0' ">
-     and c.code_id= #{latnId}
-     </if>
+        to_char(a.createdate, 'yyyy-mm-dd hh24:mi:ss') as createDate,
+        to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as lstUpd,
+        a.voucher_code as voucherCode
+        from STAT_TO_GROUP a,
+        code_list_tax b,
+        code_list_tax_2016 c,
+        cfg_sts_define d
+        where b.type_code = 'income_source2016'
+        and a.income_source = b.code_id
+        and c.type_code = 'local_net'
+        and a.latn_id = c.code_num
+        and c.code_level = 2
+        and a.status=d.status
+        and a.acct_month= #{month}
+        and a.rpt_type= #{taxtId}
+        <if test='incomeSource !="0" '>
+            and b.code_id= #{incomeSource}
+        </if>
+        <if test='latnId =="0"'>
+            and c.parent_code_id= #{latnId}
+        </if>
+        <if test='latnId !="0"'>
+            and c.code_id= #{latnId}
+        </if>
     </select>
 
- <!-- PDF预览gz文件 -->
-	<select id="queryFileName" resultType="String" >
-		<![CDATA[
+    <select id="queryLogForMap" resultType="map">
+        select a.acct_month as "month",
+        a.income_source as "incomeSource",
+        b.code_name as "incomeName",
+        c.code_name as "codeName",
+        a.batchid as "batchId",
+        a.subid as "subId",
+        d.status_name as "status",
+        to_char(a.createdate, 'yyyy-mm-dd hh24:mi:ss') as "createDate",
+        to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as "lstUpd",
+        a.voucher_code as "voucherCode"
+        from STAT_TO_GROUP a,
+        code_list_tax b,
+        code_list_tax_2016 c,
+        cfg_sts_define d
+        where b.type_code = 'income_source2016'
+        and a.income_source = b.code_id
+        and c.type_code = 'local_net'
+        and a.latn_id = c.code_num
+        and c.code_level = 2
+        and a.status=d.status
+        and a.acct_month= #{month}
+        and a.rpt_type= #{taxtId}
+        <if test='incomeSource !="0" '>
+            and b.code_id= #{incomeSource}
+        </if>
+        <if test='latnId =="0"'>
+            and c.parent_code_id= #{latnId}
+        </if>
+        <if test='latnId !="0"'>
+            and c.code_id= #{latnId}
+        </if>
+    </select>
+
+
+    <select id="queryFileName" resultType="String">
 		select file_name
   			from rpt_msg_info 
  			where busi_type = 2
    			and batch_id =#batch_id#
    			and file_name like '%.gz%'
-		
-		]]>
 	</select>
 </mapper>
 

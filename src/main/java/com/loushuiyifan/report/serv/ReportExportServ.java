@@ -4,8 +4,9 @@ import com.loushuiyifan.config.poi.AbstractPoiExport;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.*;
 
 /**
@@ -42,12 +43,12 @@ public abstract class ReportExportServ<E> extends AbstractPoiExport<E> {
     }
 
     public ReportExportServ template(String path) throws FileNotFoundException {
-        super.template(new File(path));
+        super.in(new FileInputStream(path));
         return this;
     }
 
     public ReportExportServ out(String path) throws FileNotFoundException {
-        super.out(new File(path));
+        super.out(new FileOutputStream(path));
         return this;
     }
 

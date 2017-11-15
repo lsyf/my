@@ -23,14 +23,14 @@ public abstract class AbstractPoiExport<E> implements PoiExport<E> {
     protected OutputStream os = null;
 
 
-    public AbstractPoiExport template(File file) throws FileNotFoundException {
-        this.is = new FileInputStream(file);
+    public AbstractPoiExport in(InputStream is) throws FileNotFoundException {
+        this.is = is;
         hasTemp = true;
         return this;
     }
 
-    public AbstractPoiExport out(File file) throws FileNotFoundException {
-        os = new FileOutputStream(file);
+    public AbstractPoiExport out(OutputStream os) throws FileNotFoundException {
+        this.os = os;
         return this;
     }
 

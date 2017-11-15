@@ -143,6 +143,17 @@ public class RptQueryService {
         return outPath;
     }
 
+    /**
+     * 配置导出路径(包括文件名)
+     *
+     * @param month
+     * @param latnName
+     * @param isName
+     * @param type
+     * @param isMulti
+     * @return
+     * @throws IOException
+     */
     public String configExportPath(String month,
                                    String latnName,
                                    String isName,
@@ -182,6 +193,12 @@ public class RptQueryService {
         return path.resolve(fileName).toString();
     }
 
+    /**
+     * 配置模板路径
+     * TODO 待整合(使用框架封装)
+     *
+     * @return
+     */
     public String configTemplatePath() {
         String sep = File.separator;
         String templateName = dictionaryService.getKidDataByName(ReportConfig.RptExportType.PARENT.toString(),
