@@ -131,7 +131,7 @@ public class DateService {
         //首先当前导入时间校验
         String limitTime = dictionaryService.getKidDataByName(
                 ReportConfig.RptAppParam.ROOT.toString(),
-                ReportConfig.RptAppParam.TIME_IMPORT_TAX.toString());
+                ReportConfig.RptAppParam.TIME_IMPORT_CUT.toString());
         String now = LocalDateTime.now().format(DDHH);
         if (now.compareTo(limitTime) > 0) {
             throw new ReportException("超出当前导入时间限制");
@@ -143,7 +143,7 @@ public class DateService {
         //day为其他正数代表: 当前时间大于则导入本月，否则为上月
         String day = dictionaryService.getKidDataByName(
                 ReportConfig.RptAppParam.ROOT.toString(),
-                ReportConfig.RptAppParam.MONTH_IMPORT_TAX.toString());
+                ReportConfig.RptAppParam.MONTH_IMPORT_CUT.toString());
         int limitDay = Integer.parseInt(day);
         int nowDay = LocalDate.now().getDayOfMonth();
         int value = nowDay > limitDay ? 0 : -1;
@@ -187,7 +187,7 @@ public class DateService {
             throw new ReportException("超出当前导入时间限制");
         }
 
-        //然后账期校验
+        //然后账期校验--day=10
         //day为-1及负数代表任何账期都可以导入
         //day为0代表任何账期都不可以导入
         //day为其他正数代表: 当前时间大于则导入本月，否则为上月

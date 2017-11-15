@@ -88,11 +88,11 @@ public class ImportYccyService {
         log.setExportDesc(remark);
         log.setStatus("Y");
         log.setImportDate(Date.from(Instant.now()));
-        
-        log.setIncomeSource("0");
+        log.setIncomeSoure("0");
         log.setFileName(filename);
-        extImportYccyLogDAO.insert(log);
-
+        extImportYccyLogDAO.insertSelective(log);
+        
+        
         SPDataDTO dto = new SPDataDTO();
         dto.setLogId(logId);
         rptImportYccyDataDAO.checkYCCYData(dto);
@@ -171,7 +171,7 @@ public class ImportYccyService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("count", tmp);
 		result.put("list", list);
-		//TODO 返回结果待定
+		
         return result;
     }
     

@@ -1,74 +1,33 @@
 var table;
-
-function initYCCY() {
+var orgTree;
+var isTree;
+function initTransLog() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
-    initForm();
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId", 50);
+    orgTree.Init(orgs);
+    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource", 90);
+    isTree.Init(incomeSources);
+   
 }
 
-
-function initForm() {
-    initValidator();
-
-    validatorForm = $('#form_upload').validate({
-        rules: {
-            file: 'required',
-            latnId: 'checkHidden',
-            incomeSource: 'checkHidden'
-        },
-        messages: {
-            file: "必须选择文件"           
-        },
-        ignore: "",
-        submitHandler: function (form) {
-            $(form).ajaxSubmit({
-                url: hostUrl + "importYCCY/upload",
-                type: 'post',
-                contentType: 'multipart/form-data',
-                beforeSubmit: function () {
-                    $('#btn_upload').button("loading");
-                },
-                success: function (r) {
-                    $('#btn_upload').button("reset");
-                    if (r.state) {
-                        $(form).resetForm();
-                       
-                        toastr.info('提交成功');
-                        //table.refresh();
-                        queryLog();
-                    } else {
-                        toastr.error('提交失败:' + r.msg);
-                    }
-                },
-                error: function (r) {
-                    $('#btn_upload').button("reset");
-                    toastr.error('提交失败');
-                    toastr.error(r);
-                }
-            });
-        }
-    });
-
-
-    $('#form_upload').on("change", "input[type=text], input[name], select", function () {
-        $('#form_upload').validate().element(this);
-    });
-
-}
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "importYCCY/list",
+        url: hostUrl + "queryTransLog/list",
         data: {
-            month: $("#upload_month").val()
+            month: $("#upload_month").val(),
+            latnId: orgTree.val(),
+            incomeSource: isTree.val(),
+            taxtId: $("#upload_taxtId").val()
         },
         dataType: "json",
         success: function (r) {
             if (r.state) {
                 var data = r.data;
-                table.load(data.list);
+                table.load(data);
 
             } else {
                 toastr.error('查询失败');
@@ -82,22 +41,59 @@ function queryLog() {
 
 }
 
+//导出
+function downLoadData() {
+    var month = $("#upload_month").val();
+    var latnId = orgTree.val();
+    var incomeSource = isTree.val();
+    var taxtId = $("#upload_taxtId").val();
 
-function removeData(row) {
-    editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
+    editAlert('警告', '是否确定导出:  账期' + month + ", 地市" + latnId
+        + ', 收入来源' + incomeSource + ', 数据类型' + taxtId, '导出', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "importYCCY/remove",
-            data: {"logId": row.logId},
+            url: hostUrl + "queryTransLog/downLoad",
+            data: {
+                month: month,
+                latnId: latnId,
+                incomeSource: incomeSource,
+                taxtId: taxtId
+            },
             dataType: "json",
             success: function (r) {
                 if (r.state) {
-                    toastr.info('删除成功');
+                    toastr.info('导出成功');
                     hideAlert();
-
-                    queryLog()
                 } else {
-                    toastr.error('提删除失败');
+                    toastr.error('导出失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
+//电子档案下载
+function downData() {
+    
+    editAlert('警告', '是否确定导出批次号:' + row.batchId , '导出', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "queryTransLog/downLog",
+            data:{"batchId": row.batchId,
+            	  "month": row.month
+            },
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('导出成功');
+                    hideAlert();
+                } else {
+                    toastr.error('导出失败');
                     toastr.error(r.msg);
                 }
             },
@@ -119,7 +115,7 @@ var TableInit = function () {
         $('#table_upload').bootstrapTable({
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-            pagination: false,                   //是否显示分页（*）
+            pagination: true,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
             contentType: 'application/x-www-form-urlencoded',
@@ -138,29 +134,49 @@ var TableInit = function () {
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
-            rowStyle: function () {
-                return 'table-row';
-            },
+             
             data: [],
             columns: [{
-                field: 'logId',
-                title: '流水号'
+                field: 'month',
+                width:'80px',
+                title: '账期'
             }, {
-                field: 'fileName',
-                title: '导入文件'
+                field: 'incomeSource',
+                width:'120px',
+                title: '收入来源编码'
             }, {
-                field: 'num',
-                title: '记录数'
+                field: 'incomeName',
+                width:'120px',
+                title: '收入来源名称'
             }, {
-                field: 'sum',
-                title: '金额'
+                field: 'codeName',
+                width:'120px',
+                title: '本地网名称'
             }, {
-                field: 'userId',
-                title: '操作人ID'
+                field: 'batchId',
+                width:'200px',
+                title: '批次号'
             }, {
-                field: 'importDate',
-                title: '导入时间'
+                field: 'subId',
+                width:'80px',
+                title: '版本号'
             }, {
+                field: 'status',
+                width:'80px',
+                title: '状态'
+            }, {
+                field: 'createDate',
+                width:'150px',
+                title: '创建时间'
+            }, {
+                field: 'lstUpd',
+                width:'150px',
+                title: '最后修改时间'
+            }, {
+                field: 'voucherCode',
+                width:'200px',
+                title: '凭证号'
+            },{
                 field: 'operate',
                 title: '操作',
                 events: operateEvents,
@@ -171,21 +187,20 @@ var TableInit = function () {
 
     };
 
-    //操作 监听
+  //操作 监听
     window.operateEvents = {
-
-        'click .remove': function (e, value, row, index) {
-            removeData(row);
+        'click .downlog': function (e, value, row, index) {
+        	downData(row);
         }
     };
 
     //操作显示format
     function operateFormatter(value, row, index) {
         return [
-            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
+            '<button type="button" class="downlog btn btn-danger btn-xs">下载</button>'
         ].join('');
     }
-
+    
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);

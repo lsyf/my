@@ -64,8 +64,7 @@ public class ImportYccyController extends BaseReportController {
         Long userId = user.getId();
 
         //首先校验能否导入
-        //TODO 待测试
-//        dateService.checkImportYccy();
+        dateService.checkImportYccy();
 
         //然后保存
         Path path = reportStorageService.store(file);

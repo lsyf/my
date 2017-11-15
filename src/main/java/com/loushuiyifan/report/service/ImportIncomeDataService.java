@@ -154,7 +154,9 @@ public class ImportIncomeDataService {
      * @param logId
      */
     public void commit(Long logId) {
+
         ExtImportLog log = extImportLogDAO.selectByPrimaryKey(logId);
+
 
         //首先校验是否处于待提交状态
         String status = log.getStatus();
@@ -172,6 +174,7 @@ public class ImportIncomeDataService {
         iseeC4CutDTO.setMonth(month);
         rptImportDataChennelDAO.iseeC4Cut(iseeC4CutDTO);
         Integer code = iseeC4CutDTO.getRtnCode();
+
         if (code != 0) {//非0为失败
             throw new ReportException("数据切割失败: " + iseeC4CutDTO.getRtnMsg());
         }
@@ -181,6 +184,7 @@ public class ImportIncomeDataService {
         dto.setLogId(logId);
         rptImportDataChennelDAO.commitRptImportData(dto);
         code = dto.getRtnCode();
+
         if (code != 0) {//非0为失败
             throw new ReportException("数据提交失败: " + dto.getRtnMsg());
         }

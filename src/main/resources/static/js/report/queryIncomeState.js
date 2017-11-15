@@ -1,74 +1,33 @@
 var table;
-
-function initYCCY() {
+var orgTree;
+var isTree;
+function initTransLog() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
-    initForm();
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId", 50);
+    orgTree.Init(orgs);
+    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource", 90);
+    isTree.Init(incomeSources);
+   
 }
 
-
-function initForm() {
-    initValidator();
-
-    validatorForm = $('#form_upload').validate({
-        rules: {
-            file: 'required',
-            latnId: 'checkHidden',
-            incomeSource: 'checkHidden'
-        },
-        messages: {
-            file: "必须选择文件"           
-        },
-        ignore: "",
-        submitHandler: function (form) {
-            $(form).ajaxSubmit({
-                url: hostUrl + "importYCCY/upload",
-                type: 'post',
-                contentType: 'multipart/form-data',
-                beforeSubmit: function () {
-                    $('#btn_upload').button("loading");
-                },
-                success: function (r) {
-                    $('#btn_upload').button("reset");
-                    if (r.state) {
-                        $(form).resetForm();
-                       
-                        toastr.info('提交成功');
-                        //table.refresh();
-                        queryLog();
-                    } else {
-                        toastr.error('提交失败:' + r.msg);
-                    }
-                },
-                error: function (r) {
-                    $('#btn_upload').button("reset");
-                    toastr.error('提交失败');
-                    toastr.error(r);
-                }
-            });
-        }
-    });
-
-
-    $('#form_upload').on("change", "input[type=text], input[name], select", function () {
-        $('#form_upload').validate().element(this);
-    });
-
-}
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "importYCCY/list",
+        url: hostUrl + "queryTransLog/list",
         data: {
-            month: $("#upload_month").val()
+            month: $("#upload_month").val(),
+            latnId: orgTree.val(),
+            incomeSource: isTree.val(),
+            taxtId: $("#upload_taxtId").val()
         },
         dataType: "json",
         success: function (r) {
             if (r.state) {
                 var data = r.data;
-                table.load(data.list);
+                table.load(data);
 
             } else {
                 toastr.error('查询失败');
@@ -83,21 +42,32 @@ function queryLog() {
 }
 
 
-function removeData(row) {
-    editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
+function downLoadData() {
+    var month = $("#upload_month").val();
+    var latnId = orgTree.val();
+    var incomeSource = isTree.val();
+    var taxtId = $("#upload_taxtId").val();
+
+    editAlert('警告', '是否确定导出:  账期' + month + ", 地市" + latnId
+        + ', 收入来源' + incomeSource + ', 数据类型' + taxtId, '导出', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "importYCCY/remove",
-            data: {"logId": row.logId},
+            url: hostUrl + "queryTransLog/downLoad",
+            data: {
+                month: month,
+                latnId: latnId,
+                incomeSource: incomeSource,
+                taxtId: taxtId
+            },
             dataType: "json",
             success: function (r) {
                 if (r.state) {
-                    toastr.info('删除成功');
+                    toastr.info('导出成功');
                     hideAlert();
 
                     queryLog()
                 } else {
-                    toastr.error('提删除失败');
+                    toastr.error('导出失败');
                     toastr.error(r.msg);
                 }
             },
@@ -109,6 +79,7 @@ function removeData(row) {
     showAlert();
 }
 
+
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
@@ -119,7 +90,7 @@ var TableInit = function () {
         $('#table_upload').bootstrapTable({
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-            pagination: false,                   //是否显示分页（*）
+            pagination: true,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
             contentType: 'application/x-www-form-urlencoded',
@@ -143,48 +114,41 @@ var TableInit = function () {
             },
             data: [],
             columns: [{
-                field: 'logId',
-                title: '流水号'
+                field: 'month',
+                title: '账期'
             }, {
-                field: 'fileName',
-                title: '导入文件'
+                field: 'incomeSource',
+                title: '收入来源编码'
             }, {
-                field: 'num',
-                title: '记录数'
+                field: 'incomeName',
+                title: '收入来源名称'
             }, {
-                field: 'sum',
-                title: '金额'
+                field: 'codeName',
+                title: '本地网名称'
             }, {
-                field: 'userId',
-                title: '操作人ID'
+                field: 'batchId',
+                title: '批次号'
             }, {
-                field: 'importDate',
-                title: '导入时间'
+                field: 'subId',
+                title: '版本号'
             }, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
+                field: 'status',
+                title: '状态'
+            }, {
+                field: 'createDate',
+                title: '创建时间'
+            }, {
+                field: 'lstUpd',
+                title: '最后修改时间'
+            }, {
+                field: 'voucherCode',
+                title: '凭证号'
             }]
         });
 
 
     };
 
-    //操作 监听
-    window.operateEvents = {
-
-        'click .remove': function (e, value, row, index) {
-            removeData(row);
-        }
-    };
-
-    //操作显示format
-    function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
-        ].join('');
-    }
 
     //刷新数据
     oTableInit.load = function (data) {

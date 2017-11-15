@@ -1,14 +1,15 @@
 package com.loushuiyifan.report.serv;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.report.dao.LocalNetDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.system.service.OrganizationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author 漏水亦凡
@@ -110,6 +111,12 @@ public class LocalNetService {
             orgs.add(0, org);
         }
         return orgs;
+    }
+ 
+    
+    public String getCodeName(String typeCode, String codeId){
+    	
+    	return localNetDAO.getCodeNameById(typeCode, codeId) ;
     }
 
     /**

@@ -87,6 +87,10 @@ public class RptQueryController extends BaseReportController {
 
         downloadService.download(req, resp, path);
     }
-
+    
+    /**
+     * 导出excel
+     * 不带模板的导出
+     */
 
 }

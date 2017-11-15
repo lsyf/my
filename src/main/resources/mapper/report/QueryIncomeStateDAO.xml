@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.QueryIncomeStateDAO">
+       
+	<select id="queryLogList" resultType="map">
+			select row_num, 
+			acct_month, 
+			income_source, 
+			code_name, 
+			status, 
+			to_char(update_date, 'yyyy-mm-dd hh24:mi:ss') as update_date,
+			operator
+             from rpt_income_source_sts where acct_month=#{month}
+         <if test="status !='全部' ">
+          and status = #{taxtId}
+         </if>
+		 
+	</select>
+ 
+</mapper>
+
+

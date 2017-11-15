@@ -90,7 +90,7 @@ public class ImportGroupService {
                 } else {
                     data.setUserId(userId);
                     data.setLatnId(latnId);
-                    data.setLstUpd(Date.from(Instant.now())); //TODO 时间
+                    data.setLstUpd(Date.from(Instant.now())); 
                     rptImportGroupDataDAO.insertSelective(data);
                 }
             }

@@ -66,18 +66,26 @@
 
 
     <select id="preForC3" resultType="com.loushuiyifan.common.bean.Organization">
-select a.*
-  from aweb_organization a
-  join aweb_organization b
-    on b.type = 'local_net'
-   and b.data = #{data}
-  join aweb_user_organization c
-    on a.id = c.org_id
-   and c.user_id = #{userId}
- where a.lvl = 1
-    or (a.lvl = 2 and a.id = b.id)
-    or (a.lvl = 3 and a.parent_id = b.id)
-   and a.type = 'local_net'
- order by a.lvl asc, a.sorting desc
+		select a.*
+		  from aweb_organization a
+		  join aweb_organization b
+		    on b.type = 'local_net'
+		   and b.data = #{data}
+		  join aweb_user_organization c
+		    on a.id = c.org_id
+		   and c.user_id = #{userId}
+		 where a.lvl = 1
+		    or (a.lvl = 2 and a.id = b.id)
+		    or (a.lvl = 3 and a.parent_id = b.id)
+		   and a.type = 'local_net'
+		 order by a.lvl asc, a.sorting desc
+    </select>
+    
+    <select id="getCodeNameById" resultType="String">
+	    select a.code_name
+	  from code_list_tax a
+	 where a.type_code =#{typeCode}
+	   and a.code_id = #{codeId}
+    
     </select>
 </mapper>
