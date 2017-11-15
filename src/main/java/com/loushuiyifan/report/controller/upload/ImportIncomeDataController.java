@@ -47,7 +47,7 @@ public class ImportIncomeDataController extends BaseReportController {
         Long userId = user.getId();
 
         //页面条件
-        List<Organization> orgs = localNetService.listAllByUser(userId, 3);
+        List<Organization> orgs = localNetService.listForC3(userId);
         List<CommonVO> months = dateService.aroundMonths(5);
 
         map.put("orgs", orgs);
@@ -90,13 +90,13 @@ public class ImportIncomeDataController extends BaseReportController {
                     Integer.parseInt(latnId),
                     remark);
         } catch (Exception e) {
-            logger.error("1解析入库失败", e);
+            logger.error("1解析入库失败: ", e);
             try {
                 Files.delete(path);
             } catch (IOException e1) {
-                logger.error("1删除文件失败", e1);
+                logger.error("1删除文件失败: ", e1);
             } finally {
-                throw new ReportException("导入失败: " + e.getMessage(), e);
+                throw new ReportException("1导入失败: " + e.getMessage(), e);
             }
         }
         return JsonResult.success();

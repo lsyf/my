@@ -56,6 +56,40 @@ public class LocalNetService {
     }
 
     /**
+     * 根据用户获取本地网信息
+     * (如果该用户为C4,则显示其父级C3)
+     *
+     * @param userId
+     * @return
+     */
+    public List<Organization> listForC3(Long userId) {
+
+        //首先 获取所有关联的地市
+        List<Organization> relatedList = localNetDAO.listByUserAndLvl(userId, 4);
+
+        if (relatedList == null || relatedList.size() == 0) {
+            throw new ReportException("该用户未关联地市组织");
+        }
+
+        //然后拼接参数
+        for (Organization o : relatedList) {
+            Long id = o.getId();
+            String path = o.getParentIds();
+            path = path == null ? id + "/%" : path + id + "/%";
+            o.setParentIds(path);
+            //除c4其他parentId设为空
+            if (o.getLvl() != 4) {
+                o.setParentId(-1L);
+            }
+        }
+
+        //最后进行判断所属地市 及子集
+        List<Organization> list = localNetDAO.listForC3(relatedList);
+
+        return list;
+    }
+
+    /**
      * 根据用户 获取 所有股份下地市
      *
      * @param userId

@@ -4,7 +4,7 @@
 
     <select id="checkRptImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
-        {call data_check_2017(
+        {call rpt_data_check(
          #{logId,mode=IN,jdbcType=NUMERIC},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
          #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}

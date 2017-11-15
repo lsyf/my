@@ -28,7 +28,7 @@ public interface CodeListTaxDAO extends MyMapper<CodeListTax> {
      * @param type
      * @return
      */
-    List<Map> codeListTax(@Param("lvl") int lvl,
+    List<Map<String, String>> codeListTax(@Param("lvl") int lvl,
                           @Param("type") String type);
     /**
      * 根据地市Id获得codeName

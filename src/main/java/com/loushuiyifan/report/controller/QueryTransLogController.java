@@ -45,7 +45,7 @@ public class QueryTransLogController extends BaseReportController{
         //页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 3);
         List<CommonVO> months = dateService.aroundMonths(5);
-        List<Map> incomeSources = codeListTaxService.listTaxSource(2,"income_source2017");
+        List<Map<String, String>> incomeSources = codeListTaxService.listTaxSource(2,"income_source2017");
         map.put("orgs", orgs);
         map.put("months", months);
         map.put("incomeSources", incomeSources);
@@ -78,13 +78,13 @@ public class QueryTransLogController extends BaseReportController{
      */
     @PostMapping("downLoad")
     @ResponseBody
-    public void  downLoadTransLog(HttpServletRequest req,
-    		                           HttpServletResponse resp,
-    		                           String month, 
-    		    		               String latnId,
-    		    		               String incomeSource,
-    		    		               String taxtId
-    		                           ){
+    public JsonResult downLoadTransLog (HttpServletRequest req,
+		                           HttpServletResponse resp,
+		                           String month, 
+		    		               String latnId,
+		    		               String incomeSource,
+		    		               String taxtId
+		                           ){
     	//TODO
     	try {
     		queryTransLogService.downExcel(month, latnId, incomeSource, Integer.parseInt(taxtId));
@@ -92,7 +92,7 @@ public class QueryTransLogController extends BaseReportController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	    	 
+    	return JsonResult.success();   	 
     }
     
     /**
@@ -100,9 +100,20 @@ public class QueryTransLogController extends BaseReportController{
      */
     @PostMapping("downLog")
     @ResponseBody
-    public JsonResult downLoadTrans(){
-    	//TODO	
-    	 return JsonResult.success();
+    public void downLoadTran(HttpServletRequest req,
+				    		 HttpServletResponse resp,
+				             String month,    		
+				    		 String batchId){
+    	try {
+    		String path =queryTransLogService.downLoadFile(batchId, month);
+        	
+        	downloadService.download(req, resp, path);
+    		
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+    	
     }
     
     

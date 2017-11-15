@@ -1,6 +1,10 @@
 package com.loushuiyifan.report.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.loushuiyifan.report.dao.QueryTransLogDAO;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.LocalNetService;
 import com.loushuiyifan.report.serv.ReportDownloadService;
@@ -67,12 +72,25 @@ public class QueryTransLogService {
         reportDownloadService.store(file, month, name);
         
         
-        		
+        
         
 		
 	}
 	
-	
-	
+	/**
+	 * 电子档案下载
+	 */
+	public String downLoadFile(String batchId,String month)throws IOException{
+		String fileName =queryTransLogDAO.queryFileName(batchId);
+		if(fileName ==null){
+			throw new ReportException("电子档案文件为空");
+		}
+		
+		Path path = Paths.get(reportDownloadService.configLocation(), month);
+        if (!Files.exists(path)) {
+            Files.createDirectory(path);
+        }
+		return path.resolve(fileName).toString();
+	}
 	
 }

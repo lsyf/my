@@ -26,8 +26,8 @@
    and a.acct_month= #{month}
    and a.rpt_type= #{taxtId}
  
-     <if test=" incomeSource !='0' ">
-     and b.code_id=  #{incomeSource} 
+     <if test=" incomeSource !=0 ">
+     and b.code_id= #{incomeSource} 
      </if>
      <if test=" latnId =='0' ">
      and c.parent_code_id= #{latnId}
@@ -37,7 +37,17 @@
      </if>
     </select>
 
- 
+ <!-- PDF预览gz文件 -->
+	<select id="queryFileName" resultType="String" >
+		<![CDATA[
+		select file_name
+  			from rpt_msg_info 
+ 			where busi_type = 2
+   			and batch_id =#batch_id#
+   			and file_name like '%.gz%'
+		
+		]]>
+	</select>
 </mapper>
 
 

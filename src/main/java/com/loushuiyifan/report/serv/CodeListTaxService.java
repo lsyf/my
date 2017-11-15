@@ -48,17 +48,17 @@ public class CodeListTaxService {
      * @param type
      * @return
      */
-    public List<Map> listTaxSource(int lvl,String type) {
-    	List<Map> list = new ArrayList<Map>();
-    	Map ma =Maps.newHashMap();
+    public List<Map<String, String>> listTaxSource(int lvl,String type) {
+    	List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+    	Map<String, String> ma =Maps.newHashMap();
     	ma.put("id","0");
 		ma.put("name", "汇总");
 		ma.put("data", "0");
 		list.add(ma);
     	
-		List<Map> l =codeListTaxDAO.codeListTax(lvl, type);
+		List<Map<String, String>> l =codeListTaxDAO.codeListTax(lvl, type);
     	for(Map m : l){
-    		Map map =Maps.newHashMap();
+    		Map<String, String> map =Maps.newHashMap();
     		map.put("id", m.get("id").toString());
     		map.put("name", m.get("id") +"-"+m.get("name"));
     		map.put("data", m.get("data").toString());
