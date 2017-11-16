@@ -3,6 +3,8 @@ package com.loushuiyifan;
 import org.junit.Test;
 
 import java.io.RandomAccessFile;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,17 +17,21 @@ public class AppTests {
 
     @Test
     public void test() {
-        ArrayDeque<Integer> list = new ArrayDeque();
-        TreeMap treeMap = new TreeMap();
-
-        HashMap map = new HashMap();
-        LinkedHashMap a = new LinkedHashMap();
-        LinkedHashSet v = new LinkedHashSet();
+        Path path = Paths.get("D:/IDM");
+        System.out.println(path.toString());
+        System.out.println(path.getFileName().toString());
 
     }
 
     @Test
     public void test2() {
+        ArrayDeque<Integer> list = new ArrayDeque();
+        TreeMap treeMap = new TreeMap();
+
+        HashMap map = new HashMap();
+        LinkedHashMap x = new LinkedHashMap();
+        LinkedHashSet v = new LinkedHashSet();
+
         RandomAccessFile file = null;
         ConcurrentHashMap  a = null;
         AtomicInteger b;

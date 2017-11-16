@@ -72,7 +72,7 @@
             var months = [[${months}]];
             var incomeSources = [[${incomeSources}]];
             $(function () {
-            	initTransLog();
+                initTransLog();
             });
         </script>
 
@@ -129,23 +129,25 @@
 
                             </div>
 
-                                                      
+
                             <div class="form-group  form-group-sm">
-               
-                                <button class="btn btn-danger pull-right btn-sm btn-form"
+                                <button class="btn btn-info pull-right btn-sm btn-form"
+                                        type="button" id="btn_download" onclick="downLoadData()">
+                                    电子档案
+                                </button>
+
+                                <button id="btn_load" type="button" onclick="exportData()"
+                                        class="btn btn-info pull-right btn-sm btn-form">
+                                    导出
+                                </button>
+
+
+                                <button class="btn btn-info pull-right btn-sm btn-form"
                                         type="button" id="btn_query" onclick="queryLog()">
                                     查询
                                 </button>
-                                <button id="btn_load" type="button" onclick="downLoadData()"
-                                        class="btn btn-danger pull-right btn-sm btn-form">
-                                    导出
-                                </button>
-                                <button class="btn btn-danger pull-right btn-sm btn-form"
-                                        type="button" id="btn_download" onclick="downLoadData()">
-                                   电子档案
-                                </button>
                             </div>
-                        </form>                       
+                        </form>
                     </div>
 
                 </div>
@@ -154,7 +156,7 @@
             <div id="form-table">
                 <div class="box box-primary">
                     <div class="box-header">
-                       查询结果
+                        查询结果
                     </div>
                     <div class="box-body" style=" white-space:nowrap">
                         <table id="table_upload"></table>
@@ -169,7 +171,10 @@
             <div id="menuContent2" class="menuContent">
                 <ul id="treeOrg2" class="ztree"></ul>
             </div>
-
+            <form target="_blank"
+                  id="form_export"
+                  method="post" hidden>
+            </form>
         </section>
 
 

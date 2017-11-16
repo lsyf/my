@@ -3,8 +3,6 @@ package com.loushuiyifan.report.dao;
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptImportDataChennel;
 import com.loushuiyifan.report.dto.SPDataDTO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.dto.IseeC4CutDTO;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,17 +20,17 @@ public interface RptImportDataChennelDAO extends MyMapper<RptImportDataChennel> 
     int deleteByLogId(Long logId);
 
 
-    List<ImportDataLogVO> listIncomeDataLog(@Param("userId") Long userId,
+    List<ImportDataLogVO> listIncomeDataLog(@Param("latnId") String latnId,
                                             @Param("month") String month,
                                             @Param("type") String type);
 
     String selectAction(Long logId);
 
-    void iseeC4Cut(IseeC4CutDTO dto);
+    void iseeC4Cut(SPDataDTO dto);
 
     void commitRptImportData(SPDataDTO dto);
 
-    void deleteImportData(DeleteImportDataDTO dto);
+    void deleteImportData(SPDataDTO dto);
 
 
 }

@@ -21,23 +21,25 @@
         b.file_name as "fileName",
         count(*) as "num",
         sum(a.index_data) as "sum",
-        e.name as "city",
+        c.name as "city",
         b.user_id as "userId",
-        decode(a.action, null, 'N', 'Y', 'Y') as "action",
+        b.STATUS as "action",
         b.export_desc as "remark"
         from Rpt_Import_Data_Channel a,
-        EXT_IMPORT_LOG          b,
-        aweb_user               d,
-        aweb_organization       e
-        where a.acct_month = #{month}
+        EXT_IMPORT_LOG b,
+        (select n.*
+        from AWEB_ORGANIZATION m, AWEB_ORGANIZATION n
+        where m.type = 'local_net'
+        and n.type = 'local_net'
+        and m.data = #{latnId}
+        and ((n.parent_ids like m.parent_ids || m.id || '/%' and
+        n.lvl <![CDATA[ < ]]> 4) or n.data = #{latnId})) c
+        where a.acct_month =  #{month}
         and a.log_id = b.log_id
-        and b.user_id = #{userId}
+        and c.data = b.latn_id
         and b.type = #{type}
-        and d.id = b.user_id
-        and e.data = b.latn_id
-        and e.type = 'local_net'
-        group by a.action, b.log_id, b.file_name, e.name, b.user_id, b.export_desc
-        order by a.action desc
+        group by b.STATUS, b.log_id, b.file_name, c.name, b.user_id, b.export_desc
+        order by b.STATUS desc
     </select>
 
     
@@ -48,30 +50,30 @@
     </select>
 
 
-    <select id="iseeC4Cut" parameterType="com.loushuiyifan.report.dto.IseeC4CutDTO"
+    <select id="iseeC4Cut" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
-        {call pkg_shelly_dev2017.isee_cut(
+        {call PKG_SHELLY_DEV.isee_cut(
         #{month,mode=IN,jdbcType=VARCHAR},
         #{logId,mode=IN,jdbcType=NUMERIC},
         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-        #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
     <select id="commitRptImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
-        {call IndexToParentChannel_2017(
+        {call irpt_IndexToParentChannel(
         #{logId,mode=IN,jdbcType=NUMERIC},
         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-        #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
-    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.DeleteImportDataDTO"
+    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
-        {call IRPT_DEL_DATA_CN2017(
+        {call IRPT_DEL_DATA_CN(
         #{userId,mode=IN,jdbcType=NUMERIC},
         #{logId,mode=IN,jdbcType=NUMERIC},
         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-        #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
 </mapper>

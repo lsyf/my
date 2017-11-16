@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,21 +36,64 @@ public class DownloadService {
 
     public void download(HttpServletRequest req,
                          HttpServletResponse resp,
+                         Path path) throws Exception {
+        String name = path.getFileName().toString();
+        download(req, resp, path, name);
+    }
+
+    /**
+     * 将内存中字节数组 写出流
+     *
+     * @param req
+     * @param resp
+     * @param data
+     * @param name
+     * @throws Exception
+     */
+    public void download(HttpServletRequest req,
+                         HttpServletResponse resp,
+                         byte[] data,
+                         String name) throws Exception {
+
+
+        name = configFileName(req, name);
+
+
+        long length = data.length;
+        resp.setContentType("multipart/form-data");
+        resp.setContentLengthLong(length);
+        resp.addHeader("Content-Disposition",
+                "attachment; filename=" + name);
+        try (OutputStream os = resp.getOutputStream()) {
+            os.write(data);
+            os.flush();
+            os.close();
+            resp.flushBuffer();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new DownloadException("下载文件失败: " + name, e);
+        }
+    }
+
+    /**
+     * 根据Path写出流
+     *
+     * @param req
+     * @param resp
+     * @param path
+     * @param name
+     * @throws Exception
+     */
+    public void download(HttpServletRequest req,
+                         HttpServletResponse resp,
                          Path path,
                          String name) throws Exception {
 
         if (!Files.exists(path)) {
             throw new DownloadException("找不到文件路径: " + path.toString());
         }
+        name = configFileName(req, name);
 
-        //根据浏览器配置 文件名(以防乱码)
-        String header = req.getHeader("User-Agent").toUpperCase();
-        if (header.contains("MSIE") || header.contains("TRIDENT") || header.contains("EDGE")) {
-            name = URLEncoder.encode(name, "utf-8");
-            name = name.replace("+", "%20");    //IE下载文件名空格变+号问题
-        } else {
-            name = new String(name.getBytes(), "ISO8859-1");
-        }
 
         String contentType = Files.probeContentType(path);
         long length = Files.size(path);
@@ -65,6 +109,16 @@ public class DownloadService {
         }
     }
 
+    /**
+     * 根据path写出流(断点续传)
+     * 待优化(使用RandomAccessFile)
+     *
+     * @param req
+     * @param resp
+     * @param path
+     * @param name
+     * @throws Exception
+     */
     public void downloadPlus(HttpServletRequest req,
                              HttpServletResponse resp,
                              Path path,
@@ -74,13 +128,7 @@ public class DownloadService {
             throw new DownloadException("找不到文件路径: " + path.toString());
         }
 
-        String header = req.getHeader("User-Agent").toUpperCase();
-        if (header.contains("MSIE") || header.contains("TRIDENT") || header.contains("EDGE")) {
-            name = URLEncoder.encode(name, "utf-8");
-            name = name.replace("+", "%20");    //IE下载文件名空格变+号问题
-        } else {
-            name = new String(name.getBytes(), "ISO8859-1");
-        }
+        name = configFileName(req, name);
 
 
         long fileSize = Files.size(path);
@@ -151,6 +199,22 @@ public class DownloadService {
         }
 
 
+    }
+
+    /**
+     * 根据浏览器配置 文件名(以防乱码)
+     *
+     * @return
+     */
+    public String configFileName(HttpServletRequest req, String name) throws UnsupportedEncodingException {
+        String header = req.getHeader("User-Agent").toUpperCase();
+        if (header.contains("MSIE") || header.contains("TRIDENT") || header.contains("EDGE")) {
+            name = URLEncoder.encode(name, "utf-8");
+            name = name.replace("+", "%20");    //IE下载文件名空格变+号问题
+        } else {
+            name = new String(name.getBytes(), "ISO8859-1");
+        }
+        return name;
     }
 
 }

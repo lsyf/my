@@ -1,19 +1,16 @@
 package com.loushuiyifan.report.serv;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Maps;
+import com.loushuiyifan.report.bean.CodeListTax;
+import com.loushuiyifan.report.dao.CodeListTaxDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.report.bean.CodeListTax;
-import com.loushuiyifan.report.dao.CodeListTaxDAO;
-import com.loushuiyifan.report.vo.ZtreeVO;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -27,11 +24,11 @@ public class CodeListTaxService {
     @Autowired
     CodeListTaxDAO codeListTaxDAO;
 
-    public List<Map> listIncomeSource(String type) {
+    public List<Map> listAllIncomeSource(String type) {
         return codeListTaxDAO.listByType(type);
     }
 
-    public CodeListTax getIncomeSource(String type,String data) {
+    public CodeListTax getIncomeSource(String type, String data) {
         CodeListTax param = new CodeListTax();
         param.setTypeCode(type);
         param.setCodeId(data);
@@ -42,46 +39,25 @@ public class CodeListTaxService {
     public List<Map> listByType(String type) {
         return codeListTaxDAO.listByType(type);
     }
-    
+
     /**
      * 收入来源传输日志
+     *
      * @param type
      * @return
      */
-    public List<Map<String, String>> listTaxSource(int lvl,String type) {
-    	List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-    	Map<String, String> ma =Maps.newHashMap();
-    	ma.put("id","0");
-		ma.put("name", "汇总");
-		ma.put("data", "0");
-		list.add(ma);
-    	
-		List<Map<String, String>> l =codeListTaxDAO.codeListTax(lvl, type);
-    	for(Map m : l){
-    		Map<String, String> map =Maps.newHashMap();
-    		map.put("id", m.get("id").toString());
-    		map.put("name", m.get("id") +"-"+m.get("name"));
-    		map.put("data", m.get("data").toString());
-    		list.add(map);   		
-    	}
-    	return list;
+    public List<Map<String, String>> listIncomeSource(int lvl, String type) {
+        List<Map<String, String>> list = codeListTaxDAO.listIncomeSourceByLvl(lvl, type);
+        return list;
     }
-    
-    public String getAreaName(String type){
-    	return codeListTaxDAO.codeNameById(type) ;
+
+    public String getAreaName(String type) {
+        return codeListTaxDAO.codeNameById(type);
     }
-    
-    public String getName(Integer taxtId){
-		String str ="";
-		if(taxtId != 1){
-		str="电子档案";	
-		}else{
-			str ="凭证";
-		}
-		return str;
-	}
+
+
     /**
-     *用来对现有数据 添加 parentIds
+     * 用来对现有数据 添加 parentIds
      */
     @Transactional
     public void updateCodeListTaxPath() {
@@ -127,7 +103,6 @@ public class CodeListTaxService {
 
         }
     }
-
 
 
 }
