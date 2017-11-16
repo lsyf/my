@@ -2,13 +2,16 @@ package com.loushuiyifan.report.serv;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Maps;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.report.dao.LocalNetDAO;
 import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.service.OrganizationService;
 
 /**
@@ -138,4 +141,51 @@ public class LocalNetService {
         }
         return list;
     }
+    
+    /**
+     * 资金缴拨利润中心
+     * @param userId
+     * @return
+     */
+    public List<Map<String, String>> listPrctrName(Long userId){
+    	List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+    	List<CommonVO> l =localNetDAO.listNameById(userId);
+    	String data =l.get(0).getData();  // 地市Id不为空
+    	String name =null;
+    	if("2".equals(data)){
+    		name ="省本部";
+    	}else if("3395".equals(data)){
+    		name ="网络科技";
+    	}else{
+    		name =l.get(0).getName().substring(0,2);
+    	}
+    	if(!"99999".equals(data)){
+    		List<Map<String, String>> list2 =localNetDAO.listPrctrNameByname(name,data);
+    		list.addAll(list2);   //list2 有可能为空		
+    	}else{
+    		Map<String, String> m =Maps.newHashMap();  
+        	m.put("id", "0");
+        	m.put("name", "全省");
+        	list.add(m);
+        	List<Map<String, String>> list3 =localNetDAO.listPrctrNameByname(name,data);
+    		list.addAll(list3);
+    	}
+    	
+    	return list;
+    	
+    }
+    
+    public List<Map<String, String>> listReportName(){
+    	List<Map<String, String>> list = new ArrayList<Map<String, String>>();	
+    	Map<String, String> m =Maps.newHashMap();  
+    	m.put("id", "0");
+    	m.put("name", "全部");
+    	list.add(m);
+    	List<Map<String, String>> li =localNetDAO.lisReportname();
+    	list.addAll(li);
+    	
+    	return list;
+    }
+    
+    
 }

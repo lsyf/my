@@ -47,9 +47,7 @@ public class QueryTransLogService {
 		    					) {
 
         List<TransLogVO> list =queryTransLogDAO.queryLogList(month, latnId, incomeSource, taxtId);
-        if(list.size() ==0){
-        	return null; 
-        }
+        
         return list;
     }
 	

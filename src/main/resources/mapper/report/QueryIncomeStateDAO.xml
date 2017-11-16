@@ -2,21 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.QueryIncomeStateDAO">
        
-	<select id="queryLogList" resultType="map">
-			select row_num, 
-			acct_month, 
-			income_source, 
-			code_name, 
-			status, 
-			to_char(update_date, 'yyyy-mm-dd hh24:mi:ss') as update_date,
-			operator
+	<select id="queryLogList" resultType="com.loushuiyifan.report.vo.TransLogVO">
+			select row_num  as "subId", 
+			acct_month      as "month", 
+			income_source   as "incomeSource", 
+			code_name       as "incomeName", 
+			status as "status", 
+			to_char(update_date, 'yyyy-mm-dd hh24:mi:ss') as "lstUpd",
+			operator        as "userName"
              from rpt_income_source_sts where acct_month=#{month}
          <if test="status !='全部' ">
-          and status = #{taxtId}
+          and status = #{status}
          </if>
 		 
 	</select>
- 
+ 	
+ 	<select id="checkUserId" resultType="String" >
+ 	select viewname from v_s_user_update where id=#{userId}
+ 	</select>
+ 	
+ 	<update id="updateState" >
+		update rpt_income_source_sts 
+		set status =#{status}, update_date=sysdate 
+		where row_num=#{subId}
+	</update>
+	
 </mapper>
 
 

@@ -78,7 +78,7 @@ function downLoadData() {
 }
 
 //电子档案下载
-function downData() {
+function downData(row) {
     
     editAlert('警告', '是否确定导出批次号:' + row.batchId , '导出', function () {
         $.ajax({

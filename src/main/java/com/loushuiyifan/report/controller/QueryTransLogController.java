@@ -25,6 +25,11 @@ import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.TransLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
+/**
+ * 
+ * @author yuxk
+ * @date 2017-11-15
+ */
 @Controller
 @RequestMapping("queryTransLog")
 public class QueryTransLogController extends BaseReportController{

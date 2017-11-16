@@ -23,13 +23,15 @@ public class ReportConfig {
         MONTH_IMPORT_C5("MONTH_IMPORT_C5"),      //C5导入账期限制
         TIME_IMPORT_C5("TIME_IMPORT_C5"),        //C5导入时间限制
         MONTH_IMPORT_CUT("MONTH_IMPORT_CUT"),    //切割比例导入账期限制
-        TIME_IMPORT_CUT("TIME_IMPORT_CUT"),     //切割比例导入时间限制
-    
+        TIME_IMPORT_CUT("TIME_IMPORT_CUT"),     //切割比例导入时间限制        
         TIME_IMPORT_GROUP("TIME_IMPORT_GROUP"),      //指标组导入时间限制
         MONTH_IMPORT_TAX("MONTH_IMPORT_TAX"),    //税务导入账期限制
         TIME_IMPORT_TAX("TIME_IMPORT_TAX"),      //税务导入时间限制
         MONTH_IMPORT_YCCY("MONTH_IMPORT_YCCY"),    //业财差异日期限制
-        TIME_IMPORT_YCCY("TIME_IMPORT_YCCY");      //业财差异导入限制
+        TIME_IMPORT_YCCY("TIME_IMPORT_YCCY"),      //业财差异导入限制
+    	
+    	TIME_UPDATE_PROCESS("TIME_UPDATE_PROCESS"); //修改收入来源完成度状态
+    	
         private String data;
 
         RptAppParam(String data) {

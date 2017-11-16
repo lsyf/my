@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>省公司集中处理来源完成进度</title>
+    <title>资金缴拨报表查询</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -43,8 +43,8 @@
 
     <script src="../../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../../static/js/report/queryIncomeState.js"
-            th:src="@{/static/js/report/queryIncomeState.js}"></script>
+    <script src="../../../static/js/report/rptQueryFundsFee.js"
+            th:src="@{/static/js/report/rptQueryFundsFee.js}"></script>
 
 
     <style>
@@ -67,8 +67,10 @@
     <div class="content-wrapper" layout:fragment="content">
 
         <script th:inline="javascript">
-            //页面传值           
-            var months = [[${months}]];           
+            //页面传值
+            var reportIds = [[${reportIds}]];
+            var months = [[${months}]];
+            var orgs = [[${orgs}]];
             $(function () {
             	initForm();
             });
@@ -76,7 +78,7 @@
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>省公司集中处理来源完成进度</h1>
+            <h1>收入来源传输日志</h1>
         </section>
 
         <!-- Main content -->
@@ -99,33 +101,35 @@
                                         </select>
                                     </div>
                                 </div>
-                                
                                 <div class="col-sm-3 form-group form-group-rm">
-
-                                    <label for="upload_state" class="col-sm-4 control-label">状态</label>
+                                    <label for="upload_reportId" class="col-sm-4 control-label">报表编号</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control" name="status" id="upload_state">
-                                            <option value="全部">全部</option>
-                                            <option value="未完成">未完成</option>
-                                            <option value="已完成">已完成</option>
-                                            <option value="无数据">无数据</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="upload_reportId" readonly>
+                                        <input class="form-control" name="reportId" type="hidden">
                                     </div>
+
                                 </div>
+                                <div class="col-sm-3 form-group form-group-rm">
+                                    <label for="upload_prctrName" class="col-sm-4 control-label">利润中心</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="upload_prctrName" readonly>
+                                        <input class="form-control" name="prctrName" type="hidden">
+                                    </div>
+                                </div>                               
 
                             </div>
 
                                                       
                             <div class="form-group  form-group-sm">
-               
-                				<button class="btn btn-info pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="changeStatus()">
-                                   		更改状态
+                                <button id="btn_load" type="button" onclick="exportData()"
+                                        class="btn btn_query pull-right btn-sm btn-form">
+                                   		 导出
                                 </button>
-                                <button class="btn btn-success pull-right btn-sm btn-form"
+                                <button class="btn btn-query pull-right btn-sm btn-form"
                                         type="button" id="btn_query" onclick="queryLog()">
-                                   		 查询
+                                    	查询
                                 </button>
+                                
                                
                             </div>
                         </form>                       
@@ -139,10 +143,18 @@
                     <div class="box-header">
                        查询结果
                     </div>
-                    <div class="box-body">
+                    <div class="box-body" style=" white-space:nowrap">
                         <table id="table_upload"></table>
                     </div>
                 </div>
+            </div>
+
+            <div id="menuContent" class="menuContent">
+                <ul id="treeOrg" class="ztree"></ul>
+            </div>
+
+            <div id="menuContent2" class="menuContent">
+                <ul id="treeOrg2" class="ztree"></ul>
             </div>
 
         </section>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.CodeListTaxDAO">
 
-    <select id="listByType" resultType="map">
+    <select id="listByType" resultType="Map">
       select a.code_id  as "id",
        a.code_name      as "name",
        a.code_id        as "data",
@@ -13,7 +13,7 @@
         order by a.code_level asc ,a.sorting desc
     </select>
 
-    <select id="codeListTax" resultType="map">
+    <select id="codeListTax" resultType="Map">
 		select 	a.code_id        as "id", 
 				a.code_name      as "name",
 				a.code_id        as "data"

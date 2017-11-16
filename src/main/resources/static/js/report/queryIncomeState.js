@@ -1,27 +1,20 @@
 var table;
-var orgTree;
-var isTree;
-function initTransLog() {
+
+function initForm() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId", 50);
-    orgTree.Init(orgs);
-    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource", 90);
-    isTree.Init(incomeSources);
-   
+      
 }
 
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "queryTransLog/list",
+        url: hostUrl + "queryIncomeState/list",
         data: {
             month: $("#upload_month").val(),
-            latnId: orgTree.val(),
-            incomeSource: isTree.val(),
-            taxtId: $("#upload_taxtId").val()
+            status: $("#upload_state").val()
         },
         dataType: "json",
         success: function (r) {
@@ -42,32 +35,38 @@ function queryLog() {
 }
 
 
-function downLoadData() {
+function changeStatus() {
     var month = $("#upload_month").val();
-    var latnId = orgTree.val();
-    var incomeSource = isTree.val();
-    var taxtId = $("#upload_taxtId").val();
+    var status = $("#upload_state").val()
 
-    editAlert('警告', '是否确定导出:  账期' + month + ", 地市" + latnId
-        + ', 收入来源' + incomeSource + ', 数据类型' + taxtId, '导出', function () {
+    editAlert('警告', '是否确定:  账期' + month + ", 状态:" + status, '更新状态', function () {
+    	
+    	var selects = $('#table_upload').bootstrapTable('getSelections');
+    	if(selects.length==0){
+    		toastr.info('未选中任何数据');
+    		return;
+    	}
+    	var logs = [];
+    	selects.forEach(function(data,i){
+    		logs.push(data.subId);
+    	});
+    	
         $.ajax({
             type: "POST",
-            url: hostUrl + "queryTransLog/downLoad",
+            url: hostUrl + "queryIncomeState/changeState",
             data: {
-                month: month,
-                latnId: latnId,
-                incomeSource: incomeSource,
-                taxtId: taxtId
+                logs: logs,
+                status: status
             },
             dataType: "json",
             success: function (r) {
                 if (r.state) {
-                    toastr.info('导出成功');
+                    toastr.info('更新成功');
                     hideAlert();
 
                     queryLog()
                 } else {
-                    toastr.error('导出失败');
+                    toastr.error('更新失败');
                     toastr.error(r.msg);
                 }
             },
@@ -79,6 +78,7 @@ function downLoadData() {
     showAlert();
 }
 
+ 
 
 //Table初始化
 var TableInit = function () {
@@ -105,7 +105,7 @@ var TableInit = function () {
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
             // height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-            uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+            uniqueId: "subId",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
@@ -114,6 +114,11 @@ var TableInit = function () {
             },
             data: [],
             columns: [{
+            	checkbox:true
+            },{
+                field: 'subId',
+                title: '流水号'
+            },{
                 field: 'month',
                 title: '账期'
             }, {
@@ -123,33 +128,32 @@ var TableInit = function () {
                 field: 'incomeName',
                 title: '收入来源名称'
             }, {
-                field: 'codeName',
-                title: '本地网名称'
-            }, {
-                field: 'batchId',
-                title: '批次号'
-            }, {
-                field: 'subId',
-                title: '版本号'
-            }, {
                 field: 'status',
-                title: '状态'
-            }, {
-                field: 'createDate',
-                title: '创建时间'
+                title: '状态',
+                formatter:function(value,row,index){
+                	var a ='';
+                	if(value =="已完成"){
+                		var a = '<span style="color:#00CD00">'+value+'</span>';  
+                	}else if(value =="未完成"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else{
+                		var a = '<span style="color:#BEBEBE">'+value+'</span>'; 
+                	}
+                	return a;
+                }
             }, {
                 field: 'lstUpd',
-                title: '最后修改时间'
+                title: '更新时间'
             }, {
-                field: 'voucherCode',
-                title: '凭证号'
+                field: 'userName',
+                title: '负责人'
             }]
         });
 
 
     };
-
-
+    
+  
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);
