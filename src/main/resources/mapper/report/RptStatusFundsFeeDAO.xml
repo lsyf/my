@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptStatusFundsFeeDAO">
+	<select id="listFundsFee" resultType="com.loushuiyifan.report.vo.FundsStatusVO" >
+		select report_id||'-'||report_name as reportName,
+			status,
+			voucher_code as voucherCode			
+			from v_step_balance  
+			where acct_month=#{month}
+		    <if test='reportId !="0" '>
+			and REPORT_ID = #{reportId}
+			</if>
+		
+	</select> 
+	
+	
+	
+</mapper>

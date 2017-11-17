@@ -1,6 +1,7 @@
 package com.loushuiyifan.report.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -14,5 +15,7 @@ public interface RptQueryFundsFeeDAO extends MyMapper<RptBalanceData>{
 			                      @Param("reportId") String reportId,
 			                      @Param("prctrName") String prctrName);
 	
-	
+	List<Map<String, String>> queryLogForMap(@Param("month") String month, 
+                                             @Param("reportId") String reportId,
+                                             @Param("prctrName") String prctrName);
 }

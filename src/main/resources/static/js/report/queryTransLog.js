@@ -68,59 +68,40 @@ function exportData() {
 }
 
 //电子档案下载
-function downData(row) {
-    
-    editAlert('警告', '是否确定导出批次号:' + row.batchId , '导出', function () {
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "queryTransLog/downLog",
-            data:{"batchId": row.batchId,
-            	  "month": row.month
-            },
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('导出成功');
-                    hideAlert();
-                } else {
-                    toastr.error('导出失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
-=======
-
-    $.ajax({
-        type: "POST",
-        url: hostUrl + "queryTransLog/downLog",
-        data: {
-            "batchId": row.batchId,
-            "month": row.month
-        },
-        dataType: "json",
-        success: function (r) {
-            if (r.state) {
-                toastr.info('导出成功');
-                hideAlert();
-            } else {
-                toastr.error('导出失败');
-                toastr.error(r.msg);
->>>>>>> branch 'oracle-dev' of http://134.96.93.186:8080/Naive/my.git
-            }
-        },
-        error: function (result) {
-            toastr.error('发送请求失败');
-        }
+function downData() {
+	var month = $("#upload_month").val();
+	 
+	var selects = $('#table_upload').bootstrapTable('getSelections');
+	if(selects.length==0){
+		toastr.info('未选中任何数据');
+		return;
+	}
+	var logs = [];
+	selects.forEach(function(data,i){
+		logs.push(data.batchId);
+	});
+	
+	var names =['month','logs'];
+	var params =[month,logs];
+	var form = $("#form_down");   //定义一个form表单
+	form.attr('action', hostUrl + 'queryTransLog/downLog');
+	form.empty();
+	
+    names.forEach(function (v, i) {
+        var input = $('<input>');
+        input.attr('type', 'hidden');
+        input.attr('name', v);
+        input.attr('value', params[i]);
+        form.append(input);
     });
 
-
+    form.submit();   //表单提交
+	
 }
 
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
-
 
     //初始化Table
     oTableInit.Init = function () {
@@ -149,6 +130,8 @@ var TableInit = function () {
 
             data: [],
             columns: [{
+            	checkbox:true
+            },{
                 field: 'month',
                 width: '80px',
                 title: '账期'
@@ -188,31 +171,13 @@ var TableInit = function () {
                 field: 'voucherCode',
                 width: '200px',
                 title: '凭证号'
-            }, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
             }]
         });
 
 
     };
 
-    //操作 监听
-    window.operateEvents = {
-        'click .downlog': function (e, value, row, index) {
-            downData(row);
-        }
-    };
-
-    //操作显示format
-    function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="downlog btn btn-danger btn-xs">下载</button>'
-        ].join('');
-    }
-
+   
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);

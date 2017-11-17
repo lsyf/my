@@ -89,12 +89,13 @@
     
     </select>
       
-	<select id="listPrctrNameByname" resultType="Map">
-    	select distinct PRCTR as "id", PRCTR_NAME as "name" 
-    	from charge.RPT_BALANCE_CODE_DEF        
-        <if test=' data !="99999" '>
+	<select id="listPrctrName" resultType="Map">
+    	select distinct PRCTR  as "id", 
+    	       PRCTR_NAME      as "name", 
+    	       PRCTR           as "data"
+    	from charge.RPT_BALANCE_CODE_DEF                
         where  PRCTR_NAME = #{name}
-        </if>
+        
                   
     </select>
     
@@ -103,11 +104,12 @@
 	select a.name, a.data
 	  from aweb_organization a
 	 where a.type = 'local_net' and a.lvl=3
-	   and a.id in(select b.org_id from aweb_user_organization b where b.user_id =#{userId})
     
     </select>
-    <select id="lisReportname">
-    	select report_id as id, report_id || '-' || report_name as name
+    <select id="listReportName" resultType="Map">
+    	select report_id                as "id", 
+    	report_id || '-' || report_name as "name",
+    	report_id                       as "data"
      from charge.RPT_BALANCE_DEF
      order by report_id
     </select>        

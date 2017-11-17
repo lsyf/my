@@ -3,6 +3,9 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,4 +69,25 @@ public class RptQueryFundsFeeController extends BaseReportController{
         return JsonResult.success(list);
     }
 
+    /**
+     * 导出
+     */
+    @PostMapping("export")
+    @ResponseBody
+    public JsonResult export(HttpServletRequest req,
+                           	 HttpServletResponse resp,
+                             String month,
+                             String reportId,
+                             String prctrName) {
+        //TODO 导出报表名称未定
+        try {
+            byte[] datas = RptQueryFundsFeeService.export(month, reportId, prctrName);
+            String name ="201710.xls";
+
+            downloadService.download(req, resp, datas,name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return JsonResult.success();
+    }
 }

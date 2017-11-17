@@ -1,5 +1,23 @@
 package com.loushuiyifan.report.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
@@ -7,17 +25,6 @@ import com.loushuiyifan.report.service.QueryTransLogService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.TransLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -102,14 +109,14 @@ public class QueryTransLogController extends BaseReportController {
     public void downLoadTran(HttpServletRequest req,
                              HttpServletResponse resp,
                              String month,
-                             String batchId) {
+                             @RequestParam("logs[]") String[] logs) {
         try {
-            String path = queryTransLogService.downLoadFile(batchId, month);
-
-            downloadService.download(req, resp, path);
-
+            for(String batchId : logs){
+            	String path = queryTransLogService.downLoadFile(batchId, month);
+            	downloadService.download(req, resp, path);
+            }
+        	
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 

@@ -1,14 +1,11 @@
 var table;
-var orgTree;
 var isTree;
 function initFundsFeeForm() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_prctrName", 50);
-    orgTree.Init(orgs);
-    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_reportId", 90);
+    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 90);
     isTree.Init(reportIds);
    
 }
@@ -16,10 +13,9 @@ function initFundsFeeForm() {
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptQueryFundsFee/list",
+        url: hostUrl + "rptAuditFundsFee/list",
         data: {
             month: $("#upload_month").val(),
-            prctrName: orgTree.val(),
             reportId: isTree.val()
         },
         dataType: "json",
@@ -41,34 +37,9 @@ function queryLog() {
 }
 
 
-//导出
-function exportData() {
-  var month = $("#upload_month").val();
-  var prctrName = orgTree.val();
-  var reportId = isTree.val();
- 
-  var names = ['month', 'reportId', 'prctrName'];
-  var params = [month, reportId, prctrName];
-
-  var form = $("#form_export");   //定义一个form表单
-  form.attr('action', hostUrl + 'rptQueryFundsFee/export');
-  form.empty();
-  names.forEach(function (v, i) {
-      var input = $('<input>');
-      input.attr('type', 'hidden');
-      input.attr('name', v);
-      input.attr('value', params[i]);
-      form.append(input);
-  });
-
-  form.submit();   //表单提交
-
-}
-
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
-
 
     //初始化Table
     oTableInit.Init = function () {
@@ -97,30 +68,38 @@ var TableInit = function () {
              
             data: [],
             columns: [{
-                field: 'indexCode',
+                field: 'txtMessage',
                 width:'80px',
-                title: '指标编码'
-            }, {
-                field: 'indexName',
-                width:'120px',
-                title: '指标名称'
-            }, {
-                field: 'balance',
-                width:'120px',
-                title: '金额'
+                title: '文本信息'
             }, {
                 field: 'prctr',
                 width:'120px',
                 title: '利润中心编码'
             }, {
-                field: 'prctrName',
-                width:'200px',
-                title: '利润中心简称'
-            }, {
                 field: 'sapFinCode',
                 width:'80px',
                 title: 'SAP科目编码'
-            }]
+            },{
+                field: 'sapFinCodeName',
+                width:'200px',
+                title: 'SAP科目名称'
+            }, {
+                field: 'kunnr',
+                width:'120px',
+                title: '客户编码'
+            }, {
+                field: 'kunnrName',
+                width:'120px',
+                title: '客户名称'
+            }, {
+                field: 'jieFbalance',
+                width:'120px',
+                title: '借方金额'
+            }, {
+                field: 'daiFbalance',
+                width:'120px',
+                title: '贷方金额'
+            } ]
         });
 
 

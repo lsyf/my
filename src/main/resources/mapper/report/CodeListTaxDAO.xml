@@ -20,6 +20,7 @@
            from code_list_tax a
           	where a.type_code = #{type}
             and a.code_level = #{lvl}
+      </select>
     <select id="listFromCodeListTax" resultType="com.loushuiyifan.report.bean.CodeListTax">
         select *
         from code_list_tax a
@@ -28,16 +29,23 @@
 
     </select>
 
-    <select id="listIncomeSourceByLvl" resultType="Map">
-		select 	a.code_id        as "id", 
-				a.code_id ||'-'||a.code_name      as "name",
-				a.code_id        as "data"
-           from code_list_tax a
-          	where a.type_code = #{type}
-            and a.code_level <![CDATA[ <= ]]> #{lvl}
-        order by a.code_level   ,a.code_id
-    </select>
-
+	<select id="listIncomeSourceByLvl" resultType="Map">
+		select a.code_id as "id",
+       a.code_id || '-' || a.code_name as "name",
+       a.code_id as "data"
+	  from code_list_tax a
+	 where a.type_code = #{type}
+	   and a.code_id != 90
+	   and a.code_level <![CDATA[ <= ]]> #{lvl}
+	union
+	select a.code_id as "id",
+	       a.code_id || '-' || a.code_name as "name",
+	       a.code_id as "data"
+	  from code_list_tax a
+	 where a.type_code = #{type}
+	   and a.code_id in ('9001', '9002')
+	</select>
+	
     <select id="codeNameById" resultType="java.lang.String">
 		select a.code_name  as codeName
 		  from code_list_tax a

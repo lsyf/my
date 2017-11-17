@@ -1,14 +1,11 @@
 var table;
-var orgTree;
 var isTree;
 function initFundsFeeForm() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_prctrName", 50);
-    orgTree.Init(orgs);
-    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_reportId", 90);
+    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 90);
     isTree.Init(reportIds);
    
 }
@@ -16,10 +13,9 @@ function initFundsFeeForm() {
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptQueryFundsFee/list",
+        url: hostUrl + "rptStatusFundsFee/list",
         data: {
             month: $("#upload_month").val(),
-            prctrName: orgTree.val(),
             reportId: isTree.val()
         },
         dataType: "json",
@@ -40,35 +36,9 @@ function queryLog() {
 
 }
 
-
-//导出
-function exportData() {
-  var month = $("#upload_month").val();
-  var prctrName = orgTree.val();
-  var reportId = isTree.val();
- 
-  var names = ['month', 'reportId', 'prctrName'];
-  var params = [month, reportId, prctrName];
-
-  var form = $("#form_export");   //定义一个form表单
-  form.attr('action', hostUrl + 'rptQueryFundsFee/export');
-  form.empty();
-  names.forEach(function (v, i) {
-      var input = $('<input>');
-      input.attr('type', 'hidden');
-      input.attr('name', v);
-      input.attr('value', params[i]);
-      form.append(input);
-  });
-
-  form.submit();   //表单提交
-
-}
-
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
-
 
     //初始化Table
     oTableInit.Init = function () {
@@ -97,29 +67,50 @@ var TableInit = function () {
              
             data: [],
             columns: [{
-                field: 'indexCode',
+                field: 'reportName',
                 width:'80px',
-                title: '指标编码'
+                title: '报表名称'
             }, {
-                field: 'indexName',
+                field: 'status',
                 width:'120px',
-                title: '指标名称'
+                title: '报表状态',
+                formatter:function(value,row,index){
+                	var a ='';
+                	if(value =="一审"){
+                		var a = '<span style="color:#00CD00">'+value+'</span>';  
+                	}else if(value =="二审"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="准备数据"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="准备生成文件"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="生成文件成功"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="通知集团"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="集团入库"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="通知集团失败"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="集团入库失败"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="过账成功"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="过账失败"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="SAP冲销"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else if(value =="SAP删除"){
+                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
+                	}else{
+                		var a = '<span style="color:#BEBEBE">'+value+'</span>'; 
+                	}
+                	return a;
+                }
             }, {
-                field: 'balance',
+                field: 'voucherCode',
                 width:'120px',
-                title: '金额'
-            }, {
-                field: 'prctr',
-                width:'120px',
-                title: '利润中心编码'
-            }, {
-                field: 'prctrName',
-                width:'200px',
-                title: '利润中心简称'
-            }, {
-                field: 'sapFinCode',
-                width:'80px',
-                title: 'SAP科目编码'
+                title: '凭证号'
             }]
         });
 

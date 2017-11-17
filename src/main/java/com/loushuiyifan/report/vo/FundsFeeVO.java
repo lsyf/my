@@ -11,4 +11,5 @@ public class FundsFeeVO {
 	String prctr  ;    //利润中心编码
 	String prctrName ;  //利润中心简称
 	String sapFinCode ; //SAP科目编码
+	
 }

@@ -5,20 +5,36 @@
 		select INDEX_CODE as "indexCode" ,
 	       INDEX_NAME     as "indexName" ,
 	       to_char(BALANCE,'fm999,999,999,990.00') as "balance" ,
-	       PRCTR          as "prctr",
+	       prctr          ,
 	       PRCTR_NAME     as "prctrName",
 	       SAP_FIN_CODE   as "sapFinCode"
 		  from charge.RPT_BALANCE_DATA
 		 where report_month =#{month}
-		<if test=" prctrName =='全省' ">
-		and PRCTR_NAME =#{prctrName}
+		<if test='prctrName !="0" ' >
+		and prctr =#{prctrName}
 		</if>
-		<if test='reportId =="0" '>
+		<if test='reportId !="0" '>
 		and REPORT_ID = #{reportId}
 		</if>
 	 	order by report_id
 	</select> 
 	
-	
+	<select id="queryLogForMap" resultType="Map" >
+		select INDEX_CODE as "indexCode" ,
+	       INDEX_NAME     as "indexName" ,
+	       to_char(BALANCE,'fm999,999,999,990.00') as "balance" ,
+	       prctr          ,
+	       PRCTR_NAME     as "prctrName",
+	       SAP_FIN_CODE   as "sapFinCode"
+		  from charge.RPT_BALANCE_DATA
+		 where report_month =#{month}
+		<if test=' prctrName !="0" ' >
+		and prctr =#{prctrName}
+		</if>
+		<if test='reportId !="0" '>
+		and REPORT_ID = #{reportId}
+		</if>
+	 	order by report_id
+	</select> 
 	
 </mapper>

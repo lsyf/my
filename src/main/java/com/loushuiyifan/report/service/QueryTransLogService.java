@@ -82,8 +82,8 @@ public class QueryTransLogService {
         if (fileName == null) {
             throw new ReportException("电子档案文件为空");
         }
-
-        Path path = Paths.get(reportDownloadService.configLocation(), month);
+        //TODO 待确定电子档案生成gz文件目录,文件按月份归档
+        Path path = Paths.get("");
         if (!Files.exists(path)) {
             Files.createDirectory(path);
         }

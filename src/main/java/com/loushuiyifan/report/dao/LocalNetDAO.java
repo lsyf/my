@@ -45,18 +45,17 @@ public interface LocalNetDAO extends MyMapper<Organization> {
      * 查询利润中心
      * @return
      */
-    List<Map<String, String>> listPrctrNameByname(@Param("name") String name,
-    		                                      @Param("data") String data);
+    List<Map<String, String>> listPrctrName(@Param("name") String name);
     /**
      * 根据用户Id得到所在地市
      * @param userId
      * @return
      */
-    List<CommonVO> listNameById(Long userId);
+    List<CommonVO> listNameById();
     
     /**
      * 查询报表名称
      * @return
      */
-    List<Map<String, String>> lisReportname();
+    List<Map<String, String>> listReportName();
 }
