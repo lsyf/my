@@ -67,6 +67,8 @@ var TableInit = function () {
              
             data: [],
             columns: [{
+            	checkbox:true
+            },{
                 field: 'reportName',
                 width:'80px',
                 title: '报表名称'

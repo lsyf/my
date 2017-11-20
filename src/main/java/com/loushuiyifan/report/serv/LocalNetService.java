@@ -155,6 +155,8 @@ public class LocalNetService {
     	Map<String, String> m =Maps.newHashMap();  
     	m.put("id", "0");
     	m.put("name", "全省");
+    	m.put("data", "0");
+    	m.put("lvl", "1");
     	list.add(m);
     	for(CommonVO co : l){
     		String data =co.getData();
@@ -185,6 +187,8 @@ public class LocalNetService {
     	Map<String, String> m =Maps.newHashMap();  
     	m.put("id", "0");
     	m.put("name", "全部");
+    	m.put("data", "0");
+    	m.put("lvl", "1");
     	list.add(m);
     	List<Map<String, String>> li =localNetDAO.listReportName();
     	list.addAll(li);

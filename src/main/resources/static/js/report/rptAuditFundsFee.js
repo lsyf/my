@@ -36,6 +36,49 @@ function queryLog() {
 
 }
 
+//四审
+function changeAuditStatus() {
+    var month = $("#upload_month").val();
+    var status = $("#upload_state").val()
+
+    editAlert('警告', '是否确定:  账期' + month + ", 状态:" + status, '更新状态', function () {
+    	
+    	var selects = $('#table_upload').bootstrapTable('getSelections');
+    	if(selects.length==0){
+    		toastr.info('未选中任何数据');
+    		return;
+    	}
+    	var logs = [];
+    	selects.forEach(function(data,i){
+    		logs.push(data.subId);
+    	});
+    	
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "queryIncomeState/changeState",
+            data: {
+                logs: logs,
+                status: status
+            },
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('更新成功');
+                    hideAlert();
+
+                    queryLog()
+                } else {
+                    toastr.error('更新失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
 
 //Table初始化
 var TableInit = function () {
@@ -68,6 +111,8 @@ var TableInit = function () {
              
             data: [],
             columns: [{
+            	checkbox:true
+            },{
                 field: 'txtMessage',
                 width:'80px',
                 title: '文本信息'
