@@ -1,6 +1,8 @@
 package com.loushuiyifan.report.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +37,11 @@ public class RptAuditFundsFeeService {
 	/**
 	 * 报表审核
 	 */
-	public void  auditReport(String month, String reportId){
+	public void  auditReport(String month, String reportId)throws Exception{
 		
+		String c_rpt_sett_audit_id =(reportId+ month).toString();
+		String c_acct_month =month;
+		String c_report_id =reportId;
 		
 		
 	}
