@@ -1,5 +1,6 @@
 package com.loushuiyifan.report.service;
 
+import com.loushuiyifan.common.util.AESSecurityUtils;
 import com.loushuiyifan.config.poi.PoiRead;
 import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.bean.ExtImportLog;
@@ -8,11 +9,15 @@ import com.loushuiyifan.report.dao.ExtImportLogDAO;
 import com.loushuiyifan.report.dao.RptImportDataChennelDAO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
+import com.loushuiyifan.ws.itsm.C4Detail;
+import com.loushuiyifan.ws.itsm.ITSMClient;
+import com.loushuiyifan.ws.itsm.ITSMRequest;
+import com.loushuiyifan.ws.itsm.ITSMResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -22,11 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -44,11 +52,16 @@ public class ImportIncomeDataService {
     @Autowired
     ExtImportLogDAO extImportLogDAO;
 
-    @Autowired
-    SqlSessionFactory sqlSessionFactory;
 
     @Autowired
     DateService dateService;
+
+    @Autowired
+    CodeListTaxService codeListTaxService;
+
+    @Autowired
+    ITSMClient itsmClient;
+
 
     /**
      * 解析入库
@@ -89,7 +102,7 @@ public class ImportIncomeDataService {
         log.setIncomeSoure(incomeSource);
         log.setFileName(filename);
         log.setType(ReportConfig.RptImportType.INCOME_DATA.toString());
-        extImportLogDAO.insert(log);
+        extImportLogDAO.insertSelective(log);
 
         //校验导入数据指标
         SPDataDTO dto = new SPDataDTO();
@@ -145,7 +158,22 @@ public class ImportIncomeDataService {
      */
     public List<ImportDataLogVO> list(String latnId, String month) {
         String type = ReportConfig.RptImportType.INCOME_DATA.toString();
-        return rptImportDataChennelDAO.listIncomeDataLog(latnId, month, type);
+        List<ImportDataLogVO> list = rptImportDataChennelDAO.listIncomeDataLog(latnId, month, type);
+
+        String eipName = "&eipName=" + ReportConfig.ITSM_ACCOUNT;
+
+        String SecretKey = "67987452DFE86867A0F176E7035880BB";
+        long currentTimeMillis = System.currentTimeMillis();
+        long currentAvaliableTimeMillis = currentTimeMillis / 1000 / 300;
+        String tc = "&tc=" +
+                AESSecurityUtils.encode(String.valueOf(currentAvaliableTimeMillis), SecretKey);
+
+        String server = "http://134.96.188.67:7002";
+        for (ImportDataLogVO vo : list) {
+            String url = vo.getItsmUrl();
+            vo.setItsmUrl(server + url + eipName + tc);
+        }
+        return list;
     }
 
     /**
@@ -208,6 +236,76 @@ public class ImportIncomeDataService {
         }
     }
 
+    /**
+     * 送审
+     *
+     * @param logIds
+     */
+    public void itsm(Long[] logIds, Long userId) {
+        //首先保证不能重复送审，策略为查询送审状态是否符合
+        ExtImportLog log = extImportLogDAO.selectDistinctData(logIds);
+        if (log == null || !"1".equals(log.getIsItsm()) || !"0".equals(log.getItsmStatus())) {
+            throw new ReportException("无法送审 或 重复送审");
+        }
+
+        //先更改状态,防止重复送审
+        int num = extImportLogDAO.updateItsmStatus(logIds, "1", "0");
+        if (num == 0) {
+            throw new ReportException("重复送审");
+        }
+        try {
+            //然后查询 流水号的 地市和账期
+            String month = log.getAcctMonth();
+            Integer latnId = log.getLatnId();
+
+
+            //统计本次审核金额，以及本月导入金额
+            Map<String, String> amountMap = extImportLogDAO.calcAmount(logIds, month);
+
+            //按照县分收入来源统计本次审核金额
+            List<C4Detail> c4Details = extImportLogDAO.calcC4Detail(logIds, month);
+
+            //送审数据处理
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < logIds.length; i++) {
+                list.add(logIds[i].toString());
+            }
+            String area = codeListTaxService.getAreaName(latnId + "");
+            String title = String.format("%s账期%s手工收入审批%s",
+                    month, area, LocalDateTime.now().format(DateService.YYYYMMDDHHMMSS));
+
+            //送审操作
+            //保存送审日志
+            ITSMRequest request = new ITSMRequest();
+            request.setTitle(title);
+            request.setEipAccount(ReportConfig.ITSM_ACCOUNT);
+            request.setMonth(month);
+            request.setLatnId(latnId + "");
+            request.setImportLogId(list);
+            request.setSumAmount(amountMap.get("sumAmount"));
+            request.setCurAmount(amountMap.get("curAmount"));
+            request.setDetail(c4Details);
+            request.setRemark(title);
+
+            ITSMResponse response = itsmClient.call(request, month, userId);
+
+            //成功则更改单号
+            String itsmOrderNo = response.getItsmOrderId();
+            String itsmUrl = URLDecoder.decode(response.getItsmUrl(), "utf-8");
+            extImportLogDAO.updateItsmInfo(logIds, itsmOrderNo, itsmUrl);
+
+        } catch (Exception e) {
+            String error = e.getMessage();
+            //失败后回退状态
+            if (extImportLogDAO.updateItsmStatus(logIds, "0", "1") == 0) {
+                error += " ,回退状态失败!";
+            }
+            logger.error(error, e);
+            throw new ReportException("发送送审失败:" + error);
+        }
+
+    }
+
 
     /**
      * 收入数据解析类
@@ -226,7 +324,15 @@ public class ImportIncomeDataService {
                 Row row = sheet.getRow(y);
                 RptImportDataChennel bean = new RptImportDataChennel();
                 for (int x = startX; x <= row.getLastCellNum(); x++) {
-                    String data = getCellData(row.getCell(x), evaluator);
+                    String data = "";
+                    try {
+//                        data = getCellData(row.getCell(x), evaluator);
+                        data = getXLSCellValue(row.getCell(x));
+                    } catch (Exception e) {
+                        logger.info(sheet.getSheetName());
+                        logger.info("{}:{}", y, x);
+                        return new ArrayList<>();
+                    }
                     if (StringUtils.isEmpty(data)) {
                         continue;
                     }

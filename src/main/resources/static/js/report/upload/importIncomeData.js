@@ -11,11 +11,97 @@ function initIncomeData() {
 
 
     initForm();
+
 }
 
 function queryLog() {
-    //TODO 待完成
-    toastr.info('查询导入');
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "importIncomeData/list",
+        data: {
+            month: $('#upload_month').val(),
+            latnId: orgTree.val()
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+
+                table.load(r.data);
+            } else {
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+
+}
+
+function uploadData() {
+    $('#form_upload').submit();
+}
+
+function itsmData() {
+    var selects = table.getSelections();
+    if (selects == null || selects.length == 0) {
+        toastr.info('未选中任何流水号');
+        return;
+    }
+
+    var logIds = [];
+    var txt = "";
+    var temp;
+    var error = null;
+    selects.forEach(function (d, i) {
+        //不符合送审  或者已送审 校验
+        if (d.isItsm != '1' || d.itsmStatus != '0') {
+            error = '不符合送审资格(无需送审或已送审)';
+            return;
+        }
+        //地市统一校验
+        if (i == 0) {
+            temp = d.city;
+        } else if (temp !== d.city) {
+            error = '送审地市不一致';
+            return;
+        }
+
+        logIds.push(d.logId);
+        txt += d.logId + ', '
+    });
+    if (error != null) {
+        toastr.info(error);
+        return;
+    }
+
+    editAlert('警告', '是否确定送审流水号: ' + txt, '送审', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "importIncomeData/itsm",
+            data: {logIds: logIds},
+            dataType: "json",
+            beforeSend: function () {
+                toastr.info('送审中...');
+                $('#btn_itsm').button("loading");
+                hideAlert();
+            },
+            success: function (r) {
+                $('#btn_itsm').button("reset");
+                if (r.state) {
+                    toastr.info('送审成功');
+                    queryLog();
+                } else {
+                    toastr.error('送审失败' + r.msg);
+                }
+            },
+            error: function (result) {
+                $('#btn_itsm').button("reset");
+                toastr.error('请求失败');
+            }
+        });
+    });
+    showAlert();
 
 }
 
@@ -48,15 +134,15 @@ function initForm() {
                         $('#form_upload').resetForm();
                         orgTree.reset();
 
-                        toastr.info('提交成功');
-                        table.refresh();
+                        toastr.info('导入成功');
+                        queryLog();
                     } else {
-                        toastr.error('提交失败:' + r.msg);
+                        toastr.error('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastr.error('提交失败');
+                    toastr.error('导入失败');
                     toastr.error(r);
                 }
             });
@@ -132,7 +218,7 @@ var TableInit = function () {
                 checkbox: true,
                 align: 'center',
                 valign: 'middle'
-            },{
+            }, {
                 field: 'logId',
                 title: '流水号'
             }, {
@@ -151,6 +237,42 @@ var TableInit = function () {
                 field: 'userId',
                 title: '操作人ID'
             }, {
+                field: 'isItsm',
+                title: '送审资格',
+                formatter: function (v) {
+                    if (v == '1')
+                        return '需要送审';
+                    else
+                        return '无需送审';
+                }
+            }, {
+                field: 'itsmStatus',
+                title: '送审状态',
+                formatter: function (v) {
+                    switch (v) {
+                        case '0':
+                            return null;
+                        case '1':
+                            return '待审核';
+                        case '2':
+                            return '审核成功';
+                        case '3':
+                            return '审核失败';
+                    }
+                }
+            }, {
+                field: 'itsmOrderNo',
+                title: 'ITSM单号'
+            }, {
+                field: 'itsmUrl',
+                title: 'TISM地址',
+                formatter: function () {
+                    return [
+                        '<button type="button" class="view btn btn-primary btn-xs">查看</button>'
+                    ].join('');
+                },
+                events: operateEvents
+            }, {
                 field: 'remark',
                 title: '导入说明'
             }]
@@ -159,11 +281,22 @@ var TableInit = function () {
 
     };
 
+    //操作 监听
+    window.operateEvents = {
+        'click .view': function (e, value, row, index) {
+            console.log(row.itsmUrl)
+            window.open(row.itsmUrl)
+        }
+    };
+
     //加载数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);
     };
 
+    oTableInit.getSelections = function () {
+        return $('#table_upload').bootstrapTable('getSelections');
+    };
 
 
     return oTableInit;

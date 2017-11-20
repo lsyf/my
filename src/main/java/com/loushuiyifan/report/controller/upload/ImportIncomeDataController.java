@@ -117,6 +117,18 @@ public class ImportIncomeDataController extends BaseReportController {
     }
 
     /**
+     * 收入导入-itsm送审
+     */
+    @PostMapping("itsm")
+    @ResponseBody
+    public JsonResult itsm(@RequestParam("logIds[]") Long[] logIds,
+                           @ModelAttribute("user") User user) {
+        importIncomeDataService.itsm(logIds,user.getId());
+        return JsonResult.success();
+    }
+
+
+    /**
      * 收入导入-提交
      */
     @PostMapping("commit")

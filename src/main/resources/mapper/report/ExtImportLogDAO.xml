@@ -1,9 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.ExtImportLogDAO">
+    <update id="updateItsmStatus">
+        update ext_import_log a
+        set a.itsm_status = #{status}
+        where a.log_id in
+        <include refid="foreach_logIds"/>
+        and a.itsm_status = #{initStatus}
+    </update>
+    <update id="updateItsmInfo">
+        update ext_import_log a
+        set a.itsm_order_no = #{itsmOrderNo},
+        a.itsm_url = #{itsmUrl}
+        where a.log_id in
+        <include refid="foreach_logIds"/>
+    </update>
 
     <select id="nextvalKey" resultType="java.lang.Long">
         SELECT SEQ_IMPORT_LOG_ID.nextVal from dual
+    </select>
+
+    <sql id="foreach_logIds">
+        <foreach collection="logIds" item="logId" open="(" close=")" separator=",">
+            #{logId}
+        </foreach>
+    </sql>
+
+    <select id="selectDistinctData" resultType="com.loushuiyifan.report.bean.ExtImportLog">
+        select distinct a.acct_month, a.latn_id, a.is_itsm, a.itsm_status
+        from ext_import_log a
+        where a.log_id in
+        <include refid="foreach_logIds"/>
+    </select>
+
+    <select id="calcAmount" resultType="map">
+        select to_char(SUM(case
+        when a.log_id in
+        <include refid="foreach_logIds"/>
+        then
+        a.INDEX_DATA
+        end)) as "curAmount",
+        to_char(SUM(a.INDEX_DATA)) as "sumAmount"
+        from rpt_web.Rpt_Import_Data_Channel a
+        where a.acct_month = #{month}
+        and exists
+        (select 1
+        from rpt_web.ext_import_log
+        where acct_month = #{month}
+        and log_id in
+        <include refid="foreach_logIds"/>
+        and income_soure = a.income_source
+        and is_itsm = 1)
+        and a.ver_code in (select index_code
+        from rpt_repfield_def_channel
+        where RPT_NO = 1701
+        and group_Id = '0'
+        and index_id <![CDATA[ <= ]]> '17011234')
+
+    </select>
+
+    <select id="calcC4Detail" resultType="com.loushuiyifan.ws.itsm.C4Detail">
+        select b.name as "c4Name",
+        a.income_source as "incomeName",
+        SUM(a.INDEX_DATA) as "amount"
+        from rpt_web.Rpt_Import_Data_Channel a,
+        rpt_web.AWEB_ORGANIZATION b
+        where a.acct_month = #{month}
+        and log_id in
+        <include refid="foreach_logIds"/>
+        and a.ver_code in (select index_code
+        from rpt_repfield_def_channel
+        where RPT_NO = 1701
+        and group_Id = '0'
+        and index_id  <![CDATA[ <= ]]>  '17011234')
+        and b.type = 'local_net'
+        and a.area_id = b.data
+        group by b.name, a.income_source
     </select>
 
 

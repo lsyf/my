@@ -36,9 +36,9 @@ public interface CodeListTaxDAO extends MyMapper<CodeListTax> {
     /**
      * 根据地市Id获得codeName
      *
-     * @param type
+     * @param id
      * @return
      */
-    String codeNameById(String type);
+    String codeNameById(String id);
 
 }

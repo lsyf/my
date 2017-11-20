@@ -129,8 +129,10 @@ public abstract class AbstractPoiRead<E> implements PoiRead<E> {
      * @return
      */
     protected String getCellData(Cell cell, FormulaEvaluator evaluator) {
-
-        return dataFormatter.formatCellValue(cell,evaluator);
+        if (cell != null && cell.getCellTypeEnum() == CellType.FORMULA) {
+            return cell.getStringCellValue();
+        }
+        return dataFormatter.formatCellValue(cell, evaluator);
     }
 
     /**
