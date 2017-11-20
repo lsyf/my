@@ -254,4 +254,22 @@ public class DateService {
         }
 
     }
+    
+    /**
+     * 校验 能否修改收入来源完成度状态
+     */
+    public void checkIncomeSourceProcess() {
+
+    	//TODO 之前为多少，测试暂时改为多少
+        //首先当前导入时间校验
+        String limitTime = dictionaryService.getKidDataByName(
+                ReportConfig.RptAppParam.ROOT.toString(),
+                ReportConfig.RptAppParam.TIME_UPDATE_PROCESS.toString());
+        String now = LocalDateTime.now().format(DDHH);
+        if (now.compareTo(limitTime) > 0) {
+            throw new ReportException("超出当前时间限制");
+        }
+
+
+    }
 }

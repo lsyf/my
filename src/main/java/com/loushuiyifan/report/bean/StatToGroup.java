@@ -7,14 +7,14 @@ import lombok.Data;
 @Data
 @Table(name="stat_to_group")
 public class StatToGroup {
-	private String batch_id;
-	private String sub_id;
-	private String acct_month;
-	private Long latn_id;
-	private String rpt_type;
-	private Long rpt_case_id;
-	private String create_date;
+	private String batchId;
+	private String subId;
+	private String acctMonth;
+	private Long latnId;
+	private String rptType;
+	private Long rptCaseId;
+	private String createDate;
 	private String status;
-	private String lst_upd;
-	private String income_source;
+	private String lstUpd;
+	private String incomeSource;
 }

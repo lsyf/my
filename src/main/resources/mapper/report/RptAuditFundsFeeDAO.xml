@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptAuditFundsFeeDAO">
+	<select id="listFundsFee" resultType="com.loushuiyifan.report.vo.FundsAuditVO" >
+		<![CDATA[
+		select txt_message   as txtMessage,
+           prctr,
+           sap_fin_code      as sapFinCode,
+           sap_fin_code_name as sapFinCodeName,
+           kunnr ,
+           kunnr_name as kunnrName,
+           case
+             when balance < 0 then
+              to_char(-balance,'fm999,999,999,990.00') 
+           end as jieFbalance,
+           case
+             when balance >= 0 then
+              to_char(balance,'fm999,999,999,990.00')
+           end as daiFbalance
+      from charge.RPT_BALANCE_DATA
+     where report_month =#{month} 
+      ]]>  
+    <if test=' reportId !="0" '>
+    	and REPORT_ID = #{reportId}
+    </if>
+	 	
+     union
+     <![CDATA[ select '',
+		       '',
+		       '',
+		       '',
+		       '',
+		       '',
+		       to_char(sum(case
+		                     when BALANCE < 0 then
+		                      -BALANCE 
+		                   end),
+		               'fm999,999,999,990.00') as jieFbalance,
+		       to_char(sum(case
+		                     when BALANCE >= 0 then
+		                      BALANCE
+		                   end),
+		               'fm999,999,999,990.00') as daiFbalance
+		  from charge.RPT_BALANCE_DATA
+		 where report_month = #{month}   
+	   ]]>	  
+	  <if test=' reportId !="0" '>
+    	and REPORT_ID = #{reportId}
+      </if>
+	</select> 
+			
+</mapper>
