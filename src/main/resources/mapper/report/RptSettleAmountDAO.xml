@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptSettleAmountDAO">
+	<select id="listData" resultType="com.loushuiyifan.report.vo.SettleAmountDataVO" >
+		   select b.code_name as val,
+		   sum(decode(a.income_source, '0305', a.zb_value)) as val1,
+           sum(decode(a.income_source, '0306', a.zb_value)) as val2,
+           sum(decode(a.income_source, '0307', a.zb_value)) as val3,
+           
+           sum(decode(a.income_source, '10', a.zb_value))   as val4,
+           sum(decode(a.income_source, '1001', a.zb_value)) as val5,
+           sum(decode(a.income_source, '1002', a.zb_value)) as val6,
+           sum(decode(a.income_source, '1003', a.zb_value)) as val7,
+           
+           sum(decode(a.income_source, '20', a.zb_value))   as val8,
+           sum(decode(a.income_source, '2001', a.zb_value)) as val9,
+           sum(decode(a.income_source, '2002', a.zb_value)) as val10,
+           sum(decode(a.income_source, '2003', a.zb_value)) as val11,
+           sum(decode(a.income_source, '2004', a.zb_value)) as val12,
+           
+           sum(decode(a.income_source, '30', a.zb_value))   as val13,
+           sum(decode(a.income_source, '3001', a.zb_value)) as val14,
+           sum(decode(a.income_source, '3002', a.zb_value)) as val15,
+           sum(decode(a.income_source, '3003', a.zb_value)) as val16,
+           sum(decode(a.income_source, '3004', a.zb_value)) as val17,
+           sum(decode(a.income_source, '3005', a.zb_value)) as val18,
+           
+           sum(decode(a.income_source, '40', a.zb_value))   as val19,
+           sum(decode(a.income_source, '4001', a.zb_value)) as val20,
+           sum(decode(a.income_source, '4002', a.zb_value)) as val21,
+           sum(decode(a.income_source, '4003', a.zb_value)) as val22,
+           sum(decode(a.income_source, '4004', a.zb_value)) as val23,
+           sum(decode(a.income_source, '60', a.zb_value))   as val24,
+           sum(decode(a.income_source, '6001', a.zb_value)) as val25,
+           sum(decode(a.income_source, '6002', a.zb_value)) as val26,
+           sum(decode(a.income_source, '6003', a.zb_value)) as val27,
+           sum(decode(a.income_source, '6004', a.zb_value)) as val28,
+           sum(decode(a.income_source, '6005', a.zb_value)) as val29
+		      
+		  from stat_repfield_content_channel a, code_list_tax b
+		 where a.acct_month = #{month}
+		   and a.zb_code= #{zbCode}
+		   and a.cust_id='0'
+		   and a.income_source in('0305','0306','0307','10','1001','1002','1003','20','2001','2002','2003','2004',
+                   '30','3001','3002','3003','3004','3005','40','4001','4002','4003','4004','60','6001','6002','6003','6004','6005' )
+		   and b.type_code = 'local_net'
+		   and b.code_level=2 
+		   and a.local_net = b.code_id 
+		   <choose>
+		     <when test='latnId !="99999" and latnId =="0" ' >
+				and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="1000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="2000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="3000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="4000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+	         <otherwise>
+	         	and b.code_id= #{latnId}        
+	         </otherwise>
+	     </choose>
+		 group by b.code_name
+
+	</select> 
+	<select id="listDataForMap" resultType="Map" >
+		   select b.code_name as val,
+		   sum(decode(a.income_source, '0305', a.zb_value)) as val1,
+           sum(decode(a.income_source, '0306', a.zb_value)) as val2,
+           sum(decode(a.income_source, '0307', a.zb_value)) as val3,
+           
+           sum(decode(a.income_source, '10', a.zb_value))   as val4,
+           sum(decode(a.income_source, '1001', a.zb_value)) as val5,
+           sum(decode(a.income_source, '1002', a.zb_value)) as val6,
+           sum(decode(a.income_source, '1003', a.zb_value)) as val7,
+           
+           sum(decode(a.income_source, '20', a.zb_value))   as val8,
+           sum(decode(a.income_source, '2001', a.zb_value)) as val9,
+           sum(decode(a.income_source, '2002', a.zb_value)) as val10,
+           sum(decode(a.income_source, '2003', a.zb_value)) as val11,
+           sum(decode(a.income_source, '2004', a.zb_value)) as val12,
+           
+           sum(decode(a.income_source, '30', a.zb_value))   as val13,
+           sum(decode(a.income_source, '3001', a.zb_value)) as val14,
+           sum(decode(a.income_source, '3002', a.zb_value)) as val15,
+           sum(decode(a.income_source, '3003', a.zb_value)) as val16,
+           sum(decode(a.income_source, '3004', a.zb_value)) as val17,
+           sum(decode(a.income_source, '3005', a.zb_value)) as val18,
+           
+           sum(decode(a.income_source, '40', a.zb_value))   as val19,
+           sum(decode(a.income_source, '4001', a.zb_value)) as val20,
+           sum(decode(a.income_source, '4002', a.zb_value)) as val21,
+           sum(decode(a.income_source, '4003', a.zb_value)) as val22,
+           sum(decode(a.income_source, '4004', a.zb_value)) as val23,
+           sum(decode(a.income_source, '60', a.zb_value))   as val24,
+           sum(decode(a.income_source, '6001', a.zb_value)) as val25,
+           sum(decode(a.income_source, '6002', a.zb_value)) as val26,
+           sum(decode(a.income_source, '6003', a.zb_value)) as val27,
+           sum(decode(a.income_source, '6004', a.zb_value)) as val28,
+           sum(decode(a.income_source, '6005', a.zb_value)) as val29
+		      
+		  from stat_repfield_content_channel a, code_list_tax b
+		 where a.acct_month = #{month}
+		   and a.zb_code= #{zbCode}
+		   and a.cust_id='0'
+		   and a.income_source in('0305','0306','0307','10','1001','1002','1003','20','2001','2002','2003','2004',
+                   '30','3001','3002','3003','3004','3005','40','4001','4002','4003','4004','60','6001','6002','6003','6004','6005' )
+		   and b.type_code = 'local_net'
+		   and b.code_level=2 
+		   and a.local_net = b.code_id 
+		   <choose>
+		     <when test='latnId !="99999" and latnId =="0" ' >
+				and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="1000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="2000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="3000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="4000" '>
+		     	and b.parent_code_id= #{latnId}
+		     </when>
+	         <otherwise>
+	         	and b.code_id= #{latnId}        
+	         </otherwise>
+	     </choose>
+		 group by b.code_name
+
+	</select>
+	<select id="collectData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_BALANCE.p_quit_audit(
+         #{month,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+	
+	<select id="listCodeName" resultType="String">
+	select a.code_name
+  from code_list_tax a
+ 	where a.type_code = 'income_source2017'
+   	and a.code_id in('0305','0306','0307','10','1001','1002','1003','20','2001','2002','2003','2004',
+                     '30','3001','3002','3003','3004','3005','40','4001','4002','4003','4004',
+                     '60','6001','6002','6003','6004','6005' )
+	</select>
+	
+</mapper>

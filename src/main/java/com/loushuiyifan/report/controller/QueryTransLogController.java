@@ -84,11 +84,11 @@ public class QueryTransLogController extends BaseReportController {
     @PostMapping("export")
     @ResponseBody
     public JsonResult export(HttpServletRequest req,
-                                       HttpServletResponse resp,
-                                       String month,
-                                       String latnId,
-                                       String incomeSource,
-                                       String taxtId) {
+                           	HttpServletResponse resp,
+                           	String month,
+                           	String latnId,
+                          	String incomeSource,
+                          	String taxtId) {
         //TODO
         try {
             byte[] datas = queryTransLogService.export(month, latnId, incomeSource, taxtId);

@@ -13,6 +13,14 @@
 		
 	</select> 
 	
-	
+	<select id="quitData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_BALANCE.p_quit_audit(
+         #{userId,mode=IN,jdbcType=NUMERIC},
+         #{month,mode=OUT,jdbcType=VARCHAR})}
+         #{reportId,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
 	
 </mapper>

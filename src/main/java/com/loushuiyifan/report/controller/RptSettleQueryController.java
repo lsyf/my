@@ -3,6 +3,9 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,70 +19,65 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptStatusFundsFeeService;
+import com.loushuiyifan.report.service.RptSettleQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.report.vo.FundsStatusVO;
+import com.loushuiyifan.report.vo.FundsFeeVO;
+import com.loushuiyifan.report.vo.SettleDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
 @Controller
-@RequestMapping("rptStatusFundsFee")
-public class RptStatusFundsFeeController extends BaseReportController{
-	private static final Logger logger = LoggerFactory.getLogger(RptStatusFundsFeeController.class);
+@RequestMapping("rptSettleQuery")
+public class RptSettleQueryController extends BaseReportController{
+	private static final Logger logger = LoggerFactory.getLogger(RptSettleQueryController.class);
 	@Autowired
-	RptStatusFundsFeeService rptStatusFundsFeeFeeService;
+	RptSettleQueryService rptSettleQueryService;
 	/**
-     * 资金缴拨状态查询界面
+     * 集团结算报表查询界面
      *
      * @return
      */
     @GetMapping
-    public String index(ModelMap map) {
-        
+    public String index(ModelMap map, @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+
         //页面条件
         List<CommonVO> months = dateService.aroundMonths(5);
-        List<Map<String, String>> reportIds =localNetService.listReportName();
+        List<Map<String, String>> reportIds =rptSettleQueryService.listReportName();
         map.put("months", months);
         map.put("reportIds", reportIds);
-        return "report/rptStatusFundsFee";
+        return "report/rptSettleQuery";
     }
 
     /**
      * 报表查询
      * @param month
      * @param reportId
-     * @param prctrName
      * @return
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult listQuery(String month, String reportId){
-    	List<FundsStatusVO> list =rptStatusFundsFeeFeeService.list(month, reportId);
-       
+    public JsonResult list(String month, String reportId ){
+    	List<SettleDataVO> list =rptSettleQueryService.listSettle(month, reportId);
 
         return JsonResult.success(list);
     }
 
-    /**
-     * 回退
-     */
-    @PostMapping("quit")
-    @ResponseBody
-    public JsonResult doQuit(String month, String reportId, @ModelAttribute("user") User user){
-    	//TODO
-    	 Long userId = user.getId();
-    	 rptStatusFundsFeeFeeService.quit(userId, month, reportId);
-    	 
-        return JsonResult.success();
-    }
+   /**
+    * 详情查看
+    */
+    //TODO
     
     /**
-     * 下载电子档案附件
+     * 下载
      */
-    @PostMapping("download")
-    @ResponseBody
-    public JsonResult loadFile(String month, String reportId){
-    	//TODO
-
-        return JsonResult.success();
-    }
+    //TODO
+    
+    
+    /**
+     * 审核
+     */
+    //TODO
+    
+    
+    
 }

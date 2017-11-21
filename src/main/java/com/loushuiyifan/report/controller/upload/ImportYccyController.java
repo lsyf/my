@@ -112,7 +112,7 @@ public class ImportYccyController extends BaseReportController {
         Long userId = user.getId();
        
         dateService.checkDelYccy(month);
-        importYccyService.delete(Math.toIntExact(userId), logId);
+        importYccyService.delete(userId, logId);
         return JsonResult.success();
     }
 

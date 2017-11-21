@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/static}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>集团结算审批流</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="stylesheet"
+          href="../../static/plugins/bootstrap-table/bootstrap-table.min.css"
+          th:href="@{/static/plugins/bootstrap-table/bootstrap-table.min.css}">
+    <script src="../../static/plugins/bootstrap-table/bootstrap-table.min.js"
+            th:src="@{/static/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script src="../../static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"
+            th:src="@{/static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+
+    <script src="../../static/plugins/moment/moment-with-locales.min.js"
+            th:src="@{/static/plugins/moment/moment-with-locales.min.js}"></script>
+
+
+    <link rel="stylesheet"
+          href="../../static/plugins/zTree/zTreeStyle.css"
+          th:href="@{/static/plugins/zTree/zTreeStyle.css}">
+    <script src="../../static/plugins/zTree/jquery.ztree.all.min.js"
+            th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
+
+    <!--fileinput-->
+    <link href="../../static/plugins/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet"
+          type="text/css" th:href="@{/static/plugins/bootstrap-fileinput/css/fileinput.min.css}"/>
+    <link href="../../static/plugins/bootstrap-fileinput/themes/explorer/theme.min.css" media="all" rel="stylesheet"
+          type="text/css" th:href="@{/static/plugins/bootstrap-fileinput/themes/explorer/theme.min.css}"/>
+    <script src="../../static/plugins/bootstrap-fileinput/js/fileinput.min.js"
+            th:src="@{/static/plugins/bootstrap-fileinput/js/fileinput.min.js}"></script>
+    <script src="../../static/plugins/bootstrap-fileinput/js/locales/zh.js"
+            th:src="@{/static/plugins/bootstrap-fileinput/js/locales/zh.js}"></script>
+    <script src="../../static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"
+            th:src="@{/static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js}"></script>
+
+    <script src="../../static/js/report/common.js"
+            th:src="@{/static/js/report/common.js}"></script>
+    <script src="../../static/js/report/rptSettleERecord.js"
+            th:src="@{/static/js/report/rptSettleERecord.js}"></script>
+
+
+    <style>
+        .btn-form {
+            margin-right: 20px;
+        }
+
+        .table-row {
+            /*height: 30px;*/
+        }
+    </style>
+
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content">
+
+        <script th:inline="javascript">
+            //页面传值
+            var months = [[${months}]];
+            
+            $(function () {
+            	initForm();
+            });
+        </script>
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>审批流查询</h1>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div id="form-panel">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        查询条件
+                    </div>
+                    <div class="box-body">
+
+                        <form id="form_upload" class="form-horizontal col-sm-12">
+
+                            <div class="form-group form-group-sm">
+                                <div class="col-sm-4 form-group form-group-rm">
+                                    <label for="upload_month" class="col-sm-4 control-label">月份</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="month" id="upload_month">
+                                        </select>
+                                    </div>
+                                </div>
+                                                            
+
+                            </div>
+
+                                                      
+                            <div class="form-group  form-group-sm">
+                                <button class="btn btn-success pull-right btn-sm btn-form"
+                                        type="button" id="btn_query" onclick="queryData()">
+                                    	查询
+                                </button>
+                                
+                               
+                            </div>
+                        </form>                       
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="form-table">
+                <div class="box box-primary">
+                    <div class="box-header">
+                       查询结果
+                    </div>
+                    <div class="box-body" style=" white-space:nowrap">
+                        <table id="table_upload"></table>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+    </div>
+
+</div>
+</body>
+</html>

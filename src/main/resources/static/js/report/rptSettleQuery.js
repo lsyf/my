@@ -1,6 +1,6 @@
 var table;
 var isTree;
-function initFundsFeeForm() {
+function initForm() {
     table = new TableInit();
     table.Init();
 
@@ -10,10 +10,11 @@ function initFundsFeeForm() {
    
 }
 
-function queryLog() {
+
+function queryData() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptStatusFundsFee/list",
+        url: hostUrl + "rptSettleQuery/list",
         data: {
             month: $("#upload_month").val(),
             reportId: isTree.val()
@@ -36,34 +37,50 @@ function queryLog() {
 
 }
 
-//回退
-function quitData(row) {
-	var month = $("#upload_month").val();
-	var reportId = isTree.val(); 
+//导出
+function exportData() {
+    var month = $("#upload_month").val();
+    var reportId = isTree.val();
+
+    var names = ['month', 'reportId'];
+    var params = [month, reportId];
+
+    var form = $("#form_export");   //定义一个form表单
+    form.attr('action', hostUrl + 'rptSettleQuery/export');
+    form.empty();
+    names.forEach(function (v, i) {
+        var input = $('<input>');
+        input.attr('type', 'hidden');
+        input.attr('name', v);
+        input.attr('value', params[i]);
+        form.append(input);
+    });
+
+    form.submit();   //表单提交
+
+}
+
+//审核查询
+function auditQuery(){
 	
-	var selects = $('#table_upload').bootstrapTable('getSelections');
-	if(selects.length==0){
-		toastr.info('未选中任何数据');
-		return;
-	}
-	var logs = [];
-	selects.forEach(function(data,i){
-		logs.push(data.voucherCode);
-	});
-	editAlert('警告', '是否确定回退月份: ' + month,'报表编号:'+reportId , '回退', function () {
+	
+}
+
+function detailData(row) {
+
         $.ajax({
             type: "POST",
-            url: hostUrl + "rptStatusFundsFee/quit",
-            data: {month: month, reportId: reportId},
+            url: hostUrl + "rptSettleQuery/detail",
+            data: {"logId": row.logId, "incomeSource":row.incomeSource},
             dataType: "json",
             success: function (r) {
                 if (r.state) {
-                    toastr.info('回退成功');
+                    toastr.info('删除成功');
                     hideAlert();
 
                     queryLog()
                 } else {
-                    toastr.error('回退失败');
+                    toastr.error('提删除失败');
                     toastr.error(r.msg);
                 }
             },
@@ -71,15 +88,14 @@ function quitData(row) {
                 toastr.error('发送请求失败');
             }
         });
-    });
-    showAlert();
+    
 }
-
 
 
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
+
 
     //初始化Table
     oTableInit.Init = function () {
@@ -110,55 +126,64 @@ var TableInit = function () {
             columns: [{
             	checkbox:true
             },{
-                field: 'reportName',
+                field: 'logId',
                 width:'80px',
+                title: '流水号'
+            }, {
+                field: 'reportId',
+                width:'120px',
+                title: '报表编号'
+            }, {
+                field: 'reportName',
+                width:'120px',
                 title: '报表名称'
             }, {
-                field: 'status',
+                field: 'month',
                 width:'120px',
-                title: '报表状态',
-                formatter:function(value,row,index){
-                	var a ='';
-                	if(value =="一审"){
-                		var a = '<span style="color:#00CD00">'+value+'</span>';  
-                	}else if(value =="二审"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="准备数据"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="准备生成文件"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="生成文件成功"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="通知集团"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="集团入库"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="通知集团失败"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="集团入库失败"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="过账成功"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="过账失败"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="SAP冲销"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="SAP删除"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else{
-                		var a = '<span style="color:#BEBEBE">'+value+'</span>'; 
-                	}
-                	return a;
-                }
+                title: '账期'
             }, {
-                field: 'voucherCode',
-                width:'120px',
-                title: '凭证号'
+                field: 'incomeSource',
+                width:'200px',
+                title: '收入来源'
+            }, {
+                field: 'status',
+                width:'80px',
+                title: '状态'
+            }, {
+                field: 'fileSeq',
+                width:'80px',
+                title: '重传次数'
+            }, {
+                field: 'createDate',
+                width:'80px',
+                title: '下发时间'
+            }, {
+                field: 'importDate',
+                width:'80px',
+                title: '导入时间'
+            }, {
+                field: 'operate',
+                title: '操作',
+                events: operateEvents,
+                formatter: operateFormatter
             }]
         });
-
-
+        
     };
+
+  //操作 监听
+    window.operateEvents = {
+        'click .detail': function (e, value, row, index) {
+        	detailData(row);
+        }
+    };
+
+    //操作显示format
+    function operateFormatter(value, row, index) {
+        return [
+            '<button type="button" class="detail btn btn-success btn-xs">详细</button>'
+        ].join('');
+    }
 
     
     //刷新数据

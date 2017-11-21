@@ -7,7 +7,7 @@
         {call rpt_data_check(
          #{logId,mode=IN,jdbcType=NUMERIC},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMeg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
     <delete id="deleteByLogId">

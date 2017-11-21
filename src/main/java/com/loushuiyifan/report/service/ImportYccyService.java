@@ -1,19 +1,14 @@
 package com.loushuiyifan.report.service;
 
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.bean.ExtImportYccyLog;
-import com.loushuiyifan.report.bean.RptImportYccyData;
-import com.loushuiyifan.report.dao.ExtImportYccyLogDAO;
-import com.loushuiyifan.report.dao.RptImportYccyDataDAO;
-import com.loushuiyifan.report.dto.DeleteYccyDataDTO;
-import com.loushuiyifan.report.dto.SPDataDTO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import java.nio.file.Path;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,13 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.bean.ExtImportYccyLog;
+import com.loushuiyifan.report.bean.RptImportYccyData;
+import com.loushuiyifan.report.dao.ExtImportYccyLogDAO;
+import com.loushuiyifan.report.dao.RptImportYccyDataDAO;
+import com.loushuiyifan.report.dto.SPDataDTO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.DateService;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 
 /**
  * @author 漏水亦凡
@@ -100,7 +98,7 @@ public class ImportYccyService {
         if (code != 0) {//非0为失败
             String error = "";
             try {
-                delete(Math.toIntExact(userId), logId);
+                delete(userId, logId);
             } catch (Exception e) {
                 error = "8校验失败后删除数据异常: " + e.getMessage();
             } finally {
@@ -181,16 +179,16 @@ public class ImportYccyService {
      * @param userId
      * @param logId
      */
-    public void delete(Integer userId, Long logId) {
+    public void delete(Long userId, Long logId) {
         
-    	DeleteYccyDataDTO dto = new DeleteYccyDataDTO();
+    	SPDataDTO dto = new SPDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
         rptImportYccyDataDAO.deleteImportData(dto);
-        int code = dto.getISts();
+        int code = dto.getRtnCode();
         
         if (code != 0) {//非0为失败
-            throw new ReportException("1数据删除失败: " + dto.getIRetMsg());
+            throw new ReportException("1数据删除失败: " + dto.getRtnMsg());
         }
     }
 
