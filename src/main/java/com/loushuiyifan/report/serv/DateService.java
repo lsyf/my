@@ -21,7 +21,8 @@ import java.util.List;
 public class DateService {
     public static final DateTimeFormatter YYYYMM = DateTimeFormatter.ofPattern("yyyyMM");
     public static final DateTimeFormatter DDHH = DateTimeFormatter.ofPattern("ddHH");
-    
+    public static final DateTimeFormatter YYYYMMDDHHMMSS = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
     @Autowired
     DictionaryService dictionaryService;
 

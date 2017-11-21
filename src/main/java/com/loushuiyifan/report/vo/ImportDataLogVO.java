@@ -20,6 +20,10 @@ public class ImportDataLogVO {
     String city;    //地市
     String action;  //导入状态
     String remark;  //导入说明
-    
+
+    String isItsm;
+    String itsmStatus;
+    String itsmOrderNo;
+    String itsmUrl;
 
 }

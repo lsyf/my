@@ -19,7 +19,7 @@ logging:
         net.sf.ehcache: info
         org.eclipse: info
         org.mybatis: info
-        org.springframework: info
+        org.springframework.jdbc: debug
         org.apache: info
 #    file: /report/logs/my.log
 

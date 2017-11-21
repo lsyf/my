@@ -21,12 +21,7 @@ public class ITSMRequest {
     String sumAmount;//本月累计导入金额
     String curAmount;//本次导入金额
     String remark;//导入说明
-    List<Detail> detail;//明细表信息
+    List<C4Detail> detail;//明细表信息
 
-    @Data
-    public static class Detail {
-        String c4Name;//县分
-        String incomeName;//收入来源
-        String amount;//导入金额
-    }
+
 }

@@ -50,7 +50,7 @@
 		select a.code_name  as codeName
 		  from code_list_tax a
 		 where a.type_code = 'local_net'
-		   and a.code_id = #{type}
+		   and a.code_id = #{id}
            
     </select>
 
