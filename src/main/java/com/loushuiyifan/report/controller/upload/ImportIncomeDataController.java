@@ -123,7 +123,7 @@ public class ImportIncomeDataController extends BaseReportController {
     @ResponseBody
     public JsonResult itsm(@RequestParam("logIds[]") Long[] logIds,
                            @ModelAttribute("user") User user) {
-        importIncomeDataService.itsm(logIds,user.getId());
+        importIncomeDataService.itsm(logIds, user.getId());
         return JsonResult.success();
     }
 
@@ -133,8 +133,10 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("commit")
     @ResponseBody
-    public JsonResult commit(Long logId) {
-        importIncomeDataService.commit(logId);
+    public JsonResult commit(@RequestParam("logIds[]") Long[] logIds) {
+        for (Long logId : logIds) {
+            importIncomeDataService.commit(logId);
+        }
         return JsonResult.success();
     }
 
@@ -145,10 +147,12 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
-    public JsonResult remove(Long logId,
+    public JsonResult remove(@RequestParam("logIds[]") Long[] logIds,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        importIncomeDataService.delete(userId, logId);
+        for (Long logId : logIds) {
+            importIncomeDataService.delete(userId, logId);
+        }
         return JsonResult.success();
     }
 }

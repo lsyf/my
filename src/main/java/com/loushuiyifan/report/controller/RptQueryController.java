@@ -5,6 +5,7 @@ import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.service.RptQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,9 +57,15 @@ public class RptQueryController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult list(String month, String latnId, String incomeSource, String type) {
-        Map<String, Object> map = rptQueryService.list(month, latnId, incomeSource, type);
-        return JsonResult.success(map);
+    public JsonResult list(String month,
+                           String latnId,
+                           String incomeSource,
+                           String type,
+                           @ModelAttribute("user") User user) {
+
+        Long userId = user.getId();
+        RptQueryDataVO vo = rptQueryService.list(month, latnId, incomeSource, type, userId);
+        return JsonResult.success(vo);
     }
 
     /**
@@ -87,10 +94,44 @@ public class RptQueryController extends BaseReportController {
 
         downloadService.download(req, resp, path);
     }
-    
+
+
     /**
-     * 导出excel
-     * 不带模板的导出
+     * 报表审核状态
+     *
+     * @param month
+     * @param latnId
+     * @param incomeSource
+     * @param type
+     * @return
      */
+    @PostMapping("listAudit")
+    @ResponseBody
+    public JsonResult listAudit(String month,
+                                String latnId,
+                                String incomeSource,
+                                String type,
+                                @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+        Map<String, Object> map = rptQueryService.listAudit(month,
+                latnId,
+                incomeSource,
+                type,
+                userId);
+        return JsonResult.success(map);
+    }
+
+    /**
+     * 审核报表
+     */
+    @PostMapping("audit")
+    @ResponseBody
+    public JsonResult audit(Long rptCaseId, String status, String comment,
+                            @ModelAttribute("user") User user) {
+        Long userId = user.getId();
+        rptQueryService.audit(rptCaseId, status, comment, userId);
+        return JsonResult.success();
+    }
+
 
 }

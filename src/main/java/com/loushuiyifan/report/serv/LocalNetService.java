@@ -1,18 +1,17 @@
 package com.loushuiyifan.report.serv;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.Maps;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.report.dao.LocalNetDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.service.OrganizationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -115,11 +114,12 @@ public class LocalNetService {
         }
         return orgs;
     }
- 
-    
-    public String getCodeName(String typeCode, String codeId){
-    	
-    	return localNetDAO.getCodeNameById(typeCode, codeId) ;
+
+
+    public String getCodeName(String codeId) {
+        String type = OrganizationService.TYPE_CITY;
+        Organization org = organizationService.getByData(type, codeId);
+        return org == null ? null : org.getName();
     }
 
     /**
@@ -141,60 +141,60 @@ public class LocalNetService {
         }
         return list;
     }
-    
+
     /**
      * 资金缴拨利润中心
+     *
      * @param userId
      * @return
      */
     //TODO利润中心 (股份)
-    public List<Map<String, String>> listPrctrName(Long userId){
-    	List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-    	List<CommonVO> l =localNetDAO.listNameById();
-    	//String data =l.get(0).getData();  // 地市Id不为空
-    	Map<String, String> m =Maps.newHashMap();  
-    	m.put("id", "0");
-    	m.put("name", "全省");
-    	m.put("data", "0");
-    	m.put("lvl", "1");
-    	list.add(m);
-    	for(CommonVO co : l){
-    		String data =co.getData();
-    		String name =null;
-    		if("2".equals(data)){
-        		name ="省本部";
-        	}else if("3395".equals(data)){
-        		name ="网络科技";
-        	}else{
-        		name =co.getName().substring(0,2);
-        	}
-    		
-    		
-        	List<Map<String, String>> list3 =localNetDAO.listPrctrName(name);
-        	if(list3.size() !=0){ 
-    			list.addAll(list3);	
-    		}
-    	}
-    	
-    	
-       	
-    	return list;
-    	
+    public List<Map<String, String>> listPrctrName(Long userId) {
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        List<CommonVO> l = localNetDAO.listNameById();
+        //String data =l.get(0).getData();  // 地市Id不为空
+        Map<String, String> m = Maps.newHashMap();
+        m.put("id", "0");
+        m.put("name", "全省");
+        m.put("data", "0");
+        m.put("lvl", "1");
+        list.add(m);
+        for (CommonVO co : l) {
+            String data = co.getData();
+            String name = null;
+            if ("2".equals(data)) {
+                name = "省本部";
+            } else if ("3395".equals(data)) {
+                name = "网络科技";
+            } else {
+                name = co.getName().substring(0, 2);
+            }
+
+
+            List<Map<String, String>> list3 = localNetDAO.listPrctrName(name);
+            if (list3.size() != 0) {
+                list.addAll(list3);
+            }
+        }
+
+
+        return list;
+
     }
-    
-    public List<Map<String, String>> listReportName(){
-    	List<Map<String, String>> list = new ArrayList<Map<String, String>>();	
-    	Map<String, String> m =Maps.newHashMap();  
-    	m.put("id", "0");
-    	m.put("name", "全部");
-    	m.put("data", "0");
-    	m.put("lvl", "1");
-    	list.add(m);
-    	List<Map<String, String>> li =localNetDAO.listReportName();
-    	list.addAll(li);
-    	
-    	return list;
+
+    public List<Map<String, String>> listReportName() {
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        Map<String, String> m = Maps.newHashMap();
+        m.put("id", "0");
+        m.put("name", "全部");
+        m.put("data", "0");
+        m.put("lvl", "1");
+        list.add(m);
+        List<Map<String, String>> li = localNetDAO.listReportName();
+        list.addAll(li);
+
+        return list;
     }
-    
-    
+
+
 }

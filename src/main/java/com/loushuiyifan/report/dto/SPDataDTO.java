@@ -14,10 +14,18 @@ public class SPDataDTO implements Cloneable {
     Long logId;
     Long userId;
     String month;
+    String latnId;
+
+    Long rptCaseId;
+    String status;
+    String comment;
 
     //OUT返回值
     Integer rtnCode;
     String rtnMsg;
+    String rtnMsg2;
+    Integer  rtnStatus;
+
 
     @Override
     protected SPDataDTO clone() {
@@ -28,6 +36,7 @@ public class SPDataDTO implements Cloneable {
             //清空返回值
             dto.setRtnCode(null);
             dto.setRtnMsg(null);
+            dto.setRtnStatus(null);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -22,4 +22,36 @@
         and a.acct_month = #{month}
     </select>
 
+
+
+
+    <select id="hasAuditAuthority" resultType="java.lang.String">
+      select
+      PKG_RPT_AUDIT_NEW.hasAuditAuthority(#{userId},#{rptCaseId})
+      from dual
+    </select>
+    <select id="auditRpt" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call pkg_rpt_audit_new.auditRpt(
+        #{userId,mode=IN,jdbcType=NUMERIC},
+        #{rptCaseId,mode=IN,jdbcType=NUMERIC},
+        #{status,mode=IN,jdbcType=VARCHAR},
+        #{comment,mode=IN,jdbcType=VARCHAR},
+        #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR},
+        #{rtnStatus,mode=OUT,jdbcType=NUMERIC}
+        )}
+    </select>
+
+
+    <select id="selectAudits" parameterType="map" statementType="CALLABLE">
+      {
+      #{list,mode=OUT,jdbcType=CURSOR,resultMap=rptAuditVO}= call PKG_RPT_AUDIT_NEW.getAuditInfo
+      (
+      #{rptCaseId,mode=IN,jdbcType=NUMERIC}
+      )
+      }
+    </select>
+    <resultMap id="rptAuditVO" type="com.loushuiyifan.report.vo.RptAuditVO">
+    </resultMap>
 </mapper>

@@ -2,15 +2,20 @@ package com.loushuiyifan.report.service;
 
 import com.google.common.collect.Maps;
 import com.loushuiyifan.common.bean.Organization;
+import com.loushuiyifan.common.util.ProtoStuffSerializerUtil;
 import com.loushuiyifan.report.ReportConfig;
-import com.loushuiyifan.report.dao.RptCustDefChannelDAO;
+import com.loushuiyifan.report.bean.ReportCache;
+import com.loushuiyifan.report.bean.RptCase;
+import com.loushuiyifan.report.dao.ReportCacheDAO;
 import com.loushuiyifan.report.dao.RptQueryDAO;
-import com.loushuiyifan.report.dao.RptRepfieldDefChannelDAO;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.LocalNetService;
 import com.loushuiyifan.report.serv.ReportDownloadService;
 import com.loushuiyifan.report.serv.ReportExportServ;
+import com.loushuiyifan.report.vo.RptAuditVO;
+import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.service.DictionaryService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,13 +24,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author 漏水亦凡
@@ -37,10 +46,7 @@ public class RptQueryService {
     private static Logger logger = LoggerFactory.getLogger(RptQueryService.class);
 
     @Autowired
-    RptCustDefChannelDAO rptCustDefChannelDAO;
-
-    @Autowired
-    RptRepfieldDefChannelDAO rptRepfieldDefChannelDAO;
+    RptEditionService rptEditionService;
 
     @Autowired
     RptQueryDAO rptQueryDAO;
@@ -57,61 +63,178 @@ public class RptQueryService {
     @Autowired
     ReportDownloadService reportDownloadService;
 
-    public Map<String, Object> list(String month,
-                                    String latnId,
-                                    String incomeSource,
-                                    String type) {
+    @Autowired
+    RptCaseService rptCaseService;
 
-        //客户群
-        List<Map<String, String>> custs = rptCustDefChannelDAO.listMap("1701");
-        //指标
-        List<Map<String, String>> fields = rptRepfieldDefChannelDAO.listMap("1701");
-        //数据
-        Map<String, Map<String, String>> datas = rptQueryDAO.listAsMap(month, latnId, incomeSource, type);
+    @Autowired
+    ReportCacheDAO reportCacheDAO;
 
-        //首先遍历指标
-        Map<String, Map<String, String>> fieldMap = Maps.newHashMapWithExpectedSize(2000);
-        for (int i = 0; i < fields.size(); i++) {
-            Map<String, String> temp = fields.get(i);
-            fieldMap.put(temp.get("id"), temp);
+    //生成缓存状态
+    ConcurrentHashMap<String, Instant> cacheStatusMap = new ConcurrentHashMap<>(3000);
+
+    @Transactional
+    public RptQueryDataVO list(String month,
+                               String latnId,
+                               String incomeSource,
+                               String type,
+                               Long userId) {
+
+        // 查询报表实例是否存在
+        //case(状态不为2)和cache同步，两者皆有或者两者皆无
+        RptCase rptCase = rptCaseService.selectRptCustCase(month, latnId, incomeSource, type);
+        if (rptCase != null) {
+            Long rptCaseId = rptCase.getRptCaseId();
+            ReportCache cache = reportCacheDAO.selectByPrimaryKey(rptCaseId);
+            byte[] data = cache.getHtmlData();
+            RptQueryDataVO vo = ProtoStuffSerializerUtil.deserialize(data, RptQueryDataVO.class);
+            return vo;
+
         }
 
-        //遍历数据，分别插入到指标数据中
-        Iterator<String> it = datas.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            String[] xy = key.split("_");
-            String x = xy[0];
-            String y = xy[1];
-            String v = datas.get(key).get("data");
+        //判断是否正在生成
+        String cacheStatusKey = month + latnId + incomeSource + type;
+        Instant lastInst = cacheStatusMap.get(cacheStatusKey);
+        if (lastInst != null) {
+            Long during = Duration.between(lastInst, Instant.now()).getSeconds();
+            throw new ReportException("正在生成数据，已耗时: " + during + "秒");
+        }
+        //设置为正在生成缓存状态
+        cacheStatusMap.put(cacheStatusKey, Instant.now());
+        RptQueryDataVO vo = new RptQueryDataVO();
 
-            Map<String, String> temp = fieldMap.get(x);
-            if (temp == null) {
-                continue;
+        try {
+            rptCase = new RptCase();
+            rptCase.setAcctMonth(month);
+            rptCase.setLatnId(Long.parseLong(latnId));
+            rptCase.setIncomeSoure(incomeSource);
+            rptCase.setProcessId(1101L);
+            rptCase.setReportNo(1701L);
+            rptCase.setCreateUserid(userId + "");
+            rptCase.setTaxMark(Integer.parseInt(type));
+            rptCase.setType(RptCaseService.TYPE_RptCust);//类型
+            Long rptCaseId = rptCaseService.saveCaseSelective(rptCase);
+
+            //客户群
+            List<Map<String, String>> custs = rptEditionService.listCustMap();
+            //指标
+            List<Map<String, String>> fields = rptEditionService.listFieldMap();
+            //数据
+            Map<String, Map<String, String>> datas = rptQueryDAO.listAsMap(month, incomeSource, latnId, type);
+
+            //由于fields接下来会更改，优先生成文件
+            String filePath = export(month, latnId, incomeSource, type,
+                    custs, fields, datas);
+
+
+            //生成html需求数据模型
+            //首先遍历指标,建立 id->feild
+            Map<String, Map<String, String>> fieldMap = Maps.newHashMapWithExpectedSize(2000);
+            for (int i = 0; i < fields.size(); i++) {
+                Map<String, String> temp = fields.get(i);
+                fieldMap.put(temp.get("id"), temp);
             }
-            temp.put(y, v);
+
+            //遍历数据，分别插入到指标数据中
+            Iterator<String> it = datas.keySet().iterator();
+            while (it.hasNext()) {
+                String key = it.next();
+                String[] xy = key.split("_");
+                String x = xy[0];
+                String y = xy[1];
+                String v = datas.get(key).get("data");
+
+                Map<String, String> temp = fieldMap.get(x);
+                if (temp == null) {
+                    continue;
+                }
+                temp.put(y, v);
+            }
+
+            vo.setTitles(custs);
+            vo.setDatas(fields);
+
+
+            // 保存缓存
+            ReportCache reportCache = new ReportCache();
+            reportCache.setRptCaseId(rptCaseId);
+            byte[] data = ProtoStuffSerializerUtil.serialize(vo);
+            reportCache.setHtmlData(data);
+            reportCache.setFilePath(filePath);
+            reportCacheDAO.insertSelective(reportCache);
+
+        } catch (Exception e) {
+            throw new ReportException("查询数据失败: " + e.getMessage());
+        } finally {
+            //移除生成状态
+            cacheStatusMap.remove(cacheStatusKey);
+        }
+        return null;
+    }
+
+    /**
+     * 根据已获取的数据生成文件
+     */
+    public String export(String month,
+                         String latnId,
+                         String incomeSource,
+                         String type,
+                         List<Map<String, String>> custs,
+                         List<Map<String, String>> fields,
+                         Map<String, Map<String, String>> data) throws Exception {
+        String latnName = localNetService.getCodeName(latnId);
+        if (latnName == null) {
+            throw new ReportException("选择营业区错误,请重试");
         }
 
-        Map<String, Object> result = Maps.newHashMap();
-        result.put("titles", custs);
-        result.put("datas", fields);
-        return result;
+        //数据
+        LinkedHashMap reportData = new LinkedHashMap<>();
+        reportData.put(latnName, data);
+
+
+        String isName = codeListTaxService.
+                getIncomeSource("income_source2017", incomeSource).getCodeName();
+
+
+        String templatePath = configTemplatePath();
+        String outPath = configExportPath(month,
+                latnName, isName, type, false);
+
+        ReportExportServ export = new RptQueryExport();
+        export.template(templatePath)
+                .out(outPath)
+                .column(custs)
+                .row(fields)
+                .data(reportData)
+                .export();
+
+        return outPath;
     }
+
 
     public String export(String month,
                          String latnId,
                          String incomeSource,
                          String type,
                          Boolean isMulti) throws Exception {
+
+        //非多营业区 可从缓存表中判断是否已经生成数据
+        if (!isMulti) {
+            RptCase rptCase = rptCaseService.selectRptCustCase(month, latnId, incomeSource, type);
+            if (rptCase != null) {
+                ReportCache cache = reportCacheDAO.selectByPrimaryKey(rptCase.getRptCaseId());
+                return cache.getFilePath();
+            }
+        }
+
         List<Organization> orgs = localNetService.listUnderKids(latnId, isMulti);
         if (orgs == null || orgs.size() == 0) {
             throw new ReportException("选择营业区错误,请重试");
         }
 
         //客户群
-        List<Map<String, String>> custs = rptCustDefChannelDAO.listMap("1701");
+        List<Map<String, String>> custs = rptEditionService.listCustMap();
         //指标
-        List<Map<String, String>> fields = rptRepfieldDefChannelDAO.listMap("1701");
+        List<Map<String, String>> fields = rptEditionService.listFieldMap();
 
         //数据
         LinkedHashMap reportData = new LinkedHashMap<>();
@@ -142,6 +265,68 @@ public class RptQueryService {
 
         return outPath;
     }
+
+    /**
+     * 查询审核信息
+     *
+     * @param month
+     * @param latnId
+     * @param incomeSource
+     * @param type
+     * @param userId
+     * @return
+     */
+    public Map<String, Object> listAudit(String month, String latnId, String incomeSource, String type, Long userId) {
+        //首先判断rptCaseId是否存在
+        RptCase rptCase = rptCaseService.selectRptCustCase(month, latnId, incomeSource, type);
+        if (rptCase == null) {
+            throw new ReportException("报表尚未生成,请查询后重试!");
+        }
+        Long rptCaseId = rptCase.getRptCaseId();
+
+        //然后判断用户是否存在审核权限
+        String rtn = rptQueryDAO.hasAuditAuthority(userId, rptCaseId);
+
+        if (!"Y".equals(rtn)) {
+            throw new ReportException(rtn);
+        }
+        //最后返回审核结果
+
+        Map param = new HashMap();
+        param.put("rptCaseId", rptCaseId);
+        rptQueryDAO.selectAudits(param);
+        List<RptAuditVO> list = (List<RptAuditVO>) param.get("list");
+        if (list == null || list.size() == 0) {
+            throw new ReportException("审核信息为空");
+        }
+
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("rptCaseId", rptCaseId);
+        map.put("list", list);
+        return map;
+    }
+
+    /**
+     * 审核
+     *
+     * @param rptCaseId
+     * @param status
+     * @param comment
+     * @param userId
+     * @return
+     */
+    public void audit(Long rptCaseId, String status, String comment, Long userId) {
+        SPDataDTO dto = new SPDataDTO();
+        dto.setRptCaseId(rptCaseId);
+        dto.setUserId(userId);
+        dto.setStatus(status);
+        dto.setComment(comment);
+        rptQueryDAO.auditRpt(dto);
+        if (dto.getRtnCode() != 0) {//非0审核失败
+            throw new ReportException(dto.getRtnMsg());
+        }
+    }
+
 
     /**
      * 配置导出路径(包括文件名)

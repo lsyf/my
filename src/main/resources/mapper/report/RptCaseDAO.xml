@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loushuiyifan.report.dao.RptCaseDAO">
+
+    <select id="nextval" resultType="java.lang.Long">
+        select SEQ_RPTCASE_ID.Nextval from dual
+    </select>
+    <select id="selectCase" resultType="com.loushuiyifan.report.bean.RptCase">
+        select *
+        from rpt_case a
+        where a.acct_month =#{month}
+        and a.latn_id =#{latnId}
+        <if test='incomeSource!=null and incomeSource!=""'>
+            and a.income_soure =#{incomeSource}
+        </if>
+        <if test='cust!=null and cust!=""'>
+            and a.cust_group =#{cust}
+        </if>
+        and a.tax_mark =#{tax}
+        and a.type =#{type}
+        and a.rpt_case_status != '2'
+    </select>
+</mapper>

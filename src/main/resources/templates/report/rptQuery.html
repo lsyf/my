@@ -53,20 +53,9 @@
             margin-right: 20px;
         }
 
-        .table-row {
-            /*height: 30px;*/
-        }
-
-        /*表格行样式*/
-        .tableRow {
-            color: black;
-            height: 20px;
-        }
-
         .table_data thead tr {
             background-color: #00B1F1;
             border-bottom: 1px solid #ddd;
-            /*font-family: Microsoft YaHei UI;*/
         }
 
         .table_colum1 {
@@ -79,28 +68,6 @@
 
         .table_colum3 {
             background-color: #B5DC62;
-        }
-
-        .table_data thead tr th, .table_data th div.th-inner {
-            /*padding: 0;*/
-        }
-
-        /*地市栏样式*/
-        .column_name {
-            background-color: #00B1F1;
-            border-bottom: 1px solid #ddd;
-            padding: 0 !important;
-        }
-
-        .row_total {
-            font-family: Microsoft YaHei UI;
-            font-weight: bold;
-            color: #9f2b1c;
-        }
-
-        /*标识高亮数据*/
-        .highlightData {
-            color: red;
         }
 
 
@@ -186,12 +153,21 @@
 
 
                         <div class="form-group form-group-sm">
-                            <button id="btn_export_multi" type="button" onclick="exportData(1,this)"
-                                    class="btn btn-success pull-right btn-form btn-sm">
+
+                            <button id="btn_auditInfo" type="button" onclick="listAudit('view',this)"
+                                    class="btn btn-danger pull-right btn-form btn-sm">
+                                审核状态
+                            </button>
+                            <button id="btn_audit" type="button" onclick="listAudit('audit',this)"
+                                    class="btn btn-danger pull-right btn-form btn-sm">
+                                审核
+                            </button>
+                            <button id="btn_export_multi" type="button" onclick="exportData(1)"
+                                    class="btn btn-info pull-right btn-form btn-sm">
                                 多营业区导出
                             </button>
-                            <button id="btn_export" type="button" onclick="exportData(0,this)"
-                                    class="btn btn-success pull-right btn-form btn-sm">
+                            <button id="btn_export" type="button" onclick="exportData(0)"
+                                    class="btn btn-info pull-right btn-form btn-sm">
                                 导出
                             </button>
                             <button id="btn_query" type="button" onclick="queryData()"
@@ -204,6 +180,8 @@
                 </div>
             </div>
 
+            <h4 style="text-align: center;"><b id="title_table"></b>
+            </h4>
             <table id="table_query"></table>
 
 
@@ -216,13 +194,13 @@
             </div>
 
 
-
             <form target="_blank"
                   id="form_export"
                   method="post" hidden>
             </form>
         </section>
 
+        <div th:replace="modal/modal_audit :: audit"></div>
 
     </div>
 

@@ -27,6 +27,7 @@ function initForm() {
                 timeout: 1800000,
                 beforeSubmit: function () {
                     $('#btn_exec').button("loading");
+                    log('clear');
                     log('开始汇总...');
                     time(1)
                 },
@@ -44,6 +45,7 @@ function initForm() {
                 },
                 complete: function (req, status) {
                     time(0);
+                    i = 0;
                     if (status == 'timeout') {
                         log('请求超时!')
                     }
@@ -77,6 +79,10 @@ function time(t) {
 
 }
 function log(txt, id) {
+    if (txt == 'clear') {
+        $('#div_console').empty();
+        return
+    }
     var id = id ? 'id="' + id + '"' : '';
     var $p = $('<p ' + id + '>' + txt + '</p>');
     $('#div_console').append($p);
