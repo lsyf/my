@@ -1,31 +1,26 @@
 package com.loushuiyifan.report.controller.upload;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-
+import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.service.ImportSettleCutService;
+import com.loushuiyifan.report.service.RptFundsFeeQueryService;
+import com.loushuiyifan.report.service.RptSettleQueryService;
+import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.system.vo.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.service.ImportSettleCutService;
-import com.loushuiyifan.report.service.RptSettleQueryService;
-import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.system.vo.JsonResult;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("importSettleCut")
@@ -38,6 +33,9 @@ public class ImportSettleCutController extends BaseReportController {
     @Autowired
     RptSettleQueryService rptSettleQueryService;
 
+     @Autowired
+     RptFundsFeeQueryService rptFundsFeeQueryService;
+
     /**
      * 结算数据切割页面
      *
@@ -48,7 +46,7 @@ public class ImportSettleCutController extends BaseReportController {
 
         //页面条件
         List<CommonVO> months = dateService.aroundMonths(5);
-        List<Map<String, String>> orgs =localNetService.listReportName();
+        List<Map<String, String>> orgs =rptFundsFeeQueryService.listReportName();
         map.put("months", months);
         map.put("orgs", orgs);
 

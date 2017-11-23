@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loushuiyifan.report.dao.IncomeStatisticsDAO">
+
+    <select id="allSum" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+      {call IRPT_ALL_SUM.p_all_sum(
+        #{month,mode=IN,jdbcType=VARCHAR},
+        #{userId,mode=IN,jdbcType=VARCHAR},
+        #{latnId,mode=IN,jdbcType=VARCHAR},
+        #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR},
+        #{rtnMsg2,mode=OUT,jdbcType=VARCHAR}
+        )}
+    </select>
+</mapper>

@@ -3,9 +3,6 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.service.RptSettleQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.report.vo.FundsFeeVO;
 import com.loushuiyifan.report.vo.SettleDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
@@ -42,7 +38,7 @@ public class RptSettleQueryController extends BaseReportController{
 
         //页面条件
         List<CommonVO> months = dateService.aroundMonths(5);
-        List<Map<String, String>> reportIds =rptSettleQueryService.listReportName();
+        List<Map<String, String>> reportIds =rptSettleQueryService.listReportInfo();
         map.put("months", months);
         map.put("reportIds", reportIds);
         return "report/rptSettleQuery";

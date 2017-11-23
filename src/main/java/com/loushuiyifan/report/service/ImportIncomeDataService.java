@@ -189,8 +189,8 @@ public class ImportIncomeDataService {
 
         //首先校验是否处于待提交状态
         String status = log.getStatus();
-        if (status != "Y") {
-            throw new ReportException("该条记录已经提交");
+        if (!"N".equals(status)) {
+            throw new ReportException("该条记录已经提交!");
         }
 
         //查询日志账期，校验提交时间

@@ -27,7 +27,7 @@
 	
 	
 	
-	<select id="listReportName" resultType="Map">
+	<select id="listReportInfo" resultType="Map">
 		select distinct 
 		REPORT_ID as "id", 
 		REPORT_ID || '-' || REPORT_NAME as "name",

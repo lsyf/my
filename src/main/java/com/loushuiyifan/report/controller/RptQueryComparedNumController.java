@@ -3,8 +3,9 @@ package com.loushuiyifan.report.controller;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptQueryService;
+import com.loushuiyifan.report.service.RptQueryComparedNumService;
 import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 财务报表查询
@@ -23,12 +23,12 @@ import java.util.Map;
  * @date 2017/11/2
  */
 @Controller
-@RequestMapping("rptQuery")
-public class RptQueryController extends BaseReportController {
+@RequestMapping("rptQueryComparedNum")
+public class RptQueryComparedNumController extends BaseReportController {
 
 
     @Autowired
-    RptQueryService rptQueryService;
+    RptQueryComparedNumService rptQueryComparedNumService;
 
     @GetMapping
     public String index(ModelMap map, @ModelAttribute("user") User user) {
@@ -37,12 +37,10 @@ public class RptQueryController extends BaseReportController {
         //页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 4);
         List<CommonVO> months = dateService.aroundMonths(5);
-        List<Map> incomeSources = codeListTaxService.listByType("income_source2017");
 
         map.put("orgs", orgs);
         map.put("months", months);
-        map.put("incomeSources", incomeSources);
-        return "report/rptQuery";
+        return "report/rptQueryComparedNum";
     }
 
     /**
@@ -50,15 +48,19 @@ public class RptQueryController extends BaseReportController {
      *
      * @param month
      * @param latnId
-     * @param incomeSource
      * @param type
      * @return
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult list(String month, String latnId, String incomeSource, String type) {
-        Map<String, Object> map = rptQueryService.list(month, latnId, incomeSource, type);
-        return JsonResult.success(map);
+    public JsonResult list(String month,
+                           String latnId,
+                           String type,
+                           @ModelAttribute("user") User user) {
+
+        Long userId = user.getId();
+        RptQueryDataVO vo = rptQueryComparedNumService.list(month, latnId, type, userId);
+        return JsonResult.success(vo);
     }
 
     /**
@@ -66,7 +68,6 @@ public class RptQueryController extends BaseReportController {
      *
      * @param month
      * @param latnId
-     * @param incomeSource
      * @param type
      * @return
      */
@@ -76,21 +77,26 @@ public class RptQueryController extends BaseReportController {
                        HttpServletResponse resp,
                        String month,
                        String latnId,
-                       String incomeSource,
                        String type,
                        Boolean isMulti) throws Exception {
-        String path = rptQueryService.export(month,
+        String path = rptQueryComparedNumService.export(month,
                 latnId,
-                incomeSource,
                 type,
                 isMulti);
 
         downloadService.download(req, resp, path);
     }
-    
-    /**
-     * 导出excel
-     * 不带模板的导出
-     */
+
+
+    @PostMapping("remove")
+    @ResponseBody
+    public JsonResult remove(String month,
+                             String latnId,
+                             String type) throws Exception {
+        rptQueryComparedNumService.remove(month,
+                latnId,
+                type);
+        return JsonResult.success();
+    }
 
 }

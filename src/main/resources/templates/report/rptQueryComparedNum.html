@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>财务报表查询</title>
+    <title>同期数报表</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -43,8 +43,8 @@
 
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../static/js/report/rptQuery.js"
-            th:src="@{/static/js/report/rptQuery.js}"></script>
+    <script src="../../static/js/report/rptQueryComparedNum.js"
+            th:src="@{/static/js/report/rptQueryComparedNum.js}"></script>
 
 
     <style>
@@ -53,20 +53,9 @@
             margin-right: 20px;
         }
 
-        .table-row {
-            /*height: 30px;*/
-        }
-
-        /*表格行样式*/
-        .tableRow {
-            color: black;
-            height: 20px;
-        }
-
         .table_data thead tr {
             background-color: #00B1F1;
             border-bottom: 1px solid #ddd;
-            /*font-family: Microsoft YaHei UI;*/
         }
 
         .table_colum1 {
@@ -79,28 +68,6 @@
 
         .table_colum3 {
             background-color: #B5DC62;
-        }
-
-        .table_data thead tr th, .table_data th div.th-inner {
-            /*padding: 0;*/
-        }
-
-        /*地市栏样式*/
-        .column_name {
-            background-color: #00B1F1;
-            border-bottom: 1px solid #ddd;
-            padding: 0 !important;
-        }
-
-        .row_total {
-            font-family: Microsoft YaHei UI;
-            font-weight: bold;
-            color: #9f2b1c;
-        }
-
-        /*标识高亮数据*/
-        .highlightData {
-            color: red;
         }
 
 
@@ -119,21 +86,20 @@
             //页面传值
             var orgs = [[${orgs}]];
             var months = [[${months}]];
-            var incomeSources = [[${incomeSources}]];
             $(function () {
-                initRptQuery();
+                initRptQueryComparedNum();
             });
         </script>
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                财务报表查询
+                同期数报表
                 <!--<small>仪表盘</small>-->
             </h1>
             <ol class="breadcrumb" id="content-header-ol">
                 <li><a href="#"><i class="fa fa-dashboard"></i> 报表</a></li>
-                <li class="active">财务报表查询</li>
+                <li class="active">同期数报表</li>
             </ol>
         </section>
 
@@ -148,14 +114,14 @@
                     <div class="box-body">
 
                         <div class="form-group form-group-sm">
-                            <div class="col-sm-3 form-group form-group-rm">
+                            <div class="col-sm-4 form-group form-group-rm">
                                 <label for="form_month" class="col-sm-4 control-label">月份</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="month" id="form_month">
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-3 form-group form-group-rm">
+                            <div class="col-sm-4 form-group form-group-rm">
                                 <label for="form_latnId" class="col-sm-4 control-label">本地网</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="form_latnId" readonly>
@@ -163,16 +129,10 @@
                                 </div>
 
                             </div>
-                            <div class="col-sm-3 form-group form-group-rm">
-                                <label for="form_incomeSource" class="col-sm-4 control-label">收入来源</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="form_incomeSource" readonly>
-                                    <input class="form-control" name="incomeSource" type="hidden">
-                                </div>
-                            </div>
-                            <div class="col-sm-3 form-group form-group-rm">
 
-                                <label for="form_type" class="col-sm-4 control-label">切割类型</label>
+                            <div class="col-sm-4 form-group form-group-rm">
+
+                                <label for="form_type" class="col-sm-4 control-label">税务类型</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="type" id="form_type">
                                         <option value="0">价税合一(含税)</option>
@@ -186,12 +146,16 @@
 
 
                         <div class="form-group form-group-sm">
-                            <button id="btn_export_multi" type="button" onclick="exportData(1,this)"
-                                    class="btn btn-success pull-right btn-form btn-sm">
+                            <button id="btn_remove" type="button" onclick="removeData(this)"
+                                    class="btn btn-danger pull-right btn-form btn-sm">
+                                删除缓存
+                            </button>
+                            <button id="btn_export_multi" type="button" onclick="exportData(1)"
+                                    class="btn btn-info pull-right btn-form btn-sm">
                                 多营业区导出
                             </button>
-                            <button id="btn_export" type="button" onclick="exportData(0,this)"
-                                    class="btn btn-success pull-right btn-form btn-sm">
+                            <button id="btn_export" type="button" onclick="exportData(0)"
+                                    class="btn btn-info pull-right btn-form btn-sm">
                                 导出
                             </button>
                             <button id="btn_query" type="button" onclick="queryData()"
@@ -204,6 +168,8 @@
                 </div>
             </div>
 
+            <h4 style="text-align: center;"><b id="title_table"></b>
+            </h4>
             <table id="table_query"></table>
 
 
@@ -216,13 +182,11 @@
             </div>
 
 
-
             <form target="_blank"
                   id="form_export"
                   method="post" hidden>
             </form>
         </section>
-
 
     </div>
 

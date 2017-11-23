@@ -40,7 +40,7 @@ public class RptFundsFeeStatusController extends BaseReportController{
         
         //页面条件
         List<CommonVO> months = dateService.aroundMonths(5);
-        List<Map<String, String>> reportIds =rptSettleQueryService.listReportName();
+        List<Map<String, String>> reportIds =rptSettleQueryService.listReportInfo();
         map.put("months", months);
         map.put("reportIds", reportIds);
         return "report/rptFundsFeeStatus";

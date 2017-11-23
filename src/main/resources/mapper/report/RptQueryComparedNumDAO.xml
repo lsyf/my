@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loushuiyifan.report.dao.RptQueryComparedNumDAO">
+    <sql id="taxDataType">
+        <choose>
+            <when test="type=='0'">
+                to_char(a.zb_value, 'fm999999999990.00') as "data"
+            </when>
+            <when test="type=='1'">
+                to_char(a.tax_value, 'fm999999999990.00') as "data"
+            </when>
+            <otherwise>
+                to_char(a.aft_tax_value, 'fm999999999990.00') as "data"
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="taxDataTypeSum">
+        <choose>
+            <when test="type=='0'">
+                to_char(sum(a.zb_value), 'fm999999999990.00') as "data"
+            </when>
+            <when test="type=='1'">
+                to_char(sum(a.tax_value), 'fm999999999990.00') as "data"
+            </when>
+            <otherwise>
+                to_char(sum(a.aft_tax_value), 'fm999999999990.00') as "data"
+            </otherwise>
+        </choose>
+    </sql>
+
+    <select id="listAsMap" resultType="java.util.Map">
+        select a.zb_code || '_0_1' as "key",
+        <include refid="taxDataTypeSum"/>
+        from zjhc_zwl.stat_repfield_content17 a
+        where a.income_source = '0'
+        and a.cust_id = '0'
+        and a.local_net = #{latnId}
+        and a.acct_month between #{lastYearFirstMonth} and #{lastYearThisMonth}
+        group by a.zb_code
+        union all
+        select a.zb_code || '_0_2' as "key",
+        <include refid="taxDataType"/>
+        from stat_repfield_content_channel a
+        where a.income_source = '0'
+        and a.cust_id = '0'
+        and a.local_net = #{latnId}
+        and a.acct_month = #{thisMonth}
+        union all
+        select a.zb_code || '_0_3' as "key",
+        <include refid="taxDataTypeSum"/>
+        from stat_repfield_content_channel a
+        where a.income_source = '0'
+        and a.cust_id = '0'
+        and a.local_net =#{latnId}
+        and a.acct_month between #{firstMonth} and #{thisMonth}
+        group by a.zb_code
+    </select>
+</mapper>

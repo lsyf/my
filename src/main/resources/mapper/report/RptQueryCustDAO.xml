@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptQueryCustDAO">
+
+    <select id="listAsMap" resultType="Map">
+        select
+        a.zb_code || '_' || a.cust_id as "key",
+        <choose>
+            <when test="type=='0'">
+                to_char(a.zb_value, 'fm999999999990.00') as "data"
+            </when>
+            <when test="type=='1'">
+                to_char(a.tax_value, 'fm999999999990.00') as "data"
+            </when>
+            <otherwise>
+                to_char(a.aft_tax_value, 'fm999999999990.00') as "data"
+            </otherwise>
+        </choose>
+        from stat_repfield_content_channel a
+        where a.income_source = #{incomeSource}
+        and a.local_net = #{latnId}
+        and a.acct_month = #{month}
+    </select>
+
+
+
+
+    <select id="hasAuditAuthority" resultType="java.lang.String">
+      select
+      PKG_RPT_AUDIT_NEW.hasAuditAuthority(#{userId},#{rptCaseId})
+      from dual
+    </select>
+    <select id="auditRpt" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call pkg_rpt_audit_new.auditRpt(
+        #{userId,mode=IN,jdbcType=NUMERIC},
+        #{rptCaseId,mode=IN,jdbcType=NUMERIC},
+        #{status,mode=IN,jdbcType=VARCHAR},
+        #{comment,mode=IN,jdbcType=VARCHAR},
+        #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR},
+        #{rtnStatus,mode=OUT,jdbcType=NUMERIC}
+        )}
+    </select>
+
+
+    <select id="selectAudits" parameterType="map" statementType="CALLABLE">
+      {
+      #{list,mode=OUT,jdbcType=CURSOR,resultMap=rptAuditVO}= call PKG_RPT_AUDIT_NEW.getAuditInfo
+      (
+      #{rptCaseId,mode=IN,jdbcType=NUMERIC}
+      )
+      }
+    </select>
+    <resultMap id="rptAuditVO" type="com.loushuiyifan.report.vo.RptAuditVO">
+    </resultMap>
+</mapper>

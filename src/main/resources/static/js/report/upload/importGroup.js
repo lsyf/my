@@ -20,7 +20,7 @@ function queryLog() {
         data: {
 
             latnId: orgTree.val(),
-            incomeSource: isTree.val(),
+            incomeSource: custTree.val(),
             shareType: $("#upload_cutType").val()
         },
         dataType: "json",
@@ -45,7 +45,7 @@ function queryLog() {
 function removeData() {
     var month = $("#upload_month").val();
     var latnId = orgTree.val();
-    var incomeSource = isTree.val();
+    var incomeSource = custTree.val();
     var shareType = $("#upload_cutType").val();
 
     editAlert('警告', '是否确定删除:  账期' + month + ", 地市" + latnId

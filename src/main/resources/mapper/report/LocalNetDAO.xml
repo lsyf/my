@@ -106,11 +106,5 @@
 	 where a.type = 'local_net' and a.lvl=3
     
     </select>
-    <select id="listReportName" resultType="Map">
-    	select report_id                as "id", 
-    	report_id || '-' || report_name as "name",
-    	report_id                       as "data"
-     from charge.RPT_BALANCE_DEF
-     order by report_id
-    </select>        
+
 </mapper>

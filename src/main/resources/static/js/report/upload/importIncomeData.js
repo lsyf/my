@@ -131,9 +131,7 @@ function initForm() {
                 success: function (r) {
                     $('#btn_upload').button("reset");
                     if (r.state) {
-                        $('#form_upload').resetForm();
-                        orgTree.reset();
-
+                        $('#upload_file').fileinput('clear');
                         toastr.info('导入成功');
                         queryLog();
                     } else {
@@ -156,21 +154,34 @@ function initForm() {
 
 }
 
-function removeData(row) {
-    editAlert('警告', '是否确定删除流水号: ' + row.logId, '删除', function () {
+function removeData() {
+
+    var selects = table.getSelections();
+    if (selects == null || selects.length == 0) {
+        toastr.info('未选中任何流水号');
+        return;
+    }
+
+    var logIds = [];
+    var txt = "";
+    selects.forEach(function (d, i) {
+        logIds.push(d.logId);
+        txt += d.logId + ', '
+    });
+
+    editAlert('警告', '是否确定删除流水号: ' + txt, '删除', function () {
         $.ajax({
             type: "POST",
             url: hostUrl + "importIncomeData/remove",
-            data: {logId: row.logId},
+            data: {logIds: logIds},
             dataType: "json",
             success: function (r) {
                 if (r.state) {
                     toastr.info('删除成功');
                     hideAlert();
-                    table.refresh();
+                    queryLog()
                 } else {
-                    toastr.error('提删除失败');
-                    toastr.error(r.msg);
+                    toastr.error('删除失败:' + r.msg);
                 }
             },
             error: function (result) {
@@ -180,6 +191,49 @@ function removeData(row) {
     });
     showAlert();
 }
+
+function commitData() {
+
+    var selects = table.getSelections();
+    if (selects == null || selects.length == 0) {
+        toastr.info('未选中任何流水号');
+        return;
+    }
+
+    var logIds = [];
+    var txt = "";
+    selects.forEach(function (d, i) {
+        logIds.push(d.logId);
+        txt += d.logId + ', '
+    });
+
+    editAlert('警告', '是否确定提交流水号: ' + txt, '提交', function () {
+        hideAlert();
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "importIncomeData/commit",
+            data: {logIds: logIds},
+            dataType: "json",
+            beforeSubmit: function () {
+                $('#btn_commit').button("loading");
+            }, success: function (r) {
+                $('#btn_commit').button("reset");
+                if (r.state) {
+                    toastr.info('提交成功');
+                } else {
+                    toastr.error('提交失败:' + r.msg);
+                }
+                queryLog()
+            },
+            error: function (result) {
+                $('#btn_commit').button("reset");
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
 
 //Table初始化
 var TableInit = function () {
@@ -236,6 +290,9 @@ var TableInit = function () {
             }, {
                 field: 'userId',
                 title: '操作人ID'
+            }, {
+                field: 'action',
+                title: '提交状态'
             }, {
                 field: 'isItsm',
                 title: '送审资格',
