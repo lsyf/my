@@ -20,17 +20,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptQueryFundsFeeService;
+import com.loushuiyifan.report.service.RptFundsFeeQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.FundsFeeVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
 @Controller
-@RequestMapping("rptQueryFundsFee")
-public class RptQueryFundsFeeController extends BaseReportController{
-	private static final Logger logger = LoggerFactory.getLogger(RptQueryFundsFeeController.class);
+@RequestMapping("rptFundsFeeQuery")
+public class RptFundsFeeQueryController extends BaseReportController{
+	private static final Logger logger = LoggerFactory.getLogger(RptFundsFeeQueryController.class);
 	@Autowired
-	RptQueryFundsFeeService RptQueryFundsFeeService;
+	RptFundsFeeQueryService RptFundsFeeQueryService;
 	/**
      * 资金缴拨报表查询界面
      *
@@ -47,7 +47,7 @@ public class RptQueryFundsFeeController extends BaseReportController{
         map.put("orgs", orgs);
         map.put("months", months);
         map.put("reportIds", reportIds);
-        return "report/rptQueryFundsFee";
+        return "report/rptFundsFeeQuery";
     }
 
     /**
@@ -63,7 +63,7 @@ public class RptQueryFundsFeeController extends BaseReportController{
 	    		                String reportId,
 	    		                String prctrName
 	    		                ){
-    	List<FundsFeeVO> list =RptQueryFundsFeeService.list(month, reportId, prctrName);
+    	List<FundsFeeVO> list =RptFundsFeeQueryService.list(month, reportId, prctrName);
        
 
         return JsonResult.success(list);
@@ -81,13 +81,17 @@ public class RptQueryFundsFeeController extends BaseReportController{
                              String prctrName) {
         //TODO 导出报表名称未定
         try {
-            byte[] datas = RptQueryFundsFeeService.export(month, reportId, prctrName);
-            String name ="201710.xls";
-
+            byte[] datas = RptFundsFeeQueryService.export(month, reportId, prctrName);
+            
+            String name =getFileName(month,reportId,prctrName);
             downloadService.download(req, resp, datas,name);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return JsonResult.success();
     }
+    
+    public String getFileName(String month,String reportId,String prctrName){
+		return month+"_"+reportId  +"_"+ prctrName +".xls";
+	}
 }

@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptAuditFundsFeeService;
+import com.loushuiyifan.report.service.RptFundsFeeAuditService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.FundsAuditVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
 @Controller
-@RequestMapping("rptAuditFundsFee")
-public class RptAuditFundsFeeController extends BaseReportController{
-	private static final Logger logger = LoggerFactory.getLogger(RptAuditFundsFeeController.class);
+@RequestMapping("rptFundsFeeAudit")
+public class RptFundsFeeAuditController extends BaseReportController{
+	private static final Logger logger = LoggerFactory.getLogger(RptFundsFeeAuditController.class);
 	@Autowired
-	RptAuditFundsFeeService RptAuditFundsFeeService;
+	RptFundsFeeAuditService rptFundsFeeAuditService;
 	/**
      * 资金缴拨审核界面
      *
@@ -38,7 +38,7 @@ public class RptAuditFundsFeeController extends BaseReportController{
         List<CommonVO> months = dateService.aroundMonths(5);       
         map.put("reportIds", reportIds);
         map.put("months", months);      
-        return "report/rptAuditFundsFee";
+        return "report/rptFundsFeeAudit";
     }
 
     /**
@@ -51,7 +51,7 @@ public class RptAuditFundsFeeController extends BaseReportController{
     @PostMapping("list")
     @ResponseBody
     public JsonResult listQuery(String month, String reportId){
-    	List<FundsAuditVO> list =RptAuditFundsFeeService.list(month, reportId);
+    	List<FundsAuditVO> list =rptFundsFeeAuditService.list(month, reportId);
        
 
         return JsonResult.success(list);
@@ -65,7 +65,7 @@ public class RptAuditFundsFeeController extends BaseReportController{
     public JsonResult auditReport(String month, String reportId){
         //TODO 报表审核未定
         try {
-            RptAuditFundsFeeService.auditReport(month, reportId);
+        	rptFundsFeeAuditService.auditReport(month, reportId);
             
         } catch (Exception e) {
             e.printStackTrace();

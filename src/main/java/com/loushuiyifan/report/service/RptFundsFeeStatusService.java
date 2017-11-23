@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.loushuiyifan.report.dao.RptStatusFundsFeeDAO;
+import com.loushuiyifan.report.dao.RptFundsFeeStatusDAO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.vo.FundsStatusVO;
@@ -18,17 +18,17 @@ import com.loushuiyifan.report.vo.FundsStatusVO;
  * @date 2017-11-15
  */
 @Service
-public class RptStatusFundsFeeService {
-	private static final Logger logger = LoggerFactory.getLogger(RptStatusFundsFeeService.class);
+public class RptFundsFeeStatusService {
+	private static final Logger logger = LoggerFactory.getLogger(RptFundsFeeStatusService.class);
 	@Autowired
-	RptStatusFundsFeeDAO rptStatusFundsFeeDAO;
+	RptFundsFeeStatusDAO rptFundsFeeStatusDAO;
 	
 	/**
 	 * 查询
 	 */
 	public List<FundsStatusVO> list(String month, String reportId){
 		
-		List<FundsStatusVO> list =rptStatusFundsFeeDAO.listFundsFee(month, reportId);
+		List<FundsStatusVO> list =rptFundsFeeStatusDAO.listFundsFee(month, reportId);
 	
 		return list;
 	}
@@ -42,7 +42,7 @@ public class RptStatusFundsFeeService {
 		dto.setUserId(userId);
 		dto.setMonth(month);
 		dto.setReportId(reportId);
-		rptStatusFundsFeeDAO.quitData(dto);
+		rptFundsFeeStatusDAO.quitData(dto);
 		int code = dto.getRtnCode();
         if (code != 0) {//非0为失败
             throw new ReportException("1数据回退失败: " + dto.getRtnMsg());

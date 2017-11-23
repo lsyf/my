@@ -65,8 +65,6 @@ var TableInit = function () {
              
             data: [],
             columns: [{
-            	checkbox:true
-            },{
                 field: 'logId',
                 width:'80px',
                 title: '流水号'

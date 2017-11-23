@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.loushuiyifan.report.dao.RptQueryFundsFeeDAO">
+<mapper namespace="com.loushuiyifan.report.dao.RptFundsFeeQueryDAO">
 	<select id="listFundsFee" resultType="com.loushuiyifan.report.vo.FundsFeeVO" >
 		select INDEX_CODE as "indexCode" ,
 	       INDEX_NAME     as "indexName" ,
 	       to_char(BALANCE,'fm999,999,999,990.00') as "balance" ,
-	       prctr          ,
+	       PRCTR          as "prctr",
 	       PRCTR_NAME     as "prctrName",
 	       SAP_FIN_CODE   as "sapFinCode"
 		  from charge.RPT_BALANCE_DATA
 		 where report_month =#{month}
 		<if test='prctrName !="0" ' >
-		and prctr =#{prctrName}
+		and PRCTR =#{prctrName}
 		</if>
 		<if test='reportId !="0" '>
 		and REPORT_ID = #{reportId}
@@ -23,13 +23,13 @@
 		select INDEX_CODE as "indexCode" ,
 	       INDEX_NAME     as "indexName" ,
 	       to_char(BALANCE,'fm999,999,999,990.00') as "balance" ,
-	       prctr          ,
+	       PRCTR          as "prctr",
 	       PRCTR_NAME     as "prctrName",
 	       SAP_FIN_CODE   as "sapFinCode"
 		  from charge.RPT_BALANCE_DATA
 		 where report_month =#{month}
 		<if test=' prctrName !="0" ' >
-		and prctr =#{prctrName}
+		and PRCTR =#{prctrName}
 		</if>
 		<if test='reportId !="0" '>
 		and REPORT_ID = #{reportId}

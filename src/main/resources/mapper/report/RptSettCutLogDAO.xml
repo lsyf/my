@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptSettCutLogDAO">
+	<select id="nextvalKey" resultType="java.lang.Long">
+        select RPT_SETT_LOG_ID.Nextval from dual
+    </select>
+    <select id="delSettleData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_SETT.IRPT_DEL_SETT_CUT(
+         #{logId,  mode=IN, jdbcType=NUMERIC},
+         #{userId, mode=IN, jdbcType=NUMERIC},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg, mode=OUT,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="checkSettleData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_SETT.CHECK_SETT_CUT(
+         #{logId,  mode=IN, jdbcType=NUMERIC},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg, mode=OUT,jdbcType=VARCHAR})}
+    </select>
+    
+    <delete id="deleteLog" >
+		delete from RPT_SETT_CUT_LOG where LOG_ID = #{logId}
+	</delete>
+	
+	<select id="SettCutLog" resultType="com.loushuiyifan.report.vo.SettCutDataVO">
+		select LOG_ID     as "logId", 
+		       ACCT_MONTH as "acctMonth",
+		       FILE_NAME  as "fileName", 
+		       COUNT      as "count",
+		       USER_ID    as "userId",
+		       DETAIL     as "detail",
+		       to_char(IMPORT_DATE, 'yyyy-MM-dd hh24:mi:ss') as "importDate"
+		from RPT_SETT_CUT_LOG
+		where ACCT_MONTH = #{month} 
+		order by IMPORT_DATE ASC
+	</select>
+</mapper>

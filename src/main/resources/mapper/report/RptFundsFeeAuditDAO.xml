@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.loushuiyifan.report.dao.RptAuditFundsFeeDAO">
+<mapper namespace="com.loushuiyifan.report.dao.RptFundsFeeAuditDAO">
 	<select id="listFundsFee" resultType="com.loushuiyifan.report.vo.FundsAuditVO" >
 		<![CDATA[
 		select txt_message   as txtMessage,

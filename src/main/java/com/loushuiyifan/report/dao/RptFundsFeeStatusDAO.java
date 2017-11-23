@@ -9,7 +9,7 @@ import com.loushuiyifan.report.bean.RptBalanceData;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.vo.FundsStatusVO;
 
-public interface RptStatusFundsFeeDAO extends MyMapper<RptBalanceData>{
+public interface RptFundsFeeStatusDAO extends MyMapper<RptBalanceData>{
 	
 	List<FundsStatusVO> listFundsFee(@Param("month") String month, 
 			                         @Param("reportId") String reportId);

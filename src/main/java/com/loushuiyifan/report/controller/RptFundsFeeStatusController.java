@@ -16,17 +16,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptStatusFundsFeeService;
+import com.loushuiyifan.report.service.RptSettleQueryService;
+import com.loushuiyifan.report.service.RptFundsFeeStatusService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.FundsStatusVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
 @Controller
-@RequestMapping("rptStatusFundsFee")
-public class RptStatusFundsFeeController extends BaseReportController{
-	private static final Logger logger = LoggerFactory.getLogger(RptStatusFundsFeeController.class);
+@RequestMapping("rptFundsFeeStatus")
+public class RptFundsFeeStatusController extends BaseReportController{
+	private static final Logger logger = LoggerFactory.getLogger(RptFundsFeeStatusController.class);
 	@Autowired
-	RptStatusFundsFeeService rptStatusFundsFeeFeeService;
+	RptFundsFeeStatusService rptStatusFundsFeeFeeService;
+	@Autowired
+	RptSettleQueryService rptSettleQueryService;
 	/**
      * 资金缴拨状态查询界面
      *
@@ -37,10 +40,10 @@ public class RptStatusFundsFeeController extends BaseReportController{
         
         //页面条件
         List<CommonVO> months = dateService.aroundMonths(5);
-        List<Map<String, String>> reportIds =localNetService.listReportName();
+        List<Map<String, String>> reportIds =rptSettleQueryService.listReportName();
         map.put("months", months);
         map.put("reportIds", reportIds);
-        return "report/rptStatusFundsFee";
+        return "report/rptFundsFeeStatus";
     }
 
     /**

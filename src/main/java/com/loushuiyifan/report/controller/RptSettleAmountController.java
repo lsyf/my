@@ -85,7 +85,7 @@ public class RptSettleAmountController extends BaseReportController{
 				           	String zbCode){
     	try {
             byte[] datas = rptSettleAmountService.export(month, latnId, zbCode);
-            String name ="2017.xls";
+            String name = getFileName(month, latnId, zbCode);
 
             downloadService.download(req, resp, datas,name);
         } catch (Exception e) {
@@ -96,7 +96,9 @@ public class RptSettleAmountController extends BaseReportController{
     	return JsonResult.success();
     }
     
-    
+    public String getFileName(String month,String latnId,String zbCode){
+		return month+"_"+localNetService.getCodeName("local_net",latnId)  +"_"+ zbCode +".xls";
+	}
     
     
     

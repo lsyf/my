@@ -55,8 +55,6 @@ public class RptSettleAmountService {
         		         "val10","val11","val12","val13","val14","val15","val16","val17","val18","val19",
         		         "val20","val21","val22","val23","val24","val25","val26","val27","val28","val29"};
        
-//        List<String> codeNames =rptSettleAmountDAO.listCodeName();
-//        String[] titles = (String[])codeNames.toArray();
         
         String[] str=rptSettleAmountDAO.listCodeName();
         String[] titles= new String[30];
@@ -64,10 +62,10 @@ public class RptSettleAmountService {
         for(int i=0; i<str.length; i++){
         	titles[i+1] = str[i];
         }
-        logger.info("---------titles="+titles.toString());
+        
         byte[] data = new CommonExportServ().column(keys, titles)
-                .data(list)
-                .exportData();
+        		                            .data(list)
+        		                            .exportData();
 
         return data;
     }

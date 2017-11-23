@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptSettCutRateDAO">
+	<delete id="deleteData" >
+		delete from RPT_SETT_CUT_RATE where LOG_ID = #{logId}
+	</delete>
+    
+    <select id="SettCutRateData" resultType="com.loushuiyifan.report.vo.SettCutRateVO">
+		select LOG_ID   as "logId",
+		    ACCT_MONTH  as "acctMonth", 
+		    LATN_ID     as "latnId",
+		    AREA_NAME   as "areaName",
+		    REPORT_ID   as "reportId",
+		    ZB_CODE     as "zbCode", 
+		    RATE        as "rate"
+			from RPT_SETT_CUT_RATE
+		where ACCT_MONTH=#{month}
+		<if test=' reportId !="0" '>
+		and REPORT_ID =#{reportId}
+		</if> 
+		
+		order by LOG_ID ASC
+	</select>
+</mapper>

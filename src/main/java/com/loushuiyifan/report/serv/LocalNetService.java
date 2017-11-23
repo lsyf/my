@@ -190,9 +190,8 @@ public class LocalNetService {
     	m.put("data", "0");
     	m.put("lvl", "1");
     	list.add(m);
-    	List<Map<String, String>> li =localNetDAO.listReportName();
-    	list.addAll(li);
-    	
+    	List<Map<String, String>> list2 =localNetDAO.listReportName();
+		list.addAll(list2);
     	return list;
     }
     

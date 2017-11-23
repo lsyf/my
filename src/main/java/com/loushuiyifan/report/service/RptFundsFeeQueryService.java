@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.loushuiyifan.report.dao.RptQueryFundsFeeDAO;
+import com.loushuiyifan.report.dao.RptFundsFeeQueryDAO;
 import com.loushuiyifan.report.serv.CommonExportServ;
 import com.loushuiyifan.report.vo.FundsFeeVO;
 
@@ -18,17 +18,17 @@ import com.loushuiyifan.report.vo.FundsFeeVO;
  * @date 2017-11-15
  */
 @Service
-public class RptQueryFundsFeeService {
-	private static final Logger logger = LoggerFactory.getLogger(RptQueryFundsFeeService.class);
+public class RptFundsFeeQueryService {
+	private static final Logger logger = LoggerFactory.getLogger(RptFundsFeeQueryService.class);
 	@Autowired
-	RptQueryFundsFeeDAO rptQueryFundsFeeDAO;
+	RptFundsFeeQueryDAO rptFundsFeeQueryDAO;
 	
 	/**
 	 * 查询
 	 */
 	public List<FundsFeeVO> list(String month, String reportId,String prctrName){
 		
-		List<FundsFeeVO> list =rptQueryFundsFeeDAO.listFundsFee(month, reportId, prctrName);
+		List<FundsFeeVO> list =rptFundsFeeQueryDAO.listFundsFee(month, reportId, prctrName);
 	
 		return list;
 	}
@@ -38,7 +38,7 @@ public class RptQueryFundsFeeService {
      */
     public byte[] export(String month,String reportId,String prctrName) throws Exception {
 
-        List<Map<String, String>> list = rptQueryFundsFeeDAO.queryLogForMap(month, reportId, prctrName);
+        List<Map<String, String>> list = rptFundsFeeQueryDAO.queryLogForMap(month, reportId, prctrName);
 
         String[] keys = {"indexCode", "indexName", "balance", "prctr", "prctrName", "sapFinCode"};
         

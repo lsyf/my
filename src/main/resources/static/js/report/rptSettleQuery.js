@@ -5,7 +5,7 @@ function initForm() {
     table.Init();
 
     buildSelect('upload_month', months);
-    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 90);
+    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId");
     isTree.Init(reportIds);
    
 }

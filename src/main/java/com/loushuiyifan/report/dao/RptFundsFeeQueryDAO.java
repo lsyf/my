@@ -9,7 +9,7 @@ import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptBalanceData;
 import com.loushuiyifan.report.vo.FundsFeeVO;
 
-public interface RptQueryFundsFeeDAO extends MyMapper<RptBalanceData>{
+public interface RptFundsFeeQueryDAO extends MyMapper<RptBalanceData>{
 	
 	List<FundsFeeVO> listFundsFee(@Param("month") String month, 
 			                      @Param("reportId") String reportId,
