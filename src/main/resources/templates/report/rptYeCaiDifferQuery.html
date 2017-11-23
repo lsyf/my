@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>结算报表查询</title>
+    <title>业财差异报表</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -42,8 +42,8 @@
 
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../static/js/report/rptSettleQuery.js"
-            th:src="@{/static/js/report/rptSettleQuery.js}"></script>
+    <script src="../../static/js/report/rptYeCaiDifferQuery.js"
+            th:src="@{/static/js/report/rptYeCaiDifferQuery.js}"></script>
 
 
     <style>
@@ -67,17 +67,17 @@
 
         <script th:inline="javascript">
             //页面传值
-            var reportIds = [[${reportIds}]];
+            var orgs = [[${orgs}]];
             var months = [[${months}]];
             
             $(function () {
-            	initForm();
+            	initYCCYForm();
             });
         </script>
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>报表查询</h1>
+            <h1>业财差异报表</h1>
         </section>
 
         <!-- Main content -->
@@ -101,13 +101,23 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group form-group-rm">
-                                    <label for="upload_reportId" class="col-sm-4 control-label">报表编号</label>
+                                    <label for="upload_latnId" class="col-sm-4 control-label">营业区</label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="upload_reportId" readonly>
-                                        <input class="form-control" name="reportId" type="hidden">
+                                        <input type="text" class="form-control" id="upload_latnId" readonly>
+                                        <input class="form-control" name="latnId" type="hidden">
                                     </div>
+
                                 </div>
-                                                            
+                                <div class="col-sm-4 form-group form-group-rm">
+                                    <label for="upload_report" class="col-sm-4 control-label">报表名</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" name="report" id="upload_report">
+                                            <option value="111">用户预存服务费核对表</option>
+                                            <option value="112">用户欠费核对表</option>
+                                            <option value="113">差异明细分析表</option>
+                                        </select>
+                                    </div>
+                                </div>                            
 
                             </div>
 
@@ -115,14 +125,14 @@
                             <div class="form-group  form-group-sm">
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_export" onclick="exportData()">
+                                    	多营业导出
+                                </button>
+                                <button class="btn btn-success pull-right btn-sm btn-form"
+                                        type="button" id="btn_sum" onclick="exportData()">
                                     	导出
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_audit" onclick="auditQuery()">
-                                    	审核
-                                </button>
-                                <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryData()">
+                                        type="button" id="btn_query" onclick="queryLog()">
                                     	查询
                                 </button>
                                 
@@ -148,11 +158,11 @@
             <div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
-
-           <form target="_blank"
+			<form target="_blank"
                   id="form_export"
                   method="post" hidden>
             </form>
+           
         </section>
 
 
