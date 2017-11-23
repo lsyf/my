@@ -1,19 +1,12 @@
 package com.loushuiyifan.report.service;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.config.poi.PoiRead;
-import com.loushuiyifan.report.ReportConfig;
-import com.loushuiyifan.report.bean.ExtImportLog;
-import com.loushuiyifan.report.bean.RptImportDataTax;
-import com.loushuiyifan.report.dao.ExtImportLogDAO;
-import com.loushuiyifan.report.dao.RptImportDataTaxDAO;
-import com.loushuiyifan.report.dto.CheckDataDTO;
-import com.loushuiyifan.report.dto.DeleteImportDataDTO;
-import com.loushuiyifan.report.dto.SPDataDTO;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.ReportReadServ;
-import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import java.nio.file.Path;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -25,12 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.config.poi.PoiRead;
+import com.loushuiyifan.report.ReportConfig;
+import com.loushuiyifan.report.bean.ExtImportLog;
+import com.loushuiyifan.report.bean.RptImportDataTax;
+import com.loushuiyifan.report.dao.ExtImportLogDAO;
+import com.loushuiyifan.report.dao.RptImportDataTaxDAO;
+import com.loushuiyifan.report.dto.SPDataDTO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.DateService;
+import com.loushuiyifan.report.serv.ReportReadServ;
+import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 
 
 @Service
@@ -155,7 +154,7 @@ public class ImportTaxService {
      * @param logId
      */
     public void delete(Long userId, Long logId) throws Exception {
-        DeleteImportDataDTO dto = new DeleteImportDataDTO();
+    	SPDataDTO dto = new SPDataDTO();
         dto.setUserId(userId);
         dto.setLogId(logId);
         //存过 IRPT_DEL_TAXDATA
@@ -163,7 +162,7 @@ public class ImportTaxService {
         int code = dto.getRtnCode();
        
         if (code != 0) {//非0为失败
-            throw new ReportException("1数据删除失败: " + dto.getRtnMeg());
+            throw new ReportException("1数据删除失败: " + dto.getRtnMsg());
         }
     }
 
@@ -174,11 +173,11 @@ public class ImportTaxService {
      */
     public void taxFile(String month, String type) throws Exception {
         //TODO 税务插入到stat_to_group  存过输入修改MSS_STAT_TO_TAX
-        CheckDataDTO dto = new CheckDataDTO();
+    	SPDataDTO dto = new SPDataDTO();
         dto.setLogId(Long.parseLong(type));
         rptImportDataTaxDAO.insertTaxGroup();
         int rtnCode = dto.getRtnCode();
-        String rtnMeg = dto.getRtnMeg();
+        String rtnMeg = dto.getRtnMsg();
         if (rtnCode != 0) {
             System.out.println(rtnMeg);
         }

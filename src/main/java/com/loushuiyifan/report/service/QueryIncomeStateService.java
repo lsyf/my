@@ -1,7 +1,6 @@
 package com.loushuiyifan.report.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +35,7 @@ public class QueryIncomeStateService {
 	 * @param userId
 	 * @throws Exception
 	 */
-	public void changeState(String status, 
-                            Long subId,
-                            Long userId) {
+	public void changeState(String status, Long subId, Long userId) {
 		String name =queryIncomeStateDAO.checkUserId(userId);
 		if(name ==null){
 			throw new ReportException("该用户没有修改权限！");

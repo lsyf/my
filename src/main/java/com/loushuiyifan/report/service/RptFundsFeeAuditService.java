@@ -1,15 +1,13 @@
 package com.loushuiyifan.report.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.loushuiyifan.report.dao.RptAuditFundsFeeDAO;
+import com.loushuiyifan.report.dao.RptFundsFeeAuditDAO;
 import com.loushuiyifan.report.vo.FundsAuditVO;
 
 /**
@@ -18,17 +16,17 @@ import com.loushuiyifan.report.vo.FundsAuditVO;
  * @date 2017-11-15
  */
 @Service
-public class RptAuditFundsFeeService {
-	private static final Logger logger = LoggerFactory.getLogger(RptAuditFundsFeeService.class);
+public class RptFundsFeeAuditService {
+	private static final Logger logger = LoggerFactory.getLogger(RptFundsFeeAuditService.class);
 	@Autowired
-	RptAuditFundsFeeDAO rptAuditFundsFeeDAO;
+	RptFundsFeeAuditDAO rptFundsFeeAuditDAO;
 	
 	/**
 	 * 查询
 	 */
 	public List<FundsAuditVO> list(String month, String reportId){
 		
-		List<FundsAuditVO> list =rptAuditFundsFeeDAO.listFundsFee(month, reportId);
+		List<FundsAuditVO> list =rptFundsFeeAuditDAO.listFundsFee(month, reportId);
 	
 		return list;
 	}

@@ -1,13 +1,12 @@
 package com.loushuiyifan.report.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.vo.CommonVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -48,14 +47,9 @@ public interface LocalNetDAO extends MyMapper<Organization> {
     List<Map<String, String>> listPrctrName(@Param("name") String name);
     /**
      * 根据用户Id得到所在地市
-     * @param userId
      * @return
      */
     List<CommonVO> listNameById();
     
-    /**
-     * 查询报表名称
-     * @return
-     */
-    List<Map<String, String>> listReportName();
+
 }

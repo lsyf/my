@@ -3,7 +3,9 @@ package com.loushuiyifan.report.controller.upload;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.service.ImportYccyService;
+import com.loushuiyifan.report.service.ImportSettleCutService;
+import com.loushuiyifan.report.service.RptFundsFeeQueryService;
+import com.loushuiyifan.report.service.RptSettleQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.slf4j.Logger;
@@ -20,39 +22,44 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 业财差异
- *
- * @author Administrator
- */
 @Controller
-@RequestMapping("importYCCY")
-public class ImportYccyController extends BaseReportController {
-    private static final Logger logger = LoggerFactory.getLogger(ImportYccyController.class);
+@RequestMapping("importSettleCut")
+public class ImportSettleCutController extends BaseReportController {
+    private static final Logger logger = LoggerFactory.getLogger(ImportSettleCutController.class);
 
 
     @Autowired
-    ImportYccyService importYccyService;
+    ImportSettleCutService importSettleCutService;
+    @Autowired
+    RptSettleQueryService rptSettleQueryService;
 
+     @Autowired
+     RptFundsFeeQueryService rptFundsFeeQueryService;
 
     /**
-     * 导入界面
+     * 结算数据切割页面
      *
      * @return
      */
     @GetMapping
-    public String index(ModelMap map, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
+    public String index(ModelMap map) {
 
         //页面条件
         List<CommonVO> months = dateService.aroundMonths(5);
+        List<Map<String, String>> orgs =rptFundsFeeQueryService.listReportName();
         map.put("months", months);
+        map.put("orgs", orgs);
 
-        return "report/upload/importYCCY";
+        return "report/upload/importSettleCut";
     }
-
+    
     /**
-     * 导入
+     * 文件导入
+     * @param file
+     * @param month
+     * @param desc
+     * @param user
+     * @return
      */
     @PostMapping("upload")
     @ResponseBody
@@ -61,44 +68,43 @@ public class ImportYccyController extends BaseReportController {
                              String remark,
                              @ModelAttribute("user") User user) {
 
+        //首先校验能否导入
+        dateService.checkImportSettCut(month);
         Long userId = user.getId();
 
-        //首先校验能否导入
-        dateService.checkImportYccy();
-
-        //然后保存
+        //存储
         Path path = reportStorageService.store(file);
 
-        //最后解析入库(失败则删除文件)
+        //解析入库(失败则删除文件)
         try {
-            importYccyService.save(path,
-                    userId,
-                    month,
-                    remark);
+        	importSettleCutService.save(path, month, remark, userId);
         } catch (Exception e) {
-            logger.error("7解析入库失败", e);
+            e.printStackTrace();
+            logger.error("4解析入库失败", e);
             try {
                 Files.delete(path);
             } catch (IOException e1) {
-                logger.error("7删除文件失败", e1);
+                e1.printStackTrace();
+                logger.error("4删除文件失败", e1);
             } finally {
                 throw new ReportException("导入失败: " + e.getMessage(), e);
             }
         }
+
         return JsonResult.success();
     }
+
 
     /**
      * 查询
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult list(String month, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
-        Map<String, Object> list = importYccyService
-                .list(userId, month);
+    public JsonResult listCut(String month,String reportId) {
 
-        return JsonResult.success(list);
+    	Map<String, Object> map = importSettleCutService.queryList(month, reportId);
+
+        return JsonResult.success(map);
     }
 
     /**
@@ -106,14 +112,11 @@ public class ImportYccyController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
-    public JsonResult remove(Long logId,
-                             String month,
-                             @ModelAttribute("user") User user) {
+    public JsonResult delete(@ModelAttribute("user") User user, Long logId) {
         Long userId = user.getId();
-       
-        dateService.checkDelYccy(month);
-        importYccyService.delete(userId, logId);
+        importSettleCutService.delete(userId, logId);
         return JsonResult.success();
     }
+
 
 }

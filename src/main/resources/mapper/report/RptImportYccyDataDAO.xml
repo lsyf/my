@@ -38,7 +38,7 @@
 		where t.log_id = #{logId}
     </select>
 
-    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.DeleteYccyDataDTO"
+    <select id="deleteImportData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call ssc_ychd_del_data(
         #{userId,mode=IN,jdbcType=NUMERIC},

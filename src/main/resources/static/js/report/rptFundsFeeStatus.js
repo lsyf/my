@@ -36,6 +36,47 @@ function queryLog() {
 
 }
 
+//回退
+function quitData(row) {
+	var month = $("#upload_month").val();
+	var reportId = isTree.val(); 
+	
+	var selects = $('#table_upload').bootstrapTable('getSelections');
+	if(selects.length==0){
+		toastr.info('未选中任何数据');
+		return;
+	}
+	var logs = [];
+	selects.forEach(function(data,i){
+		logs.push(data.voucherCode);
+	});
+	editAlert('警告', '是否确定回退月份: ' + month,'报表编号:'+reportId , '回退', function () {
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "rptStatusFundsFee/quit",
+            data: {month: month, reportId: reportId},
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('回退成功');
+                    hideAlert();
+
+                    queryLog()
+                } else {
+                    toastr.error('回退失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    });
+    showAlert();
+}
+
+
+
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();

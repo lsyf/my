@@ -37,7 +37,7 @@
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
          #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
- 	<select id="deleteTax" parameterType="com.loushuiyifan.report.dto.DeleteImportDataDTO"
+ 	<select id="deleteTax" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call IRPT_DEL_TAXDATA(
          #{userId,mode=IN,jdbcType=NUMERIC},

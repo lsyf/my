@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.loushuiyifan.report.dao.RptStatusFundsFeeDAO">
+<mapper namespace="com.loushuiyifan.report.dao.RptFundsFeeStatusDAO">
 	<select id="listFundsFee" resultType="com.loushuiyifan.report.vo.FundsStatusVO" >
 		select report_id||'-'||report_name as reportName,
 			status,
@@ -13,6 +13,14 @@
 		
 	</select> 
 	
-	
+	<select id="quitData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_BALANCE.p_quit_audit(
+         #{userId,mode=IN,jdbcType=NUMERIC},
+         #{month,mode=OUT,jdbcType=VARCHAR})}
+         #{reportId,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
 	
 </mapper>

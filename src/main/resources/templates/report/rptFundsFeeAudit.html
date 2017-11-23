@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>资金缴拨报表状态查询</title>
+    <title>资金缴拨报表审核</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -42,8 +42,8 @@
 
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../static/js/report/rptStatusFundsFee.js"
-            th:src="@{/static/js/report/rptStatusFundsFee.js}"></script>
+    <script src="../../static/js/report/rptFundsFeeAudit.js"
+            th:src="@{/static/js/report/rptFundsFeeAudit.js}"></script>
 
 
     <style>
@@ -69,7 +69,6 @@
             //页面传值
             var reportIds = [[${reportIds}]];
             var months = [[${months}]];
-           
             $(function () {
             	initFundsFeeForm();
             });
@@ -107,19 +106,15 @@
                                         <input class="form-control" name="reportId" type="hidden">
                                     </div>
 
-                                </div>                                                             
-
+                                </div>
+                                
                             </div>
 
                                                       
                             <div class="form-group  form-group-sm">
                                 <button id="btn_load" type="button" onclick=" "
                                         class="btn btn-success pull-right btn-sm btn-form">
-                                   		 下载
-                                </button>
-                                <button id="btn_quit" type="button" onclick=" "
-                                        class="btn btn-success pull-right btn-sm btn-form">
-                                   		 回退
+                                   		 审核
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_query" onclick="queryLog()">
@@ -148,11 +143,7 @@
             <div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
-
-           <form target="_blank"
-                  id="form_down"
-                  method="post" hidden>
-            </form>
+            
         </section>
 
 

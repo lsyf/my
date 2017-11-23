@@ -182,19 +182,5 @@ public class LocalNetService {
 
     }
 
-    public List<Map<String, String>> listReportName() {
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        Map<String, String> m = Maps.newHashMap();
-        m.put("id", "0");
-        m.put("name", "全部");
-        m.put("data", "0");
-        m.put("lvl", "1");
-        list.add(m);
-        List<Map<String, String>> li = localNetDAO.listReportName();
-        list.addAll(li);
-
-        return list;
-    }
-
 
 }
