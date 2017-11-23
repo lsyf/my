@@ -12,7 +12,7 @@ import java.util.Map;
  * @author 漏水亦凡
  * @date 2017/11/7
  */
-public interface RptQueryDAO extends MyMapper<CommonVO> {
+public interface RptQueryCustDAO extends MyMapper<CommonVO> {
 
     @MapKey("key")
     Map<String, Map<String, String>> listAsMap(@Param("month") String month,

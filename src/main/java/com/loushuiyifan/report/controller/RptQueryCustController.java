@@ -3,7 +3,7 @@ package com.loushuiyifan.report.controller;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptQueryService;
+import com.loushuiyifan.report.service.RptQueryCustService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
@@ -24,12 +24,12 @@ import java.util.Map;
  * @date 2017/11/2
  */
 @Controller
-@RequestMapping("rptQuery")
-public class RptQueryController extends BaseReportController {
+@RequestMapping("rptQueryCust")
+public class RptQueryCustController extends BaseReportController {
 
 
     @Autowired
-    RptQueryService rptQueryService;
+    RptQueryCustService rptQueryCustService;
 
     @GetMapping
     public String index(ModelMap map, @ModelAttribute("user") User user) {
@@ -43,7 +43,7 @@ public class RptQueryController extends BaseReportController {
         map.put("orgs", orgs);
         map.put("months", months);
         map.put("incomeSources", incomeSources);
-        return "report/rptQuery";
+        return "report/rptQueryCust";
     }
 
     /**
@@ -64,7 +64,7 @@ public class RptQueryController extends BaseReportController {
                            @ModelAttribute("user") User user) {
 
         Long userId = user.getId();
-        RptQueryDataVO vo = rptQueryService.list(month, latnId, incomeSource, type, userId);
+        RptQueryDataVO vo = rptQueryCustService.list(month, latnId, incomeSource, type, userId);
         return JsonResult.success(vo);
     }
 
@@ -86,7 +86,7 @@ public class RptQueryController extends BaseReportController {
                        String incomeSource,
                        String type,
                        Boolean isMulti) throws Exception {
-        String path = rptQueryService.export(month,
+        String path = rptQueryCustService.export(month,
                 latnId,
                 incomeSource,
                 type,
@@ -113,7 +113,7 @@ public class RptQueryController extends BaseReportController {
                                 String type,
                                 @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        Map<String, Object> map = rptQueryService.listAudit(month,
+        Map<String, Object> map = rptQueryCustService.listAudit(month,
                 latnId,
                 incomeSource,
                 type,
@@ -129,7 +129,7 @@ public class RptQueryController extends BaseReportController {
     public JsonResult audit(Long rptCaseId, String status, String comment,
                             @ModelAttribute("user") User user) {
         Long userId = user.getId();
-        rptQueryService.audit(rptCaseId, status, comment, userId);
+        rptQueryCustService.audit(rptCaseId, status, comment, userId);
         return JsonResult.success();
     }
 

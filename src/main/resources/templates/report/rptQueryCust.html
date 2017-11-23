@@ -43,8 +43,8 @@
 
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../static/js/report/rptQuery.js"
-            th:src="@{/static/js/report/rptQuery.js}"></script>
+    <script src="../../static/js/report/rptQueryCust.js"
+            th:src="@{/static/js/report/rptQueryCust.js}"></script>
 
 
     <style>
@@ -88,7 +88,7 @@
             var months = [[${months}]];
             var incomeSources = [[${incomeSources}]];
             $(function () {
-                initRptQuery();
+                initRptQueryCust();
             });
         </script>
 
@@ -139,7 +139,7 @@
                             </div>
                             <div class="col-sm-3 form-group form-group-rm">
 
-                                <label for="form_type" class="col-sm-4 control-label">切割类型</label>
+                                <label for="form_type" class="col-sm-4 control-label">税务类型</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="type" id="form_type">
                                         <option value="0">价税合一(含税)</option>

@@ -7,7 +7,7 @@ import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.bean.ReportCache;
 import com.loushuiyifan.report.bean.RptCase;
 import com.loushuiyifan.report.dao.ReportCacheDAO;
-import com.loushuiyifan.report.dao.RptQueryDAO;
+import com.loushuiyifan.report.dao.RptQueryCustDAO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.CodeListTaxService;
@@ -41,15 +41,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2017/11/7
  */
 @Service
-public class RptQueryService {
+public class RptQueryCustService {
 
-    private static Logger logger = LoggerFactory.getLogger(RptQueryService.class);
+    private static Logger logger = LoggerFactory.getLogger(RptQueryCustService.class);
 
     @Autowired
     RptEditionService rptEditionService;
 
     @Autowired
-    RptQueryDAO rptQueryDAO;
+    RptQueryCustDAO rptQueryCustDAO;
 
     @Autowired
     LocalNetService localNetService;
@@ -111,7 +111,7 @@ public class RptQueryService {
             rptCase.setReportNo(1701L);
             rptCase.setCreateUserid(userId + "");
             rptCase.setTaxMark(Integer.parseInt(type));
-            rptCase.setType(RptCaseService.TYPE_RptCust);//类型
+            rptCase.setType(ReportConfig.RptExportType.RPT_QUERY_CUST.toString());//类型
             Long rptCaseId = rptCaseService.saveCaseSelective(rptCase);
 
             //客户群
@@ -119,7 +119,7 @@ public class RptQueryService {
             //指标
             List<Map<String, String>> fields = rptEditionService.listFieldMap();
             //数据
-            Map<String, Map<String, String>> datas = rptQueryDAO.listAsMap(month, incomeSource, latnId, type);
+            Map<String, Map<String, String>> datas = rptQueryCustDAO.listAsMap(month, incomeSource, latnId, type);
 
             //由于fields接下来会更改，优先生成文件
             String filePath = export(month, latnId, incomeSource, type,
@@ -155,12 +155,9 @@ public class RptQueryService {
 
 
             // 保存缓存
-            ReportCache reportCache = new ReportCache();
-            reportCache.setRptCaseId(rptCaseId);
-            byte[] data = ProtoStuffSerializerUtil.serialize(vo);
-            reportCache.setHtmlData(data);
-            reportCache.setFilePath(filePath);
-            reportCacheDAO.insertSelective(reportCache);
+            rptCaseService.saveReportCache(rptCaseId,
+                    ProtoStuffSerializerUtil.serialize(vo),
+                    filePath);
 
         } catch (Exception e) {
             throw new ReportException("查询数据失败: " + e.getMessage());
@@ -168,7 +165,7 @@ public class RptQueryService {
             //移除生成状态
             cacheStatusMap.remove(cacheStatusKey);
         }
-        return null;
+        return vo;
     }
 
     /**
@@ -192,7 +189,7 @@ public class RptQueryService {
 
 
         String isName = codeListTaxService.
-                getIncomeSource("income_source2017", incomeSource).getCodeName();
+                getNameByTypeAndData("income_source2017", incomeSource).getCodeName();
 
 
         String templatePath = configTemplatePath();
@@ -241,13 +238,13 @@ public class RptQueryService {
         for (Organization org : orgs) {
             String name = org.getName();
             String id = org.getData();
-            Map<String, Map<String, String>> data = rptQueryDAO.listAsMap(month, incomeSource, id, type);
+            Map<String, Map<String, String>> data = rptQueryCustDAO.listAsMap(month, incomeSource, id, type);
             reportData.put(name, data);
         }
 
         String latnName = orgs.get(0).getName();
         String isName = codeListTaxService.
-                getIncomeSource("income_source2017", incomeSource).getCodeName();
+                getNameByTypeAndData("income_source2017", incomeSource).getCodeName();
 
 
         String templatePath = configTemplatePath();
@@ -285,7 +282,7 @@ public class RptQueryService {
         Long rptCaseId = rptCase.getRptCaseId();
 
         //然后判断用户是否存在审核权限
-        String rtn = rptQueryDAO.hasAuditAuthority(userId, rptCaseId);
+        String rtn = rptQueryCustDAO.hasAuditAuthority(userId, rptCaseId);
 
         if (!"Y".equals(rtn)) {
             throw new ReportException(rtn);
@@ -294,7 +291,7 @@ public class RptQueryService {
 
         Map param = new HashMap();
         param.put("rptCaseId", rptCaseId);
-        rptQueryDAO.selectAudits(param);
+        rptQueryCustDAO.selectAudits(param);
         List<RptAuditVO> list = (List<RptAuditVO>) param.get("list");
         if (list == null || list.size() == 0) {
             throw new ReportException("审核信息为空");
@@ -321,7 +318,7 @@ public class RptQueryService {
         dto.setUserId(userId);
         dto.setStatus(status);
         dto.setComment(comment);
-        rptQueryDAO.auditRpt(dto);
+        rptQueryCustDAO.auditRpt(dto);
         if (dto.getRtnCode() != 0) {//非0审核失败
             throw new ReportException(dto.getRtnMsg());
         }
@@ -364,7 +361,8 @@ public class RptQueryService {
             suffix = "报表.xls";
         }
 
-        String fileName = new StringBuffer(latnName)
+        String fileName = new StringBuffer("财务报表")
+                .append(sep).append(latnName)
                 .append(sep).append(month)
                 .append(sep).append(isName)
                 .append(sep).append(type)
@@ -387,7 +385,7 @@ public class RptQueryService {
     public String configTemplatePath() {
         String sep = File.separator;
         String templateName = dictionaryService.getKidDataByName(ReportConfig.RptExportType.PARENT.toString(),
-                ReportConfig.RptExportType.RPT_QUERY.toString());
+                ReportConfig.RptExportType.RPT_QUERY_CUST.toString());
         return new StringBuffer(reportDownloadService.configTemplateLocation())
                 .append(sep).append(templateName).toString();
     }

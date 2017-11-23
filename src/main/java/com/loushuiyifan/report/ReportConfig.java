@@ -30,9 +30,9 @@ public class ReportConfig {
         TIME_IMPORT_TAX("TIME_IMPORT_TAX"),      //税务导入时间限制
         MONTH_IMPORT_YCCY("MONTH_IMPORT_YCCY"),    //业财差异日期限制
         TIME_IMPORT_YCCY("TIME_IMPORT_YCCY"),      //业财差异导入限制
-    	
-    	TIME_UPDATE_PROCESS("TIME_UPDATE_PROCESS"); //修改收入来源完成度状态
-    	
+
+        TIME_UPDATE_PROCESS("TIME_UPDATE_PROCESS"); //修改收入来源完成度状态
+
         private String data;
 
         RptAppParam(String data) {
@@ -72,7 +72,9 @@ public class ReportConfig {
      */
     public enum RptExportType {
         PARENT("reportDownloadTemplate"),
-        RPT_QUERY("rpt_query");
+        RPT_QUERY_CUST("rpt_query_cust"),
+        RPT_QUERY_INCOME_SOURCE("rpt_query_incomeSouce"),
+        RPT_QUERY_COMPARED_NUM("rpt_query_comeparedNum");
 
         private String data;
 

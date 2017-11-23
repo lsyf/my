@@ -3,8 +3,8 @@ package com.loushuiyifan;
 import org.junit.Test;
 
 import java.io.RandomAccessFile;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,9 +17,8 @@ public class AppTests {
 
     @Test
     public void test() {
-        Path path = Paths.get("D:/IDM");
-        System.out.println(path.toString());
-        System.out.println(path.getFileName().toString());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate date = LocalDate.parse("201704", dtf);
 
     }
 
@@ -33,10 +32,10 @@ public class AppTests {
         LinkedHashSet v = new LinkedHashSet();
 
         RandomAccessFile file = null;
-        ConcurrentHashMap  a = null;
+        ConcurrentHashMap a = null;
         AtomicInteger b;
 
-        LockSupport c ;
+        LockSupport c;
 
         AbstractQueuedSynchronizer d;
         ReentrantLock e;

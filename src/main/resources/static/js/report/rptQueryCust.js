@@ -2,7 +2,7 @@ var table;
 var table_audit;
 var orgTree;
 var isTree;
-function initRptQuery() {
+function initRptQueryCust() {
     table = new TableInit();
     table_audit = new TableAudit();
 
@@ -25,7 +25,7 @@ function queryData() {
 
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptQuery/list",
+        url: hostUrl + "rptQueryCust/list",
         timeout: 30000,
         data: {
             month: $("#form_month").val(),
@@ -66,7 +66,7 @@ function exportData(isMulti, btn) {
     var params = [month, latnId, incomeSource, type, isMulti];
 
     var form = $("#form_export");   //定义一个form表单
-    form.attr('action', hostUrl + 'rptQuery/export');
+    form.attr('action', hostUrl + 'rptQueryCust/export');
     form.empty();
     names.forEach(function (v, i) {
         var input = $('<input>');
@@ -85,7 +85,7 @@ function exportData(isMulti, btn) {
 function listAudit(type, btn) {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptQuery/listAudit",
+        url: hostUrl + "rptQueryCust/listAudit",
         data: {
             month: $("#form_month").val(),
             latnId: orgTree.val(),
@@ -123,7 +123,7 @@ function listAudit(type, btn) {
 function auditData(rptCaseId, status) {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptQuery/audit",
+        url: hostUrl + "rptQueryCust/audit",
         data: {
             rptCaseId: rptCaseId,
             status: status,

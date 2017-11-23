@@ -20,6 +20,8 @@ public interface CodeListTaxDAO extends MyMapper<CodeListTax> {
      */
     List<Map> listByType(String type);
 
+    List<Map<String, String>> listIncomeSourceMap(String type);
+
     List<CodeListTax> listFromCodeListTax(@Param("lvl") int lvl,
                                           @Param("type") String type);
 
@@ -31,8 +33,8 @@ public interface CodeListTaxDAO extends MyMapper<CodeListTax> {
      * @return
      */
     List<Map<String, String>> listIncomeSourceByLvl(@Param("lvl") int lvl,
-    		                                        @Param("type") String type);
-    
+                                                    @Param("type") String type);
+
     /**
      * 根据地市Id获得codeName
      *
