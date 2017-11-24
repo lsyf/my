@@ -1,7 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptQueryIncomeDetailDAO">
-
+	
+	<select id="listIncomeData" resultType="com.loushuiyifan.report.vo.IncomeDetailVO">
+	select session_id  as sessionId ,
+           r.RESULTCODE0 as beforeCode,
+           r.RESULTCODE1 as afterCode,
+           r.RESULTCODE3 as EnterCode,
+           to_char(STARTTIME, 'yyyy-MM-dd HH24:mi:ss') as startDate,
+           to_char(ENDTIME, 'yyyy-MM-dd HH24:mi:ss') as endDate
+      from (select t.session_id,
+                   sum(decode(t.SERVICE_TYPE, 2010020, t.RESULTCODE)) as RESULTCODE0,
+                   sum(decode(t.SERVICE_TYPE, 2010021, t.RESULTCODE)) as RESULTCODE1,
+                   sum(decode(t.SERVICE_TYPE, 2030123, t.RESULTCODE)) as RESULTCODE3,
+                   
+                   min(t.REQUEST_TIME) as STARTTIME,
+                   max(t.REQUEST_TIME) as ENDTIME
+              from (
+              	select a.session_id,
+                       a.SERVICE_TYPE,
+                       a.RESULTCODE,
+                       a.REQUEST_TIME,
+                       row_number() over(partition by a.session_id, a.SERVICE_TYPE order by a.SERVICE_TYPE, a.REQUEST_TIME desc) rn1
+                  from Rpt_Msg_Result a 
+                 where a.session_id like 'EDA%07'
+                    
+                   and to_char(trunc(a.REQUEST_TIME), 'yyyy-MM-dd') = #month#
+              ) t
+             where t.rn1 = 1
+             group by t.session_id        
+            ) r
+     where 
+         r.STARTTIME <![CDATA[ > ]]> to_date(#start#, 'yyyy-MM-ddHH24')
+         and r.ENDTIME <![CDATA[ < ]]> to_date(#end#, 'yyyy-MM-ddHH24') 
+			
+          <choose>
+	          <when test='state ==""'>
+	          and nvl(r.RESULTCODE3,1) = '0'
+	          </when>
+	          <when test='state ==""'>
+	          and nvl(r.RESULTCODE3,1) != '0'
+	          </when>
+	          <otherwise>
+	          </otherwise>
+          </choose>            	
+          order by session_id desc
+	
+	</select>
 
 
 

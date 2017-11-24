@@ -1,5 +1,8 @@
 package com.loushuiyifan.report.dao;
 
-public interface RptQueryIncomeDetailDAO {
+import java.util.List;
+import java.util.Map;
 
+public interface RptQueryIncomeDetailDAO {
+	List<Map<String, String>> listIncomeData();
 }
