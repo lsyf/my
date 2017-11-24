@@ -74,7 +74,8 @@ public class ReportConfig {
         PARENT("reportDownloadTemplate"),
         RPT_QUERY_CUST("rpt_query_cust"),
         RPT_QUERY_INCOME_SOURCE("rpt_query_incomeSouce"),
-        RPT_QUERY_COMPARED_NUM("rpt_query_comeparedNum");
+        RPT_QUERY_COMPARED_NUM("rpt_query_comeparedNum"),
+        RPT_QUERY_COM_DETAIL("rpt_query_comDetail");
 
         private String data;
 
