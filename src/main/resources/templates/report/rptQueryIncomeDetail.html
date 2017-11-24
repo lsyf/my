@@ -29,17 +29,17 @@
             th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
 
     <link rel="stylesheet"
-          href="../../static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css"
-          th:href="@{/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}">
-    <script src="../../static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"
-            th:src="@{/static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
-    <script src="../../static/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"
-            th:src="@{/static/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js}"></script>
+          href="../../static/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
+          th:href="@{/static/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}">
+    <script src="../../static/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"
+            th:src="@{/static/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+    <script src="../../static/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
+            th:src="@{/static/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
 
 
     <script src="../../static/plugins/moment/moment-with-locales.min.js"
             th:src="@{/static/plugins/moment/moment-with-locales.min.js}"></script>
-    
+
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
     <script src="../../static/js/report/rptQueryIncomeDetail.js"
@@ -69,9 +69,9 @@
             //页面传值
             var reportIds = [[${reportIds}]];
             var months = [[${months}]];
-            
+
             $(function () {
-            	initForm();
+                initRptQueryIncomeDetail();
             });
         </script>
 
@@ -93,46 +93,61 @@
                         <form id="form_upload" class="form-horizontal col-sm-12">
 
                             <div class="form-group form-group-sm">
-                               <div class="form-group col-sm-4">
-				                    <label class="control-label col-sm-3" for="datepicker">区间</label>
-				                    <div class="col-sm-9 div_error">
-				                        <div class="form-group input-daterange input-group " id="datepicker">
-				                            <input type="text" class="input-sm form-control" name="start" readonly/>
-				                            <span class="input-group-addon">to</span>
-				                            <input type="text" class="input-sm form-control" name="end" readonly/>
-				                        </div>
-				                    </div>
-				                </div>
-                                
-                                <div class="col-sm-4 form-group form-group-rm">
-                                    <label for="upload_month" class="col-sm-4 control-label">状态</label>
-                                    <div class="col-sm-8">
+                                <div class="form-group col-sm-3">
+                                    <label class="control-label col-sm-3">开始</label>
+                                    <div class="col-sm-9 div_error">
+                                        <div class="form-group input-daterange input-group ">
+                                            <input type="text" class="input-sm form-control form_datetime" name="start"
+                                                   readonly id="query_start"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-3">
+                                    <label class="control-label col-sm-3">结束</label>
+                                    <div class="col-sm-9 div_error">
+                                        <div class="form-group input-daterange input-group">
+                                            <input type="text" class="input-sm form-control form_datetime" name="end"
+                                                   readonly id="query_end"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2 form-group form-group-rm">
+                                    <label for="upload_month" class="col-sm-5 control-label">状态</label>
+                                    <div class="col-sm-7">
                                         <select class="form-control" name="month" id="upload_month">
                                         </select>
                                     </div>
                                 </div>
-                                                 
+
+                                <div class="col-sm-4 form-group form-group-rm">
+                                    <label for="upload_month" class="col-sm-3 control-label">sessionId</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="input-sm form-control  " id="query_sessionId"/>
+                                    </div>
+                                </div>
 
                             </div>
 
-                                                      
+
                             <div class="form-group  form-group-sm">
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_export" onclick="exportData()">
-                                    	导出
+                                    导出
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_audit" onclick="auditQuery()">
-                                    	审核
+                                    审核
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_query" onclick="queryData()">
-                                    	查询
+                                    查询
                                 </button>
-                                
-                               
+
+
                             </div>
-                        </form>                       
+                        </form>
                     </div>
 
                 </div>
@@ -141,7 +156,7 @@
             <div id="form-table">
                 <div class="box box-primary">
                     <div class="box-header">
-                       查询结果
+                        查询结果
                     </div>
                     <div class="box-body" style=" white-space:nowrap">
                         <table id="table_upload"></table>
@@ -153,7 +168,7 @@
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
 
-           <form target="_blank"
+            <form target="_blank"
                   id="form_export"
                   method="post" hidden>
             </form>

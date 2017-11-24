@@ -1,28 +1,29 @@
 var table;
 var isTree;
-function initForm() {
+function initRptQueryIncomeDetail() {
     table = new TableInit();
     table.Init();
 
-     
+
     initDatePicker();
 }
 
 function initDatePicker() {
-    $('#datepicker ').datepicker({
-        format: "yyyymmddhh",
-        startView: 1,
-        minViewMode: 2,
-        maxViewMode: 2,
-        todayBtn: "linked",
-        language: "zh-CN",
-        todayHighlight: true
+    $('.form_datetime').datetimepicker({
+        format: "yyyy-mm-dd hh:00",
+        autoclose: true,
+        todayBtn: true,
+        minView: 'day',
+        maxView: 'year',
+        // startView: 'day',
+        todayHighlight: true,
+        language:'zh-CN'
     });
 
-    m_this = moment().format('YYYYMM');
-    m_last = moment().add(-1, 'y').format('YYYYMM');
-    $('#datepicker').find("input[name='start']").val(m_last);
-    $('#datepicker').find("input[name='end']").val(m_this);
+    var m_this = moment().format('YYYY-MM-DD HH:00');
+    var m_last = moment().add(-1, 'd').format('YYYY-MM-DD HH:00');
+    $('#query_start').val(m_last);
+    $('#query_end').val(m_this);
 
 }
 
@@ -77,34 +78,34 @@ function exportData() {
 }
 
 //审核查询
-function auditQuery(){
-	
-	
+function auditQuery() {
+
+
 }
 
 function detailData(row) {
 
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "rptSettleQuery/detail",
-            data: {"logId": row.logId, "incomeSource":row.incomeSource},
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('删除成功');
-                    hideAlert();
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "rptSettleQuery/detail",
+        data: {"logId": row.logId, "incomeSource": row.incomeSource},
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                toastr.info('删除成功');
+                hideAlert();
 
-                    queryLog()
-                } else {
-                    toastr.error('提删除失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
+                queryLog()
+            } else {
+                toastr.error('提删除失败');
+                toastr.error(r.msg);
             }
-        });
-    
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+
 }
 
 
@@ -137,45 +138,45 @@ var TableInit = function () {
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
-             
+
             data: [],
             columns: [{
-            	checkbox:true
-            },{
+                checkbox: true
+            }, {
                 field: 'logId',
-                width:'80px',
+                width: '80px',
                 title: '流水号'
             }, {
                 field: 'reportId',
-                width:'120px',
+                width: '120px',
                 title: '报表编号'
             }, {
                 field: 'reportName',
-                width:'120px',
+                width: '120px',
                 title: '报表名称'
             }, {
                 field: 'month',
-                width:'120px',
+                width: '120px',
                 title: '账期'
             }, {
                 field: 'incomeSource',
-                width:'200px',
+                width: '200px',
                 title: '收入来源'
             }, {
                 field: 'status',
-                width:'80px',
+                width: '80px',
                 title: '状态'
             }, {
                 field: 'fileSeq',
-                width:'80px',
+                width: '80px',
                 title: '重传次数'
             }, {
                 field: 'createDate',
-                width:'80px',
+                width: '80px',
                 title: '下发时间'
             }, {
                 field: 'importDate',
-                width:'80px',
+                width: '80px',
                 title: '导入时间'
             }, {
                 field: 'operate',
@@ -184,13 +185,13 @@ var TableInit = function () {
                 formatter: operateFormatter
             }]
         });
-        
+
     };
 
-  //操作 监听
+    //操作 监听
     window.operateEvents = {
         'click .detail': function (e, value, row, index) {
-        	detailData(row);
+            detailData(row);
         }
     };
 
@@ -201,7 +202,7 @@ var TableInit = function () {
         ].join('');
     }
 
-    
+
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);
