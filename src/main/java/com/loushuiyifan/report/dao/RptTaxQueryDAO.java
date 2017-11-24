@@ -10,4 +10,8 @@ public interface RptTaxQueryDAO {
 	List<Map<String, String>> listData(@Param("month") String month,
 										@Param("latnId")Integer latnId,
 										@Param("report")String report);
+
+
+
+	List<Map<String, String>> listAreaForTax();
 }

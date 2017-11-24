@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>业财差异报表</title>
+    <title>营收稽核系统报账回执详情</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -28,22 +28,22 @@
     <script src="../../static/plugins/zTree/jquery.ztree.all.min.js"
             th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
 
-    <!--fileinput-->
-    <link href="../../static/plugins/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet"
-          type="text/css" th:href="@{/static/plugins/bootstrap-fileinput/css/fileinput.min.css}"/>
-    <link href="../../static/plugins/bootstrap-fileinput/themes/explorer/theme.min.css" media="all" rel="stylesheet"
-          type="text/css" th:href="@{/static/plugins/bootstrap-fileinput/themes/explorer/theme.min.css}"/>
-    <script src="../../static/plugins/bootstrap-fileinput/js/fileinput.min.js"
-            th:src="@{/static/plugins/bootstrap-fileinput/js/fileinput.min.js}"></script>
-    <script src="../../static/plugins/bootstrap-fileinput/js/locales/zh.js"
-            th:src="@{/static/plugins/bootstrap-fileinput/js/locales/zh.js}"></script>
-    <script src="../../static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"
-            th:src="@{/static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js}"></script>
+    <link rel="stylesheet"
+          href="../../static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css"
+          th:href="@{/static/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}">
+    <script src="../../static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"
+            th:src="@{/static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
+    <script src="../../static/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"
+            th:src="@{/static/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js}"></script>
 
+
+    <script src="../../static/plugins/moment/moment-with-locales.min.js"
+            th:src="@{/static/plugins/moment/moment-with-locales.min.js}"></script>
+    
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../static/js/report/rptYeCaiDifferQuery.js"
-            th:src="@{/static/js/report/rptYeCaiDifferQuery.js}"></script>
+    <script src="../../static/js/report/rptQueryIncomeDetail.js"
+            th:src="@{/static/js/report/rptQueryIncomeDetail.js}"></script>
 
 
     <style>
@@ -67,17 +67,17 @@
 
         <script th:inline="javascript">
             //页面传值
-            var orgs = [[${orgs}]];
+            var reportIds = [[${reportIds}]];
             var months = [[${months}]];
             
             $(function () {
-            	initYCCYForm();
+            	initForm();
             });
         </script>
 
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>业财差异报表</h1>
+            <h1>营收回执详情查询</h1>
         </section>
 
         <!-- Main content -->
@@ -93,31 +93,25 @@
                         <form id="form_upload" class="form-horizontal col-sm-12">
 
                             <div class="form-group form-group-sm">
+                               <div class="form-group col-sm-4">
+				                    <label class="control-label col-sm-3" for="datepicker">区间</label>
+				                    <div class="col-sm-9 div_error">
+				                        <div class="form-group input-daterange input-group " id="datepicker">
+				                            <input type="text" class="input-sm form-control" name="start" readonly/>
+				                            <span class="input-group-addon">to</span>
+				                            <input type="text" class="input-sm form-control" name="end" readonly/>
+				                        </div>
+				                    </div>
+				                </div>
+                                
                                 <div class="col-sm-4 form-group form-group-rm">
-                                    <label for="upload_month" class="col-sm-4 control-label">月份</label>
+                                    <label for="upload_month" class="col-sm-4 control-label">状态</label>
                                     <div class="col-sm-8">
                                         <select class="form-control" name="month" id="upload_month">
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 form-group form-group-rm">
-                                    <label for="upload_latnId" class="col-sm-4 control-label">营业区</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="upload_latnId" readonly>
-                                        <input class="form-control" name="latnId" type="hidden">
-                                    </div>
-
-                                </div>
-                                <div class="col-sm-4 form-group form-group-rm">
-                                    <label for="upload_report" class="col-sm-4 control-label">报表名</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" name="report" id="upload_report">
-                                            <option value="111">用户预存服务费核对表</option>
-                                            <option value="112">用户欠费核对表</option>
-                                            <option value="113">差异明细分析表</option>
-                                        </select>
-                                    </div>
-                                </div>                            
+                                                 
 
                             </div>
 
@@ -125,14 +119,14 @@
                             <div class="form-group  form-group-sm">
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_export" onclick="exportData()">
-                                    	多营业导出
-                                </button>
-                                <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_sum" onclick="exportData()">
                                     	导出
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryLog()">
+                                        type="button" id="btn_audit" onclick="auditQuery()">
+                                    	审核
+                                </button>
+                                <button class="btn btn-success pull-right btn-sm btn-form"
+                                        type="button" id="btn_query" onclick="queryData()">
                                     	查询
                                 </button>
                                 
@@ -158,11 +152,11 @@
             <div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
-			<form target="_blank"
+
+           <form target="_blank"
                   id="form_export"
                   method="post" hidden>
             </form>
-           
         </section>
 
 

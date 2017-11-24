@@ -14,64 +14,50 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptTaxQueryService;
+import com.loushuiyifan.report.service.RptQueryIncomeDetailService;
 import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.report.vo.SettleDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
 @Controller
-@RequestMapping("rptTaxQuery")
-public class RptTaxQueryController extends BaseReportController{
-	private static final Logger logger = LoggerFactory.getLogger(RptTaxQueryController.class);
+@RequestMapping("rptQueryIncomeDetail")
+public class RptQueryIncomeDetailController extends BaseReportController{
+	private static final Logger logger = LoggerFactory.getLogger(RptQueryIncomeDetailController.class);
 	
 	@Autowired
-	RptTaxQueryService rptTaxQueryService;
+	RptQueryIncomeDetailService rptQueryIncomeDetailService;
 	
+
 	/**
-	 * 税务报表页面
-	 * @param map
-	 * @param user
-	 * @return
-	 */
-	@GetMapping
+     * 营收稽核系统报账回执详情
+     *
+     * @return
+     */
+    @GetMapping
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
         //页面条件
-        List<Map<String,String>> orgs = rptTaxQueryService.listAreaInfo();
         List<CommonVO> months = dateService.aroundMonths(5);
         
-        map.put("orgs", orgs);
         map.put("months", months);
-        return "report/rptTaxQuery";
+       
+        return "report/rptQueryIncomeDetail";
     }
-	
-	
-	/**
-	 * 查询
-	 */
-	@PostMapping("list")
-	@ResponseBody
-	public JsonResult list(String month, String latnId){
-		
-		
-		return JsonResult.success();
-	}
-	
-	
-	/**
-	 * 导出
-	 */
-	@PostMapping("export")
-	@ResponseBody
-	public JsonResult export(String month, String latnId){
-		
-		
-		return JsonResult.success();
-	}
-	
-	
-	
+
+
+    /**
+     * 查询
+     */
+    @PostMapping("list")
+    @ResponseBody
+    public JsonResult list(String month, String reportId ){
+    	
+        return JsonResult.success();
+    }
+
+
+
 }

@@ -57,7 +57,12 @@ public class RptCaseService extends BaseService<RptCase> {
         return selectCase(month, latnId, null, null, tax,
                 ReportConfig.RptExportType.RPT_QUERY_COMPARED_NUM.toString());
     }
-
+    
+    public RptCase selectRptYCCYCase(String month, String latnId, String tax) {
+        return selectCase(month, latnId, null, null, tax,
+                ReportConfig.RptExportType.RPT_QUERY_YCCY.toString());
+    }
+    
     public RptCase selectCase(String month, String latnId, String incomeSource, String cust, String tax, String type) {
         return rptCaseDAO.selectCase(month, latnId, incomeSource, cust, tax, type);
     }

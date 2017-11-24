@@ -1,24 +1,39 @@
 var table;
-var orgTree;
-function initYCCYForm() {
+var isTree;
+function initForm() {
     table = new TableInit();
     table.Init();
 
-    buildSelect('upload_month', months);
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
-    orgTree.Init(orgs);
-   
+     
+    initDatePicker();
+}
+
+function initDatePicker() {
+    $('#datepicker ').datepicker({
+        format: "yyyymmddhh",
+        startView: 1,
+        minViewMode: 2,
+        maxViewMode: 2,
+        todayBtn: "linked",
+        language: "zh-CN",
+        todayHighlight: true
+    });
+
+    m_this = moment().format('YYYYMM');
+    m_last = moment().add(-1, 'y').format('YYYYMM');
+    $('#datepicker').find("input[name='start']").val(m_last);
+    $('#datepicker').find("input[name='end']").val(m_this);
+
 }
 
 
-function queryLog() {
+function queryData() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptYeCaiDifferQuery",
+        url: hostUrl + "rptSettleQuery/list",
         data: {
             month: $("#upload_month").val(),
-            latnId: orgTree.val(),
-            zbCode: $("#upload_zbCode").val()
+            reportId: isTree.val()
         },
         dataType: "json",
         success: function (r) {
@@ -41,14 +56,13 @@ function queryLog() {
 //导出
 function exportData() {
     var month = $("#upload_month").val();
-    var latnId = orgTree.val();
-    var zbCode = $("#upload_zbCode").val();
+    var reportId = isTree.val();
 
-    var names = ['month', 'latnId', 'zbCode'];
-    var params = [month, latnId, zbCode];
+    var names = ['month', 'reportId'];
+    var params = [month, reportId];
 
     var form = $("#form_export");   //定义一个form表单
-    form.attr('action', hostUrl + 'rptYeCaiDifferQuery');
+    form.attr('action', hostUrl + 'rptSettleQuery/export');
     form.empty();
     names.forEach(function (v, i) {
         var input = $('<input>');
@@ -62,6 +76,36 @@ function exportData() {
 
 }
 
+//审核查询
+function auditQuery(){
+	
+	
+}
+
+function detailData(row) {
+
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "rptSettleQuery/detail",
+            data: {"logId": row.logId, "incomeSource":row.incomeSource},
+            dataType: "json",
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('删除成功');
+                    hideAlert();
+
+                    queryLog()
+                } else {
+                    toastr.error('提删除失败');
+                    toastr.error(r.msg);
+                }
+            },
+            error: function (result) {
+                toastr.error('发送请求失败');
+            }
+        });
+    
+}
 
 
 //Table初始化
@@ -96,14 +140,66 @@ var TableInit = function () {
              
             data: [],
             columns: [{
-                field: '',
+            	checkbox:true
+            },{
+                field: 'logId',
                 width:'80px',
-                title: ''
+                title: '流水号'
+            }, {
+                field: 'reportId',
+                width:'120px',
+                title: '报表编号'
+            }, {
+                field: 'reportName',
+                width:'120px',
+                title: '报表名称'
+            }, {
+                field: 'month',
+                width:'120px',
+                title: '账期'
+            }, {
+                field: 'incomeSource',
+                width:'200px',
+                title: '收入来源'
+            }, {
+                field: 'status',
+                width:'80px',
+                title: '状态'
+            }, {
+                field: 'fileSeq',
+                width:'80px',
+                title: '重传次数'
+            }, {
+                field: 'createDate',
+                width:'80px',
+                title: '下发时间'
+            }, {
+                field: 'importDate',
+                width:'80px',
+                title: '导入时间'
+            }, {
+                field: 'operate',
+                title: '操作',
+                events: operateEvents,
+                formatter: operateFormatter
             }]
         });
-
-
+        
     };
+
+  //操作 监听
+    window.operateEvents = {
+        'click .detail': function (e, value, row, index) {
+        	detailData(row);
+        }
+    };
+
+    //操作显示format
+    function operateFormatter(value, row, index) {
+        return [
+            '<button type="button" class="detail btn btn-success btn-xs">详细</button>'
+        ].join('');
+    }
 
     
     //刷新数据

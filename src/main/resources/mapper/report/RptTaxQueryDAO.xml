@@ -6,8 +6,16 @@
 	
 	</select>
 
-
-
+	
+	<select id="listAreaForTax" resultType="Map">
+		select distinct KHINR as "id",
+                        SUBSTR(LTEXT, 4, 3) as "name",
+                        KHINR as "data"
+		  from KOSTL_PRCTR_LOCAL_NEW
+		 where BUKRS = 'A011'
+		   and KHINR not in ('A3316', 'A3317', 'A3318', 'A3314', 'A3313')
+		 order by KHINR
+	</select>
 
 
 </mapper>
