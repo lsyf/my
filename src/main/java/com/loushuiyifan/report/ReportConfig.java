@@ -72,6 +72,7 @@ public class ReportConfig {
      */
     public enum RptExportType {
         PARENT("reportDownloadTemplate"),
+        RPT_QUERY_YCCY("rpt_query_yccy"),
         RPT_QUERY_CUST("rpt_query_cust"),
         RPT_QUERY_INCOME_SOURCE("rpt_query_incomeSouce"),
         RPT_QUERY_COMPARED_NUM("rpt_query_comeparedNum"),

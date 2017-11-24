@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptTaxQueryDAO">
+
+	<select id="listData" resultType="Map">
+	
+	</select>
+
+	
+	<select id="listAreaForTax" resultType="Map">
+		select distinct KHINR as "id",
+                        SUBSTR(LTEXT, 4, 3) as "name",
+                        KHINR as "data"
+		  from KOSTL_PRCTR_LOCAL_NEW
+		 where BUKRS = 'A011'
+		   and KHINR not in ('A3316', 'A3317', 'A3318', 'A3314', 'A3313')
+		 order by KHINR
+	</select>
+
+
+</mapper>
