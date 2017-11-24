@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loushuiyifan.report.dao.RptQueryComDetailDAO">
+    <select id="listComDetailRowMap" resultType="java.util.Map">
+    select
+    level_cd as "code",
+    name as "name" ,
+    to_char(row_num) as "id"
+      from rpt_index_tx_def
+     where report_id = #{rptNo}
+     order by row_num
+    </select>
+
+    <select id="listAsMap" resultType="java.util.Map">
+select  b.row_num || '_1' as "key",
+       case
+         when b.remark = 'Y' then
+          to_char(sum(-a.aft_tax_value), 'fm999999999990.00')
+         else
+          to_char(sum(a.aft_tax_value), 'fm999999999990.00')
+       end as "data"
+  from zjhc_zwl.stat_repfield_content17 a, rpt_index_tx_def b
+ where a.local_net = #{latnId}
+   and a.acct_month = to_char(#{lastYearThisMonth})
+   and a.cust_id = '0'
+   and a.income_source = '0'
+   and b.report_id = 1701
+   and a.zb_code = b.index_code
+ group by b.row_num, b.remark
+union all
+select  b.row_num || '_2' as "key",
+       case
+         when b.remark = 'Y' then
+          to_char(sum(-a.aft_tax_value), 'fm999999999990.00')
+         else
+          to_char(sum(a.aft_tax_value), 'fm999999999990.00')
+       end as "data"
+  from stat_repfield_content_channel a, rpt_index_tx_def b
+ where a.income_source = '0'
+   and a.cust_id = '0'
+   and a.local_net = #{latnId}
+   and a.acct_month = #{thisMonth}
+   and b.report_id = 1701
+   and a.zb_code = b.index_code
+ group by b.row_num, b.remark
+union all
+select  b.row_num || '_3' as "key",
+       case
+         when b.remark = 'Y' then
+          to_char(sum(-a.aft_tax_value), 'fm999999999990.00')
+         else
+          to_char(sum(a.aft_tax_value), 'fm999999999990.00')
+       end as "data"
+  from rpt_web.stat_repfield_content_channel a, rpt_index_tx_def b
+ where a.income_source = '0'
+   and a.local_net = #{latnId}
+   and a.acct_month between #{firstMonth} and #{thisMonth}
+   and a.cust_id = '0'
+   and b.report_id = 1701
+   and a.zb_code = b.index_code
+ group by b.row_num, b.remark
+
+    </select>
+</mapper>
