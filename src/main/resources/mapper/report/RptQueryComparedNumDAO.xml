@@ -3,10 +3,10 @@
 <mapper namespace="com.loushuiyifan.report.dao.RptQueryComparedNumDAO">
     <sql id="taxDataType">
         <choose>
-            <when test="type=='0'">
+            <when test='type=="0"'>
                 to_char(a.zb_value, 'fm999999999990.00') as "data"
             </when>
-            <when test="type=='1'">
+            <when test='type=="1"'>
                 to_char(a.tax_value, 'fm999999999990.00') as "data"
             </when>
             <otherwise>
@@ -17,10 +17,10 @@
 
     <sql id="taxDataTypeSum">
         <choose>
-            <when test="type=='0'">
+            <when test='type=="0"'>
                 to_char(sum(a.zb_value), 'fm999999999990.00') as "data"
             </when>
-            <when test="type=='1'">
+            <when test='type=="1"'>
                 to_char(sum(a.tax_value), 'fm999999999990.00') as "data"
             </when>
             <otherwise>

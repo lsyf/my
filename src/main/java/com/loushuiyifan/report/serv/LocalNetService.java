@@ -115,7 +115,44 @@ public class LocalNetService {
         return orgs;
     }
 
+    /**
+     * 获取11个本地网
+     *
+     * @return
+     */
+    public List<Organization> listAllCity() {
+        String type = OrganizationService.TYPE_CITY;
+        String data = "0";//该data代表股份值
+        List<Organization> orgs = localNetDAO.listAllCity();
+        Organization org = organizationService.getByData(type, data);
+        orgs.add(0, org);
+        return orgs;
+    }
 
+    /**
+     * 根据id获取地市信息
+     *
+     * @param codeId
+     * @return
+     */
+    public Organization getData(String codeId) {
+        String type = OrganizationService.TYPE_CITY;
+        Organization org = organizationService.getByData(type, codeId);
+        return org;
+    }
+
+    public Organization getName(String name) {
+        String type = OrganizationService.TYPE_CITY;
+        Organization org = organizationService.getByName(type, name);
+        return org;
+    }
+
+    /**
+     * 根据id获取地市名
+     *
+     * @param codeId
+     * @return
+     */
     public String getCodeName(String codeId) {
         String type = OrganizationService.TYPE_CITY;
         Organization org = organizationService.getByData(type, codeId);

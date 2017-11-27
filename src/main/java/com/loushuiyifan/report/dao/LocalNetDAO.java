@@ -50,6 +50,7 @@ public interface LocalNetDAO extends MyMapper<Organization> {
      * @return
      */
     List<CommonVO> listNameById();
-    
 
+
+    List<Organization> listAllCity();
 }

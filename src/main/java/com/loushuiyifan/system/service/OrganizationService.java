@@ -24,9 +24,9 @@ public class OrganizationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationService.class);
 
     //地市
-    public static final String TYPE_CITY ="local_net";
+    public static final String TYPE_CITY = "local_net";
     //部门
-    public static final String TYPE_DEPT ="user_dept";
+    public static final String TYPE_DEPT = "user_dept";
 
     @Autowired
     OrganizationMapper organizationMapper;
@@ -121,6 +121,14 @@ public class OrganizationService {
         Organization org = new Organization();
         org.setType(type);
         org.setData(data);
+        return organizationMapper.selectOne(org);
+    }
+
+
+    public Organization getByName(String type, String name) {
+        Organization org = new Organization();
+        org.setType(type);
+        org.setName(name);
         return organizationMapper.selectOne(org);
     }
 
