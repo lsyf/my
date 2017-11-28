@@ -25,4 +25,13 @@
         </if>
 
     </select>
+    <select id="listByUser" resultType="com.loushuiyifan.report.bean.RptExcelWyf">
+        select a.*
+        from RPT_EXCEL_WYF a
+        where acct_month = #{month}
+        and a.area_name in
+        <foreach collection="orgs" item="org" open="(" close=")" separator=",">
+            #{org.name}
+        </foreach>
+    </select>
 </mapper>

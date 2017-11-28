@@ -1,5 +1,6 @@
 package com.loushuiyifan.report.dao;
 
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.RptExcelWyf;
 import org.apache.ibatis.annotations.Param;
@@ -15,4 +16,7 @@ public interface RptQueryCreateDAO extends MyMapper<RptExcelWyf> {
                            @Param("incomeSource") String incomeSource);
 
     void remove(@Param("excelIds") Long[] excelIds);
+
+    List<RptExcelWyf> listByUser(@Param("month") String month,
+                                 @Param("orgs") List<Organization> orgs);
 }

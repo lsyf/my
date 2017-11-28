@@ -8,6 +8,7 @@ import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.LocalNetService;
+import com.loushuiyifan.report.serv.ReportDownloadService;
 import com.loushuiyifan.system.service.DictionaryService;
 import lombok.Data;
 import org.apache.commons.io.FilenameUtils;
@@ -21,6 +22,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -53,6 +56,9 @@ public class RptQueryCreateService {
 
     @Autowired
     RptQueryCustService rptQueryCustService;
+
+    @Autowired
+    ReportDownloadService reportDownloadService;
 
     //生成文件状态
     ConcurrentHashMap<String, Instant> cacheStatusMap = new ConcurrentHashMap<>(3000);
@@ -171,15 +177,20 @@ public class RptQueryCreateService {
      * @return
      */
     public List<RptExcelWyf> listByUser(String month, Long userId) {
-        //TODO 根据用户显示
-        List<RptExcelWyf> list = rptQueryCreateDAO.list(month, null, "0");
+        List<Organization> orgs = localNetService.listForC4(userId);
+        List<RptExcelWyf> list = rptQueryCreateDAO.listByUser(month, orgs);
         return list;
     }
 
     public String downloadZip(Long[] excelIds) {
-        String path = "/report/report.zip";
-        File file = new File(path);
-        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
+        String dir = reportDownloadService.configLocation();
+        String name = String.format("report%s.zip",
+                LocalDateTime.now().format(DateService.YYYYMMDDHHMMSS));
+
+        Path path = Paths.get(dir, name);
+
+        try (ZipOutputStream zos =
+                     new ZipOutputStream(new FileOutputStream(path.toFile()))
         ) {
             for (int i = 0; i < excelIds.length; i++) {
                 long excelId = excelIds[i];
@@ -211,7 +222,7 @@ public class RptQueryCreateService {
             throw new ReportException("压缩文件失败" + e.getMessage());
         }
 
-        return path;
+        return path.toString();
     }
 
     public String getFilePath(Long excelId) {
