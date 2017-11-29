@@ -69,9 +69,9 @@
             //页面传值
             var orgs = [[${orgs}]];
             var months = [[${months}]];
-            
+
             $(function () {
-            	initTaxForm();
+                initTaxForm();
             });
         </script>
 
@@ -109,9 +109,9 @@
 
                                 </div>
                                 <div class="col-sm-4 form-group form-group-rm">
-                                    <label for="upload_report" class="col-sm-4 control-label">报表类型</label>
+                                    <label for="query_taxType" class="col-sm-4 control-label">报表类型</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control" name="type" id="upload_report">
+                                        <select class="form-control" name="type" id="query_taxType">
                                             <option value="1">纳税组织按税目收入统计表</option>
                                             <option value="2">收入&销项税统计税</option>
                                             <option value="3">收入汇总表</option>
@@ -122,25 +122,25 @@
                                             <option value="8">收入税率结构分析</option>
                                         </select>
                                     </div>
-                                </div>                            
+                                </div>
 
                             </div>
 
-                                                      
+
                             <div class="form-group  form-group-sm">
-                                
+
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_sum" onclick="exportData()">
-                                    	导出
+                                    导出
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryLog()">
-                                    	查询
+                                        type="button" id="btn_query" onclick="queryLog(this)">
+                                    查询
                                 </button>
-                                
-                               
+
+
                             </div>
-                        </form>                       
+                        </form>
                     </div>
 
                 </div>
@@ -149,10 +149,10 @@
             <div id="form-table">
                 <div class="box box-primary">
                     <div class="box-header">
-                       查询结果
+                        查询结果
                     </div>
                     <div class="box-body" style=" white-space:nowrap">
-                        <table id="table_upload"></table>
+                        <table id="table_query"></table>
                     </div>
                 </div>
             </div>
@@ -160,11 +160,11 @@
             <div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
-			<form target="_blank"
+            <form target="_blank"
                   id="form_export"
                   method="post" hidden>
             </form>
-           
+
         </section>
 
 

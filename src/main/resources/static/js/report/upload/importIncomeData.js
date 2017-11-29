@@ -53,23 +53,29 @@ function itsmData() {
     var txt = "";
     var temp;
     var error = null;
-    selects.forEach(function (d, i) {
-        //不符合送审  或者已送审 校验
-        if (d.isItsm != '1' || d.itsmStatus != '0') {
-            error = '不符合送审资格(无需送审或已送审)';
-            return;
-        }
-        //地市统一校验
-        if (i == 0) {
-            temp = d.city;
-        } else if (temp !== d.city) {
-            error = '送审地市不一致';
-            return;
-        }
+    try {
+        selects.forEach(function (d, i) {
+            //不符合送审  或者已送审 校验
+            if (d.isItsm != '1' || d.itsmStatus != '0') {
+                error = '不符合送审资格(无需送审或已送审)';
+                throw new Error(error);
+            }
+            //地市统一校验
+            if (i == 0) {
+                temp = d.city;
+            } else if (temp !== d.city) {
+                error = '送审地市不一致';
+                throw new Error(error);
+            }
 
-        logIds.push(d.logId);
-        txt += d.logId + ', '
-    });
+            logIds.push(d.logId);
+            txt += d.logId + ', '
+        });
+    }
+    catch (e) {
+        error = e.message;
+    }
+
     if (error != null) {
         toastr.info(error);
         return;
