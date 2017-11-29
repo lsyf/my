@@ -1,9 +1,8 @@
 var table;
-var isTree;
+
 function initRptQueryIncomeDetail() {
     table = new TableInit();
     table.Init();
-
 
     initDatePicker();
 }
@@ -31,10 +30,11 @@ function initDatePicker() {
 function queryData() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptSettleQuery/list",
+        url: hostUrl + "rptQueryIncomeDetail/list",
         data: {
-            month: $("#upload_month").val(),
-            reportId: isTree.val()
+        	startDate: $("#query_start").val(),
+        	endDate: $("#query_end").val(),
+            state: $("#upload_state").val()
         },
         dataType: "json",
         success: function (r) {
@@ -54,50 +54,20 @@ function queryData() {
 
 }
 
-//导出
-function exportData() {
-    var month = $("#upload_month").val();
-    var reportId = isTree.val();
-
-    var names = ['month', 'reportId'];
-    var params = [month, reportId];
-
-    var form = $("#form_export");   //定义一个form表单
-    form.attr('action', hostUrl + 'rptSettleQuery/export');
-    form.empty();
-    names.forEach(function (v, i) {
-        var input = $('<input>');
-        input.attr('type', 'hidden');
-        input.attr('name', v);
-        input.attr('value', params[i]);
-        form.append(input);
-    });
-
-    form.submit();   //表单提交
-
-}
-
-//审核查询
-function auditQuery() {
-
-
-}
-
-function detailData(row) {
-
+function findData() {
+	var sessionId = $("#query_sessionId").val();
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptSettleQuery/detail",
-        data: {"logId": row.logId, "incomeSource": row.incomeSource},
+        url: hostUrl + "rptQueryIncomeDetail/find",
+        data: {sessionId :sessionId},
         dataType: "json",
         success: function (r) {
             if (r.state) {
-                toastr.info('删除成功');
-                hideAlert();
-
-                queryLog()
+            	var data = r.data;
+                table.load(data);
+            	
             } else {
-                toastr.error('提删除失败');
+                toastr.error('提示，查询失败');
                 toastr.error(r.msg);
             }
         },
@@ -108,7 +78,65 @@ function detailData(row) {
 
 }
 
+//详情
+function detailData() {
+	
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "rptQueryIncomeDetail/detail",
+        data: {"sessionId": row.sessionId},
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+            	var data = r.data;
+                table.load(data);
 
+            } else {
+                toastr.error('提示，查询失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+
+}
+
+//重发
+function resend(){
+	//var sessionId = $("#query_sessionId").val();
+	 
+	var selects = $('#table_upload').bootstrapTable('getSelections');
+	if(selects.length==0){
+		toastr.info('未选中任何数据');
+		return;
+	}
+	var logs = [];
+	selects.forEach(function(data,i){
+		logs.push(data.sessionId);
+	});
+	
+	$.ajax({
+        type: "POST",
+        url: hostUrl + "rptQueryIncomeDetail/repeat",
+        data: {logs :logs},
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+                toastr.info('成功');
+                hideAlert();
+
+            } else {
+                toastr.error('失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
+}
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
@@ -141,67 +169,37 @@ var TableInit = function () {
 
             data: [],
             columns: [{
-                checkbox: true
-            }, {
-                field: 'logId',
-                width: '80px',
-                title: '流水号'
-            }, {
-                field: 'reportId',
+            	checkbox:true
+            },{
+                field: 'sessionId',
                 width: '120px',
-                title: '报表编号'
+                title: '会话号'
             }, {
-                field: 'reportName',
+                field: 'beforeCode',
+                width: '80px',
+                title: '集团采集前回执'
+            }, {
+                field: 'afterCode',
+                width: '80px',
+                title: '集团采集后回执'
+            }, {
+                field: 'enterCode',
+                width: '80px',
+                title: 'Sap入库回执'
+            }, {
+                field: 'startDate',
                 width: '120px',
-                title: '报表名称'
+                title: '开始日期'
             }, {
-                field: 'month',
+                field: 'endDate',
                 width: '120px',
-                title: '账期'
-            }, {
-                field: 'incomeSource',
-                width: '200px',
-                title: '收入来源'
-            }, {
-                field: 'status',
-                width: '80px',
-                title: '状态'
-            }, {
-                field: 'fileSeq',
-                width: '80px',
-                title: '重传次数'
-            }, {
-                field: 'createDate',
-                width: '80px',
-                title: '下发时间'
-            }, {
-                field: 'importDate',
-                width: '80px',
-                title: '导入时间'
-            }, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
+                title: '结束日期'
             }]
         });
 
     };
 
-    //操作 监听
-    window.operateEvents = {
-        'click .detail': function (e, value, row, index) {
-            detailData(row);
-        }
-    };
-
-    //操作显示format
-    function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="detail btn btn-success btn-xs">详细</button>'
-        ].join('');
-    }
-
+    
 
     //刷新数据
     oTableInit.load = function (data) {

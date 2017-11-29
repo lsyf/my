@@ -6,14 +6,13 @@
 	select session_id  as sessionId ,
            r.RESULTCODE0 as beforeCode,
            r.RESULTCODE1 as afterCode,
-           r.RESULTCODE3 as EnterCode,
+           r.RESULTCODE3 as enterCode,
            to_char(STARTTIME, 'yyyy-MM-dd HH24:mi:ss') as startDate,
            to_char(ENDTIME, 'yyyy-MM-dd HH24:mi:ss') as endDate
       from (select t.session_id,
                    sum(decode(t.SERVICE_TYPE, 2010020, t.RESULTCODE)) as RESULTCODE0,
                    sum(decode(t.SERVICE_TYPE, 2010021, t.RESULTCODE)) as RESULTCODE1,
                    sum(decode(t.SERVICE_TYPE, 2030123, t.RESULTCODE)) as RESULTCODE3,
-                   
                    min(t.REQUEST_TIME) as STARTTIME,
                    max(t.REQUEST_TIME) as ENDTIME
               from (
@@ -24,21 +23,21 @@
                        row_number() over(partition by a.session_id, a.SERVICE_TYPE order by a.SERVICE_TYPE, a.REQUEST_TIME desc) rn1
                   from Rpt_Msg_Result a 
                  where a.session_id like 'EDA%07'
-                    
-                   and to_char(trunc(a.REQUEST_TIME), 'yyyy-MM-dd') = #month#
+                   and a.REQUEST_TIME <![CDATA[ > ]]> to_date(#{startDate}, 'yyyy-MM-ddHH24:mi')
+                   and a.REQUEST_TIME <![CDATA[ < ]]> to_date(#{endDate}, 'yyyy-MM-ddHH24:mi') 
               ) t
              where t.rn1 = 1
              group by t.session_id        
             ) r
      where 
-         r.STARTTIME <![CDATA[ > ]]> to_date(#start#, 'yyyy-MM-ddHH24')
-         and r.ENDTIME <![CDATA[ < ]]> to_date(#end#, 'yyyy-MM-ddHH24') 
+         r.STARTTIME <![CDATA[ > ]]> to_date(#{startDate}, 'yyyy-MM-ddHH24:mi')
+         and r.ENDTIME <![CDATA[ < ]]> to_date(#{endDate}, 'yyyy-MM-ddHH24:mi') 
 			
           <choose>
-	          <when test='state ==""'>
+	          <when test='state =="1"'>
 	          and nvl(r.RESULTCODE3,1) = '0'
 	          </when>
-	          <when test='state ==""'>
+	          <when test='state =="2"'>
 	          and nvl(r.RESULTCODE3,1) != '0'
 	          </when>
 	          <otherwise>
@@ -49,13 +48,52 @@
 	</select>
 
 
+	<select id="findDataById" resultType="com.loushuiyifan.report.vo.IncomeDetailVO">
+	select t.session_id as sessionId,
+       sum(decode(t.SERVICE_TYPE, 2010020, t.RESULTCODE)) as beforeCode,
+       sum(decode(t.SERVICE_TYPE, 2010021, t.RESULTCODE)) as afterCode,
+       sum(decode(t.SERVICE_TYPE, 2030123, t.RESULTCODE)) as enterCode,
+       to_char(min(t.REQUEST_TIME), 'yyyy-MM-dd HH24:mi:ss') as startDate,
+       to_char(max(t.REQUEST_TIME), 'yyyy-MM-dd HH24:mi:ss') as endDate
+    from (select session_id,
+               SERVICE_TYPE,
+               RESULTCODE,
+               REQUEST_TIME,
+               row_number() over(partition by session_id, SERVICE_TYPE order by SERVICE_TYPE, REQUEST_TIME desc) rn1
+          from Rpt_Msg_Result
+         where session_id = #{sessionId} 
+         ) t
+     where t.rn1 = 1
+     group by t.session_id
+	</select>
 
-
-
-
-
-
-
+	<update id="updateById">
+	update Rpt_Msg_Info a set a.state=1 , a.lst_upd=sysdate where session_id= #{sessionId}
+	 
+	</update>
+	
+	<select id="selectCodeById" resultType="Map">
+		select sum(t.RESULTCODE) as code0,
+	       sum(decode(t.SERVICE_TYPE, 2010020, t.RESULTCODE)) as code1,
+	       sum(decode(t.SERVICE_TYPE, 2010021, t.RESULTCODE)) as code2,
+	       sum(decode(t.SERVICE_TYPE, 2030123, t.RESULTCODE)) as code3
+	  from (select a.session_id,
+	               a.SERVICE_TYPE,
+	               a.RESULTCODE,
+	               a.REQUEST_TIME,
+	               row_number() over(partition by a.session_id, a.SERVICE_TYPE order by a.SERVICE_TYPE, a.REQUEST_TIME desc) rn1
+	          from Rpt_Msg_Result a
+	         where a.session_id like 'EDA%07'
+	           and a.session_id = #{sessionId}
+	           ) t
+	 where t.rn1 = 1
+	 group by session_id
+	
+	</select>
+	
+	<select id="selectLstUpd" resultType="String">
+	select distinct a.lst_upd as lstUpd from Rpt_Msg_Info a where a.session_id = #{sessionId}
+	</select>
 
 
 </mapper>

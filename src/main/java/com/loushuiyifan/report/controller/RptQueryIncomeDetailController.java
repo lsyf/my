@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptQueryIncomeDetailService;
 import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.report.vo.IncomeDetailVO;
 import com.loushuiyifan.report.vo.SettleDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
 
@@ -31,19 +34,13 @@ public class RptQueryIncomeDetailController extends BaseReportController{
 	
 
 	/**
-     * 营收稽核系统报账回执详情
+     * 营收稽核系统报账回执详情页面
      *
      * @return
      */
     @GetMapping
     public String index(ModelMap map, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
 
-        //页面条件
-        List<CommonVO> months = dateService.aroundMonths(5);
-        
-        map.put("months", months);
-       
         return "report/rptQueryIncomeDetail";
     }
 
@@ -53,11 +50,47 @@ public class RptQueryIncomeDetailController extends BaseReportController{
      */
     @PostMapping("list")
     @ResponseBody
-    public JsonResult list(String month, String reportId ){
+    public JsonResult list(String startDate,String endDate,String state){
+    	
+    	List<IncomeDetailVO> list = rptQueryIncomeDetailService.list(startDate, endDate, state);
+        return JsonResult.success(list);
+    }
+
+    /**
+     * 根据sessionId查询
+     */
+    @PostMapping("find")
+    @ResponseBody
+    public JsonResult selectList(String sessionId){
+    	List<IncomeDetailVO> list = rptQueryIncomeDetailService.findData(sessionId);
+        return JsonResult.success(list);
+    }
+    
+    /**
+     * 详情查询
+     */
+    @PostMapping("detail")
+    @ResponseBody
+    public JsonResult detailList(String sessionId){
+    	//TODO 待写
+    	List<Map<String,String>> list = rptQueryIncomeDetailService.detail(sessionId);
+        return JsonResult.success(list);
+    }
+    
+    /**
+     * 重发
+     */
+    @PostMapping("repeat")
+    @ResponseBody
+    public JsonResult repeat(@RequestParam("logs[]") String[] logs){
+    	try {
+    		for(String sessionId : logs){
+        		rptQueryIncomeDetailService.send(sessionId);
+        	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     	
         return JsonResult.success();
     }
-
-
-
 }

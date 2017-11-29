@@ -24,9 +24,42 @@
 			
 		
 	</select> 
+	<select id="listOld" resultType="Map">
+	select * from rpt_sett_income_cut a 
+		 where a.log_id= #{logId}
+		 and a.BUKRS like '833%'
+		 order by REMARK ASC
 	
+	</select>
+	<select id="titleOld" resultType="Map">
+		 select distinct c.rn2 as "id",
+		        c.COLUMN_NAME  as "name",
+		        c.rn1 
+	      from rpt_sett_log a, rpt_sett_def b, v_rpt_sett_format c
+	        where a.batch_id = b.batch_id
+	        and b.report_id = c.SHEET_CODE
+	        and a.log_id = #{logId}
+	        order by c.rn1 ASC
+	</select>
+	<select id="detail" resultType="Map">
+	select a.report_id as "reportId",
+       a.report_name   as "reportName",
+       a.acct_month    as "acctMonth",
+       a.area_id       as "areaId",
+       a.area_name     as "areaName",
+       a.hor_code      as "horCode",
+       a.ver_code      as "verCode",
+       a.index_allis   as "indexAllis",
+       a.income_source as "incomeSource",
+       a.source_name   as "sourceName",
+       a.index_data    as "indexData"
+  from rpt_sett_import_data a, rpt_sett_state b
+ where a.acct_month = b.acct_month
+   and a.report_id = b.report_id
+   and b.log_id = #{logId}
+   and a.income_source = #{incomeSource}
 	
-	
+	</select>
 	<select id="listReportInfo" resultType="Map">
 		select distinct 
 		REPORT_ID as "id", 

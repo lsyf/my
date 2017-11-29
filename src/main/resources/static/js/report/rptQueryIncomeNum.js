@@ -1,29 +1,28 @@
 var table;
-var isTree;
-function initForm() {
+
+function initRptQueryIncomeNum() {
     table = new TableInit();
     table.Init();
-
+    
     buildSelect('upload_month', months);
-    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId");
-    isTree.Init(reportIds);
-   
 }
+
 
 
 function queryData() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptSettleQuery/list",
+        url: hostUrl + "rptQueryIncomeNum/list",
         data: {
-            month: $("#upload_month").val(),
-            reportId: isTree.val()
+        	month: $("#upload_month").val(),
+        	year:$("#upload_year").val(),
+            type: $("#upload_type").val()
         },
         dataType: "json",
         success: function (r) {
             if (r.state) {
-                var data = r.data;
-                table.load(data);
+            	 var data = r.data;
+                 table.load(data);
 
             } else {
                 toastr.error('查询失败');
@@ -36,43 +35,6 @@ function queryData() {
     });
 
 }
-
-//导出
-function exportData() {
-    var month = $("#upload_month").val();
-    var reportId = isTree.val();
-
-    var names = ['month', 'reportId'];
-    var params = [month, reportId];
-
-    var form = $("#form_export");   //定义一个form表单
-    form.attr('action', hostUrl + 'rptSettleQuery/export');
-    form.empty();
-    names.forEach(function (v, i) {
-        var input = $('<input>');
-        input.attr('type', 'hidden');
-        input.attr('name', v);
-        input.attr('value', params[i]);
-        form.append(input);
-    });
-
-    form.submit();   //表单提交
-
-}
-
-//审核查询
-function auditQuery(){
-	
-	
-}
-
-function detailData(row) {
-	var logId = row.logId;
-	var incomeSource = row.incomeSource;
-
-   window.open("rptSettleDetail.html?logId="+logId+"incomeSource="+incomeSource);
-}
-
 
 //Table初始化
 var TableInit = function () {
@@ -103,71 +65,27 @@ var TableInit = function () {
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
-             
+
             data: [],
             columns: [{
-            	checkbox:true
-            },{
-                field: 'logId',
-                width:'80px',
-                title: '流水号'
-            }, {
-                field: 'reportId',
-                width:'120px',
-                title: '报表编号'
-            }, {
-                field: 'reportName',
-                width:'120px',
-                title: '报表名称'
-            }, {
                 field: 'month',
-                width:'120px',
+                width: '80px',
                 title: '账期'
             }, {
-                field: 'incomeSource',
-                width:'200px',
-                title: '收入来源'
+                field: 'success',
+                width: '80px',
+                title: '成功'
             }, {
-                field: 'status',
-                width:'80px',
-                title: '状态'
-            }, {
-                field: 'fileSeq',
-                width:'80px',
-                title: '重传次数'
-            }, {
-                field: 'createDate',
-                width:'80px',
-                title: '下发时间'
-            }, {
-                field: 'importDate',
-                width:'80px',
-                title: '导入时间'
-            }, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
+                field: 'fail',
+                width: '80px',
+                title: '失败'
             }]
         });
-        
-    };
 
-  //操作 监听
-    window.operateEvents = {
-        'click .detail': function (e, value, row, index) {
-        	detailData(row);
-        }
     };
-
-    //操作显示format
-    function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="detail btn btn-success btn-xs">详细</button>'
-        ].join('');
-    }
 
     
+
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);
