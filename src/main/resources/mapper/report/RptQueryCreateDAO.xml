@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loushuiyifan.report.dao.RptQueryCreateDAO">
+    <delete id="remove">
+        delete
+        from RPT_EXCEL_WYF a
+        where a.excel_id in
+        <foreach collection="excelIds" item="excelId" open="(" close=")" separator=",">
+            #{excelId}
+        </foreach>
+    </delete>
+
+    <select id="list" resultType="com.loushuiyifan.report.bean.RptExcelWyf">
+        select a.*
+        from RPT_EXCEL_WYF a
+        <if test='incomeSource!="0"'>
+            join code_list_tax b
+            on (b.type_code = 'income_source2017' and
+            (b.code_id = #{incomeSource} or b.parent_code_id = #{incomeSource}) and
+            a.incomesource_id = b.code_id)
+        </if>
+        where acct_month = #{month}
+        <if test='latnId!=null and latnId!=""'>
+            and a.area_name =#{latnId}
+        </if>
+
+    </select>
+    <select id="listByUser" resultType="com.loushuiyifan.report.bean.RptExcelWyf">
+        select a.*
+        from RPT_EXCEL_WYF a
+        where acct_month = #{month}
+        and a.area_name in
+        <foreach collection="orgs" item="org" open="(" close=")" separator=",">
+            #{org.name}
+        </foreach>
+    </select>
+</mapper>

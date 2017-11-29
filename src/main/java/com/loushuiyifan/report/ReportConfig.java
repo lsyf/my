@@ -90,4 +90,19 @@ public class ReportConfig {
         }
     }
 
+    public static String getTaxType(String type) {
+        switch (type) {
+            case "0":
+                type = "价税合一(含税)";
+                break;
+            case "1":
+                type = "增值税";
+                break;
+            case "2":
+                type = "价(不含税)";
+                break;
+        }
+        return type;
+    }
+
 }

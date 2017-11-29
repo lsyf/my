@@ -61,5 +61,11 @@
 		   and a.code_id = #{id}
            
     </select>
+    <select id="listKidsByTypeAndData" resultType="com.loushuiyifan.report.bean.CodeListTax">
+select *
+  from code_list_tax b
+ where b.type_code = #{type}
+   and (b.code_id = #{data} or b.parent_code_id = #{data})
+    </select>
 
 </mapper>

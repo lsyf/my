@@ -2,12 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptTaxQueryDAO">
 
-	<select id="listData" resultType="Map">
-	
-	</select>
 
-	
-	<select id="listAreaForTax" resultType="Map">
+    <select id="listAreaForTax" resultType="Map">
 		select distinct KHINR as "id",
                         SUBSTR(LTEXT, 4, 3) as "name",
                         KHINR as "data"
@@ -16,6 +12,158 @@
 		   and KHINR not in ('A3316', 'A3317', 'A3318', 'A3314', 'A3313')
 		 order by KHINR
 	</select>
+    <select id="getColumn1" resultType="java.util.Map">
+		select TAXNO as "id",
+		TAXNAMEONE||'—'||TAXNAMETWO||'—'||TAXNAMETHREE as "name"
+		from tgl_taxsubject_out
+		where INTYEAR = 2017
+		order by taxno
+    </select>
 
+    <select id="getColumn7" resultType="java.util.Map">
+        select distinct KHINR as "id",
+        substr(LTEXT, 4, 3) as "name"
+        from KOSTL_PRCTR_LOCAL_NEW
+        where BUKRS = 'A011'
+        and KHINR not in ('A3316', 'A3317', 'A3318', 'A3314', 'A3313')
+        <if test='latnId !="0"'>
+            and khinr= #{latnId}
+        </if>
+        order by KHINR
+    </select>
+    <select id="getRow1" resultType="java.util.Map">
+        select
+		khinr as "profitCode",
+		stext as "department",
+		nssbh as "id",
+		nssbhname as "taxName",
+		nssbh_prctr as "taxProfitCode",
+		ktext as "taxProfitName"
+		from CFG_NSSBH_PRCTR
+		order by nssbh_prctr
+    </select>
+    <select id="getRow2" resultType="java.util.Map">
+        select
+        NSSBH_PRCTR as "pid",
+        KTEXT as "name",
+        NSSBH as "id"
+        from v_taxrpt_area
+        <if test='latnId!="0"'>
+            where khinr = #{latnId}
+        </if>
+        order by NSSBH_PRCTR
+    </select>
+    <select id="getRow5" resultType="java.util.Map">
+        select
+        a.KHINR as "profitCode",
+        a.STEXT as "department",
+        a.NSSBH as "id",
+        a.NSSBHNAME as "taxName",
+        a.NSSBH_PRCTR as "taxProfitCode",
+        a.KTEXT as "taxProfitName",
+        b.PERCENT as "percent"
+        from CFG_NSSBH_PRCTR a, dim_cut_tax_cfg b
+        where a.NSSBH = b.NSSBH
+        order by a.nssbh_prctr
+    </select>
+    <select id="getRow7" resultType="java.util.Map">
+        SELECT TAXNO as "id",
+               TAXNAMEONE || nvl2(TAXNAMETWO, '-' || TAXNAMETWO, TAXNAMETWO) ||
+               nvl2(TAXNAMETHREE, '-' || TAXNAMETHREE, TAXNAMETHREE) as "name"
+          from tgl_taxsubject_out
+          where INTYEAR = 2017
+         order by TAXNO
+    </select>
+
+    <select id="getRow8" resultType="java.util.Map">
+        select
+        NSSBH_PRCTR as "id",
+        KTEXT as "name",
+        NSSBH as "code"
+        from v_taxrpt_area
+        <if test='latnId!="0"'>
+            where khinr = #{latnId}
+        </if>
+        order by NSSBH_PRCTR
+    </select>
+
+    <select id="getData1" resultType="java.util.Map">
+select
+KEY as "key",
+SWSRJE as "data"
+from v_taxrpt_01_1
+where acct_month=#{month}
+    </select>
+
+    <select id="getData2" resultType="java.util.Map">
+		select 'key_' || NSSBH || '_' || zb_code as "key",
+        to_char(aft_tax_value) as "data"
+  		from v_taxrpt2_02
+ 		where acct_month = #{month}
+ 		and rn=1
+    </select>
+    <select id="getData3" resultType="java.util.Map">
+select
+key as "key",
+to_char(zb_value) as "data"
+from v_taxrpt_3
+where acct_month=#{month}
+and rn=1
+    </select>
+    <select id="getData4" resultType="java.util.Map">
+select  'key_' ||type_remark|| '_1'  as "key",
+to_char(CRNCY_AMT) as "data"
+from v_taxrpt_04
+where acct_month=#{month}
+and prctr= #{latnId}
+and rn=1
+union
+select  'key_' ||type_remark|| '_2'  as "key",
+to_char(SWSRJE) as "data"
+from v_taxrpt_04
+where acct_month=#{month}
+and prctr=#{latnId}
+and rn=1
+union
+select  'key_' ||type_remark|| '_3'  as "key",
+to_char(SWSRSE) as "data"
+from v_taxrpt_04
+where acct_month=#{month}
+and prctr=#{latnId}
+and rn=1
+
+    </select>
+    <select id="getData5" resultType="java.util.Map">
+select key as "key",
+to_char(zb_value) as "data"
+from v_taxrpt_5
+where acct_month=#{month}
+    </select>
+    <select id="getData6" resultType="java.util.Map">
+SELECT KEY as "key",
+CRNCY_AMT as "data"
+FROM v_taxrpt_6
+where acct_month =#{month}
+    </select>
+    <select id="getData7" resultType="java.util.Map">
+select
+'key_'||taxno||'_'||prctr||'_1' as "key",
+to_char(CRNCY_AMT) as "data"
+from sum_stat_to_tax
+where acct_month=#{month}
+union
+select
+'key_'||taxno||'_'||prctr||'_2' as "key",
+to_char(SWSRSE) as "data"
+from sum_stat_to_tax
+where acct_month=#{month}
+    </select>
+    <select id="getData8" resultType="java.util.Map">
+SELECT
+key as "key",
+PERCENT_AMT as "data"
+FROM v_taxrpt_8
+where acct_month=#{month}
+    </select>
 
 </mapper>

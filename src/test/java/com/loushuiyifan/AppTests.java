@@ -3,8 +3,6 @@ package com.loushuiyifan;
 import org.junit.Test;
 
 import java.io.RandomAccessFile;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,9 +15,17 @@ public class AppTests {
 
     @Test
     public void test() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate date = LocalDate.parse("201704", dtf);
+        List<Map> list = new ArrayList<>();
 
+        Map map = new HashMap();
+
+        for (int i = 1; i <= 2; i++) {
+            map = new HashMap<>();
+            map.put("id", i + "");
+            list.add(map);
+        }
+
+        System.out.println(list);
     }
 
     @Test

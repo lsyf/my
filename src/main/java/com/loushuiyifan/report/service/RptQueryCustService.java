@@ -344,17 +344,7 @@ public class RptQueryCustService {
 
         String sep = "_";
         String suffix;
-        switch (type) {
-            case "0":
-                type = "价税合一(含税)";
-                break;
-            case "1":
-                type = "增值税";
-                break;
-            case "2":
-                type = "价(不含税)";
-                break;
-        }
+        type = ReportConfig.getTaxType(type);
         if (isMulti) {
             suffix = "多营业区.xls";
         } else {
@@ -368,13 +358,14 @@ public class RptQueryCustService {
                 .append(sep).append(type)
                 .append(sep).append(suffix)
                 .toString();
-
+        fileName = fileName.replace("*", "");
         Path path = Paths.get(reportDownloadService.configLocation(), month);
         if (!Files.exists(path)) {
             Files.createDirectory(path);
         }
         return path.resolve(fileName).toString();
     }
+
 
     /**
      * 配置模板路径

@@ -28,6 +28,13 @@ public class CodeListTaxService {
         return codeListTaxDAO.listByType(type);
     }
 
+    /**
+     * 根据类型和数据，获取整条数据
+     *
+     * @param type
+     * @param data
+     * @return
+     */
     public CodeListTax getNameByTypeAndData(String type, String data) {
         CodeListTax param = new CodeListTax();
         param.setTypeCode(type);
@@ -35,7 +42,25 @@ public class CodeListTaxService {
         return codeListTaxDAO.selectOne(param);
     }
 
+    /**
+     * 根据类型和数据，获取这个数据以及所有直属子类数据(不包括子类的子类)
+     *
+     * @param type
+     * @param data
+     * @return
+     */
+    public List<CodeListTax> listKidsByTypeAndData(String type, String data) {
+        List<CodeListTax> list = codeListTaxDAO.listKidsByTypeAndData(type, data);
+        return list;
+    }
 
+
+    /**
+     * 根据类型获取所有数据
+     *
+     * @param type
+     * @return
+     */
     public List<Map> listByType(String type) {
         return codeListTaxDAO.listByType(type);
     }
@@ -51,6 +76,12 @@ public class CodeListTaxService {
         return list;
     }
 
+    /**
+     * 根据地市ID获取地市名
+     *
+     * @param id
+     * @return
+     */
     public String getAreaName(String id) {
         return codeListTaxDAO.codeNameById(id);
     }

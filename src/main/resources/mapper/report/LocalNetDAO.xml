@@ -13,33 +13,33 @@
     </select>
 
     <select id="listByRootAndLvl" resultType="com.loushuiyifan.common.bean.Organization">
-        select  *
+        select *
         from(
-            select *
-            from aweb_organization a
-            where a.type = 'local_net'
-            and a.lvl <![CDATA[<=]]> #{lvl}
-            and (
-            <foreach collection="list" item="org" separator="or">
-                a.parent_ids like #{org.parentIds}
-            </foreach>
-            )
-            union
-            select *
-            from aweb_organization a
-            where a.type = 'local_net'
-            and a.lvl <![CDATA[<=]]> #{lvl}
-            and id in (
-            <foreach collection="list" item="org" separator=",">
-                #{org.id}
-            </foreach>
-            )
+        select *
+        from aweb_organization a
+        where a.type = 'local_net'
+        and a.lvl <![CDATA[<=]]> #{lvl}
+        and (
+        <foreach collection="list" item="org" separator="or">
+            a.parent_ids like #{org.parentIds}
+        </foreach>
+        )
+        union
+        select *
+        from aweb_organization a
+        where a.type = 'local_net'
+        and a.lvl <![CDATA[<=]]> #{lvl}
+        and id in (
+        <foreach collection="list" item="org" separator=",">
+            #{org.id}
+        </foreach>
+        )
         ) a
         order by a.lvl asc, a.sorting desc
     </select>
 
     <select id="listForC3" resultType="com.loushuiyifan.common.bean.Organization">
-        select  *
+        select *
         from(
         select *
         from aweb_organization a
@@ -80,7 +80,7 @@
 		   and a.type = 'local_net'
 		 order by a.lvl asc, a.sorting desc
     </select>
-    
+
     <select id="getCodeNameById" resultType="String">
 	    select a.code_name
 	  from code_list_tax a
@@ -88,8 +88,8 @@
 	   and a.code_id = #{codeId}
     
     </select>
-      
-	<select id="listPrctrName" resultType="Map">
+
+    <select id="listPrctrName" resultType="Map">
     	select distinct PRCTR  as "id", 
     	       PRCTR_NAME      as "name", 
     	       PRCTR           as "data"
@@ -98,13 +98,20 @@
         
                   
     </select>
-    
+
     <select id="listNameById" resultType="com.loushuiyifan.report.vo.CommonVO">
     
 	select a.name, a.data
 	  from aweb_organization a
 	 where a.type = 'local_net' and a.lvl=3
     
+    </select>
+
+    <select id="listAllCity" resultType="com.loushuiyifan.common.bean.Organization">
+select *
+  from aweb_organization a
+ where a.type = 'local_net'
+   and length(a.data) = 2
     </select>
 
 </mapper>
