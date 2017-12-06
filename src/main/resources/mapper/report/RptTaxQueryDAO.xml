@@ -88,11 +88,11 @@
     </select>
 
     <select id="getData1" resultType="java.util.Map">
-select
-KEY as "key",
-SWSRJE as "data"
-from v_taxrpt_01_1
-where acct_month=#{month}
+		select
+		KEY as "key",
+		SWSRJE as "data"
+		from v_taxrpt_01_1
+		where acct_month=#{month}
     </select>
 
     <select id="getData2" resultType="java.util.Map">
@@ -103,67 +103,67 @@ where acct_month=#{month}
  		and rn=1
     </select>
     <select id="getData3" resultType="java.util.Map">
-select
-key as "key",
-to_char(zb_value) as "data"
-from v_taxrpt_3
-where acct_month=#{month}
-and rn=1
+		select
+		key as "key",
+		to_char(zb_value) as "data"
+		from v_taxrpt_3
+		where acct_month=#{month}
+		and rn=1
     </select>
     <select id="getData4" resultType="java.util.Map">
-select  'key_' ||type_remark|| '_1'  as "key",
-to_char(CRNCY_AMT) as "data"
-from v_taxrpt_04
-where acct_month=#{month}
-and prctr= #{latnId}
-and rn=1
-union
-select  'key_' ||type_remark|| '_2'  as "key",
-to_char(SWSRJE) as "data"
-from v_taxrpt_04
-where acct_month=#{month}
-and prctr=#{latnId}
-and rn=1
-union
-select  'key_' ||type_remark|| '_3'  as "key",
-to_char(SWSRSE) as "data"
-from v_taxrpt_04
-where acct_month=#{month}
-and prctr=#{latnId}
-and rn=1
+		select  'key_' ||type_remark|| '_1'  as "key",
+		to_char(CRNCY_AMT) as "data"
+		from v_taxrpt_04
+		where acct_month=#{month}
+		and prctr= #{latnId}
+		and rn=1
+		union
+		select  'key_' ||type_remark|| '_2'  as "key",
+		to_char(SWSRJE) as "data"
+		from v_taxrpt_04
+		where acct_month=#{month}
+		and prctr=#{latnId}
+		and rn=1
+		union
+		select  'key_' ||type_remark|| '_3'  as "key",
+		to_char(SWSRSE) as "data"
+		from v_taxrpt_04
+		where acct_month=#{month}
+		and prctr=#{latnId}
+		and rn=1
 
     </select>
     <select id="getData5" resultType="java.util.Map">
-select key as "key",
-to_char(zb_value) as "data"
-from v_taxrpt_5
-where acct_month=#{month}
+		select key as "key",
+		to_char(zb_value) as "data"
+		from v_taxrpt_5
+		where acct_month=#{month}
     </select>
     <select id="getData6" resultType="java.util.Map">
-SELECT KEY as "key",
-CRNCY_AMT as "data"
-FROM v_taxrpt_6
-where acct_month =#{month}
+		SELECT KEY as "key",
+		CRNCY_AMT as "data"
+		FROM v_taxrpt_6
+		where acct_month =#{month}
     </select>
     <select id="getData7" resultType="java.util.Map">
-select
-'key_'||taxno||'_'||prctr||'_1' as "key",
-to_char(CRNCY_AMT) as "data"
-from sum_stat_to_tax
-where acct_month=#{month}
-union
-select
-'key_'||taxno||'_'||prctr||'_2' as "key",
-to_char(SWSRSE) as "data"
-from sum_stat_to_tax
-where acct_month=#{month}
+		select
+		'key_'||taxno||'_'||prctr||'_1' as "key",
+		to_char(CRNCY_AMT) as "data"
+		from sum_stat_to_tax
+		where acct_month=#{month}
+		union
+		select
+		'key_'||taxno||'_'||prctr||'_2' as "key",
+		to_char(SWSRSE) as "data"
+		from sum_stat_to_tax
+		where acct_month=#{month}
     </select>
     <select id="getData8" resultType="java.util.Map">
-SELECT
-key as "key",
-PERCENT_AMT as "data"
-FROM v_taxrpt_8
-where acct_month=#{month}
+	SELECT
+	key as "key",
+	PERCENT_AMT as "data"
+	FROM v_taxrpt_8
+	where acct_month=#{month}
     </select>
 
 </mapper>

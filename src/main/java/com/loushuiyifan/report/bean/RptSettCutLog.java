@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 @Data
-@Table(name="RPT_SETT_CUT_LOG")
+@Table(name="rpt_sett_cut_log")
 public class RptSettCutLog {
 	 Long logId;
 	 String fileName;

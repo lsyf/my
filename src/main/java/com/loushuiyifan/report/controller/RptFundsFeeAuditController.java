@@ -6,6 +6,8 @@ import com.loushuiyifan.report.service.RptFundsFeeQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.FundsAuditVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ public class RptFundsFeeAuditController extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:rptFundsFeeAudit:view")
     public String index(ModelMap map) {
 
         //页面条件
@@ -54,6 +57,7 @@ public class RptFundsFeeAuditController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:rptFundsFeeAudit:view")
     public JsonResult listQuery(String month, String reportId) {
         List<FundsAuditVO> list = rptFundsFeeAuditService.list(month, reportId);
 

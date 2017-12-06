@@ -6,6 +6,8 @@ import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.service.RptQueryCreateService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,6 +32,7 @@ public class RptQueryDownloadController extends BaseReportController {
     RptQueryCreateService rptQueryCreateService;
 
     @GetMapping
+    @RequiresPermissions("report:rptQueryDownload:view")
     public String index(ModelMap map) {
 
         //页面条件

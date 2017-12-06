@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 @Data
-@Table(name="RPT_SETT_CUT_RATE")
+@Table(name="rpt_sett_cut_rate")
 public class RptSettCutRate {
 	private Long logId;
 	private String reportId;

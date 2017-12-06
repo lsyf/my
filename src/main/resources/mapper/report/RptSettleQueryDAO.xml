@@ -68,4 +68,29 @@
 		from rpt_sett_def
 		order by REPORT_ID ASC
 	</select>
+	<select id="auditRpt" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_SETT.auditRpt(
+        #{userId,mode=IN,jdbcType=NUMERIC},
+        #{rptCaseId,mode=IN,jdbcType=NUMERIC},
+        #{status,mode=IN,jdbcType=VARCHAR},
+        #{comment,mode=IN,jdbcType=VARCHAR},
+        #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR},
+        #{rtnStatus,mode=OUT,jdbcType=VARCHAR}
+        )}
+    </select>
+	<select id="selectAudits" parameterType="map" statementType="CALLABLE">
+      {
+      #{list,mode=OUT,jdbcType=CURSOR,resultMap=rptAuditVO}= call PKG_RPT_SETT.getAuditInfo
+      (
+      #{rptCaseId,mode=IN,jdbcType=NUMERIC},
+      #{month,mode=IN,jdbcType=VARCHAR},
+      #{reportId,mode=IN,jdbcType=VARCHAR},
+      #{incomeSource,mode=IN,jdbcType=VARCHAR}
+      )
+      }
+    </select>
+    <resultMap id="rptAuditVO" type="com.loushuiyifan.report.vo.RptAuditVO">
+    </resultMap>
 </mapper>

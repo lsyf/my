@@ -74,7 +74,8 @@ spring:
             web-stat-filter:
                 enabled: true
                 exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
-
+              
+   
     redis:
         database: 10
         host: 134.96.246.24

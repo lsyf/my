@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptRuleConfigDAO">
+
+
+    <select id="listData" resultType="com.loushuiyifan.report.vo.RuleConfigVO">
+		select a.id         as "logId",
+		       a.acct_month as "month",
+		       b.name       as "latnName",       
+		       decode(a.area_id, 0, chr(51371) || chr(45759),
+		       (select b.name from aweb_organization b where b.data = a.area_id))   as "codeName",     
+		       (select c.card_name from dim_card_def c where c.card_id = a.card_id) as "cardType",
+		       a.rate            as "discount",		       
+		       a.platform_amount as "platformAmount",
+		       a.inactive_amount as "inactiveAmount",
+		       (select d.nickname from aweb_user d where d.id = a.chg_who) as "chgWho",
+		       to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as "lstUpd"
+		  from (select t.* from inet_discount_rate t where 1 = 1
+		        
+		        <if test='logId ==null'>
+		        	and t.acct_month = #{month}
+		        </if>
+		        
+		        <if test='logId !=null'>
+		        	and t.id = #{logId}
+		        </if>
+		        <if test='discount !="".toString'>
+		        	and t.rate = #{discount}
+		        </if>
+		        <if test='cardType !="0"'>
+		        	and t.card_id = #{cardType}
+		        </if>               
+		        order by t.lst_upd desc) a,
+		       dim_region_def b
+		 where a.latn_id = b.id   
+		   	<if test='latnId !="0"'>
+		      and b.dept_id = #{latnId}
+		    </if> 
+		   
+                 
+	</select>
+	
+	
+	<select id="findCardName" resultType="Map">
+	 select a.card_id as "id", 
+	 a.card_id || '-' || a.card_name as "name",
+	 a.card_id as "data"
+     from DIM_CARD_DEF a
+    order by a.card_id
+	</select>
+	
+	<select id="findNameById" resultType="com.loushuiyifan.report.bean.CodeListTax">
+		select a.*
+    from code_list_tax a
+   where a.type_code = 'local_net'
+     and a.parent_code_id = 0
+     and a.code_id not in ('1', '3', '5', '6', '7', '3395')
+     order by a.seq desc,a.code_id 
+	</select>
+</mapper>

@@ -2,6 +2,7 @@ package com.loushuiyifan.report.controller;
 
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class RptSettleERecordController extends BaseReportController{
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:rptSettleERecord:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
 
         //页面条件

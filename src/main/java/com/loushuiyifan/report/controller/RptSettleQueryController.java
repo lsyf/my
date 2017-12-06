@@ -3,6 +3,10 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptSettleQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.SettleDataVO;
@@ -33,9 +38,9 @@ public class RptSettleQueryController extends BaseReportController{
      * @return
      */
     @GetMapping
-    public String index(ModelMap map, @ModelAttribute("user") User user) {
-        Long userId = user.getId();
-
+    @RequiresPermissions("report:rptSettleQuery:view")
+    public String index(ModelMap map) {
+       
         //页面条件
         List<CommonVO> months = dateService.aroundMonths(5);
         List<Map<String, String>> reportIds =rptSettleQueryService.listReportInfo();
@@ -52,6 +57,7 @@ public class RptSettleQueryController extends BaseReportController{
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:rptSettleQuery:view")
     public JsonResult list(String month, String reportId ){
     	List<SettleDataVO> list =rptSettleQueryService.listSettle(month, reportId);
 
@@ -63,6 +69,7 @@ public class RptSettleQueryController extends BaseReportController{
     */
     @PostMapping("detail")
     @ResponseBody
+    @RequiresPermissions("report:rptSettleQuery:view")
     public JsonResult detail(Long logId,String incomeSource){
     	Map<String, Object> map = rptSettleQueryService.listDetail(logId, incomeSource);
         return JsonResult.success(map);
@@ -73,16 +80,59 @@ public class RptSettleQueryController extends BaseReportController{
      */
     @PostMapping("export")
     @ResponseBody
-    public JsonResult export(String month, String reportId ){
+    @RequiresPermissions("report:rptSettleQuery:view")
+    public JsonResult export(HttpServletRequest req,
+                             HttpServletResponse resp,
+                             Long logId, 
+                             String reportId,
+                             String incomeSource){
+    	
+    	try {
+    		byte[] datas = rptSettleQueryService.export(logId, reportId, incomeSource);
+    		String name = rptSettleQueryService.getFileName(logId,reportId,incomeSource);
+    		downloadService.download(req, resp, datas,name);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ReportException("导出错误:" + e.getMessage());
+		}
     	
         return JsonResult.success();
     }
     
     
     /**
-     * 审核
+     * 报表审核状态
+     *
+     * @param month
+     * @param latnId
+     * @param incomeSource
+     * @param type
+     * @return
      */
-    //TODO
+    @PostMapping("listAudit")
+    @ResponseBody
+    public JsonResult listAudit(String month,
+                                String reportId,
+                                Long logId,
+                                String incomeSource) {
+       
+        Map<String, Object> map = rptSettleQueryService.listAudit(month,reportId,logId,incomeSource);
+        return JsonResult.success(map);
+    }
+
+    /**
+     * 审核报表
+     */
+    @PostMapping("audit")
+    @ResponseBody
+    public JsonResult audit(Long rptCaseId, String status, String comment,String incomeSource,
+                            @ModelAttribute("user") User user) {
+       //TODO 审核存过返回值改为0：成功，非0：失败
+    	//PKG_RPT_SETT.auditRpt
+    	Long userId = user.getId();
+        rptSettleQueryService.audit(rptCaseId, incomeSource,status, comment, userId);;
+        return JsonResult.success();
+    }
     
     
     

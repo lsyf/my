@@ -1,44 +1,16 @@
 var table;
 var table2;
 function initSettleDetail() {
-	var logId= logId;
-    var incomeSource= incomeSource;
-	queryData();
+
     table = new TableInit();
    
     table2 = new TableInit2();
     table2.Init();
+    
+    table.Init(report_titles, report_datas);
+    table2.load(report_detail);
 
 }
-
-function queryData() {
-    $.ajax({
-        type: "POST",
-        url: hostUrl + "rptSettleQuery/detail",
-        data: {
-        	logId: logId.val(),
-        	incomeSource: incomeSource.val()
-        },
-        dataType: "json",
-        success: function (r) {
-            if (r.state) {
-                var data = r.data;
-                $('#title_table').text(titles);
-                table.Init(data.titles, data.datas);
-                table2.load(data.detail);
-            } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
-            }
-        },
-        error: function (result) {
-            toastr.error('发送请求失败');
-        }
-    });
-
-}
-
-
 
 //原始数据
 var TableInit = function () {
@@ -60,7 +32,7 @@ var TableInit = function () {
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 10,                       //每页的记录行数（*）
             pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-            search: true,                       //是否显示表格搜索
+            //search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮
@@ -82,41 +54,56 @@ var TableInit = function () {
         var cols = [
             {
                 class: 'table_colum1',
-                field: 'bukrs',
+                field: 'BUKRS',
                 title: '组织代码',
                 align: 'left',
                 halign: 'center'
             },
             {
                 class: 'table_colum1',
-                field: 'reportId',
+                field: 'REPORT_ID',
                 title: '报表编号',
                 align: 'left',
                 halign: 'center',
             },
             {
                 class: 'table_colum1',
-                field: 'extend_001',
+                field: 'EXTEND_001',
                 title: '扩展字段1',
                 align: 'left',
                 halign: 'center'
             },
             {
                 class: 'table_colum1',
-                field: 'extend_002',
+                field: 'EXTEND_002',
                 title: '扩展字段2',
                 align: 'left',
                 halign: 'center'
             },
             {
                 class: 'table_colum1',
-                field: 'extend_003',
+                field: 'EXTEND_003',
                 title: '扩展字段3',
                 align: 'left',
                 halign: 'center'
             }
         ];
-
+        var col_remark = {
+            class: 'table_colum3',
+            field: 'REMARK',
+            title: '数据状态',
+            align: 'left',
+            halign: 'center',
+            formatter:function(value,row,index){
+            	var a ='';
+            	if(value ==1){
+            		var a = '原始数据'; 
+            	}else{
+            		var a = '切割后数据'; 
+            	}
+            	return a;
+            }
+        } ;
         titles.forEach(function (t) {
             var col = {
                 class: 'table_colum2',
@@ -130,6 +117,7 @@ var TableInit = function () {
             cols.push(col);
         });
 
+        cols.push(col_remark)
         return cols;
     }
 
@@ -173,6 +161,7 @@ var TableInit2 = function () {
             rowStyle: function () {
                 return 'table-row';
             },
+            data: [],
             columns: [{
                 field: 'reportId',
                 title: '报表编号'

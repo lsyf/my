@@ -8,6 +8,8 @@ import com.loushuiyifan.report.service.ImportICTService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class ImportICTController extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:importICT:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -67,6 +70,7 @@ public class ImportICTController extends BaseReportController {
      */
     @PostMapping("upload")
     @ResponseBody
+    @RequiresPermissions("report:importICT:view")
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String month,
                              String remark,
@@ -108,6 +112,7 @@ public class ImportICTController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:importICT:view")
     public JsonResult list(String month, @ModelAttribute("user") User user) {
         Long userId = user.getId();
         List<ImportDataLogVO> list = importICTService.list(userId, month);
@@ -123,6 +128,7 @@ public class ImportICTController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
+    @RequiresPermissions("report:importICT:view")
     public JsonResult remove(Long logId, @ModelAttribute("user") User user) {
     	 
     	Long userId = user.getId();

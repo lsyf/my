@@ -8,6 +8,8 @@ import com.loushuiyifan.report.service.ImportIncomeDataService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class ImportIncomeDataController extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:importIncomeData:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -68,6 +71,7 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("upload")
     @ResponseBody
+    @RequiresPermissions("report:importIncomeData:upload")
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String month,
                              String remark,
@@ -110,6 +114,7 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:importIncomeData:view")
     public JsonResult list(String month, String latnId) {
         List<ImportDataLogVO> list = importIncomeDataService.list(latnId, month);
 
@@ -121,6 +126,7 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("itsm")
     @ResponseBody
+    @RequiresPermissions("report:importIncomeData:itsm")
     public JsonResult itsm(@RequestParam("logIds[]") Long[] logIds,
                            @ModelAttribute("user") User user) {
         importIncomeDataService.itsm(logIds, user.getId());
@@ -133,6 +139,7 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("commit")
     @ResponseBody
+    @RequiresPermissions("report:importIncomeData:commit")
     public JsonResult commit(@RequestParam("logIds[]") Long[] logIds) {
         for (Long logId : logIds) {
             importIncomeDataService.commit(logId);
@@ -147,6 +154,7 @@ public class ImportIncomeDataController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
+    @RequiresPermissions("report:importIncomeData:remove")
     public JsonResult remove(@RequestParam("logIds[]") Long[] logIds,
                              @ModelAttribute("user") User user) {
         Long userId = user.getId();

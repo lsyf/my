@@ -7,6 +7,10 @@ import com.loushuiyifan.report.service.RptQueryCustService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,6 +36,7 @@ public class RptQueryCustController extends BaseReportController {
     RptQueryCustService rptQueryCustService;
 
     @GetMapping
+    @RequiresPermissions("report:rptQueryCust:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -57,6 +62,7 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryCust:view")
     public JsonResult list(String month,
                            String latnId,
                            String incomeSource,
@@ -79,6 +85,7 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("export")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryCust:view")
     public void export(HttpServletRequest req,
                        HttpServletResponse resp,
                        String month,
@@ -107,6 +114,7 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("listAudit")
     @ResponseBody
+//  @RequiresPermissions("report:rptQueryCust:audit")
     public JsonResult listAudit(String month,
                                 String latnId,
                                 String incomeSource,
@@ -126,8 +134,23 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("audit")
     @ResponseBody
+//    @RequiresPermissions("report:rptQueryCust:audit")
     public JsonResult audit(Long rptCaseId, String status, String comment,
                             @ModelAttribute("user") User user) {
+    	
+    	//获取当前需要审核状态
+    	String auditState = "1";
+    	
+    	//判断用户是否有相应审核权限
+    	Subject subject = SecurityUtils.getSubject();
+    	if(auditState.equals("1")){
+    		subject.checkPermission("report:rptQueryCust:audit:1");
+    	}else if(auditState.equals("2")){
+    		subject.checkPermission("report:rptQueryCust:audit:2");
+    	}else if(auditState.equals("3")){
+    		subject.checkPermission("report:rptQueryCust:audit:2");
+    	}
+    	
         Long userId = user.getId();
         rptQueryCustService.audit(rptCaseId, status, comment, userId);
         return JsonResult.success();

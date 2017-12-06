@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class RptTaxExportController extends BaseReportController{
 	 * @return
 	 */
 	@GetMapping
+	@RequiresPermissions("report:rptTaxExport:view")
     public String index(ModelMap map) {
 
         //页面条件
@@ -50,6 +52,7 @@ public class RptTaxExportController extends BaseReportController{
      */
     @PostMapping("export")
     @ResponseBody
+    @RequiresPermissions("report:rptTaxExport:view")
     public JsonResult export(HttpServletRequest req,
                            	HttpServletResponse resp,
                            	String month) {

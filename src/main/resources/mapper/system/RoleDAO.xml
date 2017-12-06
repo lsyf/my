@@ -20,6 +20,7 @@
     WHERE
         b.id = a.resource_id
     AND a.type = 'menu'
+    ORDER BY b.parent_ids ASC, b.sorting desc
   </select>
 
     <select id="selectAllPermissions" resultType="com.loushuiyifan.system.vo.Permission4Role">
@@ -32,6 +33,7 @@
     WHERE
         b.id = a.resource_id
     AND a.type = 'permission'
+    order by a.resource_id
   </select>
 
     <select id="selectResourceByRole" resultType="Long">

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptQueryAuditDAO">
+
+	<select id="listStateForMap" resultType="Map">
+	<![CDATA[
+	select b.code_name as "codeName",
+		   0 as "income0",
+	       sum(decode(a.income_source, '02', status)) as "income02",
+	       sum(decode(a.income_source, '50', status)) as "income50",
+	       sum(decode(a.income_source, '06', status)) as "income06",
+	       sum(decode(a.income_source, '80', status)) as "income80",
+	       sum(decode(a.income_source, '03', status)) as "income03",
+	       sum(decode(a.income_source, '05', status)) as "income05",
+	       sum(decode(a.income_source, '07', status)) as "income05",
+	       sum(decode(a.income_source, '10', status)) as "income10",
+	       sum(decode(a.income_source, '20', status)) as "income20",
+	       sum(decode(a.income_source, '30', status)) as "income30",
+	       sum(decode(a.income_source, '40', status)) as "income40",
+	       sum(decode(a.income_source, '60', status)) as "income60",
+	       sum(decode(a.income_source, '70', status)) as "income70",
+	       sum(decode(a.income_source, '08', status)) as "income08",
+	       sum(decode(a.income_source, '9001', status)) as "income901",
+	       sum(decode(a.income_source, '9002', status)) as "income902"
+	      
+		  from v_step_incomesource_2017 a, code_list_tax b
+		 where a.acct_month = #{month}
+		   and b.type_code = 'local_net'
+		   and a.local_net = b.code_id
+		   ]]>
+		   
+		   <choose>
+		     <when test='latnId !="99999" and latnId =="0" ' >
+		      and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="1000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="2000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="3000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="4000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+	         <otherwise>
+	         and b.code_id= #{latnId}        
+	         </otherwise>
+	     </choose>
+		 group by b.code_name
+	</select>
+	
+	<select id="listFeeMap" resultType="Map">
+		<![CDATA[
+		select b.code_name,
+			   to_char(sum(a.aft_tax_value/10000), 'fm999,999,990.00') hj,
+		       to_char(sum(decode(a.income_source, '02', a.aft_tax_value/10000)), 'fm999,999,990.00') yyhz,
+		       to_char(sum(decode(a.income_source, '50', a.aft_tax_value/10000)), 'fm999,999,990.00') ocs,
+		       to_char(sum(decode(a.income_source, '06', a.aft_tax_value/10000)), 'fm999,999,990.00') znj,
+		       to_char(sum(decode(a.income_source, '80', a.aft_tax_value/10000)), 'fm999,999,990.00') hybt,
+		       to_char(sum(decode(a.income_source, '03', a.aft_tax_value/10000)), 'fm999,999,990.00') yfe,
+		       to_char(sum(decode(a.income_source, '05', a.aft_tax_value/10000)), 'fm999,999,990.00') qtsr1,
+		       to_char(sum(decode(a.income_source, '07', a.aft_tax_value/10000)),'fm999,999,990.00') qtsr2,
+		       to_char(sum(decode(a.income_source, '10', a.aft_tax_value/10000)), 'fm999,999,990.00') wjjs,
+		       to_char(sum(decode(a.income_source, '20', a.aft_tax_value/10000)), 'fm999,999,990.00') wnjs,
+		       to_char(sum(decode(a.income_source, '30', a.aft_tax_value/10000)), 'fm999,999,990.00') sgsft,
+		       to_char(sum(decode(a.income_source, '40', a.aft_tax_value/10000)), 'fm999,999,990.00') jf,
+		       to_char(sum(decode(a.income_source, '60', a.aft_tax_value/10000)), 'fm999,999,990.00') fcyw,
+		       to_char(sum(decode(a.income_source, '70', a.aft_tax_value/10000)), 'fm999,999,990.00') tfjs,
+		       to_char(sum(decode(a.income_source, '08', a.aft_tax_value/10000)), 'fm999,999,990.00') qwzjjs,
+		       to_char(sum(decode(a.income_source, '9001', a.aft_tax_value/10000)), 'fm999,999,990.00') gljy1,
+           to_char(sum(decode(a.income_source, '9002', a.aft_tax_value/10000)), 'fm999,999,990.00') gljy2
+		      
+		  from stat_repfield_content_channel a, code_list_tax b
+		 where a.acct_month = #{month}
+		  and a.zb_code='1000'
+		  and a.cust_id='0'
+		  and a.income_source  in(select code_id from  code_list_tax where type_code='income_source2016' 
+		      and ((code_level=2 and code_id<>90)or parent_code_id='90'))
+		  and b.type_code = 'local_net'
+		  and b.code_level=2 
+		  and a.local_net = b.code_id
+		  ]]>
+		  
+		  <choose>
+		     <when test='latnId !="99999" and latnId =="0" ' >
+		      and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="1000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="2000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="3000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId !="99999" and latnId =="4000" '>
+		     and b.parent_code_id= #{latnId}
+		     </when>
+	         <otherwise>
+	         and b.code_id= #{latnId}        
+	         </otherwise>
+	     </choose>
+		   
+		 group by b.code_name	
+	</select>
+	
+	
+	<select id="checkUser" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_AUDIT_NEW.hasAuditPost2(
+         #{userId,mode=OUT,jdbcType=NUMERIC})},
+         #{logId,mode=OUT,jdbcType=NUMERIC})},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+        
+    <select id="delAuditStatus" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call del_audit_status(
+         #{month,mode=OUT,jdbcType=VARCHAR})},
+         #{latnId,mode=OUT,jdbcType=VARCHAR})},
+         #{reportId,mode=OUT,jdbcType=VARCHAR})},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+    
+    <select id="auditRptPart4" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_AUDIT_NEW.auditRpt_part4(
+         #{userId,mode=OUT,jdbcType=NUMERIC})},
+         #{month,mode=OUT,jdbcType=VARCHAR})},
+         #{codeName,mode=OUT,jdbcType=VARCHAR})},
+         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+</mapper>
