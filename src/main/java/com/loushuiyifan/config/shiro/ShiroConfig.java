@@ -1,9 +1,9 @@
 package com.loushuiyifan.config.shiro;
 
 import com.loushuiyifan.config.shiro.cache.EhcacheManagerWrapper;
+import com.loushuiyifan.config.shiro.filter.MyFormAuthenticationFilter;
 import com.loushuiyifan.config.shiro.filter.SysUserFilter;
 import com.loushuiyifan.config.shiro.realm.UserRealm;
-import com.loushuiyifan.config.shiro.filter.MyFormAuthenticationFilter;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
@@ -20,7 +20,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.filter.DelegatingFilterProxy;
@@ -32,10 +31,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * ehcache版本
  * @author 漏水亦凡
  * @create 2017-03-19 16:12.
  */
-@Configuration
+//@Configuration
 public class ShiroConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiroConfig.class);

@@ -70,7 +70,7 @@ public class UserService extends BaseService<User> {
 
         List<String> list_permission = userDAO.findPermissions(username);
 
-        Set<String> permissions = ImmutableSet.copyOf(list_permission);
+        Set<String> permissions = new HashSet<>(list_permission);
         return permissions;
     }
 

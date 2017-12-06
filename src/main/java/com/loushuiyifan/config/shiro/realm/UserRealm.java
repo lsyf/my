@@ -90,11 +90,11 @@ public class UserRealm extends AuthorizingRealm {
 
     @Override
     public String getAuthorizationCacheName() {
-        return "authorizationCache";
+        return "authorizationCache_";
     }
 
     @Override
     public String getAuthenticationCacheName() {
-        return "authenticationCache";
+        return "authenticationCache_";
     }
 }
