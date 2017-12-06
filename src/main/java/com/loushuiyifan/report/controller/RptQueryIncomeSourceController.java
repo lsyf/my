@@ -7,6 +7,8 @@ import com.loushuiyifan.report.service.RptQueryIncomeSourceService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,6 +34,7 @@ public class RptQueryIncomeSourceController extends BaseReportController {
     RptQueryIncomeSourceService rptQueryIncomeSourceService;
 
     @GetMapping
+    @RequiresPermissions("report:rptQueryIncomeSource:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -57,6 +60,7 @@ public class RptQueryIncomeSourceController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryIncomeSource:view")
     public JsonResult list(String month,
                            String latnId,
                            String cust,
@@ -79,6 +83,7 @@ public class RptQueryIncomeSourceController extends BaseReportController {
      */
     @PostMapping("export")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryIncomeSource:view")
     public void export(HttpServletRequest req,
                        HttpServletResponse resp,
                        String month,
@@ -98,6 +103,7 @@ public class RptQueryIncomeSourceController extends BaseReportController {
 
     @PostMapping("remove")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryIncomeSource:view")
     public JsonResult remove(String month,
                              String latnId,
                              String cust,

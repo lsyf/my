@@ -3,6 +3,7 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,6 +33,7 @@ public class RptQueryIncomeNumController extends BaseReportController{
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:rptQueryIncomeNum:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
     	List<CommonVO> months = dateService.aroundMonths(5);
     	 map.put("months", months);
@@ -44,6 +46,7 @@ public class RptQueryIncomeNumController extends BaseReportController{
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryIncomeNum:view")
     public JsonResult list(String month, String year,String type){
     	String months ="";  
     	if("0".equals(type)){

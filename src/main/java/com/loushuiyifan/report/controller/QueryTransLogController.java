@@ -8,6 +8,8 @@ import com.loushuiyifan.report.service.QueryTransLogService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.TransLogVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,7 @@ public class QueryTransLogController extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:queryTransLog:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -61,6 +64,7 @@ public class QueryTransLogController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:queryTransLog:view")
     public JsonResult listTransLog(String month,
                                    String latnId,
                                    String incomeSource,
@@ -77,6 +81,7 @@ public class QueryTransLogController extends BaseReportController {
      */
     @PostMapping("export")
     @ResponseBody
+    @RequiresPermissions("report:queryTransLog:view")
     public JsonResult export(HttpServletRequest req,
                            	HttpServletResponse resp,
                            	String month,
@@ -101,6 +106,7 @@ public class QueryTransLogController extends BaseReportController {
      */
     @PostMapping("downLog")
     @ResponseBody
+    @RequiresPermissions("report:queryTransLog:view")
     public void downLoadTran(HttpServletRequest req,
                              HttpServletResponse resp,
                              String month,

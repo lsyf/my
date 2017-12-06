@@ -8,6 +8,8 @@ import com.loushuiyifan.report.service.RptFundsFeeQueryService;
 import com.loushuiyifan.report.service.RptSettleQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,7 @@ public class ImportSettleCutController extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:importSettleCut:view")
     public String index(ModelMap map) {
 
         //页面条件

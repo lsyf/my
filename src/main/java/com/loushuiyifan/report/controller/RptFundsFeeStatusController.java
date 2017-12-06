@@ -3,6 +3,7 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class RptFundsFeeStatusController extends BaseReportController{
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:rptFundsFeeStatus:view")
     public String index(ModelMap map) {
         
         //页面条件
@@ -55,6 +57,7 @@ public class RptFundsFeeStatusController extends BaseReportController{
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:rptFundsFeeStatus:view")
     public JsonResult listQuery(String month, String reportId){
     	List<FundsStatusVO> list =rptStatusFundsFeeFeeService.list(month, reportId);
        
@@ -67,6 +70,7 @@ public class RptFundsFeeStatusController extends BaseReportController{
      */
     @PostMapping("quit")
     @ResponseBody
+    @RequiresPermissions("report:rptFundsFeeStatus:quit")
     public JsonResult doQuit(String month, String reportId, @ModelAttribute("user") User user){
     	//TODO
     	 Long userId = user.getId();
@@ -80,6 +84,7 @@ public class RptFundsFeeStatusController extends BaseReportController{
      */
     @PostMapping("download")
     @ResponseBody
+    @RequiresPermissions("report:rptFundsFeeStatus:view")
     public JsonResult loadFile(String month, String reportId){
     	//TODO
 

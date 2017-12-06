@@ -7,6 +7,8 @@ import com.loushuiyifan.report.service.RptQueryComDetailService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,6 +33,7 @@ public class RptQueryComDetailController extends BaseReportController {
     RptQueryComDetailService rptQueryComDetailService;
 
     @GetMapping
+    @RequiresPermissions("report:rptQueryComDetail:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -53,6 +56,7 @@ public class RptQueryComDetailController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryComDetail:view")
     public JsonResult list(String month,
                            String latnId,
                            String type,
@@ -73,6 +77,7 @@ public class RptQueryComDetailController extends BaseReportController {
      */
     @PostMapping("export")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryComDetail:view")
     public void export(HttpServletRequest req,
                        HttpServletResponse resp,
                        String month,
@@ -90,6 +95,7 @@ public class RptQueryComDetailController extends BaseReportController {
 
     @PostMapping("remove")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryComDetail:view")
     public JsonResult remove(String month,
                              String latnId,
                              String type) throws Exception {

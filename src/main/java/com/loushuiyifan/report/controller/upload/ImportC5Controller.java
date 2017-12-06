@@ -7,6 +7,8 @@ import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportC5Service;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class ImportC5Controller extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:importC5:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 

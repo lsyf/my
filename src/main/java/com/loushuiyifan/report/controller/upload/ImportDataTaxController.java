@@ -6,6 +6,8 @@ import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.ImportTaxService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 财务报表导入
+ * 税务报表导入
  *
  * @author 漏水亦凡
  * @date 2017/9/20
@@ -42,6 +44,7 @@ public class ImportDataTaxController extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:importDataTax:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -63,6 +66,7 @@ public class ImportDataTaxController extends BaseReportController {
      */
     @PostMapping("upload")
     @ResponseBody
+    @RequiresPermissions("report:importDataTax:view")
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String month,
                              String remark,
@@ -100,6 +104,7 @@ public class ImportDataTaxController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:importDataTax:view")
     public JsonResult list(String month, @ModelAttribute("user") User user) {
         Long userId = user.getId();
       
@@ -115,6 +120,7 @@ public class ImportDataTaxController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
+    @RequiresPermissions("report:importDataTax:view")
     public JsonResult remove(Long logId,
                              @ModelAttribute("user") User user) {
        
@@ -134,6 +140,7 @@ public class ImportDataTaxController extends BaseReportController {
      */
     @PostMapping("createTax")
     @ResponseBody
+    @RequiresPermissions("report:importDataTax:view")
     public JsonResult createTaxData(String month) {
         //TODO  未测试
         //TODO 待修改 存过  IRPT_DEL_TAXDATA

@@ -41,7 +41,7 @@
         from charge.dim_cut_cfg a,
         charge.dim_cut_rate b,
         charge.dim_bureau_new c,
-        code_list d
+        code_list_tax d
         where a.rule_id = b.rule_id
         and b.area_id = c.area_id
         and b.bureau_id = c.bureau_id

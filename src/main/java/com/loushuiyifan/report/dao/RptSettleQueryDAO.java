@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.loushuiyifan.config.mybatis.MyMapper;
+import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.vo.SettleDataVO;
 
 public interface RptSettleQueryDAO extends MyMapper<SettleDataVO>{
@@ -21,5 +22,7 @@ public interface RptSettleQueryDAO extends MyMapper<SettleDataVO>{
     
     List<Map<String, String>> listReportInfo();
 
-
+    void selectAudits(Map map);
+    
+    void auditRpt(SPDataDTO dto);
 }

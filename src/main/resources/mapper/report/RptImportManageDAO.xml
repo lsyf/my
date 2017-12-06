@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptImportManageDAO">
+
+	<select id="listForMap" resultType="Map">
+	select t.log_id as "logId",   
+           t.acct_month as "month",
+           (select c.nickname from aweb_user c where c.id = t.user_id) as "useName",
+           (select a.name from aweb_organization a
+              join aweb_user_organization b on a.id = b.org_id 
+              where  a.lvl=3 and a.type = 'local_net'and b.user_id =t.user_id) as "codeName",    
+           (select b.code_name from code_list_tax b
+            where b.type_code = 'income_source2017' and b.code_id = t.income_soure) as "incomeSource",
+		   t.file_name as "fileName",		
+		   to_char(t.import_date, 'yyyy-MM-dd hh24:mi:ss') as "importDate",
+		   t.export_desc  as "exportDesc" 
+      from(select * from ext_import_log r    
+      where r.status = 'Y'
+      <if test='userId !="1"'>
+      and r.user_id in (select y.id from (select id from s_dept start with id =(select a.data from aweb_organization a
+            join aweb_user_organization b on a.id = b.org_id 
+          where  a.lvl=3 and a.type = 'local_net'and b.user_id = #{userId})connect by prior id = up_id) x, s_user y where x.id = y.deptid)	
+	  </if>
+                
+      and (r.income_soure not like '其他' or r.income_soure not like '冲正')            
+      )t
+	
+	where t.import_date <![CDATA[>=]]> to_date(#{startDate}, 'yyyy-MM-dd hh24:mi')	
+	and t.import_date <![CDATA[<=]]> to_date(#{endDate}, 'yyyy-MM-dd hh24:mi')	
+	
+	<if test='user !=""'>
+	and t.user_id = #{user} 
+	</if>
+	<if test='fileName !=""'>
+	and t.file_name like '%' ||#{fileName}|| '%'
+	</if>
+	order by t.log_id DESC	
+	</select>
+	
+	
+</mapper>

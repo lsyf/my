@@ -3,6 +3,7 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import com.loushuiyifan.system.vo.JsonResult;
 
 @Controller
 @RequestMapping("rptQueryIncomeDetail")
-public class RptQueryIncomeDetailController extends BaseReportController{
+public class RptQueryIncomeDetailController {
 	private static final Logger logger = LoggerFactory.getLogger(RptQueryIncomeDetailController.class);
 	
 	@Autowired
@@ -39,6 +40,7 @@ public class RptQueryIncomeDetailController extends BaseReportController{
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:rptQueryIncomeDetail:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
 
         return "report/rptQueryIncomeDetail";
@@ -48,12 +50,20 @@ public class RptQueryIncomeDetailController extends BaseReportController{
     /**
      * 查询
      */
+    @RequiresPermissions("report:rptQueryIncomeDetail:view")
     @PostMapping("list")
     @ResponseBody
     public JsonResult list(String startDate,String endDate,String state){
+    	List<IncomeDetailVO> list =null;
+    	try {
+    		
+    		list = rptQueryIncomeDetailService.list(startDate, endDate, state);
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     	
-    	List<IncomeDetailVO> list = rptQueryIncomeDetailService.list(startDate, endDate, state);
-        return JsonResult.success(list);
+    	return JsonResult.success(list);
     }
 
     /**
@@ -61,6 +71,7 @@ public class RptQueryIncomeDetailController extends BaseReportController{
      */
     @PostMapping("find")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryIncomeDetail:view")
     public JsonResult selectList(String sessionId){
     	List<IncomeDetailVO> list = rptQueryIncomeDetailService.findData(sessionId);
         return JsonResult.success(list);
@@ -71,6 +82,7 @@ public class RptQueryIncomeDetailController extends BaseReportController{
      */
     @PostMapping("detail")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryIncomeDetail:view")
     public JsonResult detailList(String sessionId){
     	//TODO 待写
     	List<Map<String,String>> list = rptQueryIncomeDetailService.detail(sessionId);
@@ -82,6 +94,7 @@ public class RptQueryIncomeDetailController extends BaseReportController{
      */
     @PostMapping("repeat")
     @ResponseBody
+    @RequiresPermissions("report:rptQueryIncomeDetail:view")
     public JsonResult repeat(@RequestParam("logs[]") String[] logs){
     	try {
     		for(String sessionId : logs){

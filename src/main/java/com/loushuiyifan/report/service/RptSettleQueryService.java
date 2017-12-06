@@ -1,17 +1,22 @@
 package com.loushuiyifan.report.service;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.report.dao.RptSettleQueryDAO;
-import com.loushuiyifan.report.vo.SettleDataVO;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.report.dao.RptSettleQueryDAO;
+import com.loushuiyifan.report.dto.SPDataDTO;
+import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.CommonExportServ;
+import com.loushuiyifan.report.vo.RptAuditVO;
+import com.loushuiyifan.report.vo.SettleDataVO;
 
 @Service
 public class RptSettleQueryService {
@@ -29,26 +34,21 @@ public class RptSettleQueryService {
         return list;
     }
     
+    /**
+     * 详情查询
+     * @param logId
+     * @param incomeSource
+     * @return
+     */
     public Map<String, Object> listDetail(Long logId,String incomeSource) {
-//    	String[] Keys = { "reportId", "reportName", "acctMonth", "areaId", "areaName", "horCode", "verCode",
-//    			"indexAllis", "incomeSource", "sourceName", "indexData" };
-//    	String[] Values = { "报表编号", "报表名称", "账期", "地市编号", "地市名", "渠道编码", "指标编码", "指标名称", "收入来源编号", "收入来源名称", "数据" };
-//
-//    	List<Map<String, String>> titles =new ArrayList<>();
-//    	for (int i = 0; i < Keys.length; i++) {
-//			String key = Keys[i];
-//			String value = Values[i];
-//			Map<String, String> map = new HashMap<>();
-//			map.put("ID", key);
-//			map.put("NAME", value);
-//			titles.add(map);
-//		}
-    	
+
+    	List<Map<String, String>> detail =rptSettleQueryDAO.detail(logId, incomeSource);  
     	
         List<Map<String, String>> titles = rptSettleQueryDAO.titleOld(logId);
         List<Map<String, String>> datas =rptSettleQueryDAO.listOld(logId);
-       
-        List<Map<String, String>> detail =rptSettleQueryDAO.detail(logId, incomeSource);
+        if (datas == null || datas.isEmpty()) {
+			throw new ReportException("原始数据为空!");
+		}
         
         Map<String, Object> map = Maps.newHashMap();
         map.put("datas", datas);
@@ -58,6 +58,82 @@ public class RptSettleQueryService {
         return map;
     }
 
+    public Map<String, Object> listAudit(String month,
+							            String reportId,
+							            Long logId,
+							            String incomeSource){
+    	
+    	Long rptCaseId = logId + Long.parseLong(incomeSource);
+    	Map param = new HashMap();
+        param.put("rptCaseId", rptCaseId);
+        param.put("month",month);
+        param.put("reportId",reportId);
+        param.put("incomeSource",incomeSource);
+        rptSettleQueryDAO.selectAudits(param);
+        List<RptAuditVO> list = (List<RptAuditVO>) param.get("list");
+        if (list == null || list.size() == 0) {
+            throw new ReportException("审核信息为空");
+        }
+    	Map<String, Object> map = Maps.newHashMap();
+    	map.put("list", list);
+    	map.put("rptCaseId", rptCaseId);
+    	map.put("incomeSource", incomeSource);
+    	
+    	return map;
+    }
+    
+    public void audit(Long rptCaseId, String incomeSource,String status, String comment, Long userId) {
+        SPDataDTO dto = new SPDataDTO();
+        dto.setRptCaseId(rptCaseId+Long.parseLong(incomeSource));
+        dto.setUserId(userId);
+        dto.setStatus(status);
+        dto.setComment(comment);
+        rptSettleQueryDAO.auditRpt(dto);
+        if (dto.getRtnCode() != 0) {//非0审核失败
+            throw new ReportException(dto.getRtnMsg());
+        }
+    }
+    
+    /**
+     * 导出数据
+     */
+    public byte[] export(Long logId, String reportId,String incomeSource) throws Exception {
+    	String[] key = { "reportId", "reportName", "acctMonth", "areaId", "areaName", "horCode", "verCode",
+    			"indexAllis", "incomeSource", "sourceName", "indexData" };
+    	String[] title = { "报表编号", "报表名称", "账期", "地市编号", "地市名", "渠道编码", "指标编码", "指标名称", "收入来源编号", "收入来源名称", "数据" };
+
+    	String[] Keys = { "BUKRS", "REPORTID", "EXTEND_001", "EXTEND_002", "EXTEND_003" };
+    	String[] Values = { "组织代码", "报表编号", "扩展字段1", "扩展字段2", "扩展字段3" };
+    	
+    	List<Map<String, Object>> tempList = new ArrayList<Map<String, Object>>();    	
+		for (int i = 0; i < Keys.length; i++) {
+			String mkey = Keys[i];
+			String value = Values[i];
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("ID", mkey);
+			map.put("NAME", value);
+			tempList.add(map);
+		}
+		
+    	List<Map<String, String>> detail =rptSettleQueryDAO.detail(logId, incomeSource);      	
+        List<Map<String, String>> titles = rptSettleQueryDAO.titleOld(logId);
+        List<Map<String, String>> datas =rptSettleQueryDAO.listOld(logId);
+        if (datas == null || datas.isEmpty()) {
+			throw new ReportException("原始数据为空!");
+		}
+
+        byte[] data = new CommonExportServ().column(key, title)
+                .data(detail)
+                .exportData();
+
+        return data;
+    }
+    
+    public String getFileName(Long logId, String reportId,String incomeSource){
+    	
+    	return "集团结算_"+reportId+"_"+incomeSource+"_.xls";
+    }
+    
     /**
      * 报表编号查询
      */

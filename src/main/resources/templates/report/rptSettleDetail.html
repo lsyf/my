@@ -57,8 +57,9 @@
 
         <script th:inline="javascript">
             //页面传值
-            var logId= logId;
-            var incomeSource= incomeSource;
+            var report_titles= [[${titles}]];
+            var report_datas= [[${datas}]];
+            var report_detail= [[${detail}]];
             $(function () {
             	initSettleDetail();
             });
@@ -78,22 +79,7 @@
                     <div class="box-header">
                         	查询条件
                     </div>
-                    <div class="box-body">
-
-                        <form id="form_upload" class="form-horizontal col-sm-8">
-
-                            <div class="form-group form-group-sm">
-                                <div class="form-group  form-group-sm">
-                                <button class="btn btn-danger pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryLog()">
-                                   	 稽核
-                                </button>
-
-                            </div>
-                            </div>
-                            
-                        </form>
-                    </div>
+                    
 
                 </div>
             </div>

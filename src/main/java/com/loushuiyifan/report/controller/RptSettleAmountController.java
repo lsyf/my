@@ -7,6 +7,8 @@ import com.loushuiyifan.report.service.RptSettleAmountService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.SettleAmountDataVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ public class RptSettleAmountController extends BaseReportController {
      * @return
      */
     @GetMapping
+    @RequiresPermissions("report:rptSettleAmount:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 

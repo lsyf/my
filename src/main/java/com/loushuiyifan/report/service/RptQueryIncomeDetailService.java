@@ -25,33 +25,29 @@ public class RptQueryIncomeDetailService {
 	/**
 	 * 查询
 	 */
-	public List<IncomeDetailVO> list(String startDate,String endDate,String state){
+	public List<IncomeDetailVO> list(String startDate,String endDate,String state)
+			throws Exception{
 		
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     	String start =null;
     	String end = null;
-    	 List<IncomeDetailVO> list =null;	
-    	try {
-    		
-            if(sdf.parse(startDate).getTime() > sdf.parse(endDate).getTime()){
-            	logger.info("开始时间大于结束时间");
-            	start = endDate;
-           	    end = startDate;
-        	}else if(sdf.parse(startDate).getTime() < sdf.parse(endDate).getTime()){
-        		logger.info("#############=="+startDate);
-            	logger.info("#############=="+endDate);
-        		start = startDate;
-           	    end = endDate;
-        	}else{
-        		return null;
-        		//month = startDate.substring(0,10).toString();
-        	}
-            list =rptQueryIncomeDetailDAO.listIncomeData(start, end, state);
-           
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
- 	
+    	
+    	if(sdf.parse(startDate).getTime() > sdf.parse(endDate).getTime()){
+    		logger.info("开始时间大于结束时间");
+         	start = endDate;
+         	end = startDate;
+    	}else if(sdf.parse(startDate).getTime() < sdf.parse(endDate).getTime()){
+     		logger.info("#############=="+startDate);
+         	logger.info("#############=="+endDate);
+     		start = startDate;
+     		end = endDate;
+    	}else{
+     		return null;
+     		//month = startDate.substring(0,10).toString();
+    	}
+    	
+    	List<IncomeDetailVO> list =rptQueryIncomeDetailDAO.listIncomeData(start, end, state);
+    	 	
 		return list;
 	}
 	

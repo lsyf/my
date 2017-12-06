@@ -3,6 +3,7 @@ package com.loushuiyifan.report.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class QueryIncomeStateController extends BaseReportController {
 	 * @return
 	 */
 	@GetMapping
+	@RequiresPermissions("report:queryIncomeState:view")
 	public String index(ModelMap map, @ModelAttribute("user") User user) {
 
 		// 页面条件
@@ -55,6 +57,7 @@ public class QueryIncomeStateController extends BaseReportController {
 	 */
 	@PostMapping("list")
 	@ResponseBody
+	@RequiresPermissions("report:queryIncomeState:view")
 	public JsonResult list(String month, String status) {
 		List<TransLogVO> list = null;
 
@@ -68,6 +71,7 @@ public class QueryIncomeStateController extends BaseReportController {
 	 */
 	@PostMapping("changeState")
 	@ResponseBody
+	@RequiresPermissions("report:queryIncomeState:change")
 	public JsonResult update(@RequestParam("logs[]") String[] logs, String status, @ModelAttribute("user") User user) {
 		Long userId = user.getId();
 		System.out.println(logs.length);

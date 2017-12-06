@@ -15,7 +15,7 @@
 		       a.voucher_code as voucherCode
 		  from STAT_TO_GROUP      a,
 		       code_list_tax      b,
-		       code_list_tax_2016 c,
+		       code_list_tax_c3 c,
 		       cfg_sts_define     d
 		 where b.type_code = 'income_source2016'
 		   and a.income_source = b.code_id
@@ -67,7 +67,7 @@
         a.voucher_code as "voucherCode"
         from STAT_TO_GROUP a,
         code_list_tax b,
-        code_list_tax_2016 c,
+        code_list_tax_c3 c,
         cfg_sts_define d
         where b.type_code = 'income_source2016'
         and a.income_source = b.code_id

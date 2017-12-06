@@ -7,6 +7,8 @@ import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.service.RptQueryCreateService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 财务报表查询
+ * 一键生成
  *
  * @author 漏水亦凡
  * @date 2017/11/2
@@ -29,6 +31,7 @@ public class RptQueryCreateController extends BaseReportController {
     RptQueryCreateService rptQueryCreateService;
 
     @GetMapping
+    @RequiresPermissions("report:rptQueryCreate:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
