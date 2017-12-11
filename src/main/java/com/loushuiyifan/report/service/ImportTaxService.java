@@ -30,6 +30,7 @@ import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
+import com.loushuiyifan.task.service.CreateFile;
 
 
 @Service
@@ -47,7 +48,7 @@ public class ImportTaxService {
 
     @Autowired
     RptImportDataTaxDAO rptImportDataTaxDAO;
-
+   
     /**
      * 解析入库
      */
@@ -171,8 +172,10 @@ public class ImportTaxService {
      *
      * @return
      */
-    public void taxFile(String month, String type) throws Exception {
+    public String taxFile(String month, String type) throws Exception {
         //TODO 税务插入到stat_to_group  存过输入修改MSS_STAT_TO_TAX
+    	String s = "税务插入到stat_to_group表失败!";
+    	
     	SPDataDTO dto = new SPDataDTO();
         dto.setLogId(Long.parseLong(type));
         rptImportDataTaxDAO.insertTaxGroup();
@@ -181,21 +184,16 @@ public class ImportTaxService {
         if (rtnCode != 0) {
             System.out.println(rtnMeg);
         }
-
-        ArrayList<String> list = rptImportDataTaxDAO.selectBatchIds(month);
-
-        logger.info("tax to create file:" + list.size());
-        if (list.size() == 0)
-            return;
-        int i = 0;
-        for (String batchId : list) {
-            i++;
-            String num = String.format("%05d", i);
-
-
-        }
+        s = "税务插入到stat_to_group表成功!";
+        
+        new CreateFile().process(month);
+        s = "插入并生成文件ftp成功";
+        
+        return s;
     }
-
+    
+    
+    
     /**
      * 解析数据
      *

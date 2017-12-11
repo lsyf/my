@@ -33,7 +33,19 @@
 
 
     <dependencies>
-
+		
+		<dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+           
+        </dependency>
+        
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.53</version>
+        </dependency>
+        
         <dependency>
             <groupId>net.sourceforge.groboutils</groupId>
             <artifactId>groboutils-core</artifactId>

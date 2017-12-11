@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptImportDataTaxDAO">
+		
     <select id="listTax" resultType="com.loushuiyifan.report.vo.ImportLogDomTaxVO">
 			select 
 	       a.LOG_ID as logId,
@@ -62,13 +63,5 @@
          #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>
     
-    <select id="selectBatchIds"
-		   resultType="String">
-		select BATCHID from STAT_TO_GROUP
-		where acct_month=#{month}
-		and status='R'
-		and rpt_type ='1'
-	</select>
-	
-	
+    	
 </mapper>
