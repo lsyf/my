@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: 8081
     context-path: /a
 
 report:
@@ -21,7 +21,7 @@ logging:
         org.mybatis: info
         org.springframework.jdbc: debug
         org.apache: info
-#    file: /report/logs/my.log
+    file: /report/logs/my.log
 
 
 spring:
