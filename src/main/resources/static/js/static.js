@@ -15,6 +15,16 @@ function hideAlert() {
 if (window.parent.toastr != null) {
     toastr = window.parent.toastr;
 }
+
+function toastrInfo(msg) {
+    window.parent.toastrInfo(msg);
+}
+
+function toastrError(msg) {
+    window.parent.toastrError(msg);
+}
+
+
 //-----------------------------------------------
 
 /**

@@ -377,6 +377,9 @@ public class ImportIncomeDataService {
                         case 19://hkont供应商
                             bean.setHkont(data);
                             break;
+                        case 20://ICT
+                            bean.setItemCode(data);
+                            break;
                     }
                 }
                 list.add(bean);

@@ -33,9 +33,6 @@ spring:
       proxy-target-class: true
     thymeleaf:
           cache: false
-    output:
-        ansi:
-          enabled: always
     resources:
         chain:
           strategy:

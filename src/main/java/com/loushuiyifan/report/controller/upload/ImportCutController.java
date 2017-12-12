@@ -69,6 +69,7 @@ public class ImportCutController extends BaseReportController {
      */
     @PostMapping("upload")
     @ResponseBody
+    @RequiresPermissions("report:importCut:view")
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String month,
                              String latnId,
@@ -114,6 +115,7 @@ public class ImportCutController extends BaseReportController {
      */
     @PostMapping("listCut")
     @ResponseBody
+    @RequiresPermissions("report:importCut:view")
     public JsonResult listCut(String month,
                               String latnId,
                               String incomeSource,
@@ -135,6 +137,7 @@ public class ImportCutController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
+    @RequiresPermissions("report:importCut:remove")
     public JsonResult delete(@ModelAttribute("user") User user,
                              String month,
                              Integer latnId,

@@ -28,10 +28,10 @@
         sum(a.index_data) as sum,
         d.name as city,
         b.user_id as userId
-        from rpt_import_data_c5 a, EXT_IMPORT_LOG b ,s_dept d
+        from rpt_import_data_c5 a, EXT_IMPORT_LOG b ,aweb_organization d
         where a.acct_month=#{month}
         and a.log_id=b.log_id
-        and d.id = a.latnid
+        and d.data = a.latnid
         and b.type ='rpt_import_data_c5'
         <if test="latnId !=0 ">
             and a.LATNID = #{latnId}

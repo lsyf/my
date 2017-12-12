@@ -71,6 +71,7 @@ public class ImportC5Controller extends BaseReportController {
      */
     @PostMapping("upload")
     @ResponseBody
+    //@RequiresPermissions("report:importC5:upload")
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String month,
                              String remark,
@@ -115,6 +116,7 @@ public class ImportC5Controller extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
+    @RequiresPermissions("report:importC5:view")
     public JsonResult listC5(String month, String latnId) {
 
         Map<String, Object> list = importC5Service.list(month, Integer.parseInt(latnId));
@@ -130,6 +132,7 @@ public class ImportC5Controller extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
+    @RequiresPermissions("report:importC5:view")
     public JsonResult remove(Long logId, @ModelAttribute("user") User user) {
        
         Long userId = user.getId();

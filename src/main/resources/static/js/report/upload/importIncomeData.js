@@ -28,11 +28,11 @@ function queryLog() {
 
                 table.load(r.data);
             } else {
-                toastr.error(r.msg);
+                toastrError(r.msg);
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastrError('发送请求失败');
         }
     });
 
@@ -98,12 +98,12 @@ function itsmData() {
                     toastr.info('送审成功');
                     queryLog();
                 } else {
-                    toastr.error('送审失败' + r.msg);
+                    toastrError('送审失败' + r.msg);
                 }
             },
             error: function (result) {
                 $('#btn_itsm').button("reset");
-                toastr.error('请求失败');
+                toastrError('请求失败');
             }
         });
     });
@@ -141,13 +141,13 @@ function initForm() {
                         toastr.info('导入成功');
                         queryLog();
                     } else {
-                        toastr.error('导入失败:' + r.msg);
+                    	toastrError('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastr.error('导入失败');
-                    toastr.error(r);
+                    toastrError('导入失败:'+r);
+                   
                 }
             });
         }
@@ -187,11 +187,11 @@ function removeData() {
                     hideAlert();
                     queryLog()
                 } else {
-                    toastr.error('删除失败:' + r.msg);
+                    toastrError('删除失败:' + r.msg);
                 }
             },
             error: function (result) {
-                toastr.error('发送请求失败');
+                toastrError('发送请求失败');
             }
         });
     });
@@ -227,13 +227,13 @@ function commitData() {
                 if (r.state) {
                     toastr.info('提交成功');
                 } else {
-                    toastr.error('提交失败:' + r.msg);
+                    toastrError('提交失败:' + r.msg);
                 }
                 queryLog()
             },
             error: function (result) {
                 $('#btn_commit').button("reset");
-                toastr.error('发送请求失败');
+                toastrError('发送请求失败');
             }
         });
     });

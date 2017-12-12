@@ -3,10 +3,10 @@ toastr.options = {
     "debug": false,
     "newestOnTop": false,
     "progressBar": true,
-    "positionClass": "toast-bottom-center",
+    "positionClass": "toast-top-center",
     "preventDuplicates": false,
     "onclick": null,
-    "showDuration": "300",
+    "showDuration": "500",
     "hideDuration": "1000",
     "timeOut": "5000",
     "extendedTimeOut": "1000",
@@ -15,6 +15,35 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
 };
+
+toastrNum = 1;
+function toastrInfo(msg) {
+    var id = "toarst_id_" + toastrNum++;
+    var html = $('<div id="' + id + '">'
+        + msg + '</div>');
+    toastr.info(html);
+    var clipboard = new Clipboard('#' + id,
+        {
+            text: function () {
+                return msg.replace(/<br>/g,'\n');
+            }
+        });
+
+}
+
+function toastrError(msg) {
+    var id = "toarst_id_" + toastrNum++;
+    var html = $('<div id="' + id + '">'
+        + msg + '</div>');
+    toastr.error(html, '点击复制:');
+    var clipboard = new Clipboard('#' + id,
+        {
+            text: function () {
+                return msg.replace(/<br>/g,'\n');
+            }
+        });
+}
+
 
 
 //适用于IE6-9

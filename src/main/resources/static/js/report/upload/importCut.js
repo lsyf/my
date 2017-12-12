@@ -33,12 +33,12 @@ function queryLog() {
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastrError('查询失败');
+                toastrError(r.msg);
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastrError('发送请求失败');
         }
     });
 
@@ -79,13 +79,13 @@ function initForm() {
                         queryLog()
 
                     } else {
-                        toastr.error('导入失败:' + r.msg);
+                        toastrError('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastr.error('导入失败');
-                    toastr.error(r);
+                    toastrError('导入失败');
+                    toastrError(r);
                 }
             });
         }
@@ -124,12 +124,12 @@ function removeData() {
 
                     queryLog()
                 } else {
-                    toastr.error('提删除失败');
-                    toastr.error(r.msg);
+                    toastrError('提删除失败');
+                    toastrError(r.msg);
                 }
             },
             error: function (result) {
-                toastr.error('发送请求失败');
+                toastrError('发送请求失败');
             }
         });
     });

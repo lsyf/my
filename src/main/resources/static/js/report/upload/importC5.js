@@ -31,12 +31,12 @@ function queryLog() {
                 table.load(data.list);
                 table2.load(data.c5);
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastrError('查询失败');
+                toastrError(r.msg);
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastrError('发送请求失败');
         }
     });
 
@@ -68,28 +68,25 @@ function initForm() {
                 success: function (r) {
                     $('#btn_upload').button("reset");
                     if (r.state) {
-                        $(form).resetForm();
-                        orgTree.reset();
-
+                        //$(form).resetForm();
+                        //orgTree.reset();
+                    	$('#upload_file').fileinput('clear');
                         toastr.info('导入成功');
                         queryLog()
                     } else {
-                        toastr.error('导入失败:' + r.msg);
+                        toastrError('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastr.error('导入失败');
-                    toastr.error(r);
+                    toastrError('导入失败:'+r);
                 }
             });
         }
     });
 
 
-    $('#form_upload').on("change",
-        "input[type=text], input[name], select",
-        function () {
+    $('#form_upload').on("change","input[type=text], input[name], select",function () {
             $('#form_upload').validate().element(this);
         });
 
@@ -110,12 +107,12 @@ function removeData(row) {
 
                     queryLog()
                 } else {
-                    toastr.error('提删除失败');
-                    toastr.error(r.msg);
+                    toastrError('提删除失败');
+                    toastrError(r.msg);
                 }
             },
             error: function (result) {
-                toastr.error('发送请求失败');
+                toastrError('发送请求失败');
             }
         });
     });

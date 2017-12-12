@@ -36,7 +36,7 @@ public class ImportGroupController extends BaseReportController {
      * @return
      */
     @GetMapping
-    @RequiresPermissions("report:importGroup:view")
+    @RequiresPermissions("report:importCut:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
@@ -52,7 +52,7 @@ public class ImportGroupController extends BaseReportController {
      */
     @PostMapping("upload")
     @ResponseBody
-    @RequiresPermissions("report:importGroup:view")
+    @RequiresPermissions("report:importCut:view")
     public JsonResult upload(@RequestParam("file") MultipartFile file,
                              String latnId,
                              @ModelAttribute("user") User user) {
@@ -95,7 +95,7 @@ public class ImportGroupController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
-    @RequiresPermissions("report:importGroup:view")
+    @RequiresPermissions("report:importCut:view")
     public JsonResult listGroup(String latnId,
                                 String groupId) {
 
@@ -110,7 +110,7 @@ public class ImportGroupController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
-    @RequiresPermissions("report:importGroup:view")
+    @RequiresPermissions("report:importCut:remove")
     public JsonResult remove(String latnId,
                              String groupId) {
 
