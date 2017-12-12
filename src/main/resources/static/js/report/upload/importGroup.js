@@ -18,10 +18,8 @@ function queryLog() {
         type: "POST",
         url: hostUrl + "importGroup/list",
         data: {
-
             latnId: orgTree.val(),
-            incomeSource: custTree.val(),
-            shareType: $("#upload_cutType").val()
+            groupId: $("#upload_groupId").val()
         },
         dataType: "json",
         success: function (r) {
@@ -166,32 +164,32 @@ var TableInit = function () {
             },
             data: [],
             columns: [{
-                field: 'logId',
-                title: '流水号'
+                field: 'groupId',
+                title: '指标组编码'
             }, {
-                field: 'city',
-                title: '地市'
+                field: 'groupName',
+                title: '指标组名称'
             }, {
-                field: 'fileName',
-                title: '导入文件'
+                field: 'subCode',
+                title: '明细指标编码'
             }, {
-                field: 'num',
-                title: '记录数'
-            }, {
-                field: 'sum',
-                title: '金额'
+                field: 'subName',
+                title: '明细指标名称'
             }, {
                 field: 'userId',
                 title: '操作人ID'
             }, {
-                field: 'remark',
-                title: '导入说明'
+                field: 'lstUpd',
+                title: '导入时间'
             }, {
+                field: 'latnId',
+                title: '本地网'
+            }/*, {
                 field: 'operate',
                 title: '操作',
                 events: operateEvents,
                 formatter: operateFormatter
-            }]
+            }*/]
         });
 
 

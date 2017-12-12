@@ -27,8 +27,8 @@ logging:
 spring:
     http:
       multipart:
-        max-file-size: 10MB
-        max-request-size: 10MB
+        max-file-size: 100MB
+        max-request-size: 100MB
     aop:
       proxy-target-class: true
     thymeleaf:
@@ -41,14 +41,14 @@ spring:
               paths: /**
     datasource:
         druid:
-            primary:
-                url: jdbc:oracle:thin:@//134.96.127.227:1521/CTZJRRS
-                username: RPT_WEB
-                password: x84yan
 #            primary:
-#                  url: jdbc:oracle:thin:@//134.96.83.50:1521/pgbb
-#                  username: yw_zdm
-#                  password: zdm_20171212
+#                url: jdbc:oracle:thin:@//134.96.127.227:1521/CTZJRRS
+#                username: RPT_WEB
+#                password: x84yan
+            primary:
+                  url: jdbc:oracle:thin:@//134.96.83.50:1521/pgbb
+                  username: yw_zdm
+                  password: zdm_20171212
             secondary:
                 url: jdbc:oracle:thin:@//134.96.83.50:1521/pgbb
                 username: borpt

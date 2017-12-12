@@ -6,10 +6,10 @@ import lombok.Data;
 public class ImportDataGroupVO {
 	
 	 Long groupId;
-	 Integer latnId;
 	 String groupName;
 	 Long subCode;
 	 String subName;
 	 Integer userId;
 	 String lstUpd;
+	 Integer latnId;
 }
