@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
 import com.loushuiyifan.report.bean.CodeListTax;
+import com.loushuiyifan.report.controller.RptFundsFeeQueryController;
 import com.loushuiyifan.report.dao.RptRuleConfigDAO;
 import com.loushuiyifan.report.vo.RuleConfigVO;
 
@@ -16,6 +19,7 @@ import oracle.net.aso.o;
 
 @Service
 public class RptRuleConfigService {
+	private static final Logger logger = LoggerFactory.getLogger(RptRuleConfigService.class);
 	@Autowired
 	RptRuleConfigDAO rptRuleConfigDAO;
 	
@@ -65,16 +69,10 @@ public class RptRuleConfigService {
 		map.put("lvl", "1");
 		list.add(map);
 		
-		List<CodeListTax> list2 = rptRuleConfigDAO.findNameById();
+		List<String> temp = rptRuleConfigDAO.queryNameForMap();
 		
-		 //然后拼接参数
-        for (CodeListTax code: list2) {
-        	String codeId = code.getCodeId();         	
-            String path = code.getParentIds();
-            path = path == null ? code + "/%" : path + code + "/%";
-            code.setParentIds(path);
-        }
-        
+		List<Map<String,String>> list2 = rptRuleConfigDAO.findNameById(temp);
+		list.addAll(list2);
 		return list;
 	}
 }

@@ -26,7 +26,8 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = {
         "com.loushuiyifan.common.mapper",
         "com.loushuiyifan.system.dao",
-        "com.loushuiyifan.report.dao"},
+        "com.loushuiyifan.report.dao",
+        "com.loushuiyifan.task.dao"},
         sqlSessionFactoryRef = "primarySqlSessionFactory")
 public class DBConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(DBConfig.class);

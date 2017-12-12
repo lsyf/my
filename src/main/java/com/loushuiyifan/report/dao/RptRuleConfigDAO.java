@@ -19,6 +19,8 @@ public interface RptRuleConfigDAO extends MyMapper<RuleConfigVO>{
 	
 	
 	List<Map<String,String>> findCardName();
+		
+	List<Map<String,String>> findNameById(@Param("list") List<String> temp);
+	List<String> queryNameForMap();
 	
-	List<CodeListTax> findNameById();
 }

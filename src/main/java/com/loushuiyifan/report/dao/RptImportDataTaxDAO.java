@@ -41,6 +41,5 @@ import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 		//生成税务
 		 void insertTaxGroup();
 		 
-		 //查询批次号
-		 ArrayList<String> selectBatchIds(String month);
+		 		 
 	}

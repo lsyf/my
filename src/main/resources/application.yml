@@ -21,7 +21,7 @@ logging:
         org.mybatis: info
         org.springframework.jdbc: debug
         org.apache: info
-#    file: /report/logs/my.log
+    file: /report/logs/my.log
 
 
 spring:

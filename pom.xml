@@ -77,6 +77,17 @@
 
 
         <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.51</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.sourceforge.groboutils</groupId>
             <artifactId>groboutils-core</artifactId>
             <version>5</version>
@@ -382,21 +393,21 @@
             <url>https://oss.sonatype.org/content/repositories/opensymphony-releases</url>
         </repository>
 
-        <repository>
-            <id>hcs-rep</id>
-            <name>HCS Private Repository</name>
-            <url>http://134.96.82.216:9090/nexus/content/groups/public</url>
-            <!--<url>http://10.80.19.203:9090/nexus/content/groups/public</url>-->
-        </repository>
+        <!--<repository>-->
+            <!--<id>hcs-rep</id>-->
+            <!--<name>HCS Private Repository</name>-->
+            <!--<url>http://134.96.82.216:9090/nexus/content/groups/public</url>-->
+            <!--&lt;!&ndash;<url>http://10.80.19.203:9090/nexus/content/groups/public</url>&ndash;&gt;-->
+        <!--</repository>-->
     </repositories>
 
     <pluginRepositories>
-        <pluginRepository>
-            <id>hcs-rep-plugin</id>
-            <name>HCS Private Plugin Repository</name>
-            <url>http://134.96.82.216:9090/nexus/content/groups/public</url>
-            <!--<url>http://10.80.19.203:9090/nexus/content/groups/public</url>-->
-        </pluginRepository>
+        <!--<pluginRepository>-->
+            <!--<id>hcs-rep-plugin</id>-->
+            <!--<name>HCS Private Plugin Repository</name>-->
+            <!--<url>http://134.96.82.216:9090/nexus/content/groups/public</url>-->
+            <!--&lt;!&ndash;<url>http://10.80.19.203:9090/nexus/content/groups/public</url>&ndash;&gt;-->
+        <!--</pluginRepository>-->
     </pluginRepositories>
 
 
