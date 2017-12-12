@@ -2,6 +2,8 @@ package com.loushuiyifan.config.shiro.realm;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.common.util.SpringUtil;
+import com.loushuiyifan.config.shiro.tool.PasswordHelper;
+import com.loushuiyifan.system.SystemException;
 import com.loushuiyifan.system.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -10,11 +12,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
-/**
- * <p>User: Zhang Kaitao
- * <p>Date: 14-1-28
- * <p>Version: 1.0
- */
+
 public class UserRealm extends AuthorizingRealm {
 
 
@@ -32,21 +30,36 @@ public class UserRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
-        String username = (String) token.getPrincipal();
+        MyToken myToken = (MyToken) token;
+        int type = myToken.getType();
 
         UserService userService = (UserService) SpringUtil.getBean("userService");
-        User user = userService.findByUsername(username);
+        User user = null;
+        if (type == MyToken.TYPE_PASSWORD) {
+            String username = (String) token.getPrincipal();
+            user = userService.findByUsername(username);
+        } else {
+            String phone = myToken.getPhone();
+            String tempPassword = "123";//设置通用密码用来兼容登录
+            myToken.setPassword(tempPassword.toCharArray());
 
+            PasswordHelper passwordHelper = (PasswordHelper) SpringUtil.getBean("passwordHelper");
+            user = userService.findByPhone(phone);
+            if (user == null) {
+                throw new UnknownAccountException();//没找到帐号
+            }
+            user.setPassword(tempPassword);
+            passwordHelper.encryptPassword(user);
+        }
         //更新登录时间
         userService.updateLogin(user.getId());
 
         if (user == null) {
-            throw new UnknownAccountException();//没找到帐号
+            throw new SystemException("用户不存在");
         }
 
         if (Boolean.TRUE.equals(user.getLocked())) {
-            throw new LockedAccountException(); //帐号锁定
+            throw new SystemException("用户已锁定");
         }
 
         //交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现
