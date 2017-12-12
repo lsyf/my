@@ -45,59 +45,81 @@
     <script src="../static/plugins/toastr/toastr.min.js"
             th:src="@{/static/plugins/toastr/toastr.min.js}"></script>
 
-    <script src="../static/plugins/clipboard/clipboard.js"
-            th:src="@{/static/plugins/clipboard/clipboard.js}"></script>
-    <link rel="stylesheet" href="../static/plugins/toastr/toastr.min.css"
-          th:href="@{/static/plugins/toastr/toastr.min.css}">
-    <script src="../static/plugins/toastr/toastr.min.js"
-            th:src="@{/static/plugins/toastr/toastr.min.js}"></script>
+
+    <script src="../static/js/layout.js"
+            th:src="@{/static/js/layout.js}"></script>
+    <script src="../static/js/login2.js"
+            th:src="@{/static/js/login2.js}"></script>
 </head>
-<body class="hold-transition">
+<body class="hold-transition login-page">
+<div id="ie_alert" class="alert alert-danger" style="margin:10px;display:none;text-align: center">
+    系统不支持IE浏览器，请使用更为高级的浏览器，例如火狐、谷歌浏览器或360、搜狗浏览器（极速模式）等更为先进的浏览器！
+</div>
+
+<div class="login-box">
+    <div class="login-logo">
+        <a th:href="@{/}">收入汇总</a>
+    </div>
 
 
-<button class=" btn-primary" onclick="abc()">1`23</button>
+    <div class="login-box-body">
 
-<script>
+        <form id="form_login">
+            <div class="form-group has-feedback">
+                <input name="username" type="text" class="form-control" placeholder="账户">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input name="password" type="password" class="form-control" placeholder="密码">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox icheck">
+                        <label>
+                            <input name="rememberMe" type="checkbox"> 记住我
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <button id="btn_login" type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+<script th:inline="javascript">
+
+
+    //主机URL
+    var hostUrl = /*[[ @{'/'} ]]*/;
+
     toastr.options = {
-        "onclick": null,
-        "closeButton": false,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-top-center",
-        "preventDuplicates": false,
-        "showDuration": "3000",
-        "hideDuration": "10000",
-        "timeOut": "50000",
-        "extendedTimeOut": "10000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
+        "positionClass": "toast-bottom-center"
     }
 
-    //    toast-message
-
-    function abc() {
-        toastrInfo(toastrNum)
+    //判断是否是IE浏览器
+    if (isIE()) {
+        $("#ie_alert").show();
     }
 
-    toastrNum = 1;
-    function toastrInfo(msg) {
-        var id = "toarst_id_" + toastrNum++;
-        html = $('<div id="' + id + '">'
-            + msg + '</div>');
-        toastr.info(html);
-        var clipboard = new Clipboard('#' + id,
-            {
-                text: function () {
-                    return msg;
-                }
-            });
+    //为了解决火狐刷新后退按钮不恢复禁用状态
+    $(window).on("beforeunload", function () {
 
-    }
+    });
+
+
+    $(function () {
+        initValidator();
+        initForm();
+    });
+
 
 </script>
-
 </body>
 </html>

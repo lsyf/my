@@ -1,13 +1,17 @@
 package com.loushuiyifan.system.controller;
 
-import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.ShiroConfig;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
+import com.loushuiyifan.system.service.DictionaryService;
+import com.loushuiyifan.system.service.LoginService;
 import com.loushuiyifan.system.service.UserService;
 import com.loushuiyifan.system.vo.JsonResult;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author 漏水亦凡
@@ -28,6 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
     private Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
+    @Autowired
+    DictionaryService dictionaryService;
 
     @Autowired
     UserService userService;
@@ -38,8 +46,18 @@ public class LoginController {
     @Autowired
     PasswordHelper passwordHelper;
 
+    @Autowired
+    LoginService loginService;
+
+    private static final String SYSTEM = "system";
+
     @GetMapping("/login")
     public String login() {
+        String type = dictionaryService.getKidDataByName(SYSTEM, "loginType");
+        //为2则进入短信登录界面
+        if (!"2".equals(type.trim())) {
+            return "login2";
+        }
         return "login";
     }
 
@@ -65,6 +83,7 @@ public class LoginController {
         //登录处理信息
         String exceptionClassName = (String) req.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 
+
         if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
             msg = "用户名不存在";
         } else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {
@@ -79,23 +98,27 @@ public class LoginController {
         return JsonResult.failure(msg);
     }
 
+    @PostMapping("/login2")
+    @ResponseBody
+    public JsonResult login2(HttpServletRequest request, HttpServletResponse response,
+                             String username,
+                             String password,
+                             Boolean rememberMe) throws IOException {
+        Subject currentUser = SecurityUtils.getSubject();
+        String host = request.getRemoteHost();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password, false, host);
+        // 开始进入shiro的认证流程
+        currentUser.login(token);
+        String url = ((HttpServletRequest) request).getContextPath();
+        return JsonResult.success("", url);
+    }
+
 
     @PostMapping("/register")
     @ResponseBody
     public JsonResult register(String username, String password) {
 
-        User user = userService.findByUsername(username);
-        if (user != null) {
-            return JsonResult.failure("用户名已存在");
-        }
-
-        user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        passwordHelper.encryptPassword(user);
-
-        userService.saveSelective(user);
-
+        loginService.register(username, password);
 
         return JsonResult.success();
     }
@@ -104,32 +127,7 @@ public class LoginController {
     @ResponseBody
     public JsonResult passwd(String username, String old, String password) {
 
-        //首先校验用户是否存在
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            return JsonResult.failure("未查找到该用户，请重试");
-        }
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(
-                user.getUsername(), //用户名
-                user.getPassword(), //密码
-                ByteSource.Util.bytes(user.getUsername() + user.getSalt()),//salt=username+salt
-                ""  //realm name
-        );
-
-        AuthenticationToken token = new UsernamePasswordToken(username, old);
-
-        //校验密码是否正确
-        boolean flag = credentialsMatcher.doCredentialsMatch(token, info);
-        if (!flag) {
-            return JsonResult.failure("原密码错误");
-        }
-
-        //重新设置密码 并加密
-        user.setPassword(password);
-        passwordHelper.encryptPassword(user);
-
-        int num = userService.updateNotNull(user);
-
+        loginService.passwd(username, old, password);
         return JsonResult.success();
     }
 }

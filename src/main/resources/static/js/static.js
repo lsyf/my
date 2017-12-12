@@ -15,6 +15,15 @@ function hideAlert() {
 if (window.parent.toastr != null) {
     toastr = window.parent.toastr;
 }
+
+function toastrInfo(msg) {
+    window.parent.toastrInfo(msg);
+}
+
+function toastrError(msg) {
+    window.parent.toastrError(msg);
+}
+
 //-----------------------------------------------
 
 /**
@@ -24,18 +33,18 @@ function initValidator() {
     $.validator.setDefaults({
         errorPlacement: function (error, element) {
             //如果为自定义单选框组,则在最上层div中添加 转换成block的error
-            if($(element).attr('type')=='radio'){
+            if ($(element).attr('type') == 'radio') {
                 var $group = $(element).parent().parent();
                 error.css('display', 'block');
                 error.appendTo($group);
-                return ;
+                return;
             }
 
-            if($(element).attr('type')=='file'){
+            if ($(element).attr('type') == 'file') {
                 var $group = $(element).parents('.file-input').parent();
                 error.css('display', 'block');
                 error.appendTo($group);
-                return ;
+                return;
             }
 
             //其他 如input则正常
@@ -54,7 +63,7 @@ function initValidator() {
     });
 
     $.validator.addMethod("checkHidden", function (value, element, params) {
-        return  value != "";
+        return value != "";
     }, "不能为空");
 }
 
@@ -81,9 +90,9 @@ function loadEnd() {
 $(function () {
     //点击标题切换到面板1,第二个参数为了兼容字典、组织等界面
     $("#content-header-h1").click(function () {
-        showPanel(1,1);
+        showPanel(1, 1);
     });
-    
+
 });
 
 

@@ -141,7 +141,7 @@ function initForm() {
                         toastr.info('导入成功');
                         queryLog();
                     } else {
-                        toastr.error('导入失败:' + r.msg);
+                        toastrError('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
