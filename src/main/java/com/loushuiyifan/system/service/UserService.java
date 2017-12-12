@@ -86,6 +86,19 @@ public class UserService extends BaseService<User> {
     }
 
     /**
+     * 根据用户名查找用户
+     *
+     * @param phone
+     * @return
+     */
+    public User findByPhone(String phone) {
+        User user = new User();
+        user.setPhone(phone);
+        user = userMapper.selectOne(user);
+        return user;
+    }
+
+    /**
      * 根据用户名判断是否为管理员Admin
      *
      * @param username

@@ -20,6 +20,7 @@ function initForm() {
             password: "密码不能为空"
         },
         submitHandler: function (form) {
+            console.log($(form).serialize())
             $(form).ajaxSubmit({
                 url: hostUrl + 'login2',
                 type: 'post',

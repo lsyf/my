@@ -6,12 +6,9 @@ import com.loushuiyifan.system.service.DictionaryService;
 import com.loushuiyifan.system.service.LoginService;
 import com.loushuiyifan.system.service.UserService;
 import com.loushuiyifan.system.vo.JsonResult;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,30 +100,25 @@ public class LoginController {
     public JsonResult login2(HttpServletRequest request, HttpServletResponse response,
                              String username,
                              String password,
-                             Boolean rememberMe) throws IOException {
-        Subject currentUser = SecurityUtils.getSubject();
+                             String rememberMe) throws IOException {
         String host = request.getRemoteHost();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password, false, host);
-        // 开始进入shiro的认证流程
-        currentUser.login(token);
-        String url = ((HttpServletRequest) request).getContextPath();
-        return JsonResult.success("", url);
+        loginService.login(username, password, rememberMe, host);
+        //登录成功自动跳转根目录
+        String url = request.getContextPath();
+        return JsonResult.success("登录成功", url);
     }
 
 
     @PostMapping("/register")
     @ResponseBody
     public JsonResult register(String username, String password) {
-
         loginService.register(username, password);
-
         return JsonResult.success();
     }
 
     @PostMapping("/passwd")
     @ResponseBody
     public JsonResult passwd(String username, String old, String password) {
-
         loginService.passwd(username, old, password);
         return JsonResult.success();
     }

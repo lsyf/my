@@ -3,10 +3,12 @@ package com.loushuiyifan.system.service;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
 import com.loushuiyifan.system.SystemException;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,27 @@ public class LoginService {
 
     @Autowired
     PasswordHelper passwordHelper;
+
+    public void login(String username,
+                      String password,
+                      String rememberMe,
+                      String host) {
+        Subject currentUser = SecurityUtils.getSubject();
+        boolean flag = "on".equals(rememberMe);
+        UsernamePasswordToken token = new UsernamePasswordToken(
+                username, password, flag, host);
+        currentUser.login(token);
+    }
+
+    public void loginByPhone(String phone,
+                             String rememberMe,
+                             String host) {
+        User user =  userService.findByPhone(phone);
+        if (user == null) {
+            throw new SystemException("找不到该用户");
+        }
+        //TODO 待完成
+    }
 
     public void register(String username, String password) {
         User user = userService.findByUsername(username);

@@ -29,6 +29,7 @@ public interface UserDAO {
 
     /**
      * 根据用户id和组织类型，获取用户所属组织
+     *
      * @param userId
      * @return
      */
@@ -70,6 +71,7 @@ public interface UserDAO {
 
     /**
      * 从s_user查询所有sts为Y的用户信息
+     *
      * @return
      */
     List<SUser> listFromSUser();
