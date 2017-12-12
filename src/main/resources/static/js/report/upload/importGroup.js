@@ -189,8 +189,8 @@ var TableInit = function () {
             }, {
                 field: 'operate',
                 title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
+                // events: operateEvents,
+                // formatter: operateFormatter
             }]
         });
 

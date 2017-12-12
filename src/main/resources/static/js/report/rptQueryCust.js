@@ -44,13 +44,12 @@ function queryData() {
                 $('#title_table').text(title);
                 table.Init(data.titles, data.datas);
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastrError('查询失败' + msg);
             }
         },
         error: function (result) {
             $('#btn_query').button("reset");
-            toastr.error('发送请求失败');
+            toastrError('发送请求失败');
         }
     });
 
@@ -101,7 +100,6 @@ function listAudit(type, btn) {
             if (r.state) {
                 var data = r.data.list;
                 var rptCaseId = r.data.rptCaseId;
-
                 table_audit.load(data);
                 editAudit("审核流程", type, function () {
                     auditData(rptCaseId, "1");
@@ -110,12 +108,12 @@ function listAudit(type, btn) {
                 });
                 showAudit();
             } else {
-                toastr.error('查询失败' + r.msg);
+                toastrError('查询失败' + r.msg);
             }
         },
         error: function (result) {
             $(btn).button("reset");
-            toastr.error('发送请求失败');
+            toastrError('发送请求失败');
         }
     });
 }
@@ -137,13 +135,14 @@ function auditData(rptCaseId, status) {
                     hideAudit();
                     return
                 }
+                toastr.info("审核成功");
                 listAudit('edit')
             } else {
-                toastr.error('查询失败' + r.msg);
+                toastrError('查询失败' + r.msg);
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastrError('发送请求失败');
         }
     });
 }
