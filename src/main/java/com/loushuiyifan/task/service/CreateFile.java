@@ -1,5 +1,18 @@
 package com.loushuiyifan.task.service;
 
+import com.loushuiyifan.task.bean.FileInfoData;
+import com.loushuiyifan.task.bean.FileXmlLogData;
+import com.loushuiyifan.task.bean.RptMsgInfoData;
+import com.loushuiyifan.task.bean.StatToTaxData;
+import com.loushuiyifan.task.dao.FileInfoDataDAO;
+import com.loushuiyifan.task.dao.FileXmlLogDataDAO;
+import com.loushuiyifan.task.dao.RptMsgInfoDataDAO;
+import org.dom4j.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,20 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.dom4j.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.loushuiyifan.task.bean.FileInfoData;
-import com.loushuiyifan.task.bean.FileXmlLogData;
-import com.loushuiyifan.task.bean.RptMsgInfoData;
-import com.loushuiyifan.task.bean.StatToTaxData;
-import com.loushuiyifan.task.dao.FileInfoDataDAO;
-import com.loushuiyifan.task.dao.FileXmlLogDataDAO;
-import com.loushuiyifan.task.dao.RptMsgInfoDataDAO;
 
 @Service
 public class CreateFile {

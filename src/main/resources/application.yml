@@ -41,14 +41,14 @@ spring:
               paths: /**
     datasource:
         druid:
-#            primary:
-#                url: jdbc:oracle:thin:@//134.96.127.227:1521/CTZJRRS
-#                username: RPT_WEB
-#                password: x84yan
             primary:
-                  url: jdbc:oracle:thin:@//134.96.83.50:1521/pgbb
-                  username: yw_zdm
-                  password: zdm_20171212
+                url: jdbc:oracle:thin:@//134.96.127.227:1521/CTZJRRS
+                username: RPT_WEB
+                password: x84yan
+#            primary:
+#                  url: jdbc:oracle:thin:@//134.96.83.50:1521/pgbb
+#                  username: yw_zdm
+#                  password: zdm_20171212
             secondary:
                 url: jdbc:oracle:thin:@//134.96.83.50:1521/pgbb
                 username: borpt
@@ -75,8 +75,8 @@ spring:
             web-stat-filter:
                 enabled: true
                 exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
-              
-   
+
+
     redis:
         database: 10
         host: 134.96.246.24
