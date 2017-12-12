@@ -137,20 +137,20 @@ public class RptQueryCustController extends BaseReportController {
 //    @RequiresPermissions("report:rptQueryCust:audit")
     public JsonResult audit(Long rptCaseId, String status, String comment,
                             @ModelAttribute("user") User user) {
-    	
-    	//获取当前需要审核状态
-    	String auditState = "1";
-    	
-    	//判断用户是否有相应审核权限
-    	Subject subject = SecurityUtils.getSubject();
-    	if(auditState.equals("1")){
-    		subject.checkPermission("report:rptQueryCust:audit:1");
-    	}else if(auditState.equals("2")){
-    		subject.checkPermission("report:rptQueryCust:audit:2");
-    	}else if(auditState.equals("3")){
-    		subject.checkPermission("report:rptQueryCust:audit:2");
-    	}
-    	
+
+        //获取当前需要审核状态
+        String auditState = "1";
+
+        //判断用户是否有相应审核权限
+        Subject subject = SecurityUtils.getSubject();
+        if (auditState.equals("1")) {
+            subject.checkPermission("report:rptQueryCust:audit:1");
+        } else if (auditState.equals("2")) {
+            subject.checkPermission("report:rptQueryCust:audit:2");
+        } else if (auditState.equals("3")) {
+            subject.checkPermission("report:rptQueryCust:audit:2");
+        }
+
         Long userId = user.getId();
         rptQueryCustService.audit(rptCaseId, status, comment, userId);
         return JsonResult.success();

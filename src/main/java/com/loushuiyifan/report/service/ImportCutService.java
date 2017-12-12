@@ -54,7 +54,7 @@ public class ImportCutService {
                      String incomeSource,
                      Integer shareType,
                      String username
-                    ) throws Exception {
+    ) throws Exception {
         String filename = path.getFileName().toString();
 
         //首先将文件解析成bean
@@ -132,7 +132,7 @@ public class ImportCutService {
                                    Integer latnId,
                                    String incomeSource,
                                    Integer shareType
-                                   ) throws Exception {
+    ) throws Exception {
         String msg = null;
         try {
             Date now = Date.from(Instant.now());
@@ -203,7 +203,7 @@ public class ImportCutService {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("4保存数据失败", e);
             msg = e.getMessage();
         } finally {
             if (msg != null) {

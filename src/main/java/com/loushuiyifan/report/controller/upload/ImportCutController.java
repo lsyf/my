@@ -63,7 +63,6 @@ public class ImportCutController extends BaseReportController {
      * @param month
      * @param latnId
      * @param incomeSource
-     * @param remark
      * @param user
      * @return
      */
@@ -78,7 +77,8 @@ public class ImportCutController extends BaseReportController {
                              @ModelAttribute("user") User user) {
 
         //首先校验能否导入
-        dateService.checkImportCut(month);
+        //TODO 测试修改
+//        dateService.checkImportCut(month);
         String username = user.getUsername();
 
         //存储
@@ -94,12 +94,10 @@ public class ImportCutController extends BaseReportController {
                     username
                    );
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("4解析入库失败", e);
             try {
                 Files.delete(path);
             } catch (IOException e1) {
-                e1.printStackTrace();
                 logger.error("4删除文件失败", e1);
             } finally {
                 throw new ReportException("导入失败: " + e.getMessage(), e);

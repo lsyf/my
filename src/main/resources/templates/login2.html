@@ -66,22 +66,16 @@
 
         <form id="form_login">
             <div class="form-group has-feedback">
-                <input name="username" type="text" class="form-control" placeholder="账户">
+                <input name="phone" type="text" class="form-control" placeholder="手机号">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input name="password" type="password" class="form-control" placeholder="密码">
+                <input name="code" type="password" class="form-control" placeholder="验证码">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
 
             <div class="row">
-                <div class="col-xs-8">
-                    <div class="checkbox icheck">
-                        <label>
-                            <input name="rememberMe" type="checkbox"> 记住我
-                        </label>
-                    </div>
-                </div>
+
                 <div class="col-xs-4">
                     <button id="btn_login" type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
                 </div>
@@ -90,7 +84,6 @@
 
     </div>
 </div>
-
 
 
 <script th:inline="javascript">

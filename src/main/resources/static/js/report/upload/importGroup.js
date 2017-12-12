@@ -190,6 +190,7 @@ var TableInit = function () {
                 events: operateEvents,
                 formatter: operateFormatter
             }*/]
+
         });
 
 

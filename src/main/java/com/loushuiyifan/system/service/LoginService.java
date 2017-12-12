@@ -1,6 +1,7 @@
 package com.loushuiyifan.system.service;
 
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.config.shiro.realm.MyToken;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
 import com.loushuiyifan.system.SystemException;
 import org.apache.shiro.SecurityUtils;
@@ -36,19 +37,28 @@ public class LoginService {
                       String host) {
         Subject currentUser = SecurityUtils.getSubject();
         boolean flag = "on".equals(rememberMe);
-        UsernamePasswordToken token = new UsernamePasswordToken(
+        MyToken token = new MyToken(
                 username, password, flag, host);
         currentUser.login(token);
     }
 
     public void loginByPhone(String phone,
-                             String rememberMe,
                              String host) {
-        User user =  userService.findByPhone(phone);
-        if (user == null) {
-            throw new SystemException("找不到该用户");
-        }
-        //TODO 待完成
+        Subject currentUser = SecurityUtils.getSubject();
+        MyToken token = new MyToken(phone, host);
+        currentUser.login(token);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param phone
+     * @return
+     */
+    public String sendPhoneCode(String phone) {
+        //首先验证账户是否存在
+        //然后发送验证码
+        return null;
     }
 
     public void register(String username, String password) {

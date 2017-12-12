@@ -79,7 +79,8 @@ public class ImportC5Controller extends BaseReportController {
                              @ModelAttribute("user") User user) {
 
         //首先校验能否导入
-        dateService.checkImportC5(month);
+        //TODO 测试后修改
+//        dateService.checkImportC5(month);
 
         Long userId = user.getId();
 

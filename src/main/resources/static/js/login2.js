@@ -22,7 +22,7 @@ function initForm() {
         submitHandler: function (form) {
             console.log($(form).serialize())
             $(form).ajaxSubmit({
-                url: hostUrl + 'login2',
+                url: hostUrl + 'loginByPhone',
                 type: 'post',
                 beforeSubmit: function () {
                     $("#btn_login").button("loading");
