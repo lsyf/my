@@ -28,14 +28,16 @@ import java.util.List;
 public class ITSMClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ITSMClient.class);
 
-    public static final String url = "http://134.96.188.67:7002/service/ZJIncomeAuditWs?wsdl";
+//        public static final String url = "http://134.96.188.67:7002/service/ZJIncomeAuditWs?wsdl";
+    public static final String url = "http://134.96.168.104:80/service/ZJIncomeAuditWs?wsdl";
+//    public static final String url = "http://134.96.168.46:7001/service/ZJIncomeAuditWs?wsdl";
     public static final String method = "createIncomeAuditFlow";
 
     @Autowired
     RptItsmLogDAO rptItsmLogDAO;
 
     public static void main(String[] args) throws Exception {
-        test();
+        test1();
     }
 
     private static void test() throws Exception {
@@ -66,9 +68,10 @@ public class ITSMClient {
     }
 
     public static void test1() throws Exception {
-        String url = "http://134.96.246.24:8085/service/itsm?wsdl";
-        String method = "call";
-        Object o = WSClient.call(url, method, "{\"statusCode\":\"1\",\"itsmOrderId\":\"" + "123" + "\"}");
+        String url = ITSMClient.url;
+        String method = ITSMClient.method;
+//        Object o = WSClient.call(url, method, "{\"title\":\"201801账期杭州市手工收入审批20171212172731\",\"eipAccount\":\"sdq.zj\",\"month\":\"201801\",\"latnId\":\"10\",\"importLogId\":[\"30877\",\"30907\"],\"sumAmount\":\"2557115.57\",\"curAmount\":\"2557115.57\",\"remark\":\"201801账期杭州市手工收入审批20171212172731\",\"detail\":[{\"c4Name\":\"临安市\",\"incomeName\":\"0501\",\"amount\":\"54142.24\"},{\"c4Name\":\"上城区\",\"incomeName\":\"0501\",\"amount\":\"274431.04\"},{\"c4Name\":\"下沙区\",\"incomeName\":\"0501\",\"amount\":\"-723651.07\"},{\"c4Name\":\"淳安县\",\"incomeName\":\"0501\",\"amount\":\"-216017.87\"},{\"c4Name\":\"萧山区\",\"incomeName\":\"0501\",\"amount\":\"18282608.04\"},{\"c4Name\":\"拱墅区\",\"incomeName\":\"0501\",\"amount\":\"-1079020.31\"},{\"c4Name\":\"余杭区\",\"incomeName\":\"0501\",\"amount\":\"-2273180.74\"},{\"c4Name\":\"桐庐县\",\"incomeName\":\"0501\",\"amount\":\"-405188.11\"},{\"c4Name\":\"建德市\",\"incomeName\":\"0501\",\"amount\":\"473106.77\"},{\"c4Name\":\"富阳市\",\"incomeName\":\"0501\",\"amount\":\"-5819481.74\"},{\"c4Name\":\"江干区\",\"incomeName\":\"0501\",\"amount\":\"-205621.14\"},{\"c4Name\":\"杭州市辖区\",\"incomeName\":\"0501\",\"amount\":\"-3696698.64\"},{\"c4Name\":\"下城区\",\"incomeName\":\"0501\",\"amount\":\"-339526.04\"},{\"c4Name\":\"滨江区\",\"incomeName\":\"0501\",\"amount\":\"-1439388.36\"},{\"c4Name\":\"西湖区\",\"incomeName\":\"0501\",\"amount\":\"-329398.5\"}]}\n");
+        Object o = WSClient.call(url, method, "");
         System.out.println(o);
     }
 

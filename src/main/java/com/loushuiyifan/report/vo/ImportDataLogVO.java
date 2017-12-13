@@ -17,6 +17,7 @@ public class ImportDataLogVO {
     Integer num;    //数量
     Double sum;     //金额
     Long userId;    //用户ID
+    String userName;    //用户名(nickname)
     String city;    //地市
     String action;  //导入状态
     String remark;  //导入说明
@@ -25,5 +26,6 @@ public class ImportDataLogVO {
     String itsmStatus;
     String itsmOrderNo;
     String itsmUrl;
+    String eip;
 
 }

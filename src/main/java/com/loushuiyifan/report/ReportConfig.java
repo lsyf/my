@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(StorageProperties.class)
 public class ReportConfig {
 
-    public static final String ITSM_ACCOUNT = "sdq.zj";
-
     /**
      * 报表参数
      */

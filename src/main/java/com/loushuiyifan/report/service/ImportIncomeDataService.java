@@ -1,24 +1,6 @@
 package com.loushuiyifan.report.service;
 
-import java.net.URLDecoder;
-import java.nio.file.Path;
-import java.sql.Date;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.common.util.AESSecurityUtils;
 import com.loushuiyifan.config.poi.PoiRead;
 import com.loushuiyifan.report.ReportConfig;
@@ -32,10 +14,29 @@ import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.DateService;
 import com.loushuiyifan.report.serv.ReportReadServ;
 import com.loushuiyifan.report.vo.ImportDataLogVO;
+import com.loushuiyifan.system.service.UserService;
 import com.loushuiyifan.ws.itsm.C4Detail;
 import com.loushuiyifan.ws.itsm.ITSMClient;
 import com.loushuiyifan.ws.itsm.ITSMRequest;
 import com.loushuiyifan.ws.itsm.ITSMResponse;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URLDecoder;
+import java.nio.file.Path;
+import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 漏水亦凡
@@ -52,6 +53,9 @@ public class ImportIncomeDataService {
 
     @Autowired
     ExtImportLogDAO extImportLogDAO;
+
+    @Autowired
+    UserService userService;
 
 
     @Autowired
@@ -161,7 +165,9 @@ public class ImportIncomeDataService {
         String type = ReportConfig.RptImportType.INCOME_DATA.toString();
         List<ImportDataLogVO> list = rptImportDataChennelDAO.listIncomeDataLog(latnId, month, type);
 
-        String eipName = "&eipName=" + ReportConfig.ITSM_ACCOUNT;
+        //添加itsm url信息
+//        String eipName = "&eipName=" + ReportConfig.ITSM_ACCOUNT;
+        String eipName = "&eipName=";
 
         String SecretKey = "67987452DFE86867A0F176E7035880BB";
         long currentTimeMillis = System.currentTimeMillis();
@@ -169,10 +175,10 @@ public class ImportIncomeDataService {
         String tc = "&tc=" +
                 AESSecurityUtils.encode(String.valueOf(currentAvaliableTimeMillis), SecretKey);
 
-        String server = "http://134.96.188.67:7002";
+        String server = "http://134.96.168.104:80";
         for (ImportDataLogVO vo : list) {
             String url = vo.getItsmUrl();
-            vo.setItsmUrl(server + url + eipName + tc);
+            vo.setItsmUrl(server + url + eipName + vo.getEip() + tc);
         }
         return list;
     }
@@ -249,7 +255,14 @@ public class ImportIncomeDataService {
             throw new ReportException("无法送审 或 重复送审");
         }
 
-        //先更改状态,防止重复送审
+        //根据用户id获取eip账号
+        User user = userService.selectByKey(userId);
+        if (user == null || StringUtils.isEmpty(user.getEip())) {
+            throw new ReportException("该用户无eip账号");
+        }
+        String eip = user.getEip();
+
+        //先更改状态,防止重复送审 0->1
         int num = extImportLogDAO.updateItsmStatus(logIds, "1", "0");
         if (num == 0) {
             throw new ReportException("重复送审");
@@ -279,7 +292,7 @@ public class ImportIncomeDataService {
             //保存送审日志
             ITSMRequest request = new ITSMRequest();
             request.setTitle(title);
-            request.setEipAccount(ReportConfig.ITSM_ACCOUNT);
+            request.setEipAccount(eip);
             request.setMonth(month);
             request.setLatnId(latnId + "");
             request.setImportLogId(list);
@@ -293,13 +306,13 @@ public class ImportIncomeDataService {
             //成功则更改单号
             String itsmOrderNo = response.getItsmOrderId();
             String itsmUrl = URLDecoder.decode(response.getItsmUrl(), "utf-8");
-            extImportLogDAO.updateItsmInfo(logIds, itsmOrderNo, itsmUrl);
+            extImportLogDAO.updateItsmInfo(logIds, itsmOrderNo, itsmUrl, eip);
 
         } catch (Exception e) {
             String error = e.getMessage();
             //失败后回退状态
             if (extImportLogDAO.updateItsmStatus(logIds, "0", "1") == 0) {
-                error += " ,回退状态失败!";
+                error += " , 回退状态失败!";
             }
             logger.error(error, e);
             throw new ReportException("发送送审失败:" + error);

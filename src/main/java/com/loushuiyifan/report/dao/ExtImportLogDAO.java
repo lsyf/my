@@ -45,5 +45,6 @@ public interface ExtImportLogDAO extends MyMapper<ExtImportLog> {
 
     int updateItsmInfo(@Param("logIds") Long[] logIds,
                        @Param("itsmOrderNo") String itsmOrderNo,
-                       @Param("itsmUrl") String itsmUrl);
+                       @Param("itsmUrl") String itsmUrl,
+                       @Param("eip") String eip);
 }
