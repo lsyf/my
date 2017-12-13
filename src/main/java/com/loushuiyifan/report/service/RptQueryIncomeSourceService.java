@@ -9,10 +9,7 @@ import com.loushuiyifan.report.bean.RptCase;
 import com.loushuiyifan.report.dao.ReportCacheDAO;
 import com.loushuiyifan.report.dao.RptQueryIncomeSourceDAO;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.CodeListTaxService;
-import com.loushuiyifan.report.serv.LocalNetService;
-import com.loushuiyifan.report.serv.ReportDownloadService;
-import com.loushuiyifan.report.serv.ReportExportServ;
+import com.loushuiyifan.report.serv.*;
 import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.service.DictionaryService;
 import org.slf4j.Logger;
@@ -123,6 +120,8 @@ public class RptQueryIncomeSourceService {
             String filePath = export(month, latnId, cust, type,
                     incomeSources, fields, datas);
 
+            //生成文件后sftp到文件主机
+            FileService.push(filePath);
 
             //生成html需求数据模型
             //首先遍历指标,建立 id->feild
@@ -201,6 +200,7 @@ public class RptQueryIncomeSourceService {
                 .data(reportData)
                 .export();
 
+
         return outPath;
     }
 
@@ -216,7 +216,11 @@ public class RptQueryIncomeSourceService {
             RptCase rptCase = rptCaseService.selectRptIncomeSourceCase(month, latnId, cust, type);
             if (rptCase != null) {
                 ReportCache cache = reportCacheDAO.selectByPrimaryKey(rptCase.getRptCaseId());
-                return cache.getFilePath();
+                String path = cache.getFilePath();
+
+                //首先从文件主机下载文件
+                FileService.pull(path);
+                return path;
             }
         }
 

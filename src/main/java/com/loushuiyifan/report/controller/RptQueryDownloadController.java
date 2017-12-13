@@ -3,6 +3,7 @@ package com.loushuiyifan.report.controller;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.bean.RptExcelWyf;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.serv.FileService;
 import com.loushuiyifan.report.service.RptQueryCreateService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
@@ -72,6 +73,7 @@ public class RptQueryDownloadController extends BaseReportController {
                          HttpServletResponse resp,
                          Long excelId) throws Exception {
         String path = rptQueryCreateService.getFilePath(excelId);
+        FileService.pull(path);
         downloadService.download(req, resp, path);
     }
 

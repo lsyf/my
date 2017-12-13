@@ -5,10 +5,7 @@ import com.loushuiyifan.report.bean.CodeListTax;
 import com.loushuiyifan.report.bean.RptExcelWyf;
 import com.loushuiyifan.report.dao.RptQueryCreateDAO;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.CodeListTaxService;
-import com.loushuiyifan.report.serv.DateService;
-import com.loushuiyifan.report.serv.LocalNetService;
-import com.loushuiyifan.report.serv.ReportDownloadService;
+import com.loushuiyifan.report.serv.*;
 import com.loushuiyifan.system.service.DictionaryService;
 import lombok.Data;
 import org.apache.commons.io.FilenameUtils;
@@ -192,10 +189,19 @@ public class RptQueryCreateService {
         try (ZipOutputStream zos =
                      new ZipOutputStream(new FileOutputStream(path.toFile()))
         ) {
+            List<String> filePaths = new ArrayList<>();
             for (int i = 0; i < excelIds.length; i++) {
                 long excelId = excelIds[i];
                 String filePath = getFilePath(excelId);
+                filePath = filePath.replaceAll("\\\\", "/");
+                filePaths.add(filePath);
+            }
 
+            //首先批量下载所有文件
+            FileService.pull(filePaths.toArray(new String[0]));
+
+            for (int i = 0; i < filePaths.size(); i++) {
+                String filePath = filePaths.get(i);
                 File f = new File(filePath);
                 if (!f.exists()) {
                     continue;
@@ -245,15 +251,22 @@ public class RptQueryCreateService {
             logger.info("一键生成文件:{}-{}-{}-{}", month, latnName, incomeSource, taxType);
 
             String path;
+            boolean flag = true;
             try {
                 path = rptQueryCustService.export(month,
                         latnId,
                         incomeSourceId,
                         taxType,
                         true);
+
+                //生成文件后上传文件主机
+                flag = FileService.push(path);
             } catch (Exception e) {
                 logger.error("文件生成失败:", e);
                 path = "文件生成失败";
+            }
+            if (!flag) {
+                path = "文件上传到文件主机失败";
             }
 
             //插入生成数据
