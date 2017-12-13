@@ -21,6 +21,7 @@ public class UserVO {
     Long deptId;//部门组织
 
     private String nickname;
+    private String eip;
     private String phone;
     private String email;
     private String avatar;

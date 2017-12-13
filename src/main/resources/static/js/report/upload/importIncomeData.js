@@ -295,8 +295,8 @@ var TableInit = function () {
                 field: 'sum',
                 title: '金额'
             }, {
-                field: 'userId',
-                title: '操作人ID'
+                field: 'userName',
+                title: '操作人'
             }, {
                 field: 'action',
                 title: '提交状态'

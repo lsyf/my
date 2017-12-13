@@ -124,6 +124,7 @@ function doSave() {
     var username = $("#user_username").val().trim();
     var password = $("#user_password").val().trim();
     var nickname = $("#user_nickname").val().trim();
+    var eip = $("#user_eip").val().trim();
     var phone = $("#user_phone").val().trim();
     var email = $("#user_email").val().trim();
     var deptId = $("#user_deptId").val();
@@ -134,6 +135,7 @@ function doSave() {
             username: username,
             password: password,
             nickname: nickname,
+            eip: eip,
             phone: phone,
             email: email,
             roles: roles,
@@ -173,6 +175,7 @@ function doSave() {
             username: username,
             password: password,
             nickname: nickname,
+            eip: eip,
             phone: phone,
             email: email,
             locked: locked,
@@ -233,6 +236,7 @@ function viewUser(user, type) {
     $("#user_username").val(user.username);
     $("#user_password").val('');
     $("#user_nickname").val(user.nickname ? user.nickname : "");
+    $("#user_eip").val(user.eip ? user.eip : "");
     $("#user_phone").val(user.phone ? user.phone : "");
     $("#user_email").val(user.email ? user.email : "");
     rg_locked.val(user.locked);

@@ -11,7 +11,8 @@
     <update id="updateItsmInfo">
         update ext_import_log a
         set a.itsm_order_no = #{itsmOrderNo},
-        a.itsm_url = #{itsmUrl}
+        a.itsm_url = #{itsmUrl},
+        a.eip = #{eip}
         where a.log_id in
         <include refid="foreach_logIds"/>
     </update>
@@ -41,11 +42,11 @@
         a.INDEX_DATA
         end)) as "curAmount",
         to_char(SUM(a.INDEX_DATA)) as "sumAmount"
-        from rpt_web.Rpt_Import_Data_Channel a
+        from Rpt_Import_Data_Channel a
         where a.acct_month = #{month}
         and exists
         (select 1
-        from rpt_web.ext_import_log
+        from ext_import_log
         where acct_month = #{month}
         and log_id in
         <include refid="foreach_logIds"/>
@@ -63,8 +64,8 @@
         select b.name as "c4Name",
         a.income_source as "incomeName",
         SUM(a.INDEX_DATA) as "amount"
-        from rpt_web.Rpt_Import_Data_Channel a,
-        rpt_web.AWEB_ORGANIZATION b
+        from Rpt_Import_Data_Channel a,
+        AWEB_ORGANIZATION b
         where a.acct_month = #{month}
         and log_id in
         <include refid="foreach_logIds"/>

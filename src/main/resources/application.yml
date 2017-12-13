@@ -1,6 +1,8 @@
 server:
     port: 8081
     context-path: /a
+    session:
+      tracking-modes: cookie
 
 report:
   storage:
@@ -78,7 +80,7 @@ spring:
 
 
     redis:
-        database: 10
+        database: 11
         host: 134.96.246.24
         port: 8084
         timeout: 15000
@@ -110,6 +112,7 @@ pagehelper:
     params: count=countSql
     page-size-zero: true
     auto-runtime-dialect: true
+
 
 
 

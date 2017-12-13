@@ -43,6 +43,7 @@ public class ExtImportLog {
     String itsmStatus;
     String itsmOrderNo;
     String itsmUrl;
+    String eip;
 
 
 }

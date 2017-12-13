@@ -2,19 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.system.dao.UserDAO">
 
-    <sql id="Base_Column_List">
-        id, username, password, salt, locked,nickname,phone,email,last_login
-    </sql>
-
-    <sql id="Base_Column_List_a">
-        a.id, a.username,a.nickname,a.phone,a.email,a.last_login, a.locked
-    </sql>
 
     <select id="nextvalKey" resultType="java.lang.Long">
         SELECT aweb_id.nextVal from dual
     </select>
 
-    <select id="test" resultType="Map">
+    <select id="test" resultType="map">
         SELECT
         <foreach collection="list" item="value" separator=",">
             ${value}
@@ -24,13 +17,12 @@
 
 
     <select id="selectByUsername" resultType="com.loushuiyifan.common.bean.User">
-        select
-        <include refid="Base_Column_List"/>
+        select *
         FROM aweb_user
         where username=#{username}
     </select>
 
-    <select id="isAdmin" resultType="String">
+    <select id="isAdmin" resultType="string">
         SELECT
             a.username
         FROM
@@ -44,7 +36,7 @@
         AND a.username = #{username}
     </select>
 
-    <select id="findRoles" resultType="String">
+    <select id="findRoles" resultType="string">
         SELECT
             b.role
         FROM
@@ -58,14 +50,14 @@
         AND a.username =  #{username}
     </select>
 
-    <select id="findAllPermissions" resultType="String">
+    <select id="findAllPermissions" resultType="string">
         select
             permission
         FROM aweb_permission
         where available=1
     </select>
 
-    <select id="findPermissions" resultType="String">
+    <select id="findPermissions" resultType="string">
         SELECT
             f.permission
         FROM
@@ -111,7 +103,7 @@
         and c.name like #{name}
     </select>
 
-    <select id="selectAllRoleIds" resultType="Long">
+    <select id="selectAllRoleIds" resultType="long">
         select role_id
         from   aweb_user_role
         where  user_id=#{userId}
@@ -127,8 +119,7 @@
     </select>
 
     <select id="selectAllUsers" resultType="com.loushuiyifan.common.bean.User">
-        select
-        <include refid="Base_Column_List_a"></include>
+        select *
         from aweb_user a
     </select>
 

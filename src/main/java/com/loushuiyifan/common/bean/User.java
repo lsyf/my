@@ -29,6 +29,7 @@ public class User implements Serializable {
     private Byte locked;
 
     private String nickname;
+    private String eip;
     private String phone;
     private String email;
     private String avatar;

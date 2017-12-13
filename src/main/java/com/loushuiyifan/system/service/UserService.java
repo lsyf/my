@@ -179,6 +179,7 @@ public class UserService extends BaseService<User> {
         String phone = userUpdate.getPhone();
         String email = userUpdate.getEmail();
         Byte locked = userUpdate.getLocked();
+        String eip = userUpdate.getEip();
 
         //如果未设昵称则默认为登录名
         if (StringUtils.isEmpty(nickname)) {
@@ -194,6 +195,7 @@ public class UserService extends BaseService<User> {
         bean.setNickname(nickname);
         bean.setPhone(phone);
         bean.setEmail(email);
+        bean.setEip(eip);
 
         //如果密码不为空，则更新密码
         if (password != null && !StringUtils.isEmpty(password.trim())) {
@@ -287,6 +289,7 @@ public class UserService extends BaseService<User> {
         String phone = userUpdate.getPhone();
         String email = userUpdate.getEmail();
         Byte locked = userUpdate.getLocked();
+        String eip = userUpdate.getEip();
 
         //如果未设昵称则默认为登录名
         if (StringUtils.isEmpty(nickname)) {
@@ -301,6 +304,7 @@ public class UserService extends BaseService<User> {
         bean.setPhone(phone);
         bean.setEmail(email);
         bean.setLocked(locked);
+        bean.setEip(eip);
 
         //如果密码不为空，则更新密码
         if (password == null || StringUtils.isEmpty(password.trim())) {

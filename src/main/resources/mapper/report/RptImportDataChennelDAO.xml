@@ -23,12 +23,14 @@
         sum(a.index_data) as "sum",
         c.name as "city",
         b.user_id as "userId",
+        d.nickname as "userName",
         b.STATUS as "action",
         b.export_desc as "remark",
         b.IS_ITSM as "isItsm",
         b.ITSM_STATUS as "itsmStatus",
         b.ITSM_ORDER_NO as "itsmOrderNo",
-        b.ITSM_URL as "itsmUrl"
+        b.ITSM_URL as "itsmUrl",
+        b.eip as "eip"
         from Rpt_Import_Data_Channel a,
         EXT_IMPORT_LOG b,
         (select n.*
@@ -37,18 +39,20 @@
         and n.type = 'local_net'
         and m.data = #{latnId}
         and ((n.parent_ids like m.parent_ids || m.id || '/%' and
-        n.lvl <![CDATA[ < ]]> 4) or n.data = #{latnId})) c
+        n.lvl <![CDATA[ < ]]> 4) or n.data = #{latnId})) c,
+        aweb_user d
         where a.acct_month =  #{month}
         and a.log_id = b.log_id
         and c.data = b.latn_id
         and b.type = #{type}
-        group by b.STATUS, b.log_id, b.file_name, c.name, b.user_id,
-         b.export_desc,b.IS_ITSM,b.ITSM_STATUS, b.ITSM_ORDER_NO,b.ITSM_URL
+        and b.user_id = d.id
+        group by b.STATUS, b.log_id, b.file_name, c.name, b.user_id,d.nickname ,
+         b.export_desc,b.IS_ITSM,b.ITSM_STATUS, b.ITSM_ORDER_NO,b.ITSM_URL,b.eip
         order by b.STATUS desc
     </select>
 
 
-    <select id="selectAction" resultType="String">
+    <select id="selectAction" resultType="string">
         select distinct t.action
         from Rpt_Import_Data_Channel t
 		where t.log_id = #{logId}
