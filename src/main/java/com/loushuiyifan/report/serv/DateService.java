@@ -206,57 +206,7 @@ public class DateService {
         }
     }
 
-    /**
-     * 校验 能否导入业财差异数据
-     *
-     */
-    public void checkImportYccy() {
-
-        //首先当前导入校验
-        String limitTime = dictionaryService.getKidDataByName(
-                ReportConfig.RptAppParam.ROOT.toString(),
-                ReportConfig.RptAppParam.TIME_IMPORT_YCCY.toString());
-        
-        if (!"Y".equals(limitTime)) {
-            throw new ReportException("超出当前导入限制");
-        }
-
-    }
-    /**
-     * 校验 能否删除业财差异数据
-     *
-     * @param month
-     */
-    public void checkDelYccy(String month) {
-    	//首先当前导入校验
-        String limitTime = dictionaryService.getKidDataByName(
-                ReportConfig.RptAppParam.ROOT.toString(),
-                ReportConfig.RptAppParam.TIME_IMPORT_YCCY.toString());
-        
-        if (!"Y".equals(limitTime)) {
-            throw new ReportException("超出当前导入限制");
-        }
-        
-    
-        //然后账期校验
-        //day为-1及负数代表任何账期都可以导入
-        //day为0代表任何账期都不可以导入
-        //day为其他正数代表: 当前时间大于则导入本月，否则为上月
-        String day = dictionaryService.getKidDataByName(
-                ReportConfig.RptAppParam.ROOT.toString(),
-                ReportConfig.RptAppParam.MONTH_IMPORT_YCCY.toString());
-       
-        int limitDay = Integer.parseInt(day);
-        int nowDay = LocalDate.now().getDayOfMonth();
-        int value = nowDay > limitDay ? 0 : -1;
-        
-        if (limitDay == 0 || limitDay > 0 
-                && !LocalDate.now().plusMonths(value).format(YYYYMM).equals(month)) {
-            throw new ReportException("超出导入账期限制");
-        }
-
-    }
-    
+      
     /**
      * 校验 能否修改收入来源完成度状态
      */

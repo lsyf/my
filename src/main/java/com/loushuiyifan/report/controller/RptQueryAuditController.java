@@ -28,6 +28,10 @@ public class RptQueryAuditController extends BaseReportController{
 	@Autowired
 	RptQueryAuditService rptQueryAuditService;
 	
+	/**
+	 * 收入来源审核进度
+	 * 四审页面
+	 */
 	@GetMapping
 	@RequiresPermissions("report:rptQueryAudit:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {

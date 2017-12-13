@@ -40,21 +40,17 @@ function queryLog() {
 
 
 function removeData() {
-    var month = $("#upload_month").val();
+    var groupId = $("#upload_groupId").val()
     var latnId = orgTree.val();
-    var incomeSource = custTree.val();
-    var shareType = $("#upload_cutType").val();
+    
 
-    editAlert('警告', '是否确定删除:  账期' + month + ", 地市" + latnId
-        + ', 收入来源' + incomeSource + ', 切割类型' + shareType, '删除', function () {
+    editAlert('警告', '是否确定删除:  指标编码：' + groupId + ", 地市：" + latnId , function () {
         $.ajax({
             type: "POST",
             url: hostUrl + "importGroup/remove",
             data: {
-                month: month,
-                latnId: latnId,
-                incomeSource: incomeSource,
-                shareType: shareType
+            	groupId: groupId,
+                latnId: latnId
             },
             dataType: "json",
             success: function (r) {

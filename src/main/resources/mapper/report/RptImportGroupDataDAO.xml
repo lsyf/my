@@ -12,7 +12,7 @@
     <delete id="deleteGroup">
         delete from charge.dim_sub_group
         where latn_id=#{latnId}
-        <if test="groupId !=null and groupId !='' ">
+        <if test='groupId !=""'>
             and group_id = #{groupId}
         </if>
     </delete>
@@ -26,10 +26,19 @@
         to_char(lst_upd, 'yyyy-MM-dd hh24:mi:ss') as lstUpd,
         latn_id as latnId
         from charge.dim_sub_group
-        where latn_id = #{latnId}
-        <if test='groupId !=""'>
-            and group_id = #{groupId}
-        </if>
-
+        <choose>
+        <when test='latnId !="0" and groupId !=""'>
+        	where latn_id = #{latnId}
+        	and group_id = #{groupId}
+        </when>
+        <when test='latnId !="0" and groupId ==""'>
+         where latn_id = #{latnId}
+        </when>
+        <when test='latnId =="0" and groupId !=""'>
+        where group_id = #{groupId}
+        </when>       
+        <otherwise></otherwise>
+        </choose>
+        
     </select>
 </mapper>

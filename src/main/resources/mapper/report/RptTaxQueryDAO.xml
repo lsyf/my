@@ -14,7 +14,7 @@
 	</select>
     <select id="getColumn1" resultType="java.util.Map">
 		select TAXNO as "id",
-		TAXNAMEONE||'—'||TAXNAMETWO||'—'||TAXNAMETHREE as "name"
+		TAXNAMEONE||'-'||TAXNAMETWO||'-'||TAXNAMETHREE as "name"
 		from tgl_taxsubject_out
 		where INTYEAR = 2017
 		order by taxno

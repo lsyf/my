@@ -16,7 +16,7 @@ function initFundsFeeForm() {
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptQueryFundsFee/list",
+        url: hostUrl + "rptFundsFeeQuery/list",
         data: {
             month: $("#upload_month").val(),
             prctrName: orgTree.val(),
@@ -51,7 +51,7 @@ function exportData() {
   var params = [month, reportId, prctrName];
 
   var form = $("#form_export");   //定义一个form表单
-  form.attr('action', hostUrl + 'rptQueryFundsFee/export');
+  form.attr('action', hostUrl + 'rptFundsFeeQuery/export');
   form.empty();
   names.forEach(function (v, i) {
       var input = $('<input>');

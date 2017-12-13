@@ -100,8 +100,7 @@ public class ImportGroupController extends BaseReportController {
     public JsonResult listGroup(String latnId,
                                 String groupId) {
 
-        List<ImportDataGroupVO> list = importGroupService
-                .list(Integer.parseInt(latnId), groupId);
+        List<ImportDataGroupVO> list = importGroupService.list(Integer.parseInt(latnId), groupId);
 
         return JsonResult.success(list);
     }
@@ -115,9 +114,9 @@ public class ImportGroupController extends BaseReportController {
     public JsonResult remove(String latnId,
                              String groupId) {
 
-        if (latnId.equals("0")) {
-            throw new ReportException("请选择正确的地市");
-        }
+//        if (latnId.equals("0")) {
+//            throw new ReportException("请选择正确的地市");
+//        }
         //首先校验能否导入 超过删除时限，禁止删除
         dateService.checkImportGroup();
         try {

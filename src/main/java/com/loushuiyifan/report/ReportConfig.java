@@ -26,10 +26,8 @@ public class ReportConfig {
         TIME_IMPORT_GROUP("TIME_IMPORT_GROUP"),      //指标组导入时间限制
         MONTH_IMPORT_TAX("MONTH_IMPORT_TAX"),    //税务导入账期限制
         TIME_IMPORT_TAX("TIME_IMPORT_TAX"),      //税务导入时间限制
-        MONTH_IMPORT_YCCY("MONTH_IMPORT_YCCY"),    //业财差异日期限制
-        TIME_IMPORT_YCCY("TIME_IMPORT_YCCY"),      //业财差异导入限制
-        MONTH_SETTLE_CUT("MONTH_IMPORT_CUT"),    //集团切割导入账期限制
-        TIME_SETTLE_CUT("TIME_IMPORT_CUT"),     //集团切割导入时间限制   
+        MONTH_SETTLE_CUT("MONTH_SETTLE_CUT"),    //集团切割导入账期限制
+        TIME_SETTLE_CUT("TIME_SETTLE_CUT"),     //集团切割导入时间限制   
         TIME_UPDATE_PROCESS("TIME_UPDATE_PROCESS"); //修改收入来源完成度状态
         private String data;
 
