@@ -27,7 +27,7 @@
         latn_id as latnId
         from charge.dim_sub_group
         where latn_id = #{latnId}
-        <if test="groupId !=null and groupId !='' ">
+        <if test='groupId !=""'>
             and group_id = #{groupId}
         </if>
 

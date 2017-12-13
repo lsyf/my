@@ -157,7 +157,7 @@ public class ImportCutService {
                 String ruleId = sb.toString();
 
                 cut.setRuleId(ruleId);
-                cut.setGroupId(str);// 得到groupId
+                cut.setGroupId(Integer.parseInt(str));// 得到groupId
                 cut.setLstUpd(now);
 
                 //首先查询表里是否存在数据

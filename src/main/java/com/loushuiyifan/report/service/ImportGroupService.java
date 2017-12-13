@@ -62,7 +62,7 @@ public class ImportGroupService {
     /**
      * 稽核
      */
-    public List<ImportDataGroupVO> list(Integer latnId, Long groupId) {
+    public List<ImportDataGroupVO> list(Integer latnId, String groupId) {
         return rptImportGroupDataDAO.listData(latnId, groupId);
     }
 

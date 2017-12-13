@@ -101,7 +101,7 @@ public class ImportGroupController extends BaseReportController {
                                 String groupId) {
 
         List<ImportDataGroupVO> list = importGroupService
-                .list(Integer.parseInt(latnId), Long.parseLong(groupId));
+                .list(Integer.parseInt(latnId), groupId);
 
         return JsonResult.success(list);
     }
