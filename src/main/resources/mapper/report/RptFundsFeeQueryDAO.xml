@@ -39,7 +39,7 @@
 
 
     <select id="listReportName" resultType="Map">
-		select report_id                as "id",
+		select distinct report_id       as "id",
 		report_id || '-' || report_name as "name",
 		report_id                       as "data"
 		from charge.RPT_BALANCE_DEF

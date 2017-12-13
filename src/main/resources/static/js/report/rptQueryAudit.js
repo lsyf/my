@@ -40,7 +40,7 @@ function queryState() {
 function queryFee(){
 	$.ajax({
         type: "POST",
-        url: hostUrl + "rptQueryAudit/list",
+        url: hostUrl + "rptQueryAudit/listFee",
         data: {
             month: $("#query_month").val(),
             latnId: orgTree.val(),
@@ -53,8 +53,7 @@ function queryFee(){
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
             }
         },
         error: function (result) {
@@ -64,12 +63,39 @@ function queryFee(){
 }
 
 function quitData(){
-	
+	var month =$("#query_month").val();
+	var latnId = orgTree.val();
+	var incomeSource= $("#query_incomeSource").val();
+	editAlert('警告', '是否确定回退月份: ' + month, '营业区:'+latnId , '收入来源:'+incomeSource, '回退', function (){
+		$.ajax({
+	        type: "POST",
+	        url: hostUrl + "rptQueryAudit/quit",
+	        data: {
+	            month: $("#query_month").val(),
+	            latnId: orgTree.val(),
+	            incomeSource: $("#query_incomeSource").val()
+	        },
+	        dataType: "json",
+	        success: function (r) {
+	            if (r.state) {
+	            	toastr.info('回退成功');
+	            	hideAlert();
+	            	quitData();
+	            } else {
+	                toastr.error('回退失败'+r.msg);	                
+	            }
+	        },
+	        error: function (result) {
+	            toastr.error('发送请求失败');
+	        }
+	    });
+		
+	});
+	showAlert();	
 }
 //四审
 function auditData() {
-	var month = $("#query_month").val();
-	 
+	var month = $("#query_month").val();	 
 	var selects = $('#table_upload').bootstrapTable('getSelections');
 	if(selects.length==0){
 		toastr.info('未选中任何数据');
@@ -77,10 +103,30 @@ function auditData() {
 	}
 	var logs = [];
 	selects.forEach(function(data,i){
-		logs.push(data.batchId);
+		logs.push(data.codeName);
 	});
 	
-	
+	$.ajax({
+        type: "POST",
+        url: hostUrl + "rptQueryAudit/audit",
+        data: {
+            month: $("#query_month").val(),
+            logs: logs         
+        },
+        dataType: "json",
+        success: function (r) {
+            if (r.state) {
+            	toastr.info('审核成功');
+            	hideAlert();
+            	quitData();
+            } else {
+                toastr.error('审核失败'+r.msg);
+            }
+        },
+        error: function (result) {
+            toastr.error('发送请求失败');
+        }
+    });
 	
 }
 

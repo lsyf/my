@@ -23,7 +23,7 @@
 	       sum(decode(a.income_source, '9001', status)) as "income901",
 	       sum(decode(a.income_source, '9002', status)) as "income902"
 	      
-		  from v_step_incomesource_2017 a, code_list_tax b
+		  from v_step_incomesource_audit a, code_list_tax b
 		 where a.acct_month = #{month}
 		   and b.type_code = 'local_net'
 		   and a.local_net = b.code_id
@@ -54,24 +54,24 @@
 	
 	<select id="listFeeMap" resultType="Map">
 		<![CDATA[
-		select b.code_name,
-			   to_char(sum(a.aft_tax_value/10000), 'fm999,999,990.00') hj,
-		       to_char(sum(decode(a.income_source, '02', a.aft_tax_value/10000)), 'fm999,999,990.00') yyhz,
-		       to_char(sum(decode(a.income_source, '50', a.aft_tax_value/10000)), 'fm999,999,990.00') ocs,
-		       to_char(sum(decode(a.income_source, '06', a.aft_tax_value/10000)), 'fm999,999,990.00') znj,
-		       to_char(sum(decode(a.income_source, '80', a.aft_tax_value/10000)), 'fm999,999,990.00') hybt,
-		       to_char(sum(decode(a.income_source, '03', a.aft_tax_value/10000)), 'fm999,999,990.00') yfe,
-		       to_char(sum(decode(a.income_source, '05', a.aft_tax_value/10000)), 'fm999,999,990.00') qtsr1,
-		       to_char(sum(decode(a.income_source, '07', a.aft_tax_value/10000)),'fm999,999,990.00') qtsr2,
-		       to_char(sum(decode(a.income_source, '10', a.aft_tax_value/10000)), 'fm999,999,990.00') wjjs,
-		       to_char(sum(decode(a.income_source, '20', a.aft_tax_value/10000)), 'fm999,999,990.00') wnjs,
-		       to_char(sum(decode(a.income_source, '30', a.aft_tax_value/10000)), 'fm999,999,990.00') sgsft,
-		       to_char(sum(decode(a.income_source, '40', a.aft_tax_value/10000)), 'fm999,999,990.00') jf,
-		       to_char(sum(decode(a.income_source, '60', a.aft_tax_value/10000)), 'fm999,999,990.00') fcyw,
-		       to_char(sum(decode(a.income_source, '70', a.aft_tax_value/10000)), 'fm999,999,990.00') tfjs,
-		       to_char(sum(decode(a.income_source, '08', a.aft_tax_value/10000)), 'fm999,999,990.00') qwzjjs,
-		       to_char(sum(decode(a.income_source, '9001', a.aft_tax_value/10000)), 'fm999,999,990.00') gljy1,
-           to_char(sum(decode(a.income_source, '9002', a.aft_tax_value/10000)), 'fm999,999,990.00') gljy2
+		select b.code_name as "codeName",
+			   to_char(sum(a.aft_tax_value/10000), 'fm999,999,990.00') as "income0",
+		       to_char(sum(decode(a.income_source, '02', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income02",
+		       to_char(sum(decode(a.income_source, '50', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income50",
+		       to_char(sum(decode(a.income_source, '06', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income06",
+		       to_char(sum(decode(a.income_source, '80', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income80",
+		       to_char(sum(decode(a.income_source, '03', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income03",
+		       to_char(sum(decode(a.income_source, '05', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income05",
+		       to_char(sum(decode(a.income_source, '07', a.aft_tax_value/10000)),'fm999,999,990.00')  as "income07",
+		       to_char(sum(decode(a.income_source, '10', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income10",
+		       to_char(sum(decode(a.income_source, '20', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income20",
+		       to_char(sum(decode(a.income_source, '30', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income30",
+		       to_char(sum(decode(a.income_source, '40', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income40",
+		       to_char(sum(decode(a.income_source, '60', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income60",
+		       to_char(sum(decode(a.income_source, '70', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income70",
+		       to_char(sum(decode(a.income_source, '08', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income08",
+		       to_char(sum(decode(a.income_source, '9001', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income9001",
+           	   to_char(sum(decode(a.income_source, '9002', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income9002"
 		      
 		  from stat_repfield_content_channel a, code_list_tax b
 		 where a.acct_month = #{month}

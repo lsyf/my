@@ -13,7 +13,7 @@ function initFundsFeeForm() {
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptStatusFundsFee/list",
+        url: hostUrl + "rptFundsFeeStatus/list",
         data: {
             month: $("#upload_month").val(),
             reportId: isTree.val()
@@ -53,7 +53,7 @@ function quitData(row) {
 	editAlert('警告', '是否确定回退月份: ' + month,'报表编号:'+reportId , '回退', function () {
         $.ajax({
             type: "POST",
-            url: hostUrl + "rptStatusFundsFee/quit",
+            url: hostUrl + "rptFundsFeeStatus/quit",
             data: {month: month, reportId: reportId},
             dataType: "json",
             success: function (r) {

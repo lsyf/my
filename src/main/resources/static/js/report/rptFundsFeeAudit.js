@@ -13,7 +13,7 @@ function initFundsFeeForm() {
 function queryLog() {
     $.ajax({
         type: "POST",
-        url: hostUrl + "rptAuditFundsFee/list",
+        url: hostUrl + "rptFundsFeeAudit/list",
         data: {
             month: $("#upload_month").val(),
             reportId: isTree.val()
@@ -38,8 +38,8 @@ function queryLog() {
 
 //四审
 function changeAuditStatus() {
-    var month = $("#upload_month").val();
-    var status = $("#upload_state").val()
+	var month = $("#upload_month").val();
+	var reportId = isTree.val(); 
 
     editAlert('警告', '是否确定:  账期' + month + ", 状态:" + status, '更新状态', function () {
     	
@@ -55,10 +55,10 @@ function changeAuditStatus() {
     	
         $.ajax({
             type: "POST",
-            url: hostUrl + "queryIncomeState/changeState",
+            url: hostUrl + "rptFundsFeeAudit/audit",
             data: {
-                logs: logs,
-                status: status
+            	month: month,
+                reportId: reportId
             },
             dataType: "json",
             success: function (r) {

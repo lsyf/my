@@ -91,7 +91,7 @@
 
     <select id="listPrctrName" resultType="Map">
     	select distinct PRCTR  as "id", 
-    	       PRCTR_NAME      as "name", 
+    	        PRCTR || '-' ||PRCTR_NAME      as "name", 
     	       PRCTR           as "data"
     	from charge.RPT_BALANCE_CODE_DEF                
         where  PRCTR_NAME = #{name}

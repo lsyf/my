@@ -58,8 +58,10 @@
 		     <when test='latnId !="99999" and latnId =="4000" '>
 		     	and b.parent_code_id= #{latnId}
 		     </when>
+		     <when test='latnId =="99999"'>		     	
+		     </when>
 	         <otherwise>
-	         	and b.code_id= #{latnId}        
+	         and b.code_id= #{latnId}	        
 	         </otherwise>
 	     </choose>
 		 group by b.code_name
@@ -121,6 +123,8 @@
 		     </when>
 		     <when test='latnId !="99999" and latnId =="4000" '>
 		     	and b.parent_code_id= #{latnId}
+		     </when>
+		     <when test='latnId =="99999"'>		     	
 		     </when>
 	         <otherwise>
 	         	and b.code_id= #{latnId}        

@@ -38,6 +38,8 @@ public class RptQueryAuditService {
 	
 	public void  quit(String month,String latnId ,String incomeSource,Long userId)
 	          throws Exception{
+		
+		//判断用户是否能回退
 		SPDataDTO dto = new SPDataDTO();
 		dto.setLogId(Long.parseLong("21"));
 		dto.setUserId(userId);
@@ -46,10 +48,13 @@ public class RptQueryAuditService {
 //        if (code != 0) {//非0为失败
 //            throw new ReportException("失败: " + dto.getRtnMsg());
 //        }
+		
 		String code = dto.getRtnCode().toString();
         if (!"Y".equals(code)) {
             throw new ReportException("失败: " + dto.getRtnMsg());
         }
+        
+        //执行回退存过
         SPDataDTO dto2 = new SPDataDTO();
         dto2.setMonth(month);
         dto2.setReportId(incomeSource);

@@ -59,10 +59,9 @@ public class RptFundsFeeQueryController extends BaseReportController {
     @ResponseBody
     public JsonResult listQuery(String month,
                                 String reportId,
-                                String prctrName
-    ) {
+                                String prctrName) {
+    	
         List<FundsFeeVO> list = rptFundsFeeQueryService.list(month, reportId, prctrName);
-
 
         return JsonResult.success(list);
     }
