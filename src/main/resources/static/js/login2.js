@@ -12,15 +12,19 @@ function initForm() {
     //表单字段验证初始化
     var validator = $("#form_login").validate({
         rules: {
-            username: "required",
-            password: "required"
+            phone: "required",
+            code: "required",
         },
         messages: {
-            username: "用户名不能为空",
-            password: "密码不能为空"
+            phone: "手机号码不能为空",
+            code: "验证码不能为空",
         },
         submitHandler: function (form) {
-            console.log($(form).serialize())
+            var code = $('#form_code').val().trim();
+            if (code != verify_code) {
+                toastr.error("验证码不正确");
+                return;
+            }
             $(form).ajaxSubmit({
                 url: hostUrl + 'loginByPhone',
                 type: 'post',
@@ -46,6 +50,52 @@ function initForm() {
     });
 
 
+}
+var verify_code = null;
+function sendCode(btn) {
+    var $btn = $(btn);
+    var phone = $('#form_phone').val().trim();
+    if (!(/^1[3|4|5|7|8][0-9]\d{4,8}$/.test(phone))) {
+        toastr.error("手机号码格式不正确")
+        return
+    }
+    $.ajax({
+        url: hostUrl + 'sendPhoneCode',
+        type: 'post',
+        data: {phone: phone},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSubmit: function () {
+            $btn.button("loading");
+        },
+        success: function (r, a, b) {
+            toastr.info("发送成功");
+            verify_code = r.data;
+            forbid($btn);
+        },
+        error: function (a, b, c) {
+            $btn.button("reset");
+            toastr.error("发送请求失败");
+        }
+    });
+
+}
+
+function forbid($btn) {
+    $btn.enable(false)
+    var time = 60;
+    var timer = setInterval(fun1, 1000);  //设置定时器
+    function fun1() {
+        time--;
+        if (time >= 0) {
+            $btn.text(time + "s后重新发送");
+        } else {
+            $btn.text("发送验证码");
+            $btn.enable();
+            clearTimeout(timer);  //清除定时器
+            time = 60;  //设置循环重新开始条件
+        }
+    }
 }
 
 /**

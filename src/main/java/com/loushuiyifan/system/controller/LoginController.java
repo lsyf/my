@@ -54,6 +54,11 @@ public class LoginController {
         return "login";
     }
 
+    @GetMapping("/login4admin")
+    public String login4admin() {
+        return "login";
+    }
+
     @GetMapping("/register")
     public String register() {
         return "register";

@@ -81,7 +81,7 @@ public class ImportIncomeDataController extends BaseReportController {
         Long userId = user.getId();
 
         //首先校验能否导入
-        dateService.checkImportIncomeData(month);
+//        dateService.checkImportIncomeData(month);
 
         //然后保存
         Path path = reportStorageService.store(file);
