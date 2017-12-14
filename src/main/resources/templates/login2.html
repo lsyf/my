@@ -66,20 +66,23 @@
 
         <form id="form_login">
             <div class="form-group has-feedback">
-                <input name="phone" type="text" class="form-control" placeholder="手机号">
+                <input name="phone" id="form_phone" type="text" class="form-control" placeholder="手机号">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
-            <div class="form-group has-feedback">
-                <input name="code" type="password" class="form-control" placeholder="验证码">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
+            <div class="form-group has-feedback" style="padding-bottom: 15px">
 
-            <div class="row">
-
-                <div class="col-xs-4">
-                    <button id="btn_login" type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                <div class="col-lg-5" style="padding-left: 0">
+                    <input id="form_code"  name="code" type="txet" class="form-control " placeholder="验证码">
                 </div>
+
+                <button onclick="sendCode(this)" type="button" class="btn btn-primary col-lg-7">获取验证码</button>
             </div>
+
+            <div class="form-group" style="padding-top: 15px;margin-top: 15px">
+            <button id="btn_login" type="submit"
+                    class="btn btn-info btn-block btn-flat">登录</button>
+            </div>
+
         </form>
 
     </div>

@@ -34,7 +34,7 @@ public class IncomeStatisticsController extends BaseReportController {
         Long userId = user.getId();
 
         //页面条件
-        List<Organization> orgs = localNetService.listForC4(userId);
+        List<Organization> orgs = localNetService.listForC3(userId);
         List<CommonVO> months = dateService.aroundMonths(5);
 
         map.put("orgs", orgs);
