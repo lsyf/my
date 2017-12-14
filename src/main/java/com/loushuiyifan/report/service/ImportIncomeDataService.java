@@ -284,7 +284,9 @@ public class ImportIncomeDataService {
             for (int i = 0; i < logIds.length; i++) {
                 list.add(logIds[i].toString());
             }
-            String area = codeListTaxService.getAreaName(latnId + "");
+           // String area = codeListTaxService.getAreaName(latnId + "local_net");
+            String area = codeListTaxService.getAreaName(latnId+"", "local_net");
+            
             String title = String.format("%s账期%s手工收入审批%s",
                     month, area, LocalDateTime.now().format(DateService.YYYYMMDDHHMMSS));
 

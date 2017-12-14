@@ -213,7 +213,7 @@ function commitData() {
         logIds.push(d.logId);
         txt += d.logId + ', '
     });
-
+    $('#btn_commit').button("loading");
     editAlert('警告', '是否确定提交流水号: ' + txt, '提交', function () {
         hideAlert();
         $.ajax({
@@ -222,15 +222,17 @@ function commitData() {
             data: {logIds: logIds},
             dataType: "json",
             beforeSubmit: function () {
-                $('#btn_commit').button("loading");
-            }, success: function (r) {
+                //$('#btn_commit').button("loading");
+            }, 
+            success: function (r) {
                 $('#btn_commit').button("reset");
                 if (r.state) {
                     toastr.info('提交成功');
+                    queryLog()
                 } else {
                     toastrError('提交失败:' + r.msg);
                 }
-                queryLog()
+                
             },
             error: function (result) {
                 $('#btn_commit').button("reset");

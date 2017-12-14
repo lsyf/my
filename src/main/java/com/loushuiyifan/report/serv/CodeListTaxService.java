@@ -82,8 +82,8 @@ public class CodeListTaxService {
      * @param id
      * @return
      */
-    public String getAreaName(String id) {
-        return codeListTaxDAO.codeNameById(id);
+    public String getAreaName(String id, String type) {
+        return codeListTaxDAO.codeNameById(id,type);
     }
 
 
