@@ -17,18 +17,18 @@ public class ReportConfig {
      */
     public enum RptAppParam {
         ROOT("RptAppParam"),//参数表root
-        MONTH_IMPORT_INCOME_DATA("MONTH_IMPORT_INCOME_DATA"), //财务导入账期限制
-        TIME_IMPORT_INCOME_DATA("TIME_IMPORT_INCOME_DATA"),   //财务导入时间限制
-        MONTH_IMPORT_C5("MONTH_IMPORT_C5"),      //C5导入账期限制
-        TIME_IMPORT_C5("TIME_IMPORT_C5"),        //C5导入时间限制
-        MONTH_IMPORT_CUT("MONTH_IMPORT_CUT"),    //切割比例导入账期限制
-        TIME_IMPORT_CUT("TIME_IMPORT_CUT"),     //切割比例导入时间限制        
-        TIME_IMPORT_GROUP("TIME_IMPORT_GROUP"),      //指标组导入时间限制
-        MONTH_IMPORT_TAX("MONTH_IMPORT_TAX"),    //税务导入账期限制
-        TIME_IMPORT_TAX("TIME_IMPORT_TAX"),      //税务导入时间限制
-        MONTH_SETTLE_CUT("MONTH_SETTLE_CUT"),    //集团切割导入账期限制
-        TIME_SETTLE_CUT("TIME_SETTLE_CUT"),     //集团切割导入时间限制   
-        TIME_UPDATE_PROCESS("TIME_UPDATE_PROCESS"); //修改收入来源完成度状态
+        MONTH_IMPORT_INCOME_DATA("财务导入账期限制"), //财务导入账期限制
+        TIME_IMPORT_INCOME_DATA("财务导入时间限制"),   //财务导入时间限制
+        MONTH_IMPORT_C5("C5导入账期限制"),      //C5导入账期限制
+        TIME_IMPORT_C5("C5导入时间限制"),        //C5导入时间限制
+        MONTH_IMPORT_CUT("切割比例导入账期"),    //切割比例导入账期限制
+        TIME_IMPORT_CUT("切割比例导入时间"),     //切割比例导入时间限制        
+        TIME_IMPORT_GROUP("指标组导入时间"),      //指标组导入时间限制
+        MONTH_IMPORT_TAX("税务导入账期"),    //税务导入账期限制
+        TIME_IMPORT_TAX("税务导入时间"),      //税务导入时间限制
+        MONTH_SETTLE_CUT("集团切割导入账期"),    //集团切割导入账期限制
+        TIME_SETTLE_CUT("集团切割导入时间"),     //集团切割导入时间限制   
+        TIME_UPDATE_PROCESS("收入来源完成度修改状态时间"); 
         private String data;
 
         RptAppParam(String data) {

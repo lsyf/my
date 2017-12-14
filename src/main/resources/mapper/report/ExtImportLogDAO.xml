@@ -77,6 +77,7 @@
         and b.type = 'local_net'
         and a.area_id = b.data
         group by b.name, a.income_source
+        order by a.area_id
     </select>
 
 
