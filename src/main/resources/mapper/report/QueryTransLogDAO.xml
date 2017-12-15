@@ -54,33 +54,34 @@
   			order by createdate DESC
     </select>
 
-    <select id="queryLogForMap" resultType="map">
-        select distinct a.acct_month as "month",
-        a.income_source as "incomeSource",
-        b.code_name as "incomeName",
-        c.code_name as "codeName",
-        a.batchid as "batchId",
-        a.subid as "subId",
-        d.status_name as "status",
-        to_char(a.createdate, 'yyyy-mm-dd hh24:mi:ss') as "createDate",
-        to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as "lstUpd",
-        a.voucher_code as "voucherCode"
-        from STAT_TO_GROUP a,
-        code_list_tax b,
-        code_list_tax_c3 c,
-        cfg_sts_define d
-        where b.type_code = 'income_source2016'
-        and a.income_source = b.code_id
-        and c.type_code = 'local_net'
-        and a.latn_id = c.code_num
-        and c.code_level = 2
-        and a.status=d.status
-        and a.acct_month= #{month}
-        and a.rpt_type= #{taxtId}
-        <if test='incomeSource !="0" ' >
+    <select id="queryLogForMap" resultType="Map">
+        select distinct a.acct_month    as month,
+		       a.income_source as incomeSource,
+		       b.code_name     as incomeName,
+		       c.code_name     as codeName,
+		       a.batchid       as batchId,
+		       a.subid         as subId,
+		       d.status_name   as status,
+		       to_char(a.createdate, 'yyyy-mm-dd hh24:mi:ss') as createDate,
+		       to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss')    as lstUpd,
+		       a.voucher_code as voucherCode
+		  from STAT_TO_GROUP      a,
+		       code_list_tax      b,
+		       code_list_tax_c3 c,
+		       cfg_sts_define     d
+		 where b.type_code = 'income_source2016'
+		   and a.income_source = b.code_id
+		   and c.type_code = 'local_net'
+		   and a.latn_id = c.code_num
+		   and c.code_level = 2
+		   and a.status = d.status
+		   and a.acct_month = #{month}
+		   and a.rpt_type = #{taxtId}
+ 			<if test='incomeSource !="0" ' >
   			and b.code_id= #{incomeSource}
-  		</if>
+  			</if>
 	     <choose>
+		     
 		     <when test='latnId !="99999" and latnId =="0" ' >
 		      and c.parent_code_id= #{latnId}
 		     </when>
@@ -101,8 +102,8 @@
 	         <otherwise>
 	         and c.code_id= #{latnId}        
 	         </otherwise>
-		</choose>
-		order by createdate DESC
+	     </choose>
+  			order by createdate DESC
     </select>
 
 

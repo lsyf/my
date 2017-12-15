@@ -40,6 +40,9 @@
 		nssbh_prctr as "taxProfitCode",
 		ktext as "taxProfitName"
 		from CFG_NSSBH_PRCTR
+		<if test='latnId!="0"'>
+            where khinr = #{latnId}
+        </if>
 		order by nssbh_prctr
     </select>
     <select id="getRow2" resultType="java.util.Map">
@@ -64,6 +67,10 @@
         b.PERCENT as "percent"
         from CFG_NSSBH_PRCTR a, dim_cut_tax_cfg b
         where a.NSSBH = b.NSSBH
+        <if test='latnId !="0"'>       
+        and a.khinr =#{latnId}
+        </if>
+        
         order by a.nssbh_prctr
     </select>
     <select id="getRow7" resultType="java.util.Map">

@@ -30,8 +30,6 @@ public class RptImportManageController extends BaseReportController{
 	@GetMapping
 	@RequiresPermissions("report:rptImportManage:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
-		//List<CommonVO> months = dateService.aroundMonths(5);
-		//map.put("months", months);
 		
         return "report/rptImportManage";
     }

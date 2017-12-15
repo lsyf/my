@@ -28,7 +28,12 @@ public class DateService {
     @Autowired
     DictionaryService dictionaryService;
 
-
+    public static void main(String[] args) {
+    	List<CommonVO> list =new DateService().calcMonths(11,2);
+    	String date = LocalDate.now().plusMonths(0).format(YYYYMM);
+    	
+    	System.out.println(list+"-----"+date);
+	}
     /**
      * 周围几个月(例如本月+前n月+后n月)
      *

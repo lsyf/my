@@ -42,7 +42,7 @@ public class RptQueryCustController extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 4);
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.calcMonths(11,2);
         List<Map> incomeSources = codeListTaxService.listByType("income_source2017");
 
         map.put("orgs", orgs);
@@ -150,7 +150,7 @@ public class RptQueryCustController extends BaseReportController {
         } else if (auditState.equals("2")) {
             subject.checkPermission("report:rptQueryCust:audit:2");
         } else if (auditState.equals("3")) {
-            subject.checkPermission("report:rptQueryCust:audit:2");
+            subject.checkPermission("report:rptQueryCust:audit:3");
         }
 
         Long userId = user.getId();

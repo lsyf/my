@@ -131,7 +131,7 @@ public class RptTaxQueryService {
                 break;
             case "5":
             case "6":
-                list = rptTaxQueryDAO.getRow5();
+                list = rptTaxQueryDAO.getRow5(latnId);
                 break;
             case "7":
                 list = rptTaxQueryDAO.getRow7();

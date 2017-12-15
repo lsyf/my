@@ -37,7 +37,7 @@ public class RptSettleERecordController extends BaseReportController{
     public String index(ModelMap map, @ModelAttribute("user") User user) {
 
         //页面条件
-        List<CommonVO> months = dateService.aroundMonths(5);
+        List<CommonVO> months = dateService.commonMonths();
         map.put("months", months);
         return "report/rptSettleERecord";
     }

@@ -40,7 +40,7 @@ public class RptQueryIncomeSourceController extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 4);
-        List<CommonVO> months = dateService.aroundMonths(5);
+        List<CommonVO> months = dateService.calcMonths(11,2);
         List<Map> custs = codeListTaxService.listByType("cust_group");
 
         map.put("orgs", orgs);

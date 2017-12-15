@@ -39,7 +39,7 @@ public class RptQueryComparedNumController extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 4);
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.calcMonths(11,2);
 
         map.put("orgs", orgs);
         map.put("months", months);

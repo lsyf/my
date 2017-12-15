@@ -213,17 +213,15 @@ function commitData() {
         logIds.push(d.logId);
         txt += d.logId + ', '
     });
-    $('#btn_commit').button("loading");
+    
     editAlert('警告', '是否确定提交流水号: ' + txt, '提交', function () {
         hideAlert();
+        $('#btn_commit').button("loading");
         $.ajax({
             type: "POST",
             url: hostUrl + "importIncomeData/commit",
             data: {logIds: logIds},
             dataType: "json",
-            beforeSubmit: function () {
-                //$('#btn_commit').button("loading");
-            }, 
             success: function (r) {
                 $('#btn_commit').button("reset");
                 if (r.state) {

@@ -42,7 +42,7 @@ public class RptRuleConfigController extends BaseReportController{
         //List<Organization> orgs2 = localNetService.listAllByUser(userId, 3);
 		List<Map<String,String>> orgs = rptRuleConfigService.getCodeName();
 		
-        List<CommonVO> months = dateService.aroundMonths(5);
+        List<CommonVO> months = dateService.commonMonths();
         List<Map<String,String>> cards =rptRuleConfigService.listCard(); 
         
         map.put("orgs", orgs);

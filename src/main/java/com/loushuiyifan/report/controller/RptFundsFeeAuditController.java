@@ -41,7 +41,7 @@ public class RptFundsFeeAuditController extends BaseReportController {
 
         //页面条件
         List<Map<String, String>> reportIds = rptFundsFeeQueryService.listReportName();
-        List<CommonVO> months = dateService.aroundMonths(5);
+        List<CommonVO> months = dateService.commonMonths();
         map.put("reportIds", reportIds);
         map.put("months", months);
         return "report/rptFundsFeeAudit";

@@ -35,7 +35,7 @@ public class RptQueryIncomeNumController extends BaseReportController{
     @GetMapping
     @RequiresPermissions("report:rptQueryIncomeNum:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
-    	List<CommonVO> months = dateService.aroundMonths(5);
+    	List<CommonVO> months = dateService.commonMonths();
     	 map.put("months", months);
         return "report/rptQueryIncomeNum";
     }

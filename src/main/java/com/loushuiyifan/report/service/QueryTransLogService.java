@@ -92,7 +92,7 @@ public class QueryTransLogService {
     }
 
     public String getFileName(String month, String latnId, String incomeSource, String taxtId) {
-    	String isName = codeListTaxService.getAreaName(latnId, "");
+    	String isName = codeListTaxService.getAreaName(latnId, "local_net");
                 
     	String areaName = codeListTaxService.
                 getNameByTypeAndData("local_net", incomeSource).getCodeName();
