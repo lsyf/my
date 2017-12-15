@@ -38,7 +38,7 @@ public class QueryTransLogService {
     public ReportDownloadService reportDownloadService;
 
     /**
-     * 稽核数据
+     * 查询数据
      */
     public List<TransLogVO> list(String month,
                                  String latnId,
@@ -92,6 +92,21 @@ public class QueryTransLogService {
     }
 
     public String getFileName(String month, String latnId, String incomeSource, String taxtId) {
-        return "1.xls";
+    	String isName = codeListTaxService.getAreaName(latnId, "");
+                
+    	String areaName = codeListTaxService.
+                getNameByTypeAndData("local_net", incomeSource).getCodeName();
+    	
+    	return "收入来源传输日志_"+areaName+"_"+isName+ "_" +getType(taxtId)+".xls";
+    }
+    
+    public String getType(String taxtId){
+    	String s ="";
+    	if("0".equals(taxtId)){
+    		s ="凭证";    		
+    	}else{
+    		s ="电子档案";
+    	}
+    	return s;
     }
 }

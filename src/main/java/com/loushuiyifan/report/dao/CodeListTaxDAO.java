@@ -41,7 +41,7 @@ public interface CodeListTaxDAO extends MyMapper<CodeListTax> {
      * @param id
      * @return
      */
-    String codeNameById(String id);
+    String codeNameById(@Param("id") String id,@Param("type") String type);
 
     List<CodeListTax> listKidsByTypeAndData(@Param("type") String type,
                                             @Param("data") String data);

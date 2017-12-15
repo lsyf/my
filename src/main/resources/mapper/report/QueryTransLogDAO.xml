@@ -3,7 +3,7 @@
 <mapper namespace="com.loushuiyifan.report.dao.QueryTransLogDAO">
 
     <select id="queryLogList" resultType="com.loushuiyifan.report.vo.TransLogVO">
-        select a.acct_month    as month,
+        select distinct a.acct_month    as month,
 		       a.income_source as incomeSource,
 		       b.code_name     as incomeName,
 		       c.code_name     as codeName,
@@ -51,11 +51,11 @@
 	         and c.code_id= #{latnId}        
 	         </otherwise>
 	     </choose>
-  			order by a.createdate DESC
+  			order by createdate DESC
     </select>
 
     <select id="queryLogForMap" resultType="map">
-        select a.acct_month as "month",
+        select distinct a.acct_month as "month",
         a.income_source as "incomeSource",
         b.code_name as "incomeName",
         c.code_name as "codeName",
@@ -102,6 +102,7 @@
 	         and c.code_id= #{latnId}        
 	         </otherwise>
 		</choose>
+		order by createdate DESC
     </select>
 
 

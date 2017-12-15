@@ -80,7 +80,7 @@ public class ImportC5Controller extends BaseReportController {
 
         //首先校验能否导入
         //TODO 测试后修改
-//        dateService.checkImportC5(month);
+        dateService.checkImportC5(month);
 
         Long userId = user.getId();
 

@@ -30,20 +30,35 @@ public class DateService {
 
 
     /**
-     * 周围几个月(例如本月+前两月+后两月)
+     * 周围几个月(例如本月+前n月+后n月)
      *
      * @param num
      * @return
      */
     public List<CommonVO> aroundMonths(Integer num) {
+        return calcMonths(num, num);
+    }
+
+    /**
+     * 前几个月(例如本月+前n月+后m月)
+     *
+     * @param num
+     * @return
+     */
+    public List<CommonVO> calcMonths(Integer n,Integer m) {
         List<CommonVO> list = Lists.newArrayList();
-        for (int i = num; i >= 0 - num; i--) {
+        for (int i = m; i >= 0 - n; i--) {
             String date = LocalDate.now().plusMonths(i).format(YYYYMM);
             list.add(new CommonVO(date, date));
         }
         return list;
     }
-
+    
+    public List<CommonVO> commonMonths() {
+    	return calcMonths(6, 2);
+    }
+    
+    
     /**
      * 前几个月(例如本月+前两月)
      *
@@ -51,12 +66,7 @@ public class DateService {
      * @return
      */
     public List<CommonVO> lastMonths(Integer num) {
-        List<CommonVO> list = Lists.newArrayList();
-        for (int i = 0; i >= 0 - num; i--) {
-            String date = LocalDate.now().plusMonths(i).format(YYYYMM);
-            list.add(new CommonVO(date, date));
-        }
-        return list;
+    	return calcMonths(num, 0);
     }
 
     /**

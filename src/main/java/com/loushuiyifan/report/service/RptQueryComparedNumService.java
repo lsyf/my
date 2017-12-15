@@ -120,7 +120,9 @@ public class RptQueryComparedNumService {
             String filePath = export(month, latnId, type,
                     cols, fields, datas);
 
-
+            //生成文件后sftp推送到文件主机
+            FileService.push(filePath);
+            
             //生成html需求数据模型
             //首先遍历指标,建立 id->feild
             Map<String, Map<String, String>> fieldMap = Maps.newHashMapWithExpectedSize(2000);
@@ -219,7 +221,11 @@ public class RptQueryComparedNumService {
             RptCase rptCase = rptCaseService.selectRptComparedNumCase(month, latnId, type);
             if (rptCase != null) {
                 ReportCache cache = reportCacheDAO.selectByPrimaryKey(rptCase.getRptCaseId());
-                return cache.getFilePath();
+                String path = cache.getFilePath();
+                
+                //首先从文件主机下载文件
+                FileService.pull(path);
+                return path;
             }
         }
 

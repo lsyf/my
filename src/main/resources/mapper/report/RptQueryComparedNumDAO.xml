@@ -32,7 +32,7 @@
     <select id="listAsMap" resultType="java.util.Map">
         select a.zb_code || '_0_1' as "key",
         <include refid="taxDataTypeSum"/>
-        from zjhc_zwl.stat_repfield_content17 a
+        from stat_repfield_compared_data a
         where a.income_source = '0'
         and a.cust_id = '0'
         and a.local_net = #{latnId}

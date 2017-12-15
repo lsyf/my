@@ -11,6 +11,7 @@ import com.loushuiyifan.report.dao.RptQueryCustDAO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.CodeListTaxService;
+import com.loushuiyifan.report.serv.FileService;
 import com.loushuiyifan.report.serv.LocalNetService;
 import com.loushuiyifan.report.serv.ReportDownloadService;
 import com.loushuiyifan.report.serv.ReportExportServ;
@@ -124,7 +125,9 @@ public class RptQueryCustService {
             //由于fields接下来会更改，优先生成文件
             String filePath = export(month, latnId, incomeSource, type,
                     custs, fields, datas);
-
+            
+            //生成文件后sftp推送到文件主机
+            FileService.push(filePath);
 
             //生成html需求数据模型
             //首先遍历指标,建立 id->feild
@@ -219,7 +222,11 @@ public class RptQueryCustService {
             RptCase rptCase = rptCaseService.selectRptCustCase(month, latnId, incomeSource, type);
             if (rptCase != null) {
                 ReportCache cache = reportCacheDAO.selectByPrimaryKey(rptCase.getRptCaseId());
-                return cache.getFilePath();
+                String path = cache.getFilePath();
+                
+                //首先从文件主机下载文件
+                FileService.pull(path);
+                return path;
             }
         }
 

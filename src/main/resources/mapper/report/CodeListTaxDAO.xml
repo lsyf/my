@@ -54,18 +54,18 @@
 	   and a.code_id in ('9001', '9002')
 	</select>
 
-    <select id="codeNameById" resultType="java.lang.String">
-		select a.code_name  as codeName
-		  from code_list_tax a
-		 where a.type_code = 'local_net'
-		   and a.code_id = #{id}
-           
-    </select>
     <select id="listKidsByTypeAndData" resultType="com.loushuiyifan.report.bean.CodeListTax">
 select *
   from code_list_tax b
  where b.type_code = #{type}
    and (b.code_id = #{data} or b.parent_code_id = #{data})
     </select>
-
+	
+	<select id="codeNameById" resultType="String">
+	 select a.code_name
+		  from code_list_tax a
+		 where a.type_code = #{type}
+		   and a.code_id = #{id}
+	
+	</select>
 </mapper>

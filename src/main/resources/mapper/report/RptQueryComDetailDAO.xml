@@ -19,7 +19,7 @@ select  b.row_num || '_1' as "key",
          else
           to_char(sum(a.aft_tax_value), 'fm999999999990.00')
        end as "data"
-  from zjhc_zwl.stat_repfield_content17 a, rpt_index_tx_def b
+  from stat_repfield_compared_data a, rpt_index_tx_def b
  where a.local_net = #{latnId}
    and a.acct_month = to_char(#{lastYearThisMonth})
    and a.cust_id = '0'
@@ -51,7 +51,7 @@ select  b.row_num || '_3' as "key",
          else
           to_char(sum(a.aft_tax_value), 'fm999999999990.00')
        end as "data"
-  from rpt_web.stat_repfield_content_channel a, rpt_index_tx_def b
+  from stat_repfield_content_channel a, rpt_index_tx_def b
  where a.income_source = '0'
    and a.local_net = #{latnId}
    and a.acct_month between #{firstMonth} and #{thisMonth}
