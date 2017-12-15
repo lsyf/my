@@ -36,32 +36,20 @@
 
 
         <!--sftp-->
-
-        <dependency>
-            <groupId>ch.ethz.ganymed</groupId>
-            <artifactId>ganymed-ssh2</artifactId>
-            <version>build210</version>
-        </dependency>
-
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.51</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.hierynomus</groupId>
-            <artifactId>sshj</artifactId>
-            <version>0.23.0</version>
-        </dependency>
         <!--sftp end-->
 
         <!--dubbo定制-->
-       <!--  <dependency>
+        <dependency>
             <groupId>com.zjhcsoft</groupId>
             <artifactId>dubbo</artifactId>
             <version>2.5.4-SNAPSHOT-jdk1.6-8.2</version>
-        </dependency> -->
+        </dependency>
 
         <dependency>
             <groupId>org.javassist</groupId>
@@ -399,21 +387,21 @@
             <url>https://oss.sonatype.org/content/repositories/opensymphony-releases</url>
         </repository>
 
-        <!--<repository>-->
-            <!--<id>hcs-rep</id>-->
-            <!--<name>HCS Private Repository</name>-->
-            <!--<url>http://134.96.82.216:9090/nexus/content/groups/public</url>-->
-            <!--&lt;!&ndash;<url>http://10.80.19.203:9090/nexus/content/groups/public</url>&ndash;&gt;-->
-        <!--</repository>-->
+        <repository>
+            <id>hcs-rep</id>
+            <name>HCS Private Repository</name>
+            <url>http://134.96.82.216:9090/nexus/content/groups/public</url>
+            <!--<url>http://10.80.19.203:9090/nexus/content/groups/public</url>-->
+        </repository>
     </repositories>
 
     <pluginRepositories>
-        <!--<pluginRepository>-->
-            <!--<id>hcs-rep-plugin</id>-->
-            <!--<name>HCS Private Plugin Repository</name>-->
-            <!--<url>http://134.96.82.216:9090/nexus/content/groups/public</url>-->
-            <!--&lt;!&ndash;<url>http://10.80.19.203:9090/nexus/content/groups/public</url>&ndash;&gt;-->
-        <!--</pluginRepository>-->
+        <pluginRepository>
+            <id>hcs-rep-plugin</id>
+            <name>HCS Private Plugin Repository</name>
+            <url>http://134.96.82.216:9090/nexus/content/groups/public</url>
+            <!--<url>http://10.80.19.203:9090/nexus/content/groups/public</url>-->
+        </pluginRepository>
     </pluginRepositories>
 
 

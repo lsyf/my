@@ -1,44 +1,71 @@
 package com.loushuiyifan.system.service;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.report.serv.DateService;
 import com.ztesoft.uccp.dubbo.interfaces.UCCPSendService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author 漏水亦凡
  * @date 2017/12/7
  */
-//@Service
+@Service
 public class SendShortMsgService {
+    Logger logger = LoggerFactory.getLogger(SendShortMsgService.class);
+
     @Autowired
     UCCPSendService uccpSendService;
 
-    public void send() {
-        LocalDateTime now = LocalDateTime.now();
-        String systemCode = "CWRPT_";
-        String seqId = "0000000001";
-        Map<String, String> param = Maps.newHashMap();
 
-        param.put("TransactionId",systemCode+now.format(DateService.YYYYMMDDHHMMSS)+seqId);
-        param.put("ExtOrderId",seqId);
-        param.put("SendDate",now.format(DateService.YYYY_MM_DD_HH_MM_SS));
-        param.put("AccNbr","15345828232");
-        param.put("Password","");
-        param.put("ContentParam","亦凡|#|123123");
-        param.put("SceneId","");
-        param.put("SystemCode",systemCode);
-        param.put("UserAcct","");
-        param.put("OrderContent","");
-        param.put("LanId","杭州市");
-        param.put("RequestTime",now.format(DateService.YYYY_MM_DD_HH_MM_SS));
-        try {
-            Map<String,String> result = uccpSendService.sendShortMessage(param);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String send(String phone) throws Exception {
+        HashMap params = new HashMap();
+        String systemCode = "INCSYS";
+        String password = "a12345";
+        String seq = (new Random().nextInt(1000000000) + 1000000000) + "";
+        String code = (new Random().nextInt(9000) + 999) + "";
+        String content = String.format("登录验证码为:%s", code);
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMddhhmmss");
+        DateTimeFormatter yyyy_MM_dd = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+
+
+        //请求消息流水，格式：系统编码（6位）+yyyymmddhhmiss+10位序列号
+        params.put("TransactionId", systemCode + now.format(yyyyMMdd) + seq);
+        //UCCP分配的系统编码
+        params.put("SystemCode", systemCode);
+        //UCCP分配的认证密码
+        params.put("Password", password);
+        //UCCP分配的帐号
+        params.put("UserAcct", systemCode);
+        //请求的时间,请求发起的时间,必须为下边的格式
+        params.put("RequestTime", now.format(yyyy_MM_dd));
+        //接收消息推送的手机号码
+        params.put("AccNbr", phone);
+        //消息内容
+        params.put("OrderContent", content);
+        //场景标识
+        params.put("SceneId", "5640");
+        //本地网/辖区
+        params.put("LanId", "571");
+        //定时发送的时间设置
+        params.put("SendDate", "");
+        //如果使用场景模板来发送短信,必须填值
+        params.put("ContentParam", "");
+        //外系统流水ID,查询发送结构用,可填
+        params.put("ExtOrderId", "");
+
+
+        logger.info("接口参数:" + params);
+        Map reqMap = uccpSendService.sendShortMessage(params);
+        logger.info("接口返回结果:" + reqMap);
+        return code;
     }
 }

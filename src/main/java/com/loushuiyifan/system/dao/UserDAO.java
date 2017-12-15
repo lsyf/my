@@ -75,4 +75,6 @@ public interface UserDAO {
      * @return
      */
     List<SUser> listFromSUser();
+
+    User findByPhone(String phone);
 }
