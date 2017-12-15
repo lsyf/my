@@ -31,6 +31,9 @@ public class LoginService {
     @Autowired
     PasswordHelper passwordHelper;
 
+    @Autowired
+    SendShortMsgService sendShortMsgService;
+
     public void login(String username,
                       String password,
                       String rememberMe,
@@ -57,8 +60,18 @@ public class LoginService {
      */
     public String sendPhoneCode(String phone) {
         //首先验证账户是否存在
+        User user = userService.findByPhone(phone);
+        if (user == null) {
+            throw new SystemException("用户不存在");
+        }
         //然后发送验证码
-        return null;
+        try {
+            return sendShortMsgService.send(phone);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SystemException("发送验证码失败:" + e.getMessage());
+        }
+
     }
 
     public void register(String username, String password) {

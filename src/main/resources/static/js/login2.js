@@ -59,15 +59,11 @@ function sendCode(btn) {
         toastr.error("手机号码格式不正确")
         return
     }
+    $btn.button("loading");
     $.ajax({
         url: hostUrl + 'sendPhoneCode',
         type: 'post',
         data: {phone: phone},
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        beforeSubmit: function () {
-            $btn.button("loading");
-        },
         success: function (r, a, b) {
             toastr.info("发送成功");
             verify_code = r.data;

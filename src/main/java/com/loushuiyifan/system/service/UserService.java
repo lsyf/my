@@ -92,9 +92,7 @@ public class UserService extends BaseService<User> {
      * @return
      */
     public User findByPhone(String phone) {
-        User user = new User();
-        user.setPhone(phone);
-        user = userMapper.selectOne(user);
+        User  user = userDAO.findByPhone(phone);
         return user;
     }
 

@@ -194,4 +194,9 @@
         from s_user t
         where t.sts = 'Y'
     </select>
+    <select id="findByPhone" resultType="com.loushuiyifan.common.bean.User">
+        select *
+        from aweb_user
+        where phone = #{phone}
+    </select>
 </mapper>
