@@ -1,9 +1,12 @@
 package com.loushuiyifan.system.service;
 
+import com.ctc.wstx.util.StringUtil;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.realm.MyToken;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
 import com.loushuiyifan.system.SystemException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -45,10 +48,10 @@ public class LoginService {
         currentUser.login(token);
     }
 
-    public void loginByPhone(String phone,
+    public void loginByPhone(String username,
                              String host) {
         Subject currentUser = SecurityUtils.getSubject();
-        MyToken token = new MyToken(phone, host);
+        MyToken token = new MyToken(username, host);
         currentUser.login(token);
     }
 
@@ -58,11 +61,15 @@ public class LoginService {
      * @param phone
      * @return
      */
-    public String sendPhoneCode(String phone) {
+    public String sendPhoneCode(String username) {
         //首先验证账户是否存在
-        User user = userService.findByPhone(phone);
+        User user = userService.findByUsername(username);
         if (user == null) {
             throw new SystemException("用户不存在");
+        }
+        String phone = user.getPhone();
+        if (StringUtils.isEmpty(phone)) {
+            throw new SystemException("该用户未配置手机号");
         }
         //然后发送验证码
         try {

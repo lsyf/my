@@ -20,7 +20,7 @@ import java.util.Random;
 public class SendShortMsgService {
     Logger logger = LoggerFactory.getLogger(SendShortMsgService.class);
 
-    @Autowired
+    @Autowired(required = false)
     UCCPSendService uccpSendService;
 
 

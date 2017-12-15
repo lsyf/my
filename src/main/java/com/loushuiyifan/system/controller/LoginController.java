@@ -87,17 +87,17 @@ public class LoginController {
 
     @PostMapping("/loginByPhone")
     @ResponseBody
-    public JsonResult loginByPhone(HttpServletRequest request, String phone) {
+    public JsonResult loginByPhone(HttpServletRequest request, String username) {
         String host = request.getRemoteHost();
-        loginService.loginByPhone(phone, host);
+        loginService.loginByPhone(username, host);
         String url = request.getContextPath();
         return JsonResult.success("登录成功", url);
     }
 
     @PostMapping("/sendPhoneCode")
     @ResponseBody
-    public JsonResult sendPhoneCode(String phone) {
-        String code = loginService.sendPhoneCode(phone);
+    public JsonResult sendPhoneCode(String username) {
+        String code = loginService.sendPhoneCode(username);
         return JsonResult.success("发送成功", code);
     }
 
