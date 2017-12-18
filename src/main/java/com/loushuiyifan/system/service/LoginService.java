@@ -1,11 +1,9 @@
 package com.loushuiyifan.system.service;
 
-import com.ctc.wstx.util.StringUtil;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.config.shiro.realm.MyToken;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
 import com.loushuiyifan.system.SystemException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -58,7 +56,6 @@ public class LoginService {
     /**
      * 发送验证码
      *
-     * @param phone
      * @return
      */
     public String sendPhoneCode(String username) {
