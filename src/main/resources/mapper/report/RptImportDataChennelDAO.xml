@@ -24,6 +24,7 @@
         c.name as "city",
         b.user_id as "userId",
         d.nickname as "userName",
+        nvl(sum(case when e.index_id <![CDATA[<=]]> ('17011234') then  a.index_data    end ),0) as "sum2",
         b.STATUS as "action",
         b.export_desc as "remark",
         b.IS_ITSM as "isItsm",
@@ -33,6 +34,7 @@
         b.eip as "eip"
         from Rpt_Import_Data_Channel a,
         EXT_IMPORT_LOG b,
+         rpt_repfield_def_channel e,
         (select n.*
         from AWEB_ORGANIZATION m, AWEB_ORGANIZATION n
         where m.type = 'local_net'
@@ -46,6 +48,9 @@
         and c.data = b.latn_id
         and b.type = #{type}
         and b.user_id = d.id
+        and e.rpt_no=1701
+        and e.group_id=0
+        and a.ver_code=e.index_code
         group by b.STATUS, b.log_id, b.file_name, c.name, b.user_id,d.nickname ,
          b.export_desc,b.IS_ITSM,b.ITSM_STATUS, b.ITSM_ORDER_NO,b.ITSM_URL,b.eip
         order by b.STATUS desc

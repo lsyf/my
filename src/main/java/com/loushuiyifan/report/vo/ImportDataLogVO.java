@@ -15,7 +15,8 @@ public class ImportDataLogVO {
     Long logId;
     String fileName;//文件名
     Integer num;    //数量
-    Double sum;     //金额
+    Double sum;     //合计金额
+    Double sum2;     //收入金额
     Long userId;    //用户ID
     String userName;    //用户名(nickname)
     String city;    //地市

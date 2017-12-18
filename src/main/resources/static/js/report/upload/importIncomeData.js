@@ -293,7 +293,10 @@ var TableInit = function () {
                 title: '记录数'
             }, {
                 field: 'sum',
-                title: '金额'
+                title: '合计(元)'
+            }, {
+                field: 'sum2',
+                title: '收入(元)'
             }, {
                 field: 'userName',
                 title: '操作人'
