@@ -1,6 +1,7 @@
 package com.loushuiyifan.system.service;
 
 import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.config.redis.RedisDAO;
 import com.loushuiyifan.config.shiro.realm.MyToken;
 import com.loushuiyifan.config.shiro.tool.PasswordHelper;
 import com.loushuiyifan.system.SystemException;
@@ -37,6 +38,9 @@ public class LoginService {
     @Autowired
     SendShortMsgService sendShortMsgService;
 
+    @Autowired
+    RedisDAO redisDAO;
+
     public void login(String username,
                       String password,
                       String rememberMe,
@@ -49,10 +53,27 @@ public class LoginService {
     }
 
     public void loginByPhone(String username,
+                             String code,
                              String host) {
+        checkVerifyCode(username, code);
         Subject currentUser = SecurityUtils.getSubject();
         MyToken token = new MyToken(username, host);
         currentUser.login(token);
+    }
+
+    public void saveVerifyCode(String username,
+                               String code) {
+        String key = String.format("verify_code_%s", username);
+        redisDAO.setEx(key, code, 180);
+    }
+
+    public void checkVerifyCode(String username,
+                                String code) {
+        String key = String.format("verify_code_%s", username);
+        String data = redisDAO.get(key, String.class);
+        if (!code.trim().equals(data)) {
+            throw new SystemException("验证码错误");
+        }
     }
 
     /**
@@ -72,7 +93,9 @@ public class LoginService {
         }
         //然后发送验证码
         try {
-            return sendShortMsgService.send(phone);
+            String code = sendShortMsgService.send(phone);
+            saveVerifyCode(username, code);
+            return code;
         } catch (Exception e) {
             e.printStackTrace();
             throw new SystemException("发送验证码失败:" + e.getMessage());
