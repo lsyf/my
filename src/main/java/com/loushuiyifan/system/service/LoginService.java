@@ -15,6 +15,8 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+
 /**
  * @author 漏水亦凡
  * @date 2017/12/8
@@ -89,6 +91,7 @@ public class LoginService {
         user.setPassword(password);
         passwordHelper.encryptPassword(user);
 
+        user.setCreateDate(Calendar.getInstance().getTime());
         userService.saveSelective(user);
 
     }

@@ -26,7 +26,8 @@ public interface ExtImportLogDAO extends MyMapper<ExtImportLog> {
     ExtImportLog selectDistinctData(@Param("logIds") Long[] logIds);
 
     Map<String, String> calcAmount(@Param("logIds") Long[] logIds,
-                                   @Param("month") String month);
+                                   @Param("month") String month,
+                                   @Param("latnId") Integer latnId);
 
     List<C4Detail> calcC4Detail(@Param("logIds") Long[] logIds,
                                 @Param("month") String month);
