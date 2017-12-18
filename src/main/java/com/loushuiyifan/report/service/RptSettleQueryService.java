@@ -98,8 +98,8 @@ public class RptSettleQueryService {
      * 导出数据
      */
     public byte[] export(Long logId, String reportId,String incomeSource) throws Exception {
-    	String[] key = { "reportId", "reportName", "acctMonth", "areaId", "areaName", "horCode", "verCode",
-    			"indexAllis", "incomeSource", "sourceName", "indexData" };
+    	String[] key = { "REPORTID", "REPORTNAME", "ACCTMONTH", "AREAID", "AREANAME", "HORCODE", "VERCODE",
+    			"INDEXALLIS", "INCOMESOURCE", "SOURCENAME", "INDEXDATA"};
     	String[] title = { "报表编号", "报表名称", "账期", "地市编号", "地市名", "渠道编码", "指标编码", "指标名称", "收入来源编号", "收入来源名称", "数据" };
 
     	String[] Keys = { "BUKRS", "REPORTID", "EXTEND_001", "EXTEND_002", "EXTEND_003" };
@@ -115,7 +115,7 @@ public class RptSettleQueryService {
 			tempList.add(map);
 		}
 		
-    	List<Map<String, String>> detail =rptSettleQueryDAO.detail(logId, incomeSource);      	
+    	List<Map<String, String>> list =rptSettleQueryDAO.detail(logId, incomeSource);      	
         List<Map<String, String>> titles = rptSettleQueryDAO.titleOld(logId);
         List<Map<String, String>> datas =rptSettleQueryDAO.listOld(logId);
         if (datas == null || datas.isEmpty()) {
@@ -123,7 +123,7 @@ public class RptSettleQueryService {
 		}
 
         byte[] data = new CommonExportServ().column(key, title)
-                .data(detail)
+                .data(list)
                 .exportData();
 
         return data;

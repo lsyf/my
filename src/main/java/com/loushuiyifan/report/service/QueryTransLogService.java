@@ -61,9 +61,9 @@ public class QueryTransLogService {
 
         List<Map<String, String>> list = queryTransLogDAO.queryLogForMap(month, latnId, incomeSource, taxtId);
 
-        String[] keys = {"month", "incomeSource", "incomeName", "codeName",
-                "batchId", "subId", "status", "createDate",
-                "lstUpd", "voucherCode"};
+        String[] keys = {"MONTH", "INCOMESOURCE", "INCOMENAME", "CODENAME",
+                "BATCHID", "SUBID", "STATUS", "CREATEDATE",
+                "LSTUPD", "VOUCHERCODE"};
         String[] titles = {"账期", "收入来源编码", "收入来源名称", "本地网名称",
                 "批次号", "版本号", "状态", "创建时间",
                 "最后修改时间", "凭证号"};

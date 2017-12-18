@@ -12,6 +12,14 @@
 		   and KHINR not in ('A3316', 'A3317', 'A3318', 'A3314', 'A3313')
 		 order by KHINR
 	</select>
+	
+	<select id="getLatnIdName" resultType="String">
+		select distinct SUBSTR(LTEXT, 4, 3) as "name"
+		  from KOSTL_PRCTR_LOCAL_NEW
+		 where BUKRS = 'A011'
+		   and KHINR = #{latnId}
+		 order by KHINR
+	</select>
     <select id="getColumn1" resultType="java.util.Map">
 		select TAXNO as "id",
 		TAXNAMEONE||'-'||TAXNAMETWO||'-'||TAXNAMETHREE as "name"

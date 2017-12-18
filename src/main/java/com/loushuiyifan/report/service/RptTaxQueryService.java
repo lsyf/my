@@ -239,13 +239,56 @@ public class RptTaxQueryService {
         return list;
     }
 
-    public String getFileName(String month, String latnId, String taxType) {
-        //TODO
-        return "a.xls";
-    }
+    
 
     public byte[] export(String month, String latnId, String taxType) {
         //TODO
         return null;
     }
+    
+    
+    public String getFileName(String month, String latnId, String taxType) {
+    	String latnName ="全部";
+    	if(latnId != "0"){
+    		latnName =rptTaxQueryDAO.getLatnIdName(latnId);
+        }
+    	String tax =getTaxType(taxType);
+    
+        return latnName+"_"+tax+"_"+month+".xls";
+    }
+    
+    public String getTaxType(String type){
+    	String tax ="";
+    	switch (type) {
+		
+		case "1":
+			tax ="纳税组织按税目收入统计表";
+			break;
+		case "2":
+			tax ="收入&销项税统计税";
+			break;
+		case "3":
+			tax ="收入汇总表";
+			break;
+		case "4":
+			tax ="应税收入汇总表";
+			break;
+		case "5":
+			tax ="预收账款分摊";
+			break;
+		case "6":
+			tax ="增值税预缴表";
+			break;
+		case "7":
+			tax ="收入税目结构当月";
+			break;
+		case "8":
+			tax ="收入税率结构分析";
+			break;
+		default:
+		}
+    	 return tax;
+    }
+    
+    
 }
