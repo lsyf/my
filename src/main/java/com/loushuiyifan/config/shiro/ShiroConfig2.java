@@ -91,7 +91,7 @@ public class ShiroConfig2 {
      */
     @Bean
     public RedisSessionDao sessionDAO() {
-        RedisSessionDao dao = new RedisSessionDao();
+        RedisSessionDao dao = new RedisSessionDao(true);
         return dao;
     }
 
@@ -112,7 +112,7 @@ public class ShiroConfig2 {
     public DefaultWebSessionManager sessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionIdUrlRewritingEnabled(false);
-        sessionManager.setGlobalSessionTimeout(30 * 60 * 1000);
+        sessionManager.setGlobalSessionTimeout(20 * 1000);
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(true);
         sessionManager.setSessionDAO(sessionDAO());
