@@ -1,14 +1,20 @@
 package com.loushuiyifan.report.service;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.report.dao.RptTaxQueryDAO;
-import com.loushuiyifan.report.vo.RptQueryDataVO;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.report.dao.RptTaxQueryDAO;
+import com.loushuiyifan.report.serv.TaxExportServ;
+import com.loushuiyifan.report.vo.RptQueryDataVO;
 
 @Service
 public class RptTaxQueryService {
@@ -113,7 +119,7 @@ public class RptTaxQueryService {
         switch (taxType) {
             case "1":
             case "3":
-                list = rptTaxQueryDAO.getRow1();
+                list = rptTaxQueryDAO.getRow1(latnId);
                 break;
             case "2":
                 list = rptTaxQueryDAO.getRow2(latnId);
@@ -241,9 +247,44 @@ public class RptTaxQueryService {
 
     
 
-    public byte[] export(String month, String latnId, String taxType) {
-        //TODO
-        return null;
+    public byte[] export(String month, String latnId, String taxType) 
+    		throws Exception{
+       
+    	//先查询表头
+        List<Map<String, String>> cols = getCols(latnId, taxType);
+        //查询行信息
+        List<Map<String, String>> rows = getRows(latnId, taxType);
+        //查询具体数据
+        Map<String, Map<String, String>> datas = getDatas(month, latnId, taxType);
+
+      //生成html需求数据模型
+        //首先遍历指标,建立 id->feild
+        Map<String, Map<String, String>> rowMap = Maps.newHashMapWithExpectedSize(2000);
+        for (int i = 0; i < rows.size(); i++) {
+            Map<String, String> row = rows.get(i);
+            rowMap.put(row.get("id"), row);
+        }
+
+        //填充行数据
+        //遍历数据，分别插入到指标数据中
+        Iterator<String> it = datas.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            String[] xy = key.replace("key_", "").split("_", 2);
+            String x = xy[0];
+            String y = xy[1];
+            String v = datas.get(key).get("data");
+
+            Map<String, String> row = rowMap.get(x);
+            if (row == null) {
+                continue;
+            }
+            row.put(y, v);
+        }
+        
+        byte[] data = new TaxExportServ().column(cols).row(rows).exportData();
+    	
+        return data;
     }
     
     

@@ -9,13 +9,13 @@
 		       b.name       as "latnName",       
 		       decode(a.area_id, 0, chr(51371) || chr(45759),
 		       (select b.name from aweb_organization b where b.data = a.area_id))   as "codeName",     
-		       (select c.card_name from dim_card_def c where c.card_id = a.card_id) as "cardType",
+		       (select c.card_name from charge.dim_card_def c where c.card_id = a.card_id) as "cardType",
 		       a.rate            as "discount",		       
 		       a.platform_amount as "platformAmount",
 		       a.inactive_amount as "inactiveAmount",
 		       (select d.nickname from aweb_user d where d.id = a.chg_who) as "chgWho",
 		       to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as "lstUpd"
-		  from (select t.* from inet_discount_rate t where 1 = 1
+		  from (select t.* from charge.inet_discount_rate t where 1 = 1
 		        
 		        <if test='logId ==null'>
 		        	and t.acct_month = #{month}
@@ -45,7 +45,7 @@
 	 select a.card_id as "id", 
 	 a.card_id || '-' || a.card_name as "name",
 	 a.card_id as "data"
-     from dim_card_def a
+     from charge.dim_card_def a
     order by a.card_id
 	</select>
 	

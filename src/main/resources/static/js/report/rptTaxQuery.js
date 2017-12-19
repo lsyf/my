@@ -46,10 +46,10 @@ function queryLog(btn) {
 function exportData() {
     var month = $("#upload_month").val();
     var latnId = orgTree.val();
-    var zbCode = $("#upload_zbCode").val();
+    var taxType =$("#query_taxType").val()
 
-    var names = ['month', 'latnId', 'zbCode'];
-    var params = [month, latnId, zbCode];
+    var names = ['month', 'latnId', 'taxType'];
+    var params = [month, latnId, taxType];
 
     var form = $("#form_export");   //定义一个form表单
     form.attr('action', hostUrl + 'rptTaxQuery/export');
@@ -88,7 +88,7 @@ var TableInit = function () {
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 10,                       //每页的记录行数（*）
             pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-            search: true,                       //是否显示表格搜索
+            //search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮

@@ -51,7 +51,7 @@ public class ImportC5Controller extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listForC4(userId);
-        List<CommonVO> months = dateService.aroundMonths(5);
+        List<CommonVO> months = dateService.commonMonths();
 
         map.put("orgs", orgs);
         map.put("months", months);

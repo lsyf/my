@@ -15,7 +15,7 @@ public interface RptTaxQueryDAO {
 
     List<Map<String, String>> getColumn7(@Param("latnId") String latnId);
 
-    List<Map<String, String>> getRow1();
+    List<Map<String, String>> getRow1(@Param("latnId") String latnId);
 
     List<Map<String, String>> getRow2(@Param("latnId") String latnId);
 

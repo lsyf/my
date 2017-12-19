@@ -46,7 +46,7 @@ public class ImportCutController extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listForC4(userId);
-        List<CommonVO> months = dateService.aroundMonths(5);
+        List<CommonVO> months = dateService.commonMonths();
         List<Map> incomeSources = codeListTaxService.listByType("income_source2017");
 
         map.put("orgs", orgs);

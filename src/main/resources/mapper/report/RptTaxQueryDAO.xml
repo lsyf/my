@@ -48,7 +48,7 @@
 		nssbh_prctr as "taxProfitCode",
 		ktext as "taxProfitName"
 		from CFG_NSSBH_PRCTR
-		<if test='latnId!="0"'>
+		<if test='latnId !="0"'>
             where khinr = #{latnId}
         </if>
 		order by nssbh_prctr
@@ -59,7 +59,7 @@
         KTEXT as "name",
         NSSBH as "id"
         from v_taxrpt_area
-        <if test='latnId!="0"'>
+        <if test='latnId !="0"'>
             where khinr = #{latnId}
         </if>
         order by NSSBH_PRCTR
@@ -96,7 +96,7 @@
         KTEXT as "name",
         NSSBH as "code"
         from v_taxrpt_area
-        <if test='latnId!="0"'>
+        <if test='latnId !="0"'>
             where khinr = #{latnId}
         </if>
         order by NSSBH_PRCTR
