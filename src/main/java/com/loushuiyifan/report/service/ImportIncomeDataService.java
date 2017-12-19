@@ -274,7 +274,7 @@ public class ImportIncomeDataService {
 
 
             //统计本次审核金额，以及本月导入金额
-            Map<String, String> amountMap = extImportLogDAO.calcAmount(logIds, month);
+            Map<String, String> amountMap = extImportLogDAO.calcAmount(logIds, month, latnId);
 
             //按照县分收入来源统计本次审核金额
             List<C4Detail> c4Details = extImportLogDAO.calcC4Detail(logIds, month);
@@ -284,9 +284,9 @@ public class ImportIncomeDataService {
             for (int i = 0; i < logIds.length; i++) {
                 list.add(logIds[i].toString());
             }
-           // String area = codeListTaxService.getAreaName(latnId + "local_net");
-            String area = codeListTaxService.getAreaName(latnId+"", "local_net");
-            
+            // String area = codeListTaxService.getAreaName(latnId + "local_net");
+            String area = codeListTaxService.getAreaName(latnId + "", "local_net");
+
             String title = String.format("%s账期%s手工收入审批%s",
                     month, area, LocalDateTime.now().format(DateService.YYYYMMDDHHMMSS));
 

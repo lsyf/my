@@ -20,11 +20,7 @@ function initForm() {
             code: "验证码不能为空",
         },
         submitHandler: function (form) {
-            var code = $('#form_code').val().trim();
-            if (code != verify_code) {
-                toastr.error("验证码不正确");
-                return;
-            }
+
             $(form).ajaxSubmit({
                 url: hostUrl + 'loginByPhone',
                 type: 'post',
@@ -50,7 +46,7 @@ function initForm() {
     });
 
 }
-var verify_code = null;
+ 
 function sendCode(btn) {
     var $btn = $(btn);
     var username = $('#form_username').val().trim();
@@ -70,7 +66,6 @@ function sendCode(btn) {
         success: function (r, a, b) {
             if (r.state) {
                 toastr.info("发送成功");
-                verify_code = r.data;
                 forbid($btn);
             } else {
                 toastr.info("发送失败:" + r.msg);

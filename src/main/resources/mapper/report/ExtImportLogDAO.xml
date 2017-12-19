@@ -44,6 +44,12 @@
         to_char(SUM(a.INDEX_DATA)) as "sumAmount"
         from Rpt_Import_Data_Channel a
         where a.acct_month = #{month}
+        and exists (select 1
+        from code_list_tax
+        where type_code = 'local_net'
+        and code_id = a.area_id
+        and length(parent_code_id) = 2
+        and parent_code_id = #{latnId})
         and exists
         (select 1
         from ext_import_log
@@ -51,7 +57,8 @@
         and log_id in
         <include refid="foreach_logIds"/>
         and income_soure = a.income_source
-        and is_itsm = 1)
+        and is_itsm = 1
+        and latn_id = #{latnId})
         and a.ver_code in (select index_code
         from rpt_repfield_def_channel
         where RPT_NO = 1701
@@ -76,7 +83,7 @@
         and index_id  <![CDATA[ <= ]]>  '17011234')
         and b.type = 'local_net'
         and a.area_id = b.data
-        group by b.name, a.income_source
+        group by b.name, a.income_source,a.area_id
         order by a.area_id
     </select>
 

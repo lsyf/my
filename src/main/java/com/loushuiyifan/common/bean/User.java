@@ -34,6 +34,7 @@ public class User implements Serializable {
     private String email;
     private String avatar;
     private Date lastLogin;
+    private Date createDate;
 
 
 }
