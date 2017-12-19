@@ -17,7 +17,7 @@ logging:
     level:
         root: info
         com.loushuiyifan: debug
-        com.loushuiyifan.config: debug
+        com.loushuiyifan.config: info
         net.sf.ehcache: info
         org.eclipse: info
         org.mybatis: info
