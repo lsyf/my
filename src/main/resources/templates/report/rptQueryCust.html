@@ -60,6 +60,7 @@
 
         .table_colum1 {
             background-color: #7AB1E7;
+            white-space: nowrap;
         }
 
         .table_colum2 {
@@ -108,82 +109,76 @@
         <section class="content">
 
             <div id="form-panel">
-                <div class="box box-primary">
-                    <div class="box-header">
-                        查询条件
+
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-3 form-group form-group-rm">
+                        <label for="form_month" class="col-sm-4 control-label">月份</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="month" id="form_month">
+                            </select>
+                        </div>
                     </div>
-                    <div class="box-body">
-
-                        <div class="form-group form-group-sm">
-                            <div class="col-sm-3 form-group form-group-rm">
-                                <label for="form_month" class="col-sm-4 control-label">月份</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="month" id="form_month">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 form-group form-group-rm">
-                                <label for="form_latnId" class="col-sm-4 control-label">本地网</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="form_latnId" readonly>
-                                    <input class="form-control" name="latnId" type="hidden">
-                                </div>
-
-                            </div>
-                            <div class="col-sm-3 form-group form-group-rm">
-                                <label for="form_incomeSource" class="col-sm-4 control-label">收入来源</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="form_incomeSource" readonly>
-                                    <input class="form-control" name="incomeSource" type="hidden">
-                                </div>
-                            </div>
-                            <div class="col-sm-3 form-group form-group-rm">
-
-                                <label for="form_type" class="col-sm-4 control-label">税务类型</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="type" id="form_type">
-                                        <option value="0">价税合一(含税)</option>
-                                        <option value="1">增值税</option>
-                                        <option value="2">价(不含税)</option>
-                                    </select>
-                                </div>
-                            </div>
-
+                    <div class="col-sm-3 form-group form-group-rm">
+                        <label for="form_latnId" class="col-sm-4 control-label">本地网</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="form_latnId" readonly>
+                            <input class="form-control" name="latnId" type="hidden">
                         </div>
 
+                    </div>
+                    <div class="col-sm-3 form-group form-group-rm">
+                        <label for="form_incomeSource" class="col-sm-4 control-label">收入来源</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="form_incomeSource" readonly>
+                            <input class="form-control" name="incomeSource" type="hidden">
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-group form-group-rm">
 
-                        <div class="form-group form-group-sm">
-
-                            <button id="btn_auditInfo" type="button" onclick="listAudit('view',this)"
-                                    class="btn btn-danger pull-right btn-form btn-sm">
-                                审核状态
-                            </button>
-                            <button id="btn_audit" type="button" onclick="listAudit('audit',this)"
-                                    class="btn btn-danger pull-right btn-form btn-sm">
-                                审核
-                            </button>
-                            <button id="btn_export_multi" type="button" onclick="exportData(1)"
-                                    class="btn btn-info pull-right btn-form btn-sm">
-                                多营业区导出
-                            </button>
-                            <button id="btn_export" type="button" onclick="exportData(0)"
-                                    class="btn btn-info pull-right btn-form btn-sm">
-                                导出
-                            </button>
-                            <button id="btn_query" type="button" onclick="queryData()"
-                                    class="btn btn-success pull-right btn-form btn-sm">
-                                查询
-                            </button>
+                        <label for="form_type" class="col-sm-4 control-label">税务类型</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="type" id="form_type">
+                                <option value="0">价税合一(含税)</option>
+                                <option value="1">增值税</option>
+                                <option value="2">价(不含税)</option>
+                            </select>
                         </div>
                     </div>
 
                 </div>
+
+
+                <div class="form-group form-group-sm col-sm-12">
+
+                    <button id="btn_auditInfo" type="button" onclick="listAudit('view',this)"
+                            class="btn btn-danger pull-right btn-form btn-sm">
+                        审核状态
+                    </button>
+                    <button id="btn_audit" type="button" onclick="listAudit('audit',this)"
+                            class="btn btn-danger pull-right btn-form btn-sm">
+                        审核
+                    </button>
+                    <button id="btn_export_multi" type="button" onclick="exportData(1)"
+                            class="btn btn-info pull-right btn-form btn-sm">
+                        多营业区导出
+                    </button>
+                    <button id="btn_export" type="button" onclick="exportData(0)"
+                            class="btn btn-info pull-right btn-form btn-sm">
+                        导出
+                    </button>
+                    <button id="btn_query" type="button" onclick="queryData()"
+                            class="btn btn-success pull-right btn-form btn-sm">
+                        查询
+                    </button>
+                </div>
+
             </div>
 
-            <h4 style="text-align: center;"><b id="title_table"></b>
-            </h4>
-            <table id="table_query"></table>
-
+            <div>
+                <h4 style="text-align: center;" id="table_title"><b id="title_table"></b>
+                </h4>
+                <table id="table_query"></table>
+            </div>
 
             <div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>

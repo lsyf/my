@@ -121,6 +121,7 @@ var TableInit = function () {
         var columns = createColumns(titles);
         $table.bootstrapTable('destroy');
         $table.bootstrapTable({
+            toolbar: "#table_title",
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
@@ -143,7 +144,12 @@ var TableInit = function () {
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
             data: datas,
-            columns: columns
+            columns: columns,
+            rowStyle: function (row, index) {//行样式
+                return {
+                    classes: "small tableRow  "
+                };
+            }
         });
 
 

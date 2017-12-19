@@ -6,6 +6,11 @@
     margin-left: 0px;
 }
 
+/*标题头隐藏*/
+.content-header{
+    display: none;
+}
+
 #content-header-h1 {
     cursor: pointer;
 }
