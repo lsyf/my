@@ -48,6 +48,7 @@ function exportData() {
 		toastr.info('已经选中多个数据');
 		return;
 	}
+	var logId;var reportId; var incomeSource;  
 	var logs = [];
 	selects.forEach(function(data,i){
 		logs.push(data.logId,data.reportId,data.incomeSource);

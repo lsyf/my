@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.common.bean.User;
@@ -83,14 +84,20 @@ public class RptSettleQueryController extends BaseReportController{
     @RequiresPermissions("report:rptSettleQuery:view")
     public JsonResult export(HttpServletRequest req,
                              HttpServletResponse resp,
-                             Long logId, 
-                             String reportId,
-                             String incomeSource){
-    	
+                             @RequestParam("logs[]") String[] logs){
+
     	try {
-    		byte[] datas = rptSettleQueryService.export(logId, reportId, incomeSource);
-    		String name = rptSettleQueryService.getFileName(logId,reportId,incomeSource);
-    		downloadService.download(req, resp, datas,name);
+    		for(int i=0; i<logs.length; i++){
+    			Long logId = Long.parseLong(logs[0]);
+    			String reportId =logs[1];
+    			String incomeSource =logs[2];
+    		 
+    			byte[] datas = rptSettleQueryService.export(logId, reportId, incomeSource);
+    			String name = rptSettleQueryService.getFileName(logId,reportId,incomeSource);
+    		
+    			downloadService.download(req, resp, datas,name);
+    		}
+    		    		   		
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ReportException("导出错误:" + e.getMessage());

@@ -37,7 +37,7 @@
 
     <style>
         .btn-form {
-            margin-right: 20px;
+            margin-right: 10px;
         }
 
         .table-row {
@@ -65,9 +65,9 @@
         </script>
 
         <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>税务报表</h1>
-        </section>
+        <!-- <section class="content-header">
+            <h1></h1>
+        </section> -->
 
         <!-- Main content -->
         <section class="content">
@@ -118,13 +118,13 @@
 
                             <div class="form-group  form-group-sm">
 
-                                <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_sum" onclick="exportData()">
-                                    导出
+                                <button id="btn_load" type="button" onclick="exportData()"
+                                        class="btn btn-success pull-right btn-sm btn-form">
+                                   	 导出
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_query" onclick="queryLog(this)">
-                                    查询
+                                   	 查询
                                 </button>
 
 

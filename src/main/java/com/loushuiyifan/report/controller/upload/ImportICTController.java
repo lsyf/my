@@ -51,7 +51,7 @@ public class ImportICTController extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 3);
-        List<CommonVO> months = dateService.aroundMonths(5);
+        List<CommonVO> months = dateService.commonMonths();
 
         map.put("orgs", orgs);
         map.put("months", months);

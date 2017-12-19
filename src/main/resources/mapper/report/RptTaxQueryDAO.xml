@@ -12,6 +12,14 @@
 		   and KHINR not in ('A3316', 'A3317', 'A3318', 'A3314', 'A3313')
 		 order by KHINR
 	</select>
+	
+	<select id="getLatnIdName" resultType="String">
+		select distinct SUBSTR(LTEXT, 4, 3) as "name"
+		  from KOSTL_PRCTR_LOCAL_NEW
+		 where BUKRS = 'A011'
+		   and KHINR = #{latnId}
+		 order by KHINR
+	</select>
     <select id="getColumn1" resultType="java.util.Map">
 		select TAXNO as "id",
 		TAXNAMEONE||'-'||TAXNAMETWO||'-'||TAXNAMETHREE as "name"
@@ -40,7 +48,7 @@
 		nssbh_prctr as "taxProfitCode",
 		ktext as "taxProfitName"
 		from CFG_NSSBH_PRCTR
-		<if test='latnId!="0"'>
+		<if test='latnId !="0"'>
             where khinr = #{latnId}
         </if>
 		order by nssbh_prctr
@@ -51,7 +59,7 @@
         KTEXT as "name",
         NSSBH as "id"
         from v_taxrpt_area
-        <if test='latnId!="0"'>
+        <if test='latnId !="0"'>
             where khinr = #{latnId}
         </if>
         order by NSSBH_PRCTR
@@ -88,7 +96,7 @@
         KTEXT as "name",
         NSSBH as "code"
         from v_taxrpt_area
-        <if test='latnId!="0"'>
+        <if test='latnId !="0"'>
             where khinr = #{latnId}
         </if>
         order by NSSBH_PRCTR

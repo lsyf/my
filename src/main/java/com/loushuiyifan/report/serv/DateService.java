@@ -29,7 +29,7 @@ public class DateService {
     DictionaryService dictionaryService;
 
     public static void main(String[] args) {
-    	List<CommonVO> list =new DateService().calcMonths(11,2);
+    	List<CommonVO> list =new DateService().calcMonths(0,2);
     	String date = LocalDate.now().plusMonths(0).format(YYYYMM);
     	
     	System.out.println(list+"-----"+date);
@@ -60,7 +60,7 @@ public class DateService {
     }
     
     public List<CommonVO> commonMonths() {
-    	return calcMonths(6, 2);
+    	return calcMonths(11, 0);
     }
     
     
@@ -71,7 +71,7 @@ public class DateService {
      * @return
      */
     public List<CommonVO> lastMonths(Integer num) {
-    	return calcMonths(num, 0);
+    	return calcMonths(0,num);
     }
 
     /**

@@ -8,18 +8,18 @@ import java.util.Map;
 
 public interface RptTaxQueryDAO {
 
-
+	String getLatnIdName(@Param("latnId") String latnId);
     List<Map<String, String>> listAreaForTax();
 
     List<Map<String, String>> getColumn1();
 
     List<Map<String, String>> getColumn7(@Param("latnId") String latnId);
 
-    List<Map<String, String>> getRow1();
+    List<Map<String, String>> getRow1(@Param("latnId") String latnId);
 
     List<Map<String, String>> getRow2(@Param("latnId") String latnId);
 
-    List<Map<String, String>> getRow5(String latnId);
+    List<Map<String, String>> getRow5(@Param("latnId") String latnId);
 
     List<Map<String, String>> getRow7();
 

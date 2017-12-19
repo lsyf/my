@@ -1,14 +1,20 @@
 package com.loushuiyifan.report.service;
 
-import com.google.common.collect.Maps;
-import com.loushuiyifan.report.dao.RptTaxQueryDAO;
-import com.loushuiyifan.report.vo.RptQueryDataVO;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import com.google.common.collect.Maps;
+import com.loushuiyifan.report.dao.RptTaxQueryDAO;
+import com.loushuiyifan.report.serv.TaxExportServ;
+import com.loushuiyifan.report.vo.RptQueryDataVO;
 
 @Service
 public class RptTaxQueryService {
@@ -113,7 +119,7 @@ public class RptTaxQueryService {
         switch (taxType) {
             case "1":
             case "3":
-                list = rptTaxQueryDAO.getRow1();
+                list = rptTaxQueryDAO.getRow1(latnId);
                 break;
             case "2":
                 list = rptTaxQueryDAO.getRow2(latnId);
@@ -239,13 +245,91 @@ public class RptTaxQueryService {
         return list;
     }
 
-    public String getFileName(String month, String latnId, String taxType) {
-        //TODO
-        return "a.xls";
-    }
+    
 
-    public byte[] export(String month, String latnId, String taxType) {
-        //TODO
-        return null;
+    public byte[] export(String month, String latnId, String taxType) 
+    		throws Exception{
+       
+    	//先查询表头
+        List<Map<String, String>> cols = getCols(latnId, taxType);
+        //查询行信息
+        List<Map<String, String>> rows = getRows(latnId, taxType);
+        //查询具体数据
+        Map<String, Map<String, String>> datas = getDatas(month, latnId, taxType);
+
+      //生成html需求数据模型
+        //首先遍历指标,建立 id->feild
+        Map<String, Map<String, String>> rowMap = Maps.newHashMapWithExpectedSize(2000);
+        for (int i = 0; i < rows.size(); i++) {
+            Map<String, String> row = rows.get(i);
+            rowMap.put(row.get("id"), row);
+        }
+
+        //填充行数据
+        //遍历数据，分别插入到指标数据中
+        Iterator<String> it = datas.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            String[] xy = key.replace("key_", "").split("_", 2);
+            String x = xy[0];
+            String y = xy[1];
+            String v = datas.get(key).get("data");
+
+            Map<String, String> row = rowMap.get(x);
+            if (row == null) {
+                continue;
+            }
+            row.put(y, v);
+        }
+        
+        byte[] data = new TaxExportServ().column(cols).row(rows).exportData();
+    	
+        return data;
     }
+    
+    
+    public String getFileName(String month, String latnId, String taxType) {
+    	String latnName ="全部";
+    	if(latnId != "0"){
+    		latnName =rptTaxQueryDAO.getLatnIdName(latnId);
+        }
+    	String tax =getTaxType(taxType);
+    
+        return latnName+"_"+tax+"_"+month+".xls";
+    }
+    
+    public String getTaxType(String type){
+    	String tax ="";
+    	switch (type) {
+		
+		case "1":
+			tax ="纳税组织按税目收入统计表";
+			break;
+		case "2":
+			tax ="收入&销项税统计税";
+			break;
+		case "3":
+			tax ="收入汇总表";
+			break;
+		case "4":
+			tax ="应税收入汇总表";
+			break;
+		case "5":
+			tax ="预收账款分摊";
+			break;
+		case "6":
+			tax ="增值税预缴表";
+			break;
+		case "7":
+			tax ="收入税目结构当月";
+			break;
+		case "8":
+			tax ="收入税率结构分析";
+			break;
+		default:
+		}
+    	 return tax;
+    }
+    
+    
 }
