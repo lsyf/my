@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.loushuiyifan.report.dao.RptQueryIncomeSourceDAO">
-    <select id="listAsMap" resultType="Map">
+    <select id="listAsMap" resultType="map">
         select
-        a.zb_code || '_' || a.cust_id as "key",
+        a.zb_code || '_' || a.income_source as "key",
         <choose>
             <when test='type=="0"'>
                 to_char(a.zb_value, 'fm999999999990.00') as "data"
