@@ -7,7 +7,7 @@ function initRptQueryComparedNum() {
 
 
     buildSelect('form_month', months);
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "form_latnId", 50);
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "form_latnId", 80);
     orgTree.Init(orgs);
 
 
@@ -130,8 +130,8 @@ var TableInit = function () {
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 10,                       //每页的记录行数（*）
-            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            pageSize: 80,                       //每页的记录行数（*）
+            pageList: [50,100,500],        //可供选择的每页的行数（*）
             search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列

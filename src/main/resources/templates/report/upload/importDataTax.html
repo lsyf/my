@@ -91,23 +91,21 @@
 
             <div id="form-panel">
                 <div class="box box-primary">
-                    <div class="box-header">
-                        查询条件
-                    </div>
+                   
                     <div class="box-body">
 
-                        <form id="form_upload" class="form-horizontal col-sm-12">
+                        <form id="form_upload" class="form-horizontal col-sm-8">
 
                             <div class="form-group form-group-sm">
-                                <label for="upload_month" class="col-sm-1 control-label">月份</label>
-                                <div class="col-sm-3">
+                                <label for="upload_month" class="col-sm-2 control-label">月份</label>
+                                <div class="col-sm-4">
                                     <select class="form-control" name="month" id="upload_month">
                                     </select>
                                 </div>
                             </div>
 
                             <div class="form-group form-group-sm">
-                                <label for="upload_file" class="col-sm-1 control-label">文件</label>
+                                <label for="upload_file" class="col-sm-2 control-label">文件</label>
                                 <div class="col-sm-7">
                                     <input id="upload_file" name="file" type="file" class="file form-control"
                                            data-show-preview="false" data-show-remove="false" data-language="zh"
@@ -115,27 +113,29 @@
                                 </div>
                             </div>
                             <div class="form-group form-group-sm">
-                                <label for="upload_remark" class="col-sm-1 control-label">备注</label>
+                                <label for="upload_remark" class="col-sm-2 control-label">备注</label>
                                 <div class="col-sm-7">
                                     <textarea id="upload_remark" name="remark" type="text"
                                               class="form-control"></textarea>
                                 </div>
-                            </div>
-
-
-                            <div class="form-group  form-group-sm">
+                                
+                                <div class="form-group  form-group-sm">
                                 <button class="btn btn-danger pull-right btn-sm btn-form"
                                         type="button" id="btn_query" onclick="queryLog()">
-                                    稽核
+                                  	  稽核
                                 </button>
                                 <button id="btn_upload" type="submit"
                                         class="btn btn-success pull-right btn-form btn-sm">
-                                    导入
+                                   	 导入
                                 </button>
 
                             </div>
+                            </div>
+
+
+                            
                         </form>
-                        <div class="form-horizontal col-sm-12">
+                        <div class="form-horizontal col-sm-4">
                             <p>
                                 导入提示: ---> <a th:href="@{/download/template/importDataTax}"
                                               target="_blank"><b>模板下载</b></a><br/>
@@ -151,9 +151,6 @@
 
             <div id="form-table">
                 <div class="box box-primary">
-                    <div class="box-header">
-                        稽核汇总
-                    </div>
                     <div class="box-body">
                         <table id="table_upload"></table>
                     </div>

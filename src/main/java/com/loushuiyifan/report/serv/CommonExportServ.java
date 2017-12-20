@@ -1,14 +1,19 @@
 package com.loushuiyifan.report.serv;
 
-import com.loushuiyifan.config.poi.AbstractPoiExport;
-import com.loushuiyifan.report.exception.ReportException;
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-import java.util.Map;
+import com.loushuiyifan.config.poi.AbstractPoiExport;
+import com.loushuiyifan.report.exception.ReportException;
 
 /**
  * 报表导出
@@ -17,7 +22,6 @@ import java.util.Map;
  * @date 2017/9/25
  */
 public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
-
 
     //数据(key->name)
     protected List<Map<String, String>> reportDatas;
@@ -50,7 +54,7 @@ public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
         super.export();
         return os.toByteArray();
     }
-
+    
 
     @Override
     protected void process(Workbook wb) throws Exception {
@@ -71,7 +75,8 @@ public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
             Map<String, String> map = reportDatas.get(i);
             for (int j = 0; j < reportKeys.length; j++) {
                 String key = reportKeys[j];
-                String data = map.get(key);
+              
+                String data = String.valueOf(map.get(key));
                 row.createCell(j).setCellValue(data);
             }
         }

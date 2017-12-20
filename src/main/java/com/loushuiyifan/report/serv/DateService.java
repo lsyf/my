@@ -29,10 +29,9 @@ public class DateService {
     DictionaryService dictionaryService;
 
     public static void main(String[] args) {
-    	List<CommonVO> list =new DateService().calcMonths(0,2);
-    	String date = LocalDate.now().plusMonths(0).format(YYYYMM);
+    	List<CommonVO> list =new DateService().calcMonths(6,2);
     	
-    	System.out.println(list+"-----"+date);
+    	System.out.println(list);
 	}
     /**
      * 周围几个月(例如本月+前n月+后n月)
@@ -60,7 +59,7 @@ public class DateService {
     }
     
     public List<CommonVO> commonMonths() {
-    	return calcMonths(11, 0);
+    	return calcMonths(11, 2);
     }
     
     
@@ -71,7 +70,7 @@ public class DateService {
      * @return
      */
     public List<CommonVO> lastMonths(Integer num) {
-    	return calcMonths(0,num);
+    	return calcMonths(6,num);
     }
 
     /**

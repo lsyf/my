@@ -11,20 +11,25 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import com.loushuiyifan.config.poi.AbstractPoiExport;
 
-public class TaxExportServ extends AbstractPoiExport<Map<String, String>>{
+public class SettleExportServ extends AbstractPoiExport<Map<String, String>>{
 
 	//列名(id+name)
     protected List<Map<String, String>> cols;
     //行数据
     protected List<Map<String, String>> rows;
     
-    public TaxExportServ column(List<Map<String, String>> columns) {
+    protected List<Map<String, String>> cols2;
+    //行数据
+    protected List<Map<String, String>> rows2;
+    public SettleExportServ column(List<Map<String, String>> columns, List<Map<String, String>> columns2) {
         this.cols = columns;
+        this.cols2 = columns2;
         return this;
     }
 
-    public TaxExportServ row(List<Map<String, String>> rows) {
+    public SettleExportServ row(List<Map<String, String>> rows, List<Map<String, String>> rows2) {
         this.rows = rows;
+        this.rows2 = rows2;
         return this;
     }
 
@@ -34,23 +39,30 @@ public class TaxExportServ extends AbstractPoiExport<Map<String, String>>{
         super.export();
         return os.toByteArray();
     }
-
     
     @Override
     protected void process(Workbook wb) throws Exception {
+    	//wb.setSheetName(0, "原始数据");//设置sheet名
+    	//Sheet sheet = wb.getSheetAt(0);
+        Sheet sheet1 = wb.createSheet("原始数据");
+        Sheet sheet2 = wb.createSheet("处理后数据");
+    	processSheet(sheet1,cols,rows);
+    	processSheet(sheet2,cols2,rows2);
+    }
+    
+    protected void processSheet(Sheet sheet,
+    		                    List<Map<String, String>> cols,
+    		                    List<Map<String, String>> rows){
     	
-        Sheet sheet = wb.createSheet("数据");
-
-        //首先添加表头
+    	//首先添加表头
         Row titleRow = sheet.createRow(0);
         for (int i = 0; i < cols.size(); i++) {
         	 Map<String, String> title = cols.get(i);
    
         	String name = title.get("name");
-        	titleRow.createCell(0).setCellValue("行次");
-        	titleRow.createCell(i+1).setCellValue(name);
+        	titleRow.createCell(i).setCellValue(name);
         }
-
+        
         //然后填充数据
         for (int i = 0; i < rows.size(); i++) {
         	int rowNum = i+1;
@@ -61,12 +73,11 @@ public class TaxExportServ extends AbstractPoiExport<Map<String, String>>{
             	Map<String, String> title = cols.get(j);
             	String id = title.get("id");
             	String data = map.get(id);
-            	row.createCell(0).setCellValue(rowNum-1);                
-                row.createCell(j+1).setCellValue(data);
+                row.createCell(j).setCellValue(data);
             }
         }
-
+    	
     }
     
-    
+       
 }

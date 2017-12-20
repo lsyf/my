@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.config.mybatis.MyMapper;
 import com.loushuiyifan.report.bean.CodeListTax;
 import com.loushuiyifan.report.vo.RuleConfigVO;
@@ -19,8 +20,11 @@ public interface RptRuleConfigDAO extends MyMapper<RuleConfigVO>{
 	
 	
 	List<Map<String,String>> findCardName();
-		
-	List<Map<String,String>> findNameById(@Param("list") List<String> temp);
-	List<String> queryNameForMap();
+	
+	List<Organization> listAll();
+	List<Organization> listByUserAndLvl(@Param("userId") Long userId,
+                                        @Param("lvl") Integer lvl);
+	
+	List<Organization> listByRootAndLvl(@Param("id") Long id);
 	
 }
