@@ -35,7 +35,9 @@
 .form-validation.has-error label {
     color: #dd4b39;
 }
-
+.table{
+  table-layout:fixed;
+}
 /*查询条件边框样式*/
 .border-style{
 	border-style:3px solid;

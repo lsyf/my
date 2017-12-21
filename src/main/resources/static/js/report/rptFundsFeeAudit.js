@@ -114,11 +114,11 @@ var TableInit = function () {
             	checkbox:true
             },{
                 field: 'txtMessage',
-                width:'80px',
+                width:'60px',
                 title: '文本信息'
             }, {
                 field: 'prctr',
-                width:'120px',
+                width:'80px',
                 title: '利润中心编码'
             }, {
                 field: 'sapFinCode',
@@ -126,15 +126,15 @@ var TableInit = function () {
                 title: 'SAP科目编码'
             },{
                 field: 'sapFinCodeName',
-                width:'200px',
+                width:'80px',
                 title: 'SAP科目名称'
             }, {
                 field: 'kunnr',
-                width:'120px',
+                width:'80px',
                 title: '客户编码'
             }, {
                 field: 'kunnrName',
-                width:'120px',
+                width:'80px',
                 title: '客户名称'
             }, {
                 field: 'jieFbalance',
