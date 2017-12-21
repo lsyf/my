@@ -48,4 +48,6 @@ public interface ExtImportLogDAO extends MyMapper<ExtImportLog> {
                        @Param("itsmOrderNo") String itsmOrderNo,
                        @Param("itsmUrl") String itsmUrl,
                        @Param("eip") String eip);
+
+    List<ExtImportLog> getAllLogs(@Param("logIds") Long[] logIds);
 }

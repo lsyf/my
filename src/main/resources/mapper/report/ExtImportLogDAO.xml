@@ -87,5 +87,12 @@
         order by a.area_id
     </select>
 
+    <select id="getAllLogs" resultType="com.loushuiyifan.report.bean.ExtImportLog">
+      SELECT *
+      FROM ext_import_log a
+      WHERE a.log_id in
+        <include refid="foreach_logIds"/>
+    </select>
+
 
 </mapper>

@@ -290,6 +290,13 @@ public class ImportIncomeDataService {
             String title = String.format("%s账期%s手工收入审批%s",
                     month, area, LocalDateTime.now().format(DateService.YYYYMMDDHHMMSS));
 
+            StringBuilder remark = new StringBuilder();
+            List<ExtImportLog> logs = extImportLogDAO.getAllLogs(logIds);
+            for (ExtImportLog temp : logs) {
+                remark.append(temp.getLogId()).append(" : ")
+                        .append(temp.getExportDesc()).append(" ; \n");
+            }
+
             //送审操作
             //保存送审日志
             ITSMRequest request = new ITSMRequest();
@@ -301,7 +308,7 @@ public class ImportIncomeDataService {
             request.setSumAmount(amountMap.get("sumAmount"));
             request.setCurAmount(amountMap.get("curAmount"));
             request.setDetail(c4Details);
-            request.setRemark(title);
+            request.setRemark(remark.toString());
 
             ITSMResponse response = itsmClient.call(request, month, userId);
 
