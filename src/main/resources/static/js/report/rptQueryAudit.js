@@ -50,7 +50,7 @@ function queryFee(){
         success: function (r) {
             if (r.state) {
                 var data = r.data;
-                table.load(data);
+                table.load(data,2);
 
             } else {
                 toastr.error('查询失败'+r.msg);
@@ -80,7 +80,7 @@ function quitData(){
 	            if (r.state) {
 	            	toastr.info('回退成功');
 	            	hideAlert();
-	            	quitData();
+	            	queryState();
 	            } else {
 	                toastr.error('回退失败'+r.msg);	                
 	            }
@@ -118,7 +118,7 @@ function auditData() {
             if (r.state) {
             	toastr.info('审核成功');
             	hideAlert();
-            	quitData();
+            	queryState();
             } else {
                 toastr.error('审核失败'+r.msg);
             }
@@ -257,8 +257,13 @@ var TableInit = function () {
 
 
     };
+    
+    var type = 1;
     function imageFormat(value,row,index){
-
+    	if(type == 2){
+    		return value;
+    	}
+    	
     	var txt = "";
     	var clas= "";
     	switch(value){
@@ -339,7 +344,8 @@ var TableInit = function () {
     }
     
     //刷新数据
-    oTableInit.load = function (data) {
+    oTableInit.load = function (data,a) {
+    	type = a;
         $('#table_upload').bootstrapTable('load', data);
     };
     

@@ -289,10 +289,13 @@ public class RptTaxQueryService {
     
     
     public String getFileName(String month, String latnId, String taxType) {
-    	String latnName ="全部";
-    	if(latnId != "0"){
+    	String latnName ="";
+    	if(!"0".equals(latnId)){
     		latnName =rptTaxQueryDAO.getLatnIdName(latnId);
+        }else{
+        	latnName ="全部";
         }
+    	
     	String tax =getTaxType(taxType);
     
         return latnName+"_"+tax+"_"+month+".xls";
