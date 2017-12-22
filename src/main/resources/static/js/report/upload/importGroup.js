@@ -28,7 +28,7 @@ function queryLog() {
                 table.load(data);
 
             } else {
-                toastrError('查询失败:'+r.msg);
+                toastrError('查询失败:' + r.msg);
             }
         },
         error: function (result) {
@@ -42,36 +42,37 @@ function queryLog() {
 function removeData() {
     var groupId = $("#upload_groupId").val()
     var latnId = orgTree.val();
-    
 
-    editAlert('警告', '是否确定删除:  指标编码：' + groupId + ", 地市：" + latnId , function () {
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "importGroup/remove",
-            data: {
-            	groupId: groupId,
-                latnId: latnId
-            },
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('删除成功');
-                    hideAlert();
 
-                    queryLog()
-                } else {
-                    toastrError('提删除失败');
-                    toastrError(r.msg);
+    editAlert('警告', '是否确定删除:  指标编码：' + groupId + ", 地市：" + latnId,
+        "删除",
+        function () {
+            $.ajax({
+                type: "POST",
+                url: hostUrl + "importGroup/remove",
+                data: {
+                    groupId: groupId,
+                    latnId: latnId
+                },
+                dataType: "json",
+                success: function (r) {
+                    if (r.state) {
+                        toastr.info('删除成功');
+                        hideAlert();
+
+                        queryLog()
+                    } else {
+                        toastrError('提删除失败');
+                        toastrError(r.msg);
+                    }
+                },
+                error: function (result) {
+                    toastrError('发送请求失败');
                 }
-            },
-            error: function (result) {
-                toastrError('发送请求失败');
-            }
+            });
         });
-    });
     showAlert();
 }
-
 
 
 function initForm() {
@@ -105,14 +106,14 @@ function initForm() {
 
 
                         toastr.info('提交成功');
-                       queryLog()
+                        queryLog()
                     } else {
                         toastrError('提交失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastrError('提交失败:'+r.msg);
+                    toastrError('提交失败:' + r.msg);
                 }
             });
         }
@@ -181,17 +182,16 @@ var TableInit = function () {
                 field: 'latnId',
                 title: '本地网'
             }/*, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
-            }*/]
+             field: 'operate',
+             title: '操作',
+             events: operateEvents,
+             formatter: operateFormatter
+             }*/]
 
         });
 
 
     };
-
 
 
     //刷新数据
