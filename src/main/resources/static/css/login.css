@@ -1,0 +1,32 @@
+.bg {
+    background: url("../img/home.png");
+    background-size: 100%;
+    /*background-position: center;*/
+}
+
+.login-logo {
+    /*background: #55ffffff;*/
+    color: #222222;
+    font-size:40px;
+}
+
+.login-trans {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: #6c7277;
+}
+
+@-webkit-keyframes autofill {
+    to {
+        color: #444444;
+        background: transparent;
+    }
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
+}
