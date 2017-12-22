@@ -49,7 +49,7 @@ public class ImportSettleCutController extends BaseReportController {
 
         //页面条件
         List<CommonVO> months = dateService.lastMonths(2);
-        List<Map<String, String>> orgs =rptFundsFeeQueryService.listReportName();
+        List<Map<String, String>> orgs =rptSettleQueryService.listReportInfo();
         map.put("months", months);
         map.put("orgs", orgs);
 

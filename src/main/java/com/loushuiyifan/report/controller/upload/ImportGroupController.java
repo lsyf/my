@@ -111,19 +111,18 @@ public class ImportGroupController extends BaseReportController {
     @PostMapping("remove")
     @ResponseBody
     @RequiresPermissions("report:importCut:remove")
-    public JsonResult remove(String latnId,
-                             String groupId) {
+    public JsonResult remove(String latnId, String groupId) {
 
-//        if (latnId.equals("0")) {
-//            throw new ReportException("请选择正确的地市");
-//        }
+        if (latnId.equals("0")) {
+            throw new ReportException("请选择正确的地市");
+        }
         //首先校验能否导入 超过删除时限，禁止删除
         dateService.checkImportGroup();
         try {
-            importGroupService.delete(Integer.parseInt(latnId), Long.parseLong(groupId));
+            importGroupService.delete(Integer.parseInt(latnId), groupId);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ReportException("删除导入时发生异常");
+            //throw new ReportException("删除导入时发生异常");
 
         }
 

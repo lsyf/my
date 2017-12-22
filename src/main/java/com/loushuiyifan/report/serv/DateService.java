@@ -115,11 +115,12 @@ public class DateService {
                 ReportConfig.RptAppParam.ROOT.toString(),
                 ReportConfig.RptAppParam.MONTH_ONE_KEY.toString());
         int limitDay = Integer.parseInt(day);
-        int nowDay = LocalDate.now().getDayOfMonth();
+        int nowDay = LocalDate.now().getDayOfMonth();       
         int value = nowDay > limitDay ? 0 : -1;
-        if (limitDay == 0 || limitDay > 0
-                && !LocalDate.now().plusMonths(value).format(YYYYMM).equals(month)) {
-            throw new ReportException("超出账期限制");
+        String str = LocalDate.now().plusMonths(value).format(YYYYMM);
+        int a =Integer.parseInt(month)- Integer.parseInt(str);
+        if (limitDay == 0 || limitDay > 0 && a<0) {
+            throw new ReportException("历史账期不能汇总");
         }
     }
     /**

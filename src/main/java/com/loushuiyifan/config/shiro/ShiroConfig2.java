@@ -75,11 +75,10 @@ public class ShiroConfig2 {
     @Bean
     public UserRealm userRealm() {
         UserRealm userRealm = new UserRealm();
-        userRealm.setCredentialsMatcher(credentialsMatcher());
-//        userRealm.setCacheManager(shiroRedisCacheManager(cacheManager));
+        userRealm.setCredentialsMatcher(credentialsMatcher()); 
         userRealm.setCachingEnabled(true);
         userRealm.setAuthenticationCachingEnabled(false);
-        userRealm.setAuthorizationCachingEnabled(true);
+        userRealm.setAuthorizationCachingEnabled(false); //TODO 缓存授权
         return userRealm;
     }
 

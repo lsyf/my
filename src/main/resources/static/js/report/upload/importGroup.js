@@ -4,13 +4,10 @@ function initGroup() {
     table = new TableInit();
     table.Init();
 
-
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
     orgTree.Init(orgs);
 
-
     initForm();
-
 }
 
 function queryLog() {
@@ -43,8 +40,7 @@ function removeData() {
     var groupId = $("#upload_groupId").val()
     var latnId = orgTree.val();
     
-
-    editAlert('警告', '是否确定删除:  指标编码：' + groupId + ", 地市：" + latnId , function () {
+    editAlert('警告', '是否确定删除:  指标编码：' + groupId + ", 地市：" + latnId ,'删除', function () {
         $.ajax({
             type: "POST",
             url: hostUrl + "importGroup/remove",
@@ -60,8 +56,7 @@ function removeData() {
 
                     queryLog()
                 } else {
-                    toastrError('提删除失败');
-                    toastrError(r.msg);
+                    toastrError('提删除失败'+r.msg);
                 }
             },
             error: function (result) {

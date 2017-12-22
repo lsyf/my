@@ -47,24 +47,47 @@ function exportData() {
 	}
 	
 	var logs = [];
-	selects.forEach(function(d,i){
-		logs.push(d.logId,d.reportId,d.incomeSource);
+	selects.forEach(function(a){
+		var temp = new Object();
+		temp.logId = a.logId;
+		temp.reportId = a.reportId;
+		temp.incomeSource = a.incomeSource;
+		logs.push(temp);
 	});
-    var names ='logs';
-    var params =logs;
-
-    var form = $("#form_export");   //定义一个form表单
-    form.attr('action', hostUrl + 'rptSettleQuery/export');
-    form.empty();
-    names.forEach(function (v, i) {
-        var input = $('<input>');
-        input.attr('type', 'hidden');
-        input.attr('name', v);
-        input.attr('value', params[i]);
-        form.append(input);
-    });
-    
-    form.submit();   //表单提交
+	var param ={logs :logs};
+	var form = $("#form_export");   //定义一个form表单 
+	form.ajaxSubmit({
+		type: "POST",
+        url: hostUrl + "rptSettleQuery/export",
+        data: JSON.stringify(param),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (r){
+        	if (r.state) {
+                toastr.info('成功');
+  
+            } else {
+                toastr.info('失败');
+            }
+        },
+	    error: function (result){
+	    	toastr.error('发送请求失败');
+	    }
+		
+	});
+	
+//    var form = $("#form_export");   //定义一个form表单    
+//    form.attr('action', hostUrl + 'rptSettleQuery/export');
+//    form.empty();   
+//    logs.forEach(function (v, i) {
+//        var input = $('<input>');
+//        input.attr('type', 'hidden');
+//        input.attr('name', v);
+//        input.attr('value', logs[i]);
+//        form.append(input);
+//    });
+//    
+//    form.submit();   //表单提交
 
 }
 
@@ -81,6 +104,9 @@ function listAudit(btn) {
 	var selects = table.getSelections();
 	if(selects.length==0){
 		toastr.info('未选中任何数据');
+		return;
+	}else if(selects.length >1){
+		toastr.info('选中数据大于1');
 		return;
 	}
 	var logs = [];

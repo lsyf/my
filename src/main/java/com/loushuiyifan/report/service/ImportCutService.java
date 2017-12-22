@@ -155,9 +155,9 @@ public class ImportCutService {
                         .append(shareType).append("-")
                         .append(str);
                 String ruleId = sb.toString();
-
+               
                 cut.setRuleId(ruleId);
-                cut.setGroupId(Integer.parseInt(str));// 得到groupId
+                cut.setGroupId(Long.parseLong(str));// 得到groupId
                 cut.setLstUpd(now);
 
                 //首先查询表里是否存在数据

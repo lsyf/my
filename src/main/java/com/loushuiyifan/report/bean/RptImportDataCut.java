@@ -21,5 +21,5 @@ public class RptImportDataCut {
     String activeFlag;
     String chgWho;
     Date lstUpd;
-    Integer groupId;
+    Long groupId;
 }

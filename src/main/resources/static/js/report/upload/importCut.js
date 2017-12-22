@@ -33,8 +33,8 @@ function queryLog() {
                 table.load(data);
 
             } else {
-                toastrError('查询失败');
-                toastrError(r.msg);
+                toastrError('查询失败'+r.msg);
+               
             }
         },
         error: function (result) {
@@ -84,8 +84,7 @@ function initForm() {
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastrError('导入失败');
-                    toastrError(r);
+                    toastrError('导入失败'+r);
                 }
             });
         }
@@ -124,8 +123,7 @@ function removeData() {
 
                     queryLog()
                 } else {
-                    toastrError('提删除失败');
-                    toastrError(r.msg);
+                    toastrError('提删除失败'+r.msg);
                 }
             },
             error: function (result) {

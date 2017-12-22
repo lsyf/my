@@ -69,10 +69,9 @@ public class ImportGroupService {
     /**
      * 删除
      */
-    public void delete(Integer latnId, Long groupId) throws Exception {
+    public void delete(Integer latnId, String groupId) throws Exception {
         
          //指标编码groupId 为空时删除按latnId
-       
         rptImportGroupDataDAO.deleteGroup(latnId, groupId);
     }
 

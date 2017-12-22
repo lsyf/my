@@ -14,8 +14,8 @@ import com.loushuiyifan.report.vo.ImportDataGroupVO;
  */
 public interface RptImportGroupDataDAO extends MyMapper<RptImportDataGroup> {
     //删除
-    void deleteGroup(@Param("latnid") Integer latnId,
-                     @Param("groupid") Long groupId);
+    void deleteGroup(@Param("latnId") Integer latnId,
+                     @Param("groupId") String groupId);
 
     //判断指标编码
     List<String> findSubcode(@Param("subcode") String subcode,
