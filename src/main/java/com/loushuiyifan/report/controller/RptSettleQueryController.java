@@ -85,7 +85,7 @@ public class RptSettleQueryController extends BaseReportController{
     @RequiresPermissions("report:rptSettleQuery:view")
     public JsonResult export(HttpServletRequest req,
                              HttpServletResponse resp,
-                             @RequestParam(value="logs", required=true) String[] logs){
+                             @RequestParam("logs[]") String[] logs){
     		
     	try {
     		for(int i=0; i<logs.length; i++){
@@ -120,11 +120,17 @@ public class RptSettleQueryController extends BaseReportController{
     @PostMapping("listAudit")
     @ResponseBody
     public JsonResult listAudit(String month,
-                                String reportId,
-                                Long logId,
-                                String incomeSource) {
+    		@RequestParam("logs[]") String[] logs) {
        
-        Map<String, Object> map = rptSettleQueryService.listAudit(month,reportId,logId,incomeSource);
+    	Map<String, Object> map =null;
+    	for(int i=0; i<logs.length; i++){
+			Long logId = Long.parseLong(logs[0]);
+			String reportId =logs[1];
+			String incomeSource =logs[2];
+    		map = rptSettleQueryService.listAudit(month,reportId,logId,incomeSource);
+             
+       }
+        
         return JsonResult.success(map);
     }
 

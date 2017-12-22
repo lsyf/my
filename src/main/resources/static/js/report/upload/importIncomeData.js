@@ -332,10 +332,10 @@ var TableInit = function () {
                 title: 'ITSM单号'
             }, {
                 field: 'itsmUrl',
-                title: 'TISM地址',
+                title: 'ITSM审批流转',
                 formatter: function () {
                     return [
-                        '<button type="button" class="view btn btn-primary btn-xs">查看</button>'
+                        '<button type="button" class="view btn btn-primary btn-xs">审批提交</button>'
                     ].join('');
                 },
                 events: operateEvents

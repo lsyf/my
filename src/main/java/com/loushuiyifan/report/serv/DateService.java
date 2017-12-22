@@ -105,7 +105,23 @@ public class DateService {
             throw new ReportException("超出导入账期限制");
         }
     }
-
+    
+    /**
+     * 一键汇总
+     * @param month
+     */
+    public void checkStatistic(String month){
+    	String day = dictionaryService.getKidDataByName(
+                ReportConfig.RptAppParam.ROOT.toString(),
+                ReportConfig.RptAppParam.MONTH_ONE_KEY.toString());
+        int limitDay = Integer.parseInt(day);
+        int nowDay = LocalDate.now().getDayOfMonth();
+        int value = nowDay > limitDay ? 0 : -1;
+        if (limitDay == 0 || limitDay > 0
+                && !LocalDate.now().plusMonths(value).format(YYYYMM).equals(month)) {
+            throw new ReportException("超出账期限制");
+        }
+    }
     /**
      * 校验 能否导入C5数据
      *

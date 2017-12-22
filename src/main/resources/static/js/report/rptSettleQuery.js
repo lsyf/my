@@ -40,21 +40,18 @@ function queryData() {
 
 //导出
 function exportData() {
-	var selects = $('#table_upload').bootstrapTable('getSelections');
+	var selects = table.getSelections();
 	if(selects.length==0){
 		toastr.info('未选中任何数据');
-		return;
-	}else if(selects.length >1){
-		toastr.info('已经选中多个数据');
 		return;
 	}
 	
 	var logs = [];
-	selects.forEach(function(data,i){
-		logs.push(data.logId,data.incomeSource);
+	selects.forEach(function(d,i){
+		logs.push(d.logId,d.reportId,d.incomeSource);
 	});
-    var names = ['logs'];
-    var params = [logs];
+    var names ='logs';
+    var params =logs;
 
     var form = $("#form_export");   //定义一个form表单
     form.attr('action', hostUrl + 'rptSettleQuery/export');
@@ -66,7 +63,7 @@ function exportData() {
         input.attr('value', params[i]);
         form.append(input);
     });
-
+    
     form.submit();   //表单提交
 
 }
@@ -80,15 +77,23 @@ function detailData(row) {
 }
 
 //审核查询
-function listAudit(type, btn) {
-    $.ajax({
+function listAudit(btn) {
+	var selects = table.getSelections();
+	if(selects.length==0){
+		toastr.info('未选中任何数据');
+		return;
+	}
+	var logs = [];
+	selects.forEach(function(d,i){
+		logs.push(d.logId,d.reportId,d.incomeSource);
+	});
+	
+	$.ajax({
         type: "POST",
         url: hostUrl + "rptSettleQuery/listAudit",
         data: {
-            month: $("#form_month").val(),
-            latnId: orgTree.val(),
-            incomeSource: isTree.val(),
-            type: $("#form_type").val()
+            month: $("#upload_month").val(),
+            logs: logs
         },
         dataType: "json",
         beforeSend: function () {
@@ -151,11 +156,11 @@ function auditData(rptCaseId, status,incomeSource) {
 //Table初始化
 var TableInit = function () {
     var oTableInit = new Object();
-
+    var $table = $('#table_upload');
 
     //初始化Table
     oTableInit.Init = function () {
-        $('#table_upload').bootstrapTable({
+    	$table.bootstrapTable({
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
@@ -191,7 +196,7 @@ var TableInit = function () {
                 title: '报表编号'
             }, {
                 field: 'reportName',
-                width:'120px',
+                width:'100px',
                 title: '报表名称'
             }, {
                 field: 'month',
@@ -240,7 +245,9 @@ var TableInit = function () {
             '<button type="button" class="detail btn btn-success btn-xs">详细</button>'
         ].join('');
     }
-
+    oTableInit.getSelections = function () {
+        return $table.bootstrapTable('getSelections');
+    };
     
     //刷新数据
     oTableInit.load = function (data) {
@@ -320,7 +327,7 @@ var TableAudit = function () {
 
     };
 
-
+   
     //刷新数据
     oTableInit.load = function (data) {
         $table.bootstrapTable('load', data);

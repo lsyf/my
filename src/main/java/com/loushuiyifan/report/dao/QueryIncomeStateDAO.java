@@ -14,7 +14,7 @@ public interface QueryIncomeStateDAO extends MyMapper<RptIncomeSourceSts>{
 	List<TransLogVO> queryLogList(@Param("month") String month, 
 			                      @Param("status") String status);
 	
-	String checkUserId(Long userId);
+	//String checkUserId(Long userId);
 	
 	void updateState(@Param("status") String status, 
                      @Param("subId") Long subId);

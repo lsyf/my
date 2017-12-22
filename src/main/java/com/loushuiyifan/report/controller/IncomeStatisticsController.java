@@ -47,6 +47,9 @@ public class IncomeStatisticsController extends BaseReportController {
     @ResponseBody
     public JsonResult exec(String month, String latnId, @ModelAttribute("user") User user) {
         Long userId = user.getId();
+        //账期历史限制
+        dateService.checkStatistic(month);
+        
         incomeStatisticsService.allSum(month, latnId, userId);
         return JsonResult.success();
     }

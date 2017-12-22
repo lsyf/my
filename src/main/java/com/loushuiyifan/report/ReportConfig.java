@@ -28,6 +28,7 @@ public class ReportConfig {
         TIME_IMPORT_TAX("税务导入时间"),      //税务导入时间限制
         MONTH_SETTLE_CUT("集团切割导入账期"),    //集团切割导入账期限制
         TIME_SETTLE_CUT("集团切割导入时间"),     //集团切割导入时间限制   
+        MONTH_ONE_KEY("一键汇总账期"),    //集团切割导入账期限制
         TIME_UPDATE_PROCESS("收入来源完成度修改状态时间"); 
         private String data;
 

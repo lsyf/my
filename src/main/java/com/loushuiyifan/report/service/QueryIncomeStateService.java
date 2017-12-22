@@ -35,11 +35,7 @@ public class QueryIncomeStateService {
 	 * @param userId
 	 * @throws Exception
 	 */
-	public void changeState(String status, Long subId, Long userId) {
-		String name =queryIncomeStateDAO.checkUserId(userId);
-		if(name ==null){
-			throw new ReportException("该用户没有修改权限！");
-		}
+	public void changeState(String status, Long subId) throws Exception{
 		
 		queryIncomeStateDAO.updateState(status, subId);
 	}

@@ -17,9 +17,9 @@
 		 
 	</select>
  	
- 	<select id="checkUserId" resultType="String" >
+ 	<!-- <select id="checkUserId" resultType="String" >
  	select viewname from v_s_user_update where id=#{userId}
- 	</select>
+ 	</select> -->
  	
  	<update id="updateState" >
 		update rpt_income_source_sts 

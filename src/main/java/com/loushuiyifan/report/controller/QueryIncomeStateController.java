@@ -73,19 +73,22 @@ public class QueryIncomeStateController extends BaseReportController {
 	@ResponseBody
 	@RequiresPermissions("report:queryIncomeState:change")
 	public JsonResult update(@RequestParam("logs[]") String[] logs, String status, @ModelAttribute("user") User user) {
-		Long userId = user.getId();
-		System.out.println(logs.length);
+		
 		// 校验时间
 		 dateService.checkIncomeSourceProcess();
 		
 		 if("全部".equals(status)){
 			 throw new ReportException("您无权做此操作！"); 
 		 }
+		 try {
+			 for(String subId : logs){
+				 queryIncomeStateService.changeState(status, Long.parseLong(subId));
+						 
+			 }
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
 		 
-		 for(String subId : logs){
-			 queryIncomeStateService.changeState(status, Long.parseLong(subId), userId);
-					 
-		 }
 		 
 		return JsonResult.success();
 	}

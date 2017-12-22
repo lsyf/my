@@ -33,7 +33,7 @@ public class SendShortMsgService {
         String password = "a12345";
         String seq = (new Random().nextInt(1000000000) + 1000000000) + "";
         String code = (new Random().nextInt(9000) + 999) + "";
-        String content = String.format("[收入系统登录]您的短信口令为[%s]，有效期3分钟", code);
+        String content = String.format("[收入系统登录]您的短信口令为【%s】，有效期3分钟", code);
         
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMddhhmmss");
