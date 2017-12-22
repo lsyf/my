@@ -197,7 +197,7 @@ var TableInit = function () {
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 50,                       //每页的记录行数（*）
             pageList: [50,100,500],        //可供选择的每页的行数（*）
-            // search: true,                       //是否显示表格搜索
+            search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮
@@ -214,11 +214,11 @@ var TableInit = function () {
             	checkbox:true
             },{
                 field: 'logId',
-                width:'80px',
+                width:'60px',
                 title: '流水号'
             }, {
                 field: 'reportId',
-                width:'120px',
+                width:'70px',
                 title: '报表编号'
             }, {
                 field: 'reportName',
@@ -226,27 +226,27 @@ var TableInit = function () {
                 title: '报表名称'
             }, {
                 field: 'month',
-                width:'120px',
+                width:'70px',
                 title: '账期'
             }, {
                 field: 'incomeSource',
-                width:'200px',
+                width:'60px',
                 title: '收入来源'
             }, {
                 field: 'status',
-                width:'80px',
+                width:'60px',
                 title: '状态'
             }, {
                 field: 'fileSeq',
-                width:'80px',
+                width:'60px',
                 title: '重传次数'
             }, {
                 field: 'createDate',
-                width:'80px',
+                width:'150px',
                 title: '下发时间'
             }, {
                 field: 'importDate',
-                width:'80px',
+                width:'150px',
                 title: '导入时间'
             }, {
                 field: 'operate',

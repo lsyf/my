@@ -25,7 +25,7 @@ function queryLog() {
                 table.load(data);
 
             } else {
-                toastrError('查询失败:'+r.msg);
+                toastrError('查询失败:' + r.msg);
             }
         },
         error: function (result) {
@@ -57,16 +57,15 @@ function removeData() {
                     queryLog()
                 } else {
                     toastrError('提删除失败'+r.msg);
+                    }
+                },
+                error: function (result) {
+                    toastrError('发送请求失败');
                 }
-            },
-            error: function (result) {
-                toastrError('发送请求失败');
-            }
+            });
         });
-    });
     showAlert();
 }
-
 
 
 function initForm() {
@@ -100,14 +99,14 @@ function initForm() {
 
 
                         toastr.info('提交成功');
-                       queryLog()
+                        queryLog()
                     } else {
                         toastrError('提交失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastrError('提交失败:'+r.msg);
+                    toastrError('提交失败:' + r.msg);
                 }
             });
         }
@@ -176,17 +175,16 @@ var TableInit = function () {
                 field: 'latnId',
                 title: '本地网'
             }/*, {
-                field: 'operate',
-                title: '操作',
-                events: operateEvents,
-                formatter: operateFormatter
-            }*/]
+             field: 'operate',
+             title: '操作',
+             events: operateEvents,
+             formatter: operateFormatter
+             }*/]
 
         });
 
 
     };
-
 
 
     //刷新数据

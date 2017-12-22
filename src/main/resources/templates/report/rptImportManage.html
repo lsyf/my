@@ -28,7 +28,7 @@
     <script src="../../static/plugins/zTree/jquery.ztree.all.min.js"
             th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
 
-	<link rel="stylesheet"
+    <link rel="stylesheet"
           href="../../static/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
           th:href="@{/static/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}">
     <script src="../../static/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"
@@ -64,7 +64,7 @@
 
         <script th:inline="javascript">
             //页面传值
-            
+
             $(function () {
                 initImportManage();
             });
@@ -79,72 +79,61 @@
         <section class="content">
 
             <div id="form-panel">
-                <div class="box box-primary">
-                    
-                    <div class="box-body">
 
-                        <form id="form_upload" class="form-horizontal col-sm-12">
+                <form id="form_upload" class="form-horizontal col-sm-12">
 
-                            <div class="form-group form-group-sm">
-                                <div class="form-group col-sm-3">
-                                    <label class="control-label col-sm-4">开始</label>
-                                    <div class="col-sm-8 div_error">
-                                        <div class="form-group input-daterange input-group ">
-                                            <input type="text" class="input-sm form-control form_datetime" name="start"
-                                                   readonly id="query_start"/>
-                                        </div>
-                                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="form-group col-sm-3">
+                            <label class="control-label col-sm-4">开始</label>
+                            <div class="col-sm-8 div_error">
+                                <div class="form-group input-daterange input-group ">
+                                    <input type="text" class="input-sm form-control form_datetime" name="start"
+                                           readonly id="query_start"/>
                                 </div>
-
-                                <div class="form-group col-sm-3">
-                                    <label class="control-label col-sm-4">结束</label>
-                                    <div class="col-sm-8 div_error">
-                                        <div class="form-group input-daterange input-group">
-                                            <input type="text" class="input-sm form-control form_datetime" name="end"
-                                                   readonly id="query_end"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="query_fileName" class="col-sm-4 control-label">文件</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="input-sm form-control  " id="query_fileName"/>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="query_userId" class="col-sm-5 control-label">用户ID</label>
-                                    <div class="col-sm-7">
-                                        <input type="text" class="input-sm form-control  " id="query_userId"/>
-                                    </div>
-                                </div>
-
                             </div>
+                        </div>
 
-                            <div class="form-group  form-group-sm">
-                                
-                               
-                                <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryLog()">
-                                   	 查询
-                                </button>
-                                 
+                        <div class="form-group col-sm-3">
+                            <label class="control-label col-sm-4">结束</label>
+                            <div class="col-sm-8 div_error">
+                                <div class="form-group input-daterange input-group">
+                                    <input type="text" class="input-sm form-control form_datetime" name="end"
+                                           readonly id="query_end"/>
+                                </div>
                             </div>
-                        </form>
+                        </div>
+                        <div class="col-sm-3 form-group form-group-rm">
+                            <label for="query_fileName" class="col-sm-4 control-label">文件</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="input-sm form-control  " id="query_fileName"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group form-group-rm">
+                            <label for="query_userId" class="col-sm-5 control-label">用户ID</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="input-sm form-control  " id="query_userId"/>
+                            </div>
+                        </div>
+                        <button class="btn btn-success pull-right btn-sm btn-form"
+                                type="button" id="btn_query" onclick="queryLog()">
+                            查询
+                        </button>
                     </div>
 
-                </div>
+
+
+
+                </form>
             </div>
+
 
             <div id="form-table">
-                <div class="box box-primary">
-                   
-                    <div class="box-body" style=" white-space:nowrap">
-                        <table id="table_upload"></table>
-                    </div>
-                </div>
+
+                <table id="table_upload"></table>
+
             </div>
 
-            
+
             <form target="_blank"
                   id="form_down"
                   method="post" hidden>
