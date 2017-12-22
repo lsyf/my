@@ -44,10 +44,6 @@ public class RptQueryAuditService {
 		dto.setLogId(Long.parseLong("21"));
 		dto.setUserId(userId);
 		rptQueryAuditDAO.checkUser(dto);
-//		int code = dto.getRtnCode();
-//        if (code != 0) {//非0为失败
-//            throw new ReportException("失败: " + dto.getRtnMsg());
-//        }
 		
 		String code = dto.getRtnCode().toString();
         if (!"Y".equals(code)) {

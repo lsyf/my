@@ -48,7 +48,7 @@ function initForm() {
 }
  
 function sendCode(btn) {
-    var $btn = $(btn);
+    var $btn = $('#btn_sendCode');
     var username = $('#form_username').val().trim();
     if (username == "") {
         toastr.error("账户不能为空")

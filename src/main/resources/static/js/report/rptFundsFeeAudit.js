@@ -5,7 +5,7 @@ function initFundsFeeForm() {
     table.Init();
 
     buildSelect('upload_month', months);
-    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 90);
+    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 100);
     isTree.Init(reportIds);
    
 }
@@ -95,8 +95,8 @@ var TableInit = function () {
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 10,                       //每页的记录行数（*）
-            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            pageSize: 50,                       //每页的记录行数（*）
+            pageList: [50,100,500],        //可供选择的每页的行数（*）
             // search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
@@ -114,11 +114,11 @@ var TableInit = function () {
             	checkbox:true
             },{
                 field: 'txtMessage',
-                width:'80px',
+                width:'60px',
                 title: '文本信息'
             }, {
                 field: 'prctr',
-                width:'120px',
+                width:'80px',
                 title: '利润中心编码'
             }, {
                 field: 'sapFinCode',
@@ -126,15 +126,15 @@ var TableInit = function () {
                 title: 'SAP科目编码'
             },{
                 field: 'sapFinCodeName',
-                width:'200px',
+                width:'80px',
                 title: 'SAP科目名称'
             }, {
                 field: 'kunnr',
-                width:'120px',
+                width:'80px',
                 title: '客户编码'
             }, {
                 field: 'kunnrName',
-                width:'120px',
+                width:'80px',
                 title: '客户名称'
             }, {
                 field: 'jieFbalance',

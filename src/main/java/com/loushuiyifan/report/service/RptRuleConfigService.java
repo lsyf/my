@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
+import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.report.bean.CodeListTax;
 import com.loushuiyifan.report.controller.RptFundsFeeQueryController;
 import com.loushuiyifan.report.dao.RptRuleConfigDAO;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.vo.RuleConfigVO;
 
 import oracle.net.aso.o;
@@ -59,20 +61,38 @@ public class RptRuleConfigService {
 	return list;
 	}
 	
-    public List<Map<String,String>> getCodeName(){
-		
-		List<Map<String,String>> list = new ArrayList<>();
-		Map<String,String> map = Maps.newHashMap();
-		map.put("id", "0");
-		map.put("name", "全部");
-		map.put("data", "0");
-		map.put("lvl", "1");
-		list.add(map);
-		
-		List<String> temp = rptRuleConfigDAO.queryNameForMap();
-		
-		List<Map<String,String>> list2 = rptRuleConfigDAO.findNameById(temp);
-		list.addAll(list2);
-		return list;
-	}
+    
+    public List<Organization> listAllByUser(Long userId, Integer lvl) {
+
+        //首先 获取所有关联的地市
+        List<Organization> relatedList = rptRuleConfigDAO.listByUserAndLvl(userId, lvl);
+
+        if (relatedList == null || relatedList.size() == 0) {
+            throw new ReportException("该用户未关联地市组织");
+        }
+
+        List<Organization> list = new ArrayList<>();
+        //然后拼接参数
+        for (Organization o : relatedList) {
+        	Long id = o.getId();
+            String path = o.getParentIds();
+            path = path == null ? id + "/%" : path + id + "/%";
+            o.setParentIds(path);
+            
+            if(id ==5851){
+            	 List<Organization> l =rptRuleConfigDAO.listAll();            	 
+            	 for (Organization o2 : l){
+            		 Long id2 = o2.getId();
+            		 List<Organization> list2 = rptRuleConfigDAO.listByRootAndLvl(id2); //最后进行判断所属地市 及子集
+            		 list.addAll(list2);
+            	 
+            	 }
+            }else{
+            	list = rptRuleConfigDAO.listByRootAndLvl(id);
+            }
+  
+        }
+
+        return list;
+    }
 }

@@ -39,10 +39,8 @@ public class RptRuleConfigController extends BaseReportController{
 		Long userId = user.getId();
 
         //页面条件
-        //List<Organization> orgs2 = localNetService.listAllByUser(userId, 3);
-		List<Map<String,String>> orgs = rptRuleConfigService.getCodeName();
-		
-        List<CommonVO> months = dateService.lastMonths(2);
+        List<Organization> orgs = rptRuleConfigService.listAllByUser(userId, 3);		
+        List<CommonVO> months = dateService.commonMonths();
         List<Map<String,String>> cards =rptRuleConfigService.listCard(); 
         
         map.put("orgs", orgs);

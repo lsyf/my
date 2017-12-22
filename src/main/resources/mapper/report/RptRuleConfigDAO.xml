@@ -31,8 +31,8 @@
 		        	and t.card_id = #{cardType}
 		        </if>               
 		        order by t.lst_upd desc) a,
-		       dim_region_def b
-		 where a.latn_id = b.id   
+		        dim_region_def b
+		    where a.latn_id = b.id   
 		   	<if test='latnId !="0"'>
 		      and b.dept_id = #{latnId}
 		    </if> 
@@ -49,38 +49,37 @@
     order by a.card_id
 	</select>
 	
-	
-	<select id="queryNameForMap" resultType="String">
-		select code_id as "codeId"
-	    from code_list_tax a
-	   where a.type_code = 'local_net'
-	     and a.parent_code_id = 0
-	     and a.code_id not in ('1', '3', '5', '6', '7', '3395')
-	     order by a.seq desc,a.code_id 
-	</select>
-	
-	
-	<select id="findNameById" resultType="Map">
-	 select code_id as "id",
-        code_name   as "name",
-        code_id     as "data",
-        code_level  as "lvl" 
-   from code_list_tax
-  where type_code = 'local_net'
-    and code_level <![CDATA[<=]]> 3
-    and parent_code_id in(
-        <foreach collection="list" item="codeId" separator=",">
-             #{codeId}
-        </foreach>
-        )
- union
- select code_id   as "id",
-        code_name as "name",
-        code_id   as "data",
-        code_level  as "lvl" 
-   from code_list_tax
-  where type_code = 'local_net'
-    and parent_code_id = 0
-    and code_id not in ('1', '3', '5', '6', '7', '3395')
-	</select>
+
+	<select id="listByUserAndLvl" resultType="com.loushuiyifan.common.bean.Organization">
+        select a.*
+        from aweb_organization a
+        join aweb_user_organization b
+        on a.id = b.org_id
+        and b.user_id = #{userId}
+        where  a.lvl <![CDATA[<=]]> #{lvl}
+        and a.type = 'local_net'
+    </select>
+    <select id="listAll" resultType="com.loushuiyifan.common.bean.Organization">
+	select * from aweb_organization a where a.parent_id =5853 and a.data not in('1', '3', '5', '6', '7', '3395')
+    order by a.lvl,a.sorting
+    </select>
+    <select id="listByRootAndLvl" resultType="com.loushuiyifan.common.bean.Organization">
+        select *
+        from(
+        select *
+        from aweb_organization a
+        where a.type = 'local_net'
+        and a.lvl = 3
+        and a.id =#{id}
+        union
+        select *
+        from aweb_organization a
+        where a.type = 'local_net'
+        and a.lvl = 4
+        and a.parent_id =#{id}
+        ) a
+        order by a.lvl asc, a.sorting desc
+    </select>
+    
+    
 </mapper>

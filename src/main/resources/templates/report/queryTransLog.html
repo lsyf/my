@@ -73,12 +73,7 @@
         <section class="content">
 
             <div id="form-panel">
-                <div class="box box-primary">
-                    <div class="box-header">
-                        查询条件
-                    </div>
-                    <div class="box-body">
-
+                
                         <form id="form_upload" class="form-horizontal col-sm-12">
 
                             <div class="form-group form-group-sm">
@@ -98,16 +93,16 @@
 
                                 </div>
                                 <div class="col-sm-3 form-group form-group-rm">
-                                    <label for="upload_incomeSource" class="col-sm-4 control-label">收入来源</label>
-                                    <div class="col-sm-8">
+                                    <label for="upload_incomeSource" class="col-sm-5 control-label">收入来源</label>
+                                    <div class="col-sm-7">
                                         <input type="text" class="form-control" id="upload_incomeSource" readonly>
                                         <input class="form-control" name="incomeSource" type="hidden">
                                     </div>
                                 </div>
                                 <div class="col-sm-3 form-group form-group-rm">
 
-                                    <label for="upload_taxtId" class="col-sm-4 control-label">数据类型</label>
-                                    <div class="col-sm-8">
+                                    <label for="upload_taxtId" class="col-sm-5 control-label">数据类型</label>
+                                    <div class="col-sm-7">
                                         <select class="form-control" name="taxtId" id="upload_taxtId">
                                             <option value="0">凭证</option>
                                             <option value="2">电子档案</option>
@@ -116,8 +111,8 @@
                                 </div>
 
                             </div>
-
-                            <div class="form-group  form-group-sm">
+                           </form>
+                            <div class="form-group  form-group-sm col-sm-12">
                                 <button class="btn btn-success pull-right btn-sm btn-form"
                                         type="button" id="btn_download" onclick="downData()">
                                   	  电子档案
@@ -132,21 +127,15 @@
                                 </button>
                                  
                             </div>
-                        </form>
-                    </div>
-
-                </div>
+                        
+                   
             </div>
 
-            <div id="form-table">
-                <div class="box box-primary">
-                    <div class="box-header">
-                        查询结果
-                    </div>
-                    <div class="box-body" style=" white-space:nowrap">
-                        <table id="table_upload"></table>
-                    </div>
-                </div>
+            <div id="form-table">                                  
+               <div class="box-body" style=" white-space:nowrap">
+                   <table id="table_upload"></table>
+               </div>
+               
             </div>
 
             <div id="menuContent" class="menuContent">

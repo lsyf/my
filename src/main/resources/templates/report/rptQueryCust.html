@@ -29,18 +29,6 @@
     <script src="../../static/plugins/zTree/jquery.ztree.all.min.js"
             th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
 
-    <!--fileinput-->
-    <link href="../../static/plugins/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet"
-          type="text/css" th:href="@{/static/plugins/bootstrap-fileinput/css/fileinput.min.css}"/>
-    <link href="../../static/plugins/bootstrap-fileinput/themes/explorer/theme.min.css" media="all" rel="stylesheet"
-          type="text/css" th:href="@{/static/plugins/bootstrap-fileinput/themes/explorer/theme.min.css}"/>
-    <script src="../../static/plugins/bootstrap-fileinput/js/fileinput.min.js"
-            th:src="@{/static/plugins/bootstrap-fileinput/js/fileinput.min.js}"></script>
-    <script src="../../static/plugins/bootstrap-fileinput/js/locales/zh.js"
-            th:src="@{/static/plugins/bootstrap-fileinput/js/locales/zh.js}"></script>
-    <script src="../../static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js"
-            th:src="@{/static/plugins/bootstrap-fileinput/themes/explorer/theme.min.js}"></script>
-
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
     <script src="../../static/js/report/rptQueryCust.js"
@@ -107,9 +95,8 @@
 
         <!-- Main content -->
         <section class="content">
-
             <div id="form-panel">
-
+             
                 <div class="form-group form-group-sm">
                     <div class="col-sm-3 form-group form-group-rm">
                         <label for="form_month" class="col-sm-4 control-label">月份</label>
@@ -127,16 +114,16 @@
 
                     </div>
                     <div class="col-sm-3 form-group form-group-rm">
-                        <label for="form_incomeSource" class="col-sm-4 control-label">收入来源</label>
-                        <div class="col-sm-8">
+                        <label for="form_incomeSource" class="col-sm-5 control-label">收入来源</label>
+                        <div class="col-sm-7">
                             <input type="text" class="form-control" id="form_incomeSource" readonly>
                             <input class="form-control" name="incomeSource" type="hidden">
                         </div>
                     </div>
                     <div class="col-sm-3 form-group form-group-rm">
 
-                        <label for="form_type" class="col-sm-4 control-label">税务类型</label>
-                        <div class="col-sm-8">
+                        <label for="form_type" class="col-sm-5 control-label">税务类型</label>
+                        <div class="col-sm-7">
                             <select class="form-control" name="type" id="form_type">
                                 <option value="0">价税合一(含税)</option>
                                 <option value="1">增值税</option>
@@ -147,39 +134,39 @@
 
                 </div>
 
-
-                <div class="form-group form-group-sm col-sm-12">
+				<div >
+				<div class="form-group form-group-sm col-sm-12">
 
                     <button id="btn_auditInfo" type="button" onclick="listAudit('view',this)"
                             class="btn btn-danger pull-right btn-form btn-sm">
-                        审核状态
+                       	 审核状态
                     </button>
                     <button id="btn_audit" type="button" onclick="listAudit('audit',this)"
                             class="btn btn-danger pull-right btn-form btn-sm">
-                        审核
+                       	 审核
                     </button>
                     <button id="btn_export_multi" type="button" onclick="exportData(1)"
                             class="btn btn-info pull-right btn-form btn-sm">
-                        多营业区导出
+                       	 多营业区导出
                     </button>
                     <button id="btn_export" type="button" onclick="exportData(0)"
                             class="btn btn-info pull-right btn-form btn-sm">
-                        导出
+                        	导出
                     </button>
                     <button id="btn_query" type="button" onclick="queryData()"
                             class="btn btn-success pull-right btn-form btn-sm">
-                        查询
+                      	  查询
                     </button>
                 </div>
-
+				</div>
+                
+				
             </div>
-
-            <div>
-                <h4 style="text-align: center;" id="table_title"><b id="title_table"></b>
-                </h4>
-                <table id="table_query"></table>
-            </div>
-
+            
+             <h4 style="text-align: center;" id="table_title"><b id="title_table"></b>
+             </h4>
+             <table id="table_query"></table>
+           
             <div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>
             </div>

@@ -51,7 +51,7 @@ public class ImportIncomeDataController extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listForC3(userId);
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.lastMonths(2);
 
         map.put("orgs", orgs);
         map.put("months", months);

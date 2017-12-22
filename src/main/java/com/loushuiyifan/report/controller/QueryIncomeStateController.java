@@ -81,6 +81,7 @@ public class QueryIncomeStateController extends BaseReportController {
 		 if("全部".equals(status)){
 			 throw new ReportException("您无权做此操作！"); 
 		 }
+		 
 		 for(String subId : logs){
 			 queryIncomeStateService.changeState(status, Long.parseLong(subId), userId);
 					 

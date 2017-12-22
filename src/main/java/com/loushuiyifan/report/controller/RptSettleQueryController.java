@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,16 +85,16 @@ public class RptSettleQueryController extends BaseReportController{
     @RequiresPermissions("report:rptSettleQuery:view")
     public JsonResult export(HttpServletRequest req,
                              HttpServletResponse resp,
-                             @RequestParam("logs[]") String[] logs){
-
+                             @RequestParam(value="logs", required=true) String[] logs){
+    		
     	try {
     		for(int i=0; i<logs.length; i++){
     			Long logId = Long.parseLong(logs[0]);
     			String reportId =logs[1];
     			String incomeSource =logs[2];
     		 
-    			byte[] datas = rptSettleQueryService.export(logId, reportId, incomeSource);
-    			String name = rptSettleQueryService.getFileName(logId,reportId,incomeSource);
+    			byte[] datas = rptSettleQueryService.export(logId, incomeSource);
+    			String name = rptSettleQueryService.getFileName(reportId,incomeSource);
     		
     			downloadService.download(req, resp, datas,name);
     		}

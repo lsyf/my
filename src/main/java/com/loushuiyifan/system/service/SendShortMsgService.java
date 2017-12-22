@@ -1,16 +1,19 @@
 package com.loushuiyifan.system.service;
 
-import com.ztesoft.uccp.dubbo.interfaces.UCCPSendService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.awt.Color;
+import java.awt.Font;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ztesoft.uccp.dubbo.interfaces.UCCPSendService;
 
 /**
  * @author 漏水亦凡
@@ -30,8 +33,8 @@ public class SendShortMsgService {
         String password = "a12345";
         String seq = (new Random().nextInt(1000000000) + 1000000000) + "";
         String code = (new Random().nextInt(9000) + 999) + "";
-        String content = String.format("登录验证码为:%s", code);
-
+        String content = String.format("[收入系统登录]您的短信口令为[%s]，有效期3分钟", code);
+        
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMddhhmmss");
         DateTimeFormatter yyyy_MM_dd = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
@@ -68,4 +71,5 @@ public class SendShortMsgService {
         logger.info("接口返回结果:" + reqMap);
         return code;
     }
+    
 }
