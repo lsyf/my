@@ -100,19 +100,17 @@ public class ImportCutService {
                        String incomeSource,
                        Integer shareType,
                        String userName) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(latnId).append(incomeSource).append(shareType);
-        String ruleId = sb.toString();
+        
         try {
 
-            List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName, ruleId);
+            List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName);
 
             if (check.size() != 0) {
                 rptImportCutDataDAO.updataCutFlag(latnId,
                         incomeSource,
                         shareType,
                         userName,
-                        "N"); //TODO 更新（Y/N）is_active  待校验
+                        "N"); 
                 rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName);
             } else {
                 throw new ReportException("您没有权限删除此记录");
@@ -164,7 +162,7 @@ public class ImportCutService {
                 RptImportDataCut exist_cut = rptImportCutDataDAO.selectByPrimaryKey(ruleId);
                 if (exist_cut == null) {
                     rptImportCutDataDAO.insertSelective(cut);
-                } else {//如果数据已存在 则更新状态
+                } else {//如果数据已存在 则更新状态和更新lst_upd
                     rptImportCutDataDAO.updataCutFlag(latnId,
                             incomeSource,
                             shareType,

@@ -5,7 +5,7 @@
     <update id="updataCutFlag"
             parameterType="com.loushuiyifan.report.bean.RptImportDataCut">
 		update charge.dim_cut_cfg a
-		set a.is_active = #{activeFlag}
+		set a.is_active = #{activeFlag},a.lst_upd =sysdate
 		where a.latn_id=#{latnId}
 		and a.share_type=#{shareType}
 		and a.income_source=#{incomeSource}

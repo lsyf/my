@@ -25,8 +25,7 @@ public interface RptImportCutDataDAO extends MyMapper<RptImportDataCut> {
                           @Param("latnId") Integer latnId,
                           @Param("incomeSource") String incomeSource,
                           @Param("shareType") Integer shareType,
-                          @Param("userName") String userName,
-                          @Param("ruleId") String ruleId);
+                          @Param("userName") String userName);
 
 
 }
