@@ -100,7 +100,7 @@ public class ImportCutService {
                        String incomeSource,
                        Integer shareType,
                        String userName) {
-        
+
         try {
 
             List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName);
@@ -110,14 +110,14 @@ public class ImportCutService {
                         incomeSource,
                         shareType,
                         userName,
-                        "N"); 
+                        "N");
                 rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName);
             } else {
                 throw new ReportException("您没有权限删除此记录");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ReportException("删除导入时发生异常");
+            throw new ReportException("删除导入时发生异常:" + e.getMessage());
         }
     }
 
@@ -153,7 +153,7 @@ public class ImportCutService {
                         .append(shareType).append("-")
                         .append(str);
                 String ruleId = sb.toString();
-               
+
                 cut.setRuleId(ruleId);
                 cut.setGroupId(Long.parseLong(str));// 得到groupId
                 cut.setLstUpd(now);
@@ -245,7 +245,6 @@ public class ImportCutService {
 
         @Override
         protected List<Map<String, Object>> processSheet(Sheet sheet) {
-            FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
 
             List<Map<String, Object>> result = new ArrayList<>();
 
@@ -256,7 +255,7 @@ public class ImportCutService {
                 Row row = sheet.getRow(y);
                 RptImportCutRate bean = new RptImportCutRate();
                 for (int x = startX; x <= row.getLastCellNum(); x++) {
-                    String data = getCellData(row.getCell(x), evaluator);
+                    String data = getXLSCellValue(row.getCell(x));
                     if (StringUtils.isEmpty(data)) {
                         continue;
                     }

@@ -337,10 +337,10 @@ public class ImportIncomeDataService {
 
         @Override
         protected List<RptImportDataChennel> processSheet(Sheet sheet) {
-            FormulaEvaluator evaluator = sheet
-                    .getWorkbook()
-                    .getCreationHelper()
-                    .createFormulaEvaluator();
+//            FormulaEvaluator evaluator = sheet
+//                    .getWorkbook()
+//                    .getCreationHelper()
+//                    .createFormulaEvaluator();
 
             List<RptImportDataChennel> list = new ArrayList<>();
             for (int y = startY; y <= sheet.getLastRowNum(); y++) {
@@ -361,7 +361,8 @@ public class ImportIncomeDataService {
                     }
                     switch (x) {
                         case 0:
-                            bean.setAreaId(Integer.parseInt(data));
+                            Double temp = Double.parseDouble(data);
+                            bean.setAreaId(temp.intValue());
                             break;
                         case 2:
                             bean.setC5Id(Long.parseLong(data));

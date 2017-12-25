@@ -71,7 +71,7 @@ function initForm() {
                 success: function (r) {
                     $('#btn_upload').button("reset");
                     if (r.state) {
-                        $(form).resetForm();
+
                         orgTree.reset();
                         isTree.reset();
 
