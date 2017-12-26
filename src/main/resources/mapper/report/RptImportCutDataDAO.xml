@@ -5,21 +5,29 @@
     <update id="updataCutFlag"
             parameterType="com.loushuiyifan.report.bean.RptImportDataCut">
 		update charge.dim_cut_cfg a
-		set a.is_active = #{activeFlag},a.lst_upd =sysdate
+		set a.is_active = #{activeFlag},
+		a.lst_upd =sysdate
 		where a.latn_id=#{latnId}
 		and a.share_type=#{shareType}
 		and a.income_source=#{incomeSource}
-		and a.chg_who=#{userName}
+		<if test='flag !="1"'>
+		 and a.chg_who=#{userName}
+		</if>
+		
 	</update>
 
-    <select id="checkCut"
-            resultType="java.lang.String">
+    <select id="checkCut" resultType="java.lang.String">
 		select a.chg_who
 		from charge.dim_cut_cfg a
 		where a.latn_id=#{latnId}
 		 and a.share_type=#{shareType} 
 		 and a.income_source=#{incomeSource} 
 		 and a.chg_who=#{userName}
+	
+	</select>
+	
+	<select id="selectRoleById" resultType="String">
+	select b.role_id from aweb_user a,aweb_user_role b where a.id =b.user_id and a.id =#{userId}
 	
 	</select>
 </mapper>

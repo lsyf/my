@@ -33,7 +33,7 @@ function queryLog() {
         	startDate: $("#query_start").val(),
         	endDate: $("#query_end").val(),
         	fileName: $("#query_fileName").val(),
-        	userId: $("#query_userId").val()
+        	userName: $("#query_userId").val()
         },
         dataType: "json",
         success: function (r) {
@@ -42,40 +42,13 @@ function queryLog() {
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
             }
         },
         error: function (result) {
             toastr.error('发送请求失败');
         }
     });
-
-}
-
-//清空
-function resetData() {
-    var month = $("#upload_month").val();
-    var latnId = orgTree.val();
-    var incomeSource = isTree.val();
-    var taxtId = $("#upload_taxtId").val();
-
-
-    var names = ['month', 'latnId', 'incomeSource', 'taxtId'];
-    var params = [month, latnId, incomeSource, taxtId ];
-
-    var form = $("#form_export");   //定义一个form表单
-    form.attr('action', hostUrl + 'queryTransLog/export');
-    form.empty();
-    names.forEach(function (v, i) {
-        var input = $('<input>');
-        input.attr('type', 'hidden');
-        input.attr('name', v);
-        input.attr('value', params[i]);
-        form.append(input);
-    });
-
-    form.submit();   //表单提交
 
 }
 
@@ -103,7 +76,7 @@ var TableInit = function () {
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            // height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图

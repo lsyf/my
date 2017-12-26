@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
@@ -86,10 +87,13 @@ public class RptSettleQueryController extends BaseReportController{
     @RequiresPermissions("report:rptSettleQuery:view")
     public JsonResult export(HttpServletRequest req,
                              HttpServletResponse resp,
-                             @RequestBody ParamVO temp){
+                             String temp){
     		
     	try {
-    		for(SettleDataVO s : temp.getLogs()){
+    		
+    		ObjectMapper om = new ObjectMapper();
+    		ParamVO vo = om.readValue(temp, ParamVO.class);
+    		for(SettleDataVO s : vo.getLogs()){
     				 
     			byte[] datas = rptSettleQueryService.export(Long.parseLong(s.getLogId()), s.getIncomeSource());
     			String name = rptSettleQueryService.getFileName(s.getReportId(),s.getIncomeSource());

@@ -22,8 +22,7 @@ public interface RptRuleConfigDAO extends MyMapper<RuleConfigVO>{
 	List<Map<String,String>> findCardName();
 	
 	List<Organization> listAll();
-	List<Organization> listByUserAndLvl(@Param("userId") Long userId,
-                                        @Param("lvl") Integer lvl);
+	List<Organization> preForC3(@Param("userId") Long userId);
 	
 	List<Organization> listByRootAndLvl(@Param("id") Long id);
 	

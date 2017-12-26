@@ -18,18 +18,18 @@ public class SettleExportServ extends AbstractPoiExport<Map<String, String>>{
     //行数据
     protected List<Map<String, String>> rows;
     
-    protected List<Map<String, String>> cols2;
+    protected List<Map<String, String>> col;
     //行数据
-    protected List<Map<String, String>> rows2;
+    protected List<Map<String, String>> row;
     public SettleExportServ column(List<Map<String, String>> columns, List<Map<String, String>> columns2) {
         this.cols = columns;
-        this.cols2 = columns2;
+        this.col = columns2;
         return this;
     }
 
     public SettleExportServ row(List<Map<String, String>> rows, List<Map<String, String>> rows2) {
         this.rows = rows;
-        this.rows2 = rows2;
+        this.row = rows2;
         return this;
     }
 
@@ -47,7 +47,7 @@ public class SettleExportServ extends AbstractPoiExport<Map<String, String>>{
         Sheet sheet1 = wb.createSheet("原始数据");
         Sheet sheet2 = wb.createSheet("处理后数据");
     	processSheet(sheet1,cols,rows);
-    	processSheet(sheet2,cols2,rows2);
+    	processSheet(sheet2,col,row);
     }
     
     protected void processSheet(Sheet sheet,

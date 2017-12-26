@@ -39,7 +39,7 @@ public class RptEditionService {
 
     static {
         String[] ids = {"0_1", "0_2", "0_3"};
-        String[] names = {"上年同期累计数", "本月发生数", "本年累计数"};
+        String[] names = {"汇总-上年同期累计数", "汇总-本月发生数", "汇总-本年累计数"};
         list_comparedNum = generateColMap(ids, names);
 
         String[] ids2 = {"1", "2", "3"};

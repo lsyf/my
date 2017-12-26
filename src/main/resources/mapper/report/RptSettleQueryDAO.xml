@@ -80,16 +80,13 @@
         #{rtnStatus,mode=OUT,jdbcType=VARCHAR}
         )}
     </select>
-	<select id="selectAudits" parameterType="map" statementType="CALLABLE">
-      {
-      #{list,mode=OUT,jdbcType=CURSOR,resultMap=rptAuditVO}= call PKG_RPT_SETT.getAuditInfo
-      (
+	<select id="selectAudits" parameterType="Map" statementType="CALLABLE">
+      {#{list,mode=OUT,jdbcType=CURSOR,resultMap=rptAuditVO}= call PKG_RPT_SETT.getAuditInfo(
       #{rptCaseId,mode=IN,jdbcType=NUMERIC},
       #{month,mode=IN,jdbcType=VARCHAR},
       #{reportId,mode=IN,jdbcType=VARCHAR},
       #{incomeSource,mode=IN,jdbcType=VARCHAR}
-      )
-      }
+      )}
     </select>
     <resultMap id="rptAuditVO" type="com.loushuiyifan.report.vo.RptAuditVO">
     </resultMap>

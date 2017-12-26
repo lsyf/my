@@ -6,6 +6,7 @@ function initForm() {
     table.Init();
     table_audit = new TableAudit();
     buildSelect('upload_month', months);
+    
     isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId",80);
     isTree.Init(reportIds);
    
@@ -54,41 +55,21 @@ function exportData() {
 		temp.incomeSource = a.incomeSource;
 		logs.push(temp);
 	});
-	var param ={logs :logs};
-	var form = $("#form_export");   //定义一个form表单 
-	form.ajaxSubmit({
-		type: "POST",
-        url: hostUrl + "rptSettleQuery/export",
-        data: JSON.stringify(param),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (r){
-        	if (r.state) {
-                toastr.info('成功');
-  
-            } else {
-                toastr.info('失败');
-            }
-        },
-	    error: function (result){
-	    	toastr.error('发送请求失败');
-	    }
-		
-	});
 	
-//    var form = $("#form_export");   //定义一个form表单    
-//    form.attr('action', hostUrl + 'rptSettleQuery/export');
-//    form.empty();   
-//    logs.forEach(function (v, i) {
-//        var input = $('<input>');
-//        input.attr('type', 'hidden');
-//        input.attr('name', v);
-//        input.attr('value', logs[i]);
-//        form.append(input);
-//    });
-//    
-//    form.submit();   //表单提交
+	var temp = {logs:logs};
+	var param = JSON.stringify(temp) ;
+		
+    var form = $("#form_export");   //定义一个form表单    
+    form.attr('action', hostUrl + 'rptSettleQuery/export');
+    form.empty();   
 
+    var input = $('<input>');
+    input.attr('type', 'hidden');
+    input.attr('name', 'temp');
+    input.attr('value', param);
+    form.append(input);
+    
+    form.submit();   //表单提交
 }
 
 
@@ -197,13 +178,13 @@ var TableInit = function () {
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 50,                       //每页的记录行数（*）
             pageList: [50,100,500],        //可供选择的每页的行数（*）
-            search: true,                       //是否显示表格搜索
+            //search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            // height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
@@ -308,7 +289,7 @@ var TableAudit = function () {
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            // height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "rowNum",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图

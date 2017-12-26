@@ -99,22 +99,33 @@ public class ImportCutService {
                        Integer latnId,
                        String incomeSource,
                        Integer shareType,
+                       Long userId,
                        String userName) {
 
         try {
+        	String flag ="";
+        	List<String> role =rptImportCutDataDAO.selectRoleById(userId);
+        	if(role.contains("1") ||role.size()==1){
+        		flag ="1";
+        		rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType,userName,flag,"N");
+        		rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType,flag, userName);
 
-            List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName);
-
-            if (check.size() != 0) {
-                rptImportCutDataDAO.updataCutFlag(latnId,
-                        incomeSource,
-                        shareType,
-                        userName,
-                        "N");
-                rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, userName);
-            } else {
-                throw new ReportException("您没有权限删除此记录");
-            }
+        	}else{
+        		List<String> check = rptImportCutDataDAO.checkCut(month, latnId, incomeSource, shareType, userName);
+                if (check.size() != 0) {
+                    rptImportCutDataDAO.updataCutFlag(latnId,
+    						                          incomeSource,
+    						                          shareType,
+    						                          userName,
+    						                          "",
+    						                          "N");
+                    rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType,"", userName);
+                } else {
+                    throw new ReportException("您没有权限删除此记录");
+                }
+        	}
+        	
+            
         } catch (Exception e) {
             e.printStackTrace();
             throw new ReportException("删除导入时发生异常:" + e.getMessage());
@@ -162,11 +173,12 @@ public class ImportCutService {
                 RptImportDataCut exist_cut = rptImportCutDataDAO.selectByPrimaryKey(ruleId);
                 if (exist_cut == null) {
                     rptImportCutDataDAO.insertSelective(cut);
-                } else {//如果数据已存在 则更新状态和更新lst_upd
-                    rptImportCutDataDAO.updataCutFlag(latnId,
+                } else {//如果记录数据已存在 则更新状态和更新lst_upd
+                	rptImportCutDataDAO.updataCutFlag(latnId,
                             incomeSource,
                             shareType,
                             username,
+                            "",
                             "Y");
                 }
 
@@ -188,13 +200,13 @@ public class ImportCutService {
                     Double result2 = rptImportCutRateDAO.calcRateSum(cut.getRuleId(), month);
                     if (result2 != 1) {
 
-                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username, "N");
+                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"", "N");
                         throw new ReportException("导入数据比例合计不等于1");
                     }
                 } else {
                     List<CutRateVO> l_rate = rptImportCutRateDAO.sumRateByRuleId(cut.getRuleId(), month);
                     if (l_rate.size() != 0) {
-                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username, "N");
+                        rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"", "N");
                         throw new ReportException("导入数据比例合计不等于1,请检查数据比例合计；\n若比例合计为1,请查询是否因多次导入造成数据重复，\n请先执行删除操作再尝试重新导入");
                     }
                 }
@@ -206,8 +218,8 @@ public class ImportCutService {
         } finally {
             if (msg != null) {
                 // 若发生异常则删除导入的数据
-                rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType, username);
-                rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username, "N");
+                rptImportCutRateDAO.cutRateDel(latnId, incomeSource, shareType,"", username);
+                rptImportCutDataDAO.updataCutFlag(latnId, incomeSource, shareType, username,"", "N");
                 throw new ReportException(msg);
             }
         }
