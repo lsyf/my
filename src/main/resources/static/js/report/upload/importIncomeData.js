@@ -320,11 +320,11 @@ var TableInit = function () {
                         case '0':
                             return null;
                         case '1':
-                            return '待审核';
+                            return '待审批';
                         case '2':
-                            return '审核成功';
+                            return '审批通过';
                         case '3':
-                            return '审核失败';
+                            return '审批不通过';
                     }
                 }
             }, {
