@@ -1,19 +1,14 @@
 package com.loushuiyifan.report.serv;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import com.loushuiyifan.config.poi.AbstractPoiExport;
+import com.loushuiyifan.report.exception.ReportException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.loushuiyifan.config.poi.AbstractPoiExport;
-import com.loushuiyifan.report.exception.ReportException;
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 报表导出
@@ -54,7 +49,7 @@ public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
         super.export();
         return os.toByteArray();
     }
-    
+
 
     @Override
     protected void process(Workbook wb) throws Exception {
@@ -75,8 +70,10 @@ public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
             Map<String, String> map = reportDatas.get(i);
             for (int j = 0; j < reportKeys.length; j++) {
                 String key = reportKeys[j];
-              
+
                 String data = String.valueOf(map.get(key));
+                data = data == null ? "-" : data;
+                data = "null".equals(data) ? "-" : data;
                 row.createCell(j).setCellValue(data);
             }
         }
