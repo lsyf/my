@@ -33,7 +33,8 @@ public interface RptImportCutRateDAO extends MyMapper<RptImportCutRate> {
     void cutRateDel(@Param("latnId") Integer latnId,
                     @Param("incomeSource") String incomeSource,
                     @Param("shareType") Integer shareType,
-                    @Param("username") String username
+                    @Param("flag") String flag,
+                    @Param("userName") String userName
     );
 
 }

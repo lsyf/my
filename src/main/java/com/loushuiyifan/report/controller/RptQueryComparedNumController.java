@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 财务报表查询
+ * 同期数报表查询
  *
  * @author 漏水亦凡
  * @date 2017/11/2

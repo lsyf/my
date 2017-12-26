@@ -153,7 +153,7 @@ public abstract class AbstractPoiRead<E> implements PoiRead<E> {
                     } else {
                         //数值
                         double value = cell.getNumericCellValue();
-                        int intValue = (int) value;
+                        long intValue = (long) value;
                         cellValue = value - intValue == 0 ? String.valueOf(intValue) : String.valueOf(value);
                     }
                     break;

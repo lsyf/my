@@ -23,7 +23,11 @@
 		delete from charge.dim_cut_rate b where b.rule_id in 
 		(select a.rule_id from charge.dim_cut_cfg a 
 		where a.latn_id=#{latnId} and a.share_type=#{shareType} 
-		and a.income_source=#{incomeSource} and a.chg_who=#{username})
+		and a.income_source=#{incomeSource} 
+		<if test='flag !="1"'>
+		 and a.chg_who=#{userName}
+		</if>)
+
 	</delete>
 
     <select id="cutRateList" resultType="com.loushuiyifan.report.vo.CutDataListVO">

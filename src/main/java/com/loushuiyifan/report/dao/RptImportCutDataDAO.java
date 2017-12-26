@@ -11,14 +11,16 @@ import java.util.List;
  * @data 2017/10/26
  */
 public interface RptImportCutDataDAO extends MyMapper<RptImportDataCut> {
-
-    //重新导入更新is_active
+	List<String> selectRoleById(@Param("userId") Long userId);
+	
+	//重新导入更新is_active
     void updataCutFlag(@Param("latnId") Integer latnId,
                        @Param("incomeSource") String incomeSource,
                        @Param("shareType") Integer shareType,
                        @Param("userName") String userName,
+                       @Param("flag") String flag,
                        @Param("activeFlag") String activeFlag
-    );
+                       );
 
     //删除前验证
     List<String> checkCut(@Param("month") String month,

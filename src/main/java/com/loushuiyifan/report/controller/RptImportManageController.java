@@ -41,14 +41,14 @@ public class RptImportManageController extends BaseReportController{
     public JsonResult queryList(String startDate,
     		                    String endDate,
     		                    String fileName,
-    		                    String userId,
+    		                    String userName,
     		                    @ModelAttribute("user") User user) {
-		Long userIds = user.getId();
+		Long userId = user.getId();
 		
 		List<Map<String,String>> list =null;
 		try {
 			
-			list = rptImportManageService.list(startDate, endDate, fileName,userId,userIds);
+			list = rptImportManageService.list(startDate, endDate, fileName,userName,userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -13,14 +13,16 @@ import com.google.common.collect.Maps;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.report.bean.CodeListTax;
 import com.loushuiyifan.report.controller.RptFundsFeeQueryController;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.dao.RptRuleConfigDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.vo.RuleConfigVO;
+import com.loushuiyifan.system.service.OrganizationService;
 
 import oracle.net.aso.o;
 
 @Service
-public class RptRuleConfigService {
+public class RptRuleConfigService extends BaseReportController{
 	private static final Logger logger = LoggerFactory.getLogger(RptRuleConfigService.class);
 	@Autowired
 	RptRuleConfigDAO rptRuleConfigDAO;
@@ -61,11 +63,11 @@ public class RptRuleConfigService {
 	return list;
 	}
 	
-    
-    public List<Organization> listAllByUser(Long userId, Integer lvl) {
-
+	
+    public List<Organization> listAllByUserForRule(Long userId) {
+    	
         //首先 获取所有关联的地市
-        List<Organization> relatedList = rptRuleConfigDAO.listByUserAndLvl(userId, lvl);
+        List<Organization> relatedList = rptRuleConfigDAO.preForC3(userId);
 
         if (relatedList == null || relatedList.size() == 0) {
             throw new ReportException("该用户未关联地市组织");
@@ -75,9 +77,9 @@ public class RptRuleConfigService {
         //然后拼接参数
         for (Organization o : relatedList) {
         	Long id = o.getId();
-            String path = o.getParentIds();
-            path = path == null ? id + "/%" : path + id + "/%";
-            o.setParentIds(path);
+//            String path = o.getParentIds();
+//            path = path == null ? id + "/%" : path + id + "/%";
+//            o.setParentIds(path);
             
             if(id ==5851){
             	 List<Organization> l =rptRuleConfigDAO.listAll();            	 

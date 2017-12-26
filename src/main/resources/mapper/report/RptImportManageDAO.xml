@@ -15,10 +15,8 @@
 		   t.export_desc  as "exportDesc" 
       from(select * from ext_import_log r    
        
-      <if test='userId !="1"'>
-      where r.user_id in (select y.id from (select id from s_dept start with id =(select a.data from aweb_organization a
-            join aweb_user_organization b on a.id = b.org_id 
-          where  a.lvl=3 and a.type = 'local_net'and b.user_id = #{userId})connect by prior id = up_id) x, s_user y where x.id = y.deptid)	
+      <if test='flag !="1"'>
+      where r.user_id =#{userId}	
 	  </if>              
                  
       )t
@@ -26,14 +24,13 @@
 	where t.import_date <![CDATA[>=]]> to_date(#{startDate}, 'yyyy-MM-dd hh24:mi')	
 	and t.import_date <![CDATA[<=]]> to_date(#{endDate}, 'yyyy-MM-dd hh24:mi')	
 	
-	<if test='user !=""'>
-	and t.user_id = #{user} 
+	<if test='userName !=null and userName !=""'>
+	and t.user_id in(select c.id from aweb_user c where c.username =#{userName})
 	</if>
 	<if test='fileName !=""'>
 	and t.file_name like '%' ||#{fileName}|| '%'
 	</if>
 	order by t.log_id DESC	
 	</select>
-	
 	
 </mapper>

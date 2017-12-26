@@ -107,8 +107,8 @@ public class RptSettleQueryService {
     	List<Map<String, String>> row =rptSettleQueryDAO.detail(logId, incomeSource);      	
         
     	List<Map<String, String>> titles = rptSettleQueryDAO.titleOld(logId);
-        List<Map<String, String>> datas =rptSettleQueryDAO.listOld(logId);        
-        if (datas == null || datas.isEmpty()) {
+        List<Map<String, String>> rows =rptSettleQueryDAO.listOld(logId);        
+        if (rows == null || rows.isEmpty()) {
 			throw new ReportException("原始数据为空!");
 		}
         //原始数据表头
@@ -124,18 +124,18 @@ public class RptSettleQueryService {
 		cols.addAll(titles);
 		logger.info("-------------cols="+cols.size());
         
-		//原始数据表头
+		//数据表头
     	List<Map<String, String>> col = new ArrayList<Map<String, String>>();    	
-		for (int i = 0; i < Keys.length; i++) {
+		for (int i = 0; i < key.length; i++) {
 			String k = key[i];
 			String v = value[i];
 			Map map = new HashMap();
 			map.put("id", k);
 			map.put("name", v);
-			cols.add(map);
+			col.add(map);
 		}
 		
-        byte[] data = new SettleExportServ().column(cols, col).row(datas, row).exportData();
+        byte[] data = new SettleExportServ().column(cols, col).row(rows, row).exportData();
 
         return data;
     }

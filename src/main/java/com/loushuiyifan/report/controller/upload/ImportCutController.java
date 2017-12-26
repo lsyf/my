@@ -77,8 +77,7 @@ public class ImportCutController extends BaseReportController {
                              @ModelAttribute("user") User user) {
 
         //首先校验能否导入
-        //TODO 测试修改
-//        dateService.checkImportCut(month);
+        dateService.checkImportCut(month);
         String username = user.getUsername();
 
         //存储
@@ -142,7 +141,9 @@ public class ImportCutController extends BaseReportController {
                              String incomeSource,
                              Integer shareType) {
         String userName = user.getUsername();
-        importCutService.delete(month, latnId, incomeSource, shareType, userName);
+        Long userId = user.getId();
+        
+        importCutService.delete(month, latnId, incomeSource, shareType,userId, userName);
         return JsonResult.success();
     }
 

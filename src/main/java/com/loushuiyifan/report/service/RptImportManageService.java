@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.loushuiyifan.report.controller.RptQueryIncomeDetailController;
+import com.loushuiyifan.report.dao.RptImportCutDataDAO;
 import com.loushuiyifan.report.dao.RptImportManageDAO;
 
 @Service
@@ -18,13 +18,14 @@ public class RptImportManageService {
 	
 	@Autowired
 	RptImportManageDAO rptImportManageDAO;
-	
+	@Autowired
+	RptImportCutDataDAO rptImportCutDataDAO;
 	
 	public List<Map<String,String>> list(String startDate,
                                          String endDate,
                                          String fileName,
-                                         String userId,
-                                         Long userIds)throws Exception{
+                                         String userName,
+                                         Long userId)throws Exception{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     	String start =null;
     	String end = null;
@@ -41,10 +42,17 @@ public class RptImportManageService {
     	}else{
      		return null;
     	}
-    	
-		List<Map<String,String>> list = rptImportManageDAO.listForMap(start, 
-				end, fileName, userId,userIds);
-		
+    	String flag ="";
+    	List<Map<String,String>> list =null;
+    	List<String> role =rptImportCutDataDAO.selectRoleById(userId);
+    	if(role.contains("1") ||role.size()==1){
+    		flag ="1";
+    		list = rptImportManageDAO.listForMap(start, 
+    				end, fileName, userName,flag,userId);
+    	}else{
+    		list = rptImportManageDAO.listForMap(start, 
+    				end, fileName, userName,"",userId);
+    	}
 		
 		return list;
 	}
