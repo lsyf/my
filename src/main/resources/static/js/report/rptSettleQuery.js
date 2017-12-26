@@ -6,10 +6,10 @@ function initForm() {
     table.Init();
     table_audit = new TableAudit();
     buildSelect('upload_month', months);
-    
-    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId",80);
+
+    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 80);
     isTree.Init(reportIds);
-   
+
 }
 
 
@@ -41,61 +41,61 @@ function queryData() {
 
 //导出
 function exportData() {
-	var selects = table.getSelections();
-	if(selects.length==0){
-		toastr.info('未选中任何数据');
-		return;
-	}
-	
-	var logs = [];
-	selects.forEach(function(a){
-		var temp = new Object();
-		temp.logId = a.logId;
-		temp.reportId = a.reportId;
-		temp.incomeSource = a.incomeSource;
-		logs.push(temp);
-	});
-	
-	var temp = {logs:logs};
-	var param = JSON.stringify(temp) ;
-		
+    var selects = table.getSelections();
+    if (selects.length == 0) {
+        toastr.info('未选中任何数据');
+        return;
+    }
+
+    var logs = [];
+    selects.forEach(function (a) {
+        var temp = new Object();
+        temp.logId = a.logId;
+        temp.reportId = a.reportId;
+        temp.incomeSource = a.incomeSource;
+        logs.push(temp);
+    });
+
+    var temp = {logs: logs};
+    var param = JSON.stringify(temp);
+
     var form = $("#form_export");   //定义一个form表单    
     form.attr('action', hostUrl + 'rptSettleQuery/export');
-    form.empty();   
+    form.empty();
 
     var input = $('<input>');
     input.attr('type', 'hidden');
     input.attr('name', 'temp');
     input.attr('value', param);
     form.append(input);
-    
+
     form.submit();   //表单提交
 }
 
 
 function detailData(row) {
-	var logId = row.logId;
-	var incomeSource = row.incomeSource;
+    var logId = row.logId;
+    var incomeSource = row.incomeSource;
 
-   window.open("rptSettleDetail.html?logId="+logId+"&incomeSource="+incomeSource);
+    window.open("rptSettleDetail.html?logId=" + logId + "&incomeSource=" + incomeSource);
 }
 
 //审核查询
 function listAudit(btn) {
-	var selects = table.getSelections();
-	if(selects.length==0){
-		toastr.info('未选中任何数据');
-		return;
-	}else if(selects.length >1){
-		toastr.info('选中数据大于1');
-		return;
-	}
-	var logs = [];
-	selects.forEach(function(d,i){
-		logs.push(d.logId,d.reportId,d.incomeSource);
-	});
-	
-	$.ajax({
+    var selects = table.getSelections();
+    if (selects.length == 0) {
+        toastr.info('未选中任何数据');
+        return;
+    } else if (selects.length > 1) {
+        toastr.info('选中数据大于1');
+        return;
+    }
+    var logs = [];
+    selects.forEach(function (d, i) {
+        logs.push(d.logId, d.reportId, d.incomeSource);
+    });
+
+    $.ajax({
         type: "POST",
         url: hostUrl + "rptSettleQuery/listAudit",
         data: {
@@ -114,9 +114,9 @@ function listAudit(btn) {
                 var incomeSource = r.data.incomeSource;
                 table_audit.load(data);
                 editAudit("审核流程", type, function () {
-                    auditData(rptCaseId, "1",incomeSource);
+                    auditData(rptCaseId, "1", incomeSource);
                 }, function () {
-                    auditData(rptCaseId, "0",incomeSource);
+                    auditData(rptCaseId, "0", incomeSource);
                 });
                 showAudit();
             } else {
@@ -130,7 +130,7 @@ function listAudit(btn) {
     });
 }
 
-function auditData(rptCaseId, status,incomeSource) {
+function auditData(rptCaseId, status, incomeSource) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptSettleQuery/audit",
@@ -167,7 +167,7 @@ var TableInit = function () {
 
     //初始化Table
     oTableInit.Init = function () {
-    	$table.bootstrapTable({
+        $table.bootstrapTable({
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
@@ -177,7 +177,7 @@ var TableInit = function () {
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 50,                       //每页的记录行数（*）
-            pageList: [50,100,500],        //可供选择的每页的行数（*）
+            pageList: [50, 100, 500],        //可供选择的每页的行数（*）
             //search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
@@ -189,45 +189,45 @@ var TableInit = function () {
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
-             
+
             data: [],
             columns: [{
-            	checkbox:true
-            },{
+                checkbox: true
+            }, {
                 field: 'logId',
-                width:'60px',
+                width: '60px',
                 title: '流水号'
             }, {
                 field: 'reportId',
-                width:'70px',
+                width: '70px',
                 title: '报表编号'
             }, {
                 field: 'reportName',
-                width:'100px',
+                width: '100px',
                 title: '报表名称'
             }, {
                 field: 'month',
-                width:'70px',
+                width: '70px',
                 title: '账期'
             }, {
                 field: 'incomeSource',
-                width:'60px',
+                width: '60px',
                 title: '收入来源'
             }, {
                 field: 'status',
-                width:'60px',
+                width: '60px',
                 title: '状态'
             }, {
                 field: 'fileSeq',
-                width:'60px',
+                width: '60px',
                 title: '重传次数'
             }, {
                 field: 'createDate',
-                width:'150px',
+                width: '150px',
                 title: '下发时间'
             }, {
                 field: 'importDate',
-                width:'150px',
+                width: '150px',
                 title: '导入时间'
             }, {
                 field: 'operate',
@@ -236,13 +236,13 @@ var TableInit = function () {
                 formatter: operateFormatter
             }]
         });
-        
+
     };
 
-  //操作 监听
+    //操作 监听
     window.operateEvents = {
         'click .detail': function (e, value, row, index) {
-        	detailData(row);
+            detailData(row);
         }
     };
 
@@ -252,10 +252,11 @@ var TableInit = function () {
             '<button type="button" class="detail btn btn-success btn-xs">详细</button>'
         ].join('');
     }
+
     oTableInit.getSelections = function () {
         return $table.bootstrapTable('getSelections');
     };
-    
+
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);
@@ -334,7 +335,7 @@ var TableAudit = function () {
 
     };
 
-   
+
     //刷新数据
     oTableInit.load = function (data) {
         $table.bootstrapTable('load', data);

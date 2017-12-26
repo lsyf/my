@@ -60,9 +60,7 @@ function initForm() {
                 success: function (r) {
                     $('#btn_upload').button("reset");
                     if (r.state) {
-                        $('#form_upload').resetForm();
-                        orgTree.reset();
-
+                        $('#upload_file').fileinput('clear');
                         toastr.info('导入成功');
 
                         queryLog();

@@ -92,7 +92,7 @@ public class ImportICTService {
         log.setIncomeSoure(incomeSource);
         log.setFileName(filename);
         log.setType(ReportConfig.RptImportType.ICT.toString());
-        extImportLogDAO.insert(log);
+        extImportLogDAO.insertSelective(log);
 
 
         //校验导入数据指标
