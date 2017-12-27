@@ -1,6 +1,6 @@
 var table;
 var orgTree;
-
+var form_orgTree;
 function initRuleConfigForm() {
     table = new TableInit();
     table.Init();
@@ -8,26 +8,31 @@ function initRuleConfigForm() {
     buildSelect('query_month', months);
     buildSelect('query_card', cards);
     
+    
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "query_latnId", 80);
     orgTree.Init(orgs);
     
+  //表单下拉加载
+    buildSelect('form_month', months);
+    buildSelect('form_card', cards);
+    form_orgTree = new ZtreeSelect("treeOrg2", "menuContent2", "form_latnId");
+    form_orgTree.Init(orgs);
 
 }
 
 function showPanel(a){
 	 
 	if (a){
-        titleContentHeader("11");
+         
         $("#form-panel").hide();
         $("#table-panel").show();
     } else {
-    	titleContentHeader("22");
+    	 
         $("#form-panel").show();
         $("#table-panel").hide();
         var form = $("#rule_form");
         form.resetForm();
        
-        resetValidator(form);
        
     }
 }
@@ -60,36 +65,19 @@ function queryList() {
 
 }
 
-function updateData(selections) {
+function updateData(row) {
 
-    if (selections.length == 0) {
-        toastr.info('请选择数据');
-        return;
-    }
-
+    
     showPanel(0);
-    var month = "";
-    var latnId = "";
-    var cardType = "";
-    var discount = "";
-    var platformAmount = "";
-    var inactiveAmount = "";
-    selections.forEach(function (d) {
-    	month += d.month + ", ";
-    	latnId += d.latnId + ", ";
-    	cardType += d.cardType + ", ";
-    	discount += d.discount + ", ";
-    	platformAmount += d.platformAmount + ", ";
-    	inactiveAmount += d.inactiveAmount + ", ";
-    });
-
-    //填入表单属性
-    $('#query_month').val(month);
-    $('#query_latnId').val(latnId);
-    $('#query_card').val(cardType);
-    $('#query_discount').val(discount);
-    $('#platformAmount_val').val(platformAmount);
-    $('#inactiveAmount_val').val(inactiveAmount);
+    $("#form_month").val(row.month);
+    form_orgTree.txt(row.latnName);
+    form_orgTree.val(row.latnId);
+  
+    $('#form_logId').val(row.logId);
+    $('#form_card').val(row.cardTypeId);
+    $('#form_discount').val(row.discount);
+    $('#platformAmount_val').val(row.platformAmount);
+    $('#inactiveAmount_val').val(row.inactiveAmount);
 
 
 }
@@ -109,9 +97,9 @@ function doUpdate() {
 
             if (r.state) {
                 toastr.info('更新成功');
-
-                showPanel(1);
-                table.refresh();
+                queryList()
+                //showPanel(1);
+                //table.refresh();
             } else {
                 toastr.error('更新失败'+r.msg);
             }
@@ -208,16 +196,14 @@ var TableInit = function () {
     //操作 监听
     window.operateEvents = {
     		'click .edit': function (e, value, row, index) {
-                var selections = new Array();
-                selections.push(row);
-                updateData(selections);
+                updateData(row);
             }
     };
 
     //操作显示format
     function operateFormatter(value, row, index) {
         return [
-            '<button type="button" class="edit btn btn-success btn-xs">修改</button>'
+            '<button type="button" class="edit btn btn-primary btn-xs">修改</button>'
         ].join('');
     }
     
