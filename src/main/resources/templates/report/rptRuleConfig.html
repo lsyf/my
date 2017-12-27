@@ -72,11 +72,10 @@
         <!-- Main content -->
         <section class="content">
 
-            <div id="form-panel">
+            <div id="table-panel">
                 <div class="box box-primary">
                     
                     <div class="box-body">
-
                         <form id="form_upload" class="form-horizontal col-sm-12">
 							<div class="form-group form-group-sm">
                                 <label for="query_month" class="col-sm-2 control-label">月份</label>
@@ -108,38 +107,84 @@
                                     <input type="text" class="input-sm form-control  " id="query_discount"/>
                                 </div>
                                 <div class="form-group  form-group-sm">
-                                <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_download" onclick="deleteData()">
-                                  	  删除
-                                </button>
-                                <button id="btn_load" type="button" onclick="addRule()"
-                                        class="btn btn-success pull-right btn-sm btn-form">
-                                   	 新增
-                                </button>
-                                <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryList()">
-                                   	 查询
-                                </button>
-                                 
-                            </div>
+	                                <button class="btn btn-success pull-right btn-sm btn-form"
+	                                        type="button" id="btn_query" onclick="queryList()">
+	                                   	 查询
+	                                </button>
+                            	</div>
                             </div>
                                                       
                            
-                        </form>                       
+                        </form>  
+                        <table id="table_ruleConfig"></table>                     
                     </div>
-
                 </div>
             </div>
 
-            <div id="form-table">
-                <div class="box box-primary">
-                    <div class="box-header">
-                                                    查询结果
-                    </div>
-                    <div class="box-body" style=" white-space:nowrap">
-                        <table id="table_upload"></table>
-                    </div>
+            
+            <div id="form-panel" hidden>
+            	<div class="box-header"></div>
+             <div class="box-body">
+             <div class="col-sm-8">
+                 <form id="rule_form" class="form-horizontal">
+	                 <div class="form-group">
+	                     <label for="user_id" class="col-sm-4 control-label">帐期</label>
+	                     <div class="col-sm-8">
+	                     	<input type="text" class="form-control" name="month" id="query_month">
+	                     </div>
+	                 </div>
+	                 <div class="form-group">
+		                 <label for="query_latnId" class="col-sm-4 control-label">营业区</label>
+		                 <div class="col-sm-8">
+		                     <input type="text" class="form-control" id="query_latnId" readonly>
+                             <input class="form-control" name="latnId" type="hidden">
+		                 </div>
+	                 </div>
+	                 <div class="form-group">
+	                     <label for="query_card" class="col-sm-4 control-label">卡类型</label>
+                         <div class="col-sm-8">
+                             <select class="form-control" name="cardType" id="query_card">
+                             </select>
+                         </div>
+	                 </div>
+	                 <div class="form-group">
+	                     <label for="query_discount" class="col-sm-4 control-label">折扣率</label>
+                         <div class="col-sm-8">
+                             <input type="text" class="input-sm form-control" name="discount" id="query_discount"/>
+                         </div>
+	                 </div>
+	                 <div class="form-group">
+	                     <label for="user_id" class="col-sm-4 control-label">平台过期卡金额</label>
+	                     <div class="col-sm-8">
+	                         <input type="text" class="form-control" name="platformAmount" id="platformAmount_val">
+	                     </div>
+	                 </div>
+	                 <div class="form-group">
+	                     <label for="user_id" class="col-sm-4 control-label">库存过期卡金额</label>
+	                     <div class="col-sm-8">
+	                         <input type="text" class="form-control" name="inactiveAmount" id="inactiveAmount_val">
+	                     </div>
+	                 </div>
+                 
+                 
+                 
+	                 <div class="form-group ">
+	                     <button class="btn btn-danger pull-right" type="button"
+	                             style="margin-right: 5px" onclick="showPanel(1)">
+	                        	 取消
+	                     </button>
+	                     <button id="btn_save" type="submit" onclick="doUpdate()"
+	                             class="btn btn-success pull-right " style="margin-right: 5px"> 
+	                         	保存
+	                     </button>
+	
+	                 </div>
+                 </form>
                 </div>
+             </div>       
+            
+            
+            
             </div>
 			<div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>

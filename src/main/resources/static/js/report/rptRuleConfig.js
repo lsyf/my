@@ -10,8 +10,27 @@ function initRuleConfigForm() {
     
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "query_latnId", 80);
     orgTree.Init(orgs);
+    
+
 }
 
+function showPanel(a){
+	 
+	if (a){
+        titleContentHeader("11");
+        $("#form-panel").hide();
+        $("#table-panel").show();
+    } else {
+    	titleContentHeader("22");
+        $("#form-panel").show();
+        $("#table-panel").hide();
+        var form = $("#rule_form");
+        form.resetForm();
+       
+        resetValidator(form);
+       
+    }
+}
 
 function queryList() {
     $.ajax({
@@ -40,6 +59,59 @@ function queryList() {
         }
     });
 
+}
+
+function updateData(selections) {
+
+    if (selections.length == 0) {
+        toastr.info('请选择数据');
+        return;
+    }
+
+    showPanel(0);
+
+    var ids = new Array;
+    var names = "";
+    selections.forEach(function (d) {
+        ids.push(d.id);
+        names += resource.name + ", ";
+    });
+
+    //填入表单属性
+    $('#resource_id').val(ids);
+    $('#resource_name').val(names);
+
+
+}
+
+function doUpdate() {
+    var form = $('#rule_form');
+
+    form.ajaxSubmit({
+        url: hostUrl + 'rptRuleConfig/update',
+        type: 'post',
+        resetForm: true,
+        beforeSubmit: function () {
+            $("#btn_save").button("loading");
+        },
+        success: function (r) {
+            $("#btn_save").button("reset");
+
+            if (r.state) {
+                toastr.info('更新成功');
+
+                showPanel(1);
+                oTable.refresh();
+            } else {
+                toastr.error('更新失败');
+                toastr.error(r.msg);
+            }
+        },
+        error: function () {
+            $("#btn_save").button("reset");
+            toastr.error("发送请求失败");
+        }
+    });
 }
 
 
@@ -114,12 +186,32 @@ var TableInit = function () {
             	field: 'lstUpd',
             	title: '修改时间',
                 width: 100
+            }, {
+                field: 'operate',
+                title: '操作',
+                events: operateEvents,
+                formatter: operateFormatter
             }]
         });
         
     };
 
-     
+    //操作 监听
+    window.operateEvents = {
+    		'click .edit': function (e, value, row, index) {
+                var selections = new Array();
+                selections.push(row);
+                updateData(selections);
+            }
+    };
+
+    //操作显示format
+    function operateFormatter(value, row, index) {
+        return [
+            '<button type="button" class="edit btn btn-success btn-xs">修改</button>'
+        ].join('');
+    }
+    
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);

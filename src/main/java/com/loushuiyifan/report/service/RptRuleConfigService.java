@@ -14,6 +14,7 @@ import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.report.bean.CodeListTax;
 import com.loushuiyifan.report.controller.RptFundsFeeQueryController;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.dao.RptImportCutDataDAO;
 import com.loushuiyifan.report.dao.RptRuleConfigDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.vo.RuleConfigVO;
@@ -27,6 +28,8 @@ public class RptRuleConfigService extends BaseReportController{
 	@Autowired
 	RptRuleConfigDAO rptRuleConfigDAO;
 	
+	@Autowired
+    RptImportCutDataDAO rptImportCutDataDAO;
 	
 	/**
 	 * 查询
@@ -43,6 +46,10 @@ public class RptRuleConfigService extends BaseReportController{
 		return list;
 	}
 	
+	public void add(String month,String latnId, String cardType,String discount, 
+                    String platformAmount,String inactiveAmount){
+		
+	}
 	
 	/**
 	 * 查询卡的类型

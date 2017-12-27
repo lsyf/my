@@ -72,7 +72,9 @@ public class SettleExportServ extends AbstractPoiExport<Map<String, String>>{
             for (int j = 0; j < cols.size(); j++) {
             	Map<String, String> title = cols.get(j);
             	String id = title.get("id");
-            	String data = map.get(id);
+            	Object ob =map.get(id);
+            	String data = ob ==null?map.get(id):ob.toString();
+            	
                 row.createCell(j).setCellValue(data);
             }
         }

@@ -22,6 +22,11 @@ public interface RptSettleQueryDAO extends MyMapper<SettleDataVO>{
     
     List<Map<String, String>> listReportInfo();
 
+    /**
+     * 结算审核查询
+     * PKG_RPT_SETT.getAuditInfo
+     * @param map
+     */
     void selectAudits(Map map);
     
     void auditRpt(SPDataDTO dto);

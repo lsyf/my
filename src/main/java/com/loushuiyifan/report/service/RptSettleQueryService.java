@@ -69,6 +69,8 @@ public class RptSettleQueryService {
         param.put("month",month);
         param.put("reportId",reportId);
         param.put("incomeSource",incomeSource);
+        
+        //PKG_RPT_SETT.getAuditInfo
         rptSettleQueryDAO.selectAudits(param);
         List<RptAuditVO> list = (List<RptAuditVO>) param.get("list");
         if (list == null || list.size() == 0) {
@@ -98,11 +100,11 @@ public class RptSettleQueryService {
      * 导出数据
      */
     public byte[] export(Long logId,String incomeSource) throws Exception {
-    	String[] key = { "REPORTID", "REPORTNAME", "ACCTMONTH", "AREAID", "AREANAME", "HORCODE", "VERCODE",
-    			"INDEXALLIS", "INCOMESOURCE", "SOURCENAME", "INDEXDATA"};
+    	String[] key = { "reportId", "reportName", "acctMonth", "areaId", "areaName", "horCode", "verCode",
+    			"indexAllis", "incomeSource", "sourceName", "indexData"};
     	String[] value = { "报表编号", "报表名称", "账期", "地市编号", "地市名", "渠道编码", "指标编码", "指标名称", "收入来源编号", "收入来源名称", "数据" };
 
-    	String[] Keys = { "BUKRS", "REPORTID", "EXTEND_001", "EXTEND_002", "EXTEND_003" };
+    	String[] Keys = { "BUKRS", "REPORT_ID", "EXTEND_001", "EXTEND_002", "EXTEND_003" };
     	String[] Values = { "组织代码", "报表编号", "扩展字段1", "扩展字段2", "扩展字段3" };
     	List<Map<String, String>> row =rptSettleQueryDAO.detail(logId, incomeSource);      	
         

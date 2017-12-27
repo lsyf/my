@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptRuleConfigService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.RuleConfigVO;
@@ -67,7 +68,18 @@ public class RptRuleConfigController extends BaseReportController{
         return JsonResult.success(list);
     }
 	
-	
+	/**
+	 * 修改
+	 * @return
+	 */
+	@PostMapping("update")
+    @ResponseBody
+    public JsonResult update(String month,String latnId, String cardType,String discount, 
+    		                  String platformAmount,String inactiveAmount) {
+				
+		rptRuleConfigService.add(month, latnId, cardType, discount, platformAmount, inactiveAmount);
+        return JsonResult.success();
+    }
 	
 	
 	
