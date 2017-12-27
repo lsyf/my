@@ -75,8 +75,9 @@ public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
             Map<String, String> map = reportDatas.get(i);
             for (int j = 0; j < reportKeys.length; j++) {
                 String key = reportKeys[j];
+
                 Object obj =map.get(key);
-                String data = obj ==null?map.get(key):obj.toString();
+                String data = obj ==null?"-":obj.toString();
                 row.createCell(j).setCellValue(data);
             }
         }
