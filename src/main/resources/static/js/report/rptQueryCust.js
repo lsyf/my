@@ -159,7 +159,7 @@ var TableInit = function () {
         $table.bootstrapTable('destroy');
         $table.bootstrapTable({
             toolbar: "#table_title",
-            striped: true,                      //是否显示行间隔色
+            striped: false,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
             sortable: false,                     //是否启用排序
@@ -174,7 +174,7 @@ var TableInit = function () {
             showColumns: false,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
-            clickToSelect: true,                //是否启用点击选中行
+            clickToSelect: false,                //是否启用点击选中行
             height: 800,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "rowNum",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
@@ -184,7 +184,7 @@ var TableInit = function () {
             columns: columns,
             rowStyle: function (row, index) {//行样式
                 return {
-                    classes: "small tableRow  "
+                    classes: "small "
                 };
             }
         });
@@ -216,12 +216,11 @@ var TableInit = function () {
                 halign: 'center',
             },
             {
-                class: 'table_colum1',
+                class: 'table_colum12',
                 field: 'name',
                 title: '产品收入项目名称',
                 align: 'left',
                 halign: 'center',
-                // width: '300px'
 
             }
         ];
