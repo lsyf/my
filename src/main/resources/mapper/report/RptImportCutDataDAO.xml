@@ -6,14 +6,14 @@
             parameterType="com.loushuiyifan.report.bean.RptImportDataCut">
 		update charge.dim_cut_cfg a
 		set a.is_active = #{activeFlag},
-		a.lst_upd =sysdate
+		a.lst_upd =sysdate,a.chg_who=#{userName}
 		where a.latn_id=#{latnId}
 		and a.share_type=#{shareType}
 		and a.income_source=#{incomeSource}
-		<if test='flag !="1"'>
+		<!-- <if test='flag !="1"'>
 		 and a.chg_who=#{userName}
 		</if>
-		
+		 -->
 	</update>
 
     <select id="checkCut" resultType="java.lang.String">

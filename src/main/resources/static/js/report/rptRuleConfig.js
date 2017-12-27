@@ -50,8 +50,7 @@ function queryList() {
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
             }
         },
         error: function (result) {
@@ -69,17 +68,28 @@ function updateData(selections) {
     }
 
     showPanel(0);
-
-    var ids = new Array;
-    var names = "";
+    var month = "";
+    var latnId = "";
+    var cardType = "";
+    var discount = "";
+    var platformAmount = "";
+    var inactiveAmount = "";
     selections.forEach(function (d) {
-        ids.push(d.id);
-        names += resource.name + ", ";
+    	month += d.month + ", ";
+    	latnId += d.latnId + ", ";
+    	cardType += d.cardType + ", ";
+    	discount += d.discount + ", ";
+    	platformAmount += d.platformAmount + ", ";
+    	inactiveAmount += d.inactiveAmount + ", ";
     });
 
     //填入表单属性
-    $('#resource_id').val(ids);
-    $('#resource_name').val(names);
+    $('#query_month').val(month);
+    $('#query_latnId').val(latnId);
+    $('#query_card').val(cardType);
+    $('#query_discount').val(discount);
+    $('#platformAmount_val').val(platformAmount);
+    $('#inactiveAmount_val').val(inactiveAmount);
 
 
 }
@@ -101,10 +111,9 @@ function doUpdate() {
                 toastr.info('更新成功');
 
                 showPanel(1);
-                oTable.refresh();
+                table.refresh();
             } else {
-                toastr.error('更新失败');
-                toastr.error(r.msg);
+                toastr.error('更新失败'+r.msg);
             }
         },
         error: function () {

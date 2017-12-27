@@ -95,7 +95,7 @@ public class ImportSettleCutService {
     	SPDataDTO dto = new SPDataDTO();
     	dto.setLogId(logId);
     	dto.setUserId(userId);
-    	//TODO 存过待修改
+    	//TODO 存过待修改PKG_RPT_SETT.IRPT_DEL_SETT_CUT
     	rptSettCutLogDAO.delSettleData(dto);
     	Integer code = dto.getRtnCode();
     	if (code != 0) {//非0为失败

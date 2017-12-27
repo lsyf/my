@@ -47,8 +47,10 @@ public class RptRuleConfigService extends BaseReportController{
 	}
 	
 	public void add(String month,String latnId, String cardType,String discount, 
-                    String platformAmount,String inactiveAmount){
-		
+                    String platformAmount,String inactiveAmount)throws Exception{
+	
+
+		rptRuleConfigDAO.updateByAll(month, latnId, cardType, discount, platformAmount, inactiveAmount);
 	}
 	
 	/**

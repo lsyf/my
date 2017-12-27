@@ -16,11 +16,8 @@
 		       (select d.nickname from aweb_user d where d.id = a.chg_who) as "chgWho",
 		       to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as "lstUpd"
 		  from (select t.* from charge.inet_discount_rate t where 1 = 1
-		        
-		        <if test='logId ==null'>
-		        	and t.acct_month = #{month}
-		        </if>
-		        
+		        and t.acct_month = #{month}
+		      
 		        <if test='logId !=null'>
 		        	and t.id = #{logId}
 		        </if>
@@ -40,7 +37,33 @@
                  
 	</select>
 	
+	<update id="updateByAll">
+	update charge.inet_discount_rate a
+    	set 
+    	<if test='month !=""'>
+    	a.acct_month = #{month},
+    	</if>
+    	<if test='latnId !=""'>
+    	a.area_id         = #{latnId},
+    	</if>
+       <if test='cardType !=""'>
+    	a.card_id         = #{cardType},
+    	</if>
+       <if test='discount !=""'>
+    	a.rate            = #{discount},
+    	</if>
+       <if test='platformAmount !=""'>
+    	a.inactive_amount = #{platformAmount},
+    	</if>
+    	<if test='inactiveAmount !=""'>
+    	a.platform_amount = #{inactiveAmount},
+    	</if>
+        a.lst_upd = sysdate      
+   	where a.acct_month = #{month}
+   	  and a.area_id = #{latnId}
+	  and a.card_id = #{cardType}
 	
+	</update>
 	<select id="findCardName" resultType="Map">
 	 select a.card_id as "id", 
 	 a.card_id || '-' || a.card_name as "name",

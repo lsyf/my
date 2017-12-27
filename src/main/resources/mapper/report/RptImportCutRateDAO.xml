@@ -59,6 +59,9 @@
             and a.express like #{remark}
         </if>
         and a.share_type = #{shareType}
-        and a.income_source = #{incomeSource}
+        <if test="latnId !=0">
+            and a.income_source = #{incomeSource}
+        </if>
+        
     </select>
 </mapper>

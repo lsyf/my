@@ -76,9 +76,13 @@ public class RptRuleConfigController extends BaseReportController{
     @ResponseBody
     public JsonResult update(String month,String latnId, String cardType,String discount, 
     		                  String platformAmount,String inactiveAmount) {
-				
-		rptRuleConfigService.add(month, latnId, cardType, discount, platformAmount, inactiveAmount);
-        return JsonResult.success();
+		try {
+			rptRuleConfigService.add(month, latnId, cardType, discount, platformAmount, inactiveAmount);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		        return JsonResult.success();
     }
 	
 	

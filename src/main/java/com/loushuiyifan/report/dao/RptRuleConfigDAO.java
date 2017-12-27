@@ -18,7 +18,12 @@ public interface RptRuleConfigDAO extends MyMapper<RuleConfigVO>{
 			                    @Param("logId") Long logId,
 			                    @Param("discount") String discount);
 	
-	
+	void updateByAll(@Param("month") String month,
+		             @Param("latnId") String latnId, 
+		             @Param("cardType") String cardType,
+		             @Param("discount") String discount,
+		             @Param("platformAmount") String platformAmount,
+		             @Param("inactiveAmount") String inactiveAmount);
 	List<Map<String,String>> findCardName();
 	
 	List<Organization> listAll();

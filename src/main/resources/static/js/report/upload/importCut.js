@@ -103,7 +103,7 @@ function removeData() {
     var latnId = orgTree.val();
     var incomeSource = isTree.val();
     var shareType = $("#upload_cutType").val();
-
+    var remark = $("#upload_remark").val();
     editAlert('警告', '是否确定删除:  账期' + month + ", 地市" + latnId
         + ', 收入来源' + incomeSource + ', 切割类型' + shareType, '删除', function () {
         $.ajax({
@@ -113,7 +113,8 @@ function removeData() {
                 month: month,
                 latnId: latnId,
                 incomeSource: incomeSource,
-                shareType: shareType
+                shareType: shareType,
+                remark:remark
             },
             dataType: "json",
             success: function (r) {
