@@ -35,7 +35,7 @@
         </foreach>
         )
         ) a
-        order by a.lvl asc, a.sorting desc
+        order by a.remark asc, a.lvl asc, a.sorting desc
     </select>
 
     <select id="listForC3" resultType="com.loushuiyifan.common.bean.Organization">
