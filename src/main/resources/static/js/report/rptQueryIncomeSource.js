@@ -187,7 +187,7 @@ var TableInit = function () {
                 halign: 'center',
             },
             {
-                class: 'table_colum1',
+                class: 'table_colum12',
                 field: 'name',
                 title: '产品收入项目名称',
                 align: 'left',

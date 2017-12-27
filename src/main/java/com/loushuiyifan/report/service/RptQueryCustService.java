@@ -125,7 +125,7 @@ public class RptQueryCustService {
             //由于fields接下来会更改，优先生成文件
             String filePath = export(month, latnId, incomeSource, type,
                     custs, fields, datas);
-            
+
             //生成文件后sftp推送到文件主机
             FileService.push(filePath);
 
@@ -223,7 +223,7 @@ public class RptQueryCustService {
             if (rptCase != null) {
                 ReportCache cache = reportCacheDAO.selectByPrimaryKey(rptCase.getRptCaseId());
                 String path = cache.getFilePath();
-                
+
                 //首先从文件主机下载文件
                 FileService.pull(path);
                 return path;
@@ -288,12 +288,12 @@ public class RptQueryCustService {
         }
         Long rptCaseId = rptCase.getRptCaseId();
 
-        //然后判断用户是否存在审核权限
-        String rtn = rptQueryCustDAO.hasAuditAuthority(userId, rptCaseId);
-
-        if (!"Y".equals(rtn)) {
-            throw new ReportException(rtn);
-        }
+        //然后判断用户是否存在审核权限,查询审核进度无需权限
+//        String rtn = rptQueryCustDAO.hasAuditAuthority(userId, rptCaseId);
+//
+//        if (!"Y".equals(rtn)) {
+//            throw new ReportException(rtn);
+//        }
         //最后返回审核结果
 
         Map param = new HashMap();
