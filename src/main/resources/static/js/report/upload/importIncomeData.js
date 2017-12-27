@@ -141,14 +141,14 @@ function initForm() {
                         toastr.info('导入成功');
                         queryLog();
                     } else {
- 
-                    	toastrError('导入失败:' + r.msg);
+
+                        toastrError('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastrError('导入失败:'+r);
-                   
+                    toastrError('导入失败:' + r);
+
                 }
             });
         }
@@ -213,7 +213,7 @@ function commitData() {
         logIds.push(d.logId);
         txt += d.logId + ', '
     });
-    
+
     editAlert('警告', '是否确定提交流水号: ' + txt, '提交', function () {
         hideAlert();
         $('#btn_commit').button("loading");
@@ -230,7 +230,7 @@ function commitData() {
                 } else {
                     toastrError('提交失败:' + r.msg);
                 }
-                
+
             },
             error: function (result) {
                 $('#btn_commit').button("reset");
@@ -333,7 +333,10 @@ var TableInit = function () {
             }, {
                 field: 'itsmUrl',
                 title: 'ITSM审批流转',
-                formatter: function () {
+                formatter: function (a, b, c) {
+                    if (b.itsmOrderNo == null) {
+                        return null;
+                    }
                     return [
                         '<button type="button" class="view btn btn-primary btn-xs">审批提交</button>'
                     ].join('');
