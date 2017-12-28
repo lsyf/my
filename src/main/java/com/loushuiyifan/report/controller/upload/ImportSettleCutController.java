@@ -115,7 +115,8 @@ public class ImportSettleCutController extends BaseReportController {
      */
     @PostMapping("remove")
     @ResponseBody
-    public JsonResult delete(@ModelAttribute("user") User user, Long logId) {
+    public JsonResult delete(@ModelAttribute("user") User user, String month, Long logId) {
+        dateService.checkImportSettCut(month);
         Long userId = user.getId();
         importSettleCutService.delete(userId, logId);
         return JsonResult.success();

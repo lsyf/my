@@ -33,7 +33,7 @@ import com.loushuiyifan.report.vo.SettCutRateVO;
 @Service
 public class ImportSettleCutService {
     private static final Logger logger = LoggerFactory.getLogger(ImportSettleCutService.class);
-    
+
     @Autowired
     SqlSessionFactory sqlSessionFactory;
 
@@ -46,8 +46,8 @@ public class ImportSettleCutService {
      * 导入
      */
     @Transactional
-    public void save(Path path, String month,String remark,Long userId) 
-    	throws Exception {
+    public void save(Path path, String month, String remark, Long userId)
+            throws Exception {
         String filename = path.getFileName().toString();
 
         //首先将文件解析成bean
@@ -62,14 +62,14 @@ public class ImportSettleCutService {
         }
 
         //然后保存解析的数据
-        Long logId =rptSettCutLogDAO.nextvalKey();
-        saveCutDataByGroup(list, month, filename, userId, logId,remark);
-        
+        Long logId = rptSettCutLogDAO.nextvalKey();
+        saveCutDataByGroup(list, month, filename, userId, logId, remark);
+
         SPDataDTO dto = new SPDataDTO();
-    	dto.setLogId(logId);
-    	rptSettCutLogDAO.checkSettleData(dto);
-    	Integer code = dto.getRtnCode();
-    	if (code != 0) {//非0为失败
+        dto.setLogId(logId);
+        rptSettCutLogDAO.checkSettleData(dto);
+        Integer code = dto.getRtnCode();
+        if (code != 0) {//非0为失败
             throw new ReportException("1数据校验失败: " + dto.getRtnMsg());
         }
 
@@ -78,10 +78,10 @@ public class ImportSettleCutService {
     /**
      * 查询数据
      */
-    public Map<String, Object> queryList(String month,String reportId) {
+    public Map<String, Object> queryList(String month, String reportId) {
 
         List<SettCutRateVO> datas = rptSettCutRateDAO.SettCutRateData(month, reportId);
-        List<SettCutDataVO> logs =rptSettCutLogDAO.SettCutLog(month);
+        List<SettCutDataVO> logs = rptSettCutLogDAO.SettCutLog(month);
         Map<String, Object> map = Maps.newHashMap();
         map.put("datas", datas);
         map.put("logs", logs);
@@ -92,28 +92,28 @@ public class ImportSettleCutService {
      * 删除数据
      */
     public void delete(Long userId, Long logId) {
-    	SPDataDTO dto = new SPDataDTO();
-    	dto.setLogId(logId);
-    	dto.setUserId(userId);
-    	//TODO 存过待修改PKG_RPT_SETT.IRPT_DEL_SETT_CUT
-    	rptSettCutLogDAO.delSettleData(dto);
-    	Integer code = dto.getRtnCode();
-    	if (code != 0) {//非0为失败
+        SPDataDTO dto = new SPDataDTO();
+        dto.setLogId(logId);
+        dto.setUserId(userId);
+        //TODO 存过待修改PKG_RPT_SETT.IRPT_DEL_SETT_CUT
+        rptSettCutLogDAO.delSettleData(dto);
+        Integer code = dto.getRtnCode();
+        if (code != 0) {//非0为失败
             throw new ReportException("1数据删除失败: " + dto.getRtnMsg());
         }
-        
+
     }
 
     /**
      * 保存excel数据
      */
     public void saveCutDataByGroup(List<RptSettCutRate> list,
-						    		String month,
-						            String filename,
-						            Long userId,
-						            Long logId,
-						            String remark) throws Exception {
-    	
+                                   String month,
+                                   String filename,
+                                   Long userId,
+                                   Long logId,
+                                   String remark) throws Exception {
+
         RptSettCutLog log = new RptSettCutLog();
         log.setLogId(logId);
         log.setAcctMonth(month);
@@ -122,16 +122,16 @@ public class ImportSettleCutService {
         log.setUserId(userId);
         log.setCount(list.size());
         log.setImportDate(Date.from(Instant.now()));
-		rptSettCutLogDAO.insertSelective(log);
-		
-		for(RptSettCutRate rate : list){
-			rate.setLogId(logId);
-			rate.setAcctMonth(month);
-			rate.setUserId(userId);
-			rate.setLstUpd(Date.from(Instant.now()));
-			rptSettCutRateDAO.insertSelective(rate);
-		}
-        
+        rptSettCutLogDAO.insertSelective(log);
+
+        for (RptSettCutRate rate : list) {
+            rate.setLogId(logId);
+            rate.setAcctMonth(month);
+            rate.setUserId(userId);
+            rate.setLstUpd(Date.from(Instant.now()));
+            rptSettCutRateDAO.insertSelective(rate);
+        }
+
     }
 
     /**
@@ -143,9 +143,9 @@ public class ImportSettleCutService {
     public List<RptSettCutRate> getRptImportDataCut(Path path) throws Exception {
 
         PoiRead read = new RptImportDataCutRead()
-			                .load(path.toFile())
-			                .multi(true)//excel数据可以解析多sheet
-			                .startWith(0, 1);
+                .load(path.toFile())
+                .multi(true)//excel数据可以解析多sheet
+                .startWith(0, 1);
 
         List<RptSettCutRate> list = read.read();
 
@@ -188,7 +188,7 @@ public class ImportSettleCutService {
                             bean.setLatnId(Integer.parseInt(data));
                             break;
                         case 3:
-                            bean.setLatnId(Integer.parseInt(data));
+                            bean.setAreaName(data);
                             break;
                         case 4:
                             bean.setZbCode(data);
@@ -197,8 +197,8 @@ public class ImportSettleCutService {
                             bean.setZbName(data);
                             break;
                         case 6:
-                        	bean.setRate(Double.parseDouble(data));
-        					break;
+                            bean.setRate(Double.parseDouble(data));
+                            break;
 
                     }
                 }

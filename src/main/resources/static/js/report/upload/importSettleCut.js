@@ -3,7 +3,7 @@ var table2;
 var orgTree;
 function initSettleCut() {
     buildSelect('upload_month', months);
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId",90);
+    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 90);
     orgTree.Init(orgs);
 
 
@@ -98,7 +98,7 @@ function removeData(row) {
         $.ajax({
             type: "POST",
             url: hostUrl + "importSettleCut/remove",
-            data: {"logId": row.logId},
+            data: {"logId": row.logId, month: row.acctMonth},
             dataType: "json",
             success: function (r) {
                 if (r.state) {
@@ -107,7 +107,7 @@ function removeData(row) {
 
                     queryLog()
                 } else {
-                    toastrError('提删除失败:',+ r.msg);
+                    toastrError('删除失败:' +r.msg);
                 }
             },
             error: function (result) {
@@ -117,7 +117,6 @@ function removeData(row) {
     });
     showAlert();
 }
-
 
 
 //Table初始化
@@ -251,7 +250,7 @@ var TableInit2 = function () {
 
     };
 
-  //操作 监听
+    //操作 监听
     window.operateEvents = {
         'click .remove': function (e, value, row, index) {
             removeData(row);
@@ -264,7 +263,7 @@ var TableInit2 = function () {
             '<button type="button" class="remove btn btn-danger btn-xs">删除</button>'
         ].join('');
     }
-    
+
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload2').bootstrapTable('load', data);

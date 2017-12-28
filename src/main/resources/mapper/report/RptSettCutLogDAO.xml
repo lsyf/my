@@ -7,8 +7,8 @@
     <select id="delSettleData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call PKG_RPT_SETT.IRPT_DEL_SETT_CUT(
-         #{logId,  mode=IN, jdbcType=NUMERIC},
-         #{userId, mode=IN, jdbcType=NUMERIC},
+         #{userId,  mode=IN, jdbcType=NUMERIC},
+         #{logId , mode=IN, jdbcType=NUMERIC},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
          #{rtnMsg, mode=OUT,jdbcType=VARCHAR})}
     </select>
