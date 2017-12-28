@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.dao.RptImportCutDataDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptRuleConfigService;
+
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.RuleConfigVO;
 import com.loushuiyifan.system.vo.JsonResult;
@@ -33,6 +35,8 @@ public class RptRuleConfigController extends BaseReportController{
 
 	@Autowired
 	RptRuleConfigService rptRuleConfigService;
+	@Autowired
+    RptImportCutDataDAO rptImportCutDataDAO;
 	
 	@GetMapping
 	@RequiresPermissions("report:rptRuleConfig:view")
@@ -41,7 +45,7 @@ public class RptRuleConfigController extends BaseReportController{
 
         //页面条件
         List<Organization> orgs = rptRuleConfigService.listAllByUserForRule(userId);
-		
+        //List<Organization> orgs = localNetService.listAllByUser(userId, 4);
         List<CommonVO> months = dateService.commonMonths();
         List<Map<String,String>> cards =rptRuleConfigService.listCard(); 
         
@@ -75,9 +79,18 @@ public class RptRuleConfigController extends BaseReportController{
 	@PostMapping("update")
     @ResponseBody
     public JsonResult update(String month,String latnId, String cardType,String discount, 
-    		                  String platformAmount,String inactiveAmount,Long logId) {
+    		                  String platformAmount,String inactiveAmount,Long logId,
+    		                  @ModelAttribute("user") User user) {
 		try {
-			rptRuleConfigService.updateRule(month, latnId, cardType, discount, platformAmount, inactiveAmount,logId);
+			Long userId = user.getId();
+			
+			List<String> num =rptRuleConfigService.checkUsers(logId, userId);
+			
+			if(num.size()!=1 && userId !=19306&& userId !=119 && userId !=113 &&userId !=34951&& userId !=216630&& userId !=1082230){
+				throw new ReportException("该用户不具有修改权限");		
+			}
+			
+			rptRuleConfigService.updateRule(month,cardType, discount, platformAmount, inactiveAmount,logId);
 
 		} catch (Exception e) {
 			e.printStackTrace();

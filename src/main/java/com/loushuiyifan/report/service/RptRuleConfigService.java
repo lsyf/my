@@ -28,9 +28,6 @@ public class RptRuleConfigService extends BaseReportController{
 	@Autowired
 	RptRuleConfigDAO rptRuleConfigDAO;
 	
-	@Autowired
-    RptImportCutDataDAO rptImportCutDataDAO;
-	
 	/**
 	 * 查询
 	 * @param month
@@ -46,13 +43,15 @@ public class RptRuleConfigService extends BaseReportController{
 		return list;
 	}
 	
-	public void updateRule(String month,String latnId, String cardType,String discount, 
-                    String platformAmount,String inactiveAmount,Long logId)throws Exception{
+	public void updateRule(String month,String cardType,String discount, 
+                           String platformAmount,String inactiveAmount,Long logId)throws Exception{
 	
-
-		rptRuleConfigDAO.updateByAll(month,logId, latnId, cardType, discount, platformAmount, inactiveAmount);
+		rptRuleConfigDAO.updateByAll(month,logId,cardType, discount, platformAmount, inactiveAmount);
 	}
 	
+	public List<String> checkUsers(Long logId,Long userId){
+		return rptRuleConfigDAO.checkUser(logId, userId);
+	}
 	/**
 	 * 查询卡的类型
 	 */
@@ -86,13 +85,19 @@ public class RptRuleConfigService extends BaseReportController{
         //然后拼接参数
         for (Organization o : relatedList) {
         	Long id = o.getId();
-//            String path = o.getParentIds();
-//            path = path == null ? id + "/%" : path + id + "/%";
-//            o.setParentIds(path);
+            String path = o.getParentIds();
+            path = path == null ? id + "/%" : path + id + "/%";
+            o.setParentIds(path);
             
             if(id ==5851){
-            	 List<Organization> l =rptRuleConfigDAO.listAll();            	 
-            	 for (Organization o2 : l){
+            	Organization org = new Organization();
+            	org.setData("0");
+            	org.setLvl(1);
+            	org.setId(id);
+            	org.setName("股份");
+            	list.add(org);
+            	List<Organization> l =rptRuleConfigDAO.listAll();            	 
+            	 for (Organization o2 : l){            		 
             		 Long id2 = o2.getId();
             		 List<Organization> list2 = rptRuleConfigDAO.listByRootAndLvl(id2); //最后进行判断所属地市 及子集
             		 list.addAll(list2);

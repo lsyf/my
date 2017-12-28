@@ -42,7 +42,7 @@
         a.INDEX_DATA
         end)) as "curAmount",
         to_char(SUM(a.INDEX_DATA)) as "sumAmount"
-        from Rpt_Import_Data_Channel a
+        from Rpt_Import_Data_Channel a,ext_import_log b
         where a.acct_month = #{month}
         and exists (select 1
         from code_list_tax
@@ -56,6 +56,7 @@
         where acct_month = #{month}
         and log_id in
         <include refid="foreach_logIds"/>
+       <![CDATA[
         and income_soure = a.income_source
         and is_itsm = 1
         and latn_id = #{latnId})
@@ -63,8 +64,10 @@
         from rpt_repfield_def_channel
         where RPT_NO = 1701
         and group_Id = '0'
-        and index_id <![CDATA[ <= ]]> '17011234')
-
+        and index_id  <=  '17011234')
+        and a.log_id=b.log_id
+        and b.itsm_status not in(0,3) 
+		]]>
     </select>
 
     <select id="calcC4Detail" resultType="com.loushuiyifan.ws.itsm.C4Detail">

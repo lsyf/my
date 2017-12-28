@@ -112,29 +112,32 @@
 	<select id="checkUser" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call PKG_RPT_AUDIT_NEW.hasAuditPost2(
-         #{userId,mode=OUT,jdbcType=NUMERIC})},
-         #{logId,mode=OUT,jdbcType=NUMERIC})},
+         #{userId,mode=IN,jdbcType=NUMERIC},
+         #{logId,mode=IN,jdbcType=NUMERIC},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR}
+         )}
     </select>
         
     <select id="delAuditStatus" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call del_audit_status(
-         #{month,mode=OUT,jdbcType=VARCHAR})},
-         #{latnId,mode=OUT,jdbcType=VARCHAR})},
-         #{reportId,mode=OUT,jdbcType=VARCHAR})},
+         #{month,mode=IN,jdbcType=VARCHAR},
+         #{latnId,mode=IN,jdbcType=VARCHAR},
+         #{reportId,mode=IN,jdbcType=VARCHAR},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR}
+         )}
     </select>
     
     <select id="auditRptPart4" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call PKG_RPT_AUDIT_NEW.auditRpt_part4(
-         #{userId,mode=OUT,jdbcType=NUMERIC})},
-         #{month,mode=OUT,jdbcType=VARCHAR})},
-         #{codeName,mode=OUT,jdbcType=VARCHAR})},
+         #{userId,mode=IN,jdbcType=NUMERIC},
+         #{month,mode=IN,jdbcType=VARCHAR},
+         #{reportId,mode=IN,jdbcType=VARCHAR},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
+         #{rtnMsg,mode=OUT,jdbcType=VARCHAR}
+         )}
     </select>
 </mapper>

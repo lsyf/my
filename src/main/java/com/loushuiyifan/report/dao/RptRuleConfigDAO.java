@@ -11,7 +11,8 @@ import com.loushuiyifan.report.bean.CodeListTax;
 import com.loushuiyifan.report.vo.RuleConfigVO;
 
 public interface RptRuleConfigDAO extends MyMapper<RuleConfigVO>{
-
+	List<String> checkUser(@Param("logId") Long logId,
+			               @Param("userId") Long userId);
 	List<RuleConfigVO> listData(@Param("month") String month,
 			                    @Param("latnId") String latnId, 
 			                    @Param("cardType") String cardType,
@@ -20,7 +21,6 @@ public interface RptRuleConfigDAO extends MyMapper<RuleConfigVO>{
 	
 	void updateByAll(@Param("month") String month,
 			         @Param("logId") Long logId,
-		             @Param("latnId") String latnId, 
 		             @Param("cardType") String cardType,
 		             @Param("discount") String discount,
 		             @Param("platformAmount") String platformAmount,

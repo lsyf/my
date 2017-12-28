@@ -10,13 +10,14 @@
 		       a.card_id as "cardTypeId", 
 		       b.name       as "latnName",       
 		       (select b.name from aweb_organization b where b.type='local_net' and b.data = a.area_id)   as "codeName",     
-		       (select c.card_name from charge.dim_card_def c where c.card_id = a.card_id) as "cardType",
+		       (select c.card_name from dim_card_def c where c.card_id = a.card_id) as "cardType",
 		       a.rate            as "discount",		       
 		       a.platform_amount as "platformAmount",
 		       a.inactive_amount as "inactiveAmount",
-		       (select d.nickname from aweb_user d where d.id = a.chg_who) as "chgWho",
+		       a.chg_who as "chgWho",
+		       (select d.nickname from aweb_user d where d.id = a.chg_who) as "userName",
 		       to_char(a.lst_upd, 'yyyy-mm-dd hh24:mi:ss') as "lstUpd"
-		  from (select t.* from charge.inet_discount_rate t where 1 = 1
+		  from (select t.* from inet_discount_rate t where 1 = 1
 		        and t.acct_month = #{month}
 		      
 		        <if test='logId !=null'>
@@ -37,12 +38,17 @@
 		   
                  
 	</select>
-	
+	<select id="checkUser" resultType="String">
+	select *
+	  from inet_discount_rate a, dim_region_def b
+	 where a.latn_id = b.id
+	   and a.id =#{logId}
+	   and a.chg_who =#{userId}
+	</select>
 	<update id="updateByAll">
-	update charge.inet_discount_rate a
+	update inet_discount_rate a
     	set    	
     	a.acct_month = #{month},
-    	a.area_id         = #{latnId},
     	a.card_id         = #{cardType},
     	a.rate            = #{discount},
     	a.inactive_amount = #{platformAmount},
@@ -55,7 +61,7 @@
 	 select a.card_id as "id", 
 	 a.card_id || '-' || a.card_name as "name",
 	 a.card_id as "data"
-     from charge.dim_card_def a
+     from dim_card_def a
     order by a.card_id
 	</select>
 	

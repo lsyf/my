@@ -66,7 +66,7 @@ function quitData(){
 	var month =$("#query_month").val();
 	var latnId = orgTree.val();
 	var incomeSource= $("#query_incomeSource").val();
-	editAlert('警告', '是否确定回退月份: ' + month, '营业区:'+latnId , '收入来源:'+incomeSource, '回退', function (){
+	editAlert('警告', '是否确定回退月份: ' + month+ ',营业区:'+latnId+ ',收入来源:'+incomeSource, '回退', function (){
 		$.ajax({
 	        type: "POST",
 	        url: hostUrl + "rptQueryAudit/quit",

@@ -41,7 +41,7 @@ public class RptQueryAuditService {
 		
 		//判断用户是否能回退
 		SPDataDTO dto = new SPDataDTO();
-		dto.setLogId(Long.parseLong("21"));
+		dto.setLogId(Long.parseLong("21")); //logId 代表审核的c_post_id
 		dto.setUserId(userId);
 		rptQueryAuditDAO.checkUser(dto);
 		

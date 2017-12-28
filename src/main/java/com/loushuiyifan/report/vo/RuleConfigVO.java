@@ -15,6 +15,7 @@ public class RuleConfigVO {
 	Double discount; //折扣率
 	String inactiveAmount; //库存过期卡金额
 	String platformAmount; //平台过期卡金额 
-	String chgWho; //修改人
+	String chgWho; //修改人ID
+	String userName;
 	String lstUpd; //修改时间
 }

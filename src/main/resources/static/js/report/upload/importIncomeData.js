@@ -338,7 +338,7 @@ var TableInit = function () {
                         return null;
                     }
                     return [
-                        '<button type="button" class="view btn btn-primary btn-xs">审批提交</button>'
+                        '<button type="button" class="view btn btn-primary btn-xs">订单跟踪</button>'
                     ].join('');
                 },
                 events: operateEvents
