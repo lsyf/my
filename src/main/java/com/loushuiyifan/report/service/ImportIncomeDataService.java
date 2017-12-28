@@ -226,6 +226,16 @@ public class ImportIncomeDataService {
 
     }
 
+    public String getMonth(Long id) {
+        ExtImportLog log = new ExtImportLog();
+        log.setLogId(id);
+        log = extImportLogDAO.selectOne(log);
+        if (log == null) {
+            return null;
+        }
+        return log.getAcctMonth();
+    }
+
     /**
      * 删除数据
      *

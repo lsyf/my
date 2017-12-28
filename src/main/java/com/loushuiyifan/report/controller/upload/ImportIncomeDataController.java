@@ -77,11 +77,11 @@ public class ImportIncomeDataController extends BaseReportController {
                              String remark,
                              String latnId,
                              @ModelAttribute("user") User user) {
-    	
+
         Long userId = user.getId();
 
         //首先校验能否导入
-//        dateService.checkImportIncomeData(month);
+        dateService.checkImportIncomeData(month);
 
         //然后保存
         Path path = reportStorageService.store(file);
@@ -116,7 +116,7 @@ public class ImportIncomeDataController extends BaseReportController {
     @ResponseBody
     @RequiresPermissions("report:importIncomeData:view")
     public JsonResult list(String month, String latnId, @ModelAttribute("user") User user) {
-        List<ImportDataLogVO> list = importIncomeDataService.list(latnId, month,user);
+        List<ImportDataLogVO> list = importIncomeDataService.list(latnId, month, user);
 
         return JsonResult.success(list);
     }
@@ -156,9 +156,12 @@ public class ImportIncomeDataController extends BaseReportController {
     @ResponseBody
     @RequiresPermissions("report:importIncomeData:remove")
     public JsonResult remove(@RequestParam("logIds[]") Long[] logIds,
+                             String month,
                              @ModelAttribute("user") User user) {
+        dateService.checkImportIncomeData(month);
         Long userId = user.getId();
         for (Long logId : logIds) {
+
             importIncomeDataService.delete(userId, logId);
         }
         return JsonResult.success();

@@ -87,7 +87,7 @@ public class DateService {
                 ReportConfig.RptAppParam.TIME_IMPORT_INCOME_DATA.toString());
         String now = LocalDateTime.now().format(DDHH);
         if (now.compareTo(limitTime) > 0) {
-            throw new ReportException("超出当前导入时间限制");
+            throw new ReportException("超出时间限制");
         }
 
         //然后账期校验
@@ -102,7 +102,7 @@ public class DateService {
         int value = nowDay > limitDay ? 0 : -1;
         if (limitDay == 0 || limitDay > 0
                 && !LocalDate.now().plusMonths(value).format(YYYYMM).equals(month)) {
-            throw new ReportException("超出导入账期限制");
+            throw new ReportException("超出账期限制");
         }
     }
     

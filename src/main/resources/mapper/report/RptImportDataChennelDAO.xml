@@ -18,6 +18,7 @@
 
     <select id="listIncomeDataLog" resultType="com.loushuiyifan.report.vo.ImportDataLogVO">
         select b.log_id as "logId",
+        a.acct_month as "month",
         b.file_name as "fileName",
         count(*) as "num",
         sum(a.index_data) as "sum",
@@ -51,7 +52,7 @@
         and e.rpt_no=1701
         and e.group_id=0
         and a.ver_code=e.index_code
-        group by b.STATUS, b.log_id, b.file_name, c.name, b.user_id,d.nickname ,
+        group by  a.acct_month ,b.STATUS, b.log_id, b.file_name, c.name, b.user_id,d.nickname ,
          b.export_desc,b.IS_ITSM,b.ITSM_STATUS, b.ITSM_ORDER_NO,b.ITSM_URL,b.eip
         order by b.STATUS desc
     </select>

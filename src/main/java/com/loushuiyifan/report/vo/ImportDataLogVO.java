@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class ImportDataLogVO {
 
-
+    String month;
     Long logId;
     String fileName;//文件名
     Integer num;    //数量
