@@ -161,13 +161,13 @@ public class ImportIncomeDataService {
      * @param month
      * @return
      */
-    public List<ImportDataLogVO> list(String latnId, String month) {
+    public List<ImportDataLogVO> list(String latnId, String month, User user) {
         String type = ReportConfig.RptImportType.INCOME_DATA.toString();
         List<ImportDataLogVO> list = rptImportDataChennelDAO.listIncomeDataLog(latnId, month, type);
 
         //添加itsm url信息
 //        String eipName = "&eipName=" + ReportConfig.ITSM_ACCOUNT;
-        String eipName = "&eipName=";
+        String eipName = "&eipName=" + user.getEip();
 
         String SecretKey = "67987452DFE86867A0F176E7035880BB";
         long currentTimeMillis = System.currentTimeMillis();
@@ -178,7 +178,7 @@ public class ImportIncomeDataService {
         String server = "http://134.96.168.104:80";
         for (ImportDataLogVO vo : list) {
             String url = vo.getItsmUrl();
-            vo.setItsmUrl(server + url + eipName + vo.getEip() + tc);
+            vo.setItsmUrl(server + url + eipName + tc);
         }
         return list;
     }
@@ -359,13 +359,15 @@ public class ImportIncomeDataService {
                     if (StringUtils.isEmpty(data)) {
                         continue;
                     }
+                    Double temp;
                     switch (x) {
                         case 0:
-                            Double temp = Double.parseDouble(data);
+                            temp = Double.parseDouble(data);
                             bean.setAreaId(temp.intValue());
                             break;
                         case 2:
-                            bean.setC5Id(Long.parseLong(data));
+                            temp = Double.parseDouble(data);
+                            bean.setC5Id(temp.longValue());
                             break;
                         case 4:
                             bean.setIncomeSource(data);
@@ -377,7 +379,8 @@ public class ImportIncomeDataService {
                             bean.setVerCode(data);
                             break;
                         case 10:
-                            bean.setSelfCode(Integer.parseInt(data));
+                            temp = Double.parseDouble(data);
+                            bean.setSelfCode(temp.intValue());
                             break;
                         case 12:
                             bean.setContractId(data);
@@ -389,10 +392,12 @@ public class ImportIncomeDataService {
                             bean.setZglks(data);
                             break;
                         case 16:
-                            bean.setIndexData(Double.parseDouble(data));
+                            temp = Double.parseDouble(data);
+                            bean.setIndexData(temp);
                             break;
                         case 17:
-                            bean.setTaxValue(Double.parseDouble(data));
+                            temp = Double.parseDouble(data);
+                            bean.setTaxValue(temp);
                             break;
                         case 18://ICT合同号
                             bean.setIctCode(data);

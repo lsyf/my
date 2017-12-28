@@ -115,8 +115,8 @@ public class ImportIncomeDataController extends BaseReportController {
     @PostMapping("list")
     @ResponseBody
     @RequiresPermissions("report:importIncomeData:view")
-    public JsonResult list(String month, String latnId) {
-        List<ImportDataLogVO> list = importIncomeDataService.list(latnId, month);
+    public JsonResult list(String month, String latnId, @ModelAttribute("user") User user) {
+        List<ImportDataLogVO> list = importIncomeDataService.list(latnId, month,user);
 
         return JsonResult.success(list);
     }
