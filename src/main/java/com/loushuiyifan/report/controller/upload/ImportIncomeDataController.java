@@ -77,7 +77,7 @@ public class ImportIncomeDataController extends BaseReportController {
                              String remark,
                              String latnId,
                              @ModelAttribute("user") User user) {
-
+    	
         Long userId = user.getId();
 
         //首先校验能否导入

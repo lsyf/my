@@ -74,11 +74,10 @@ function updateData(row) {
     form_orgTree.val(row.latnId);
   
     $('#form_logId').val(row.logId);
-    $('#form_card').val(row.cardTypeId);
+    $('#form_card').val(row.cardTypeId);   
     $('#form_discount').val(row.discount);
     $('#platformAmount_val').val(row.platformAmount);
     $('#inactiveAmount_val').val(row.inactiveAmount);
-
 
 }
 
@@ -176,7 +175,7 @@ var TableInit = function () {
                 width:'80px',
                 title: '库存过期卡金额(元)'
             },{
-            	field: 'chgWho',
+            	field: 'userName',
                 title: '修改人',
                 width: 100
             },{
