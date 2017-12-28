@@ -75,9 +75,9 @@ public class RptRuleConfigController extends BaseReportController{
 	@PostMapping("update")
     @ResponseBody
     public JsonResult update(String month,String latnId, String cardType,String discount, 
-    		                  String platformAmount,String inactiveAmount) {
+    		                  String platformAmount,String inactiveAmount,Long logId) {
 		try {
-			rptRuleConfigService.add(month, latnId, cardType, discount, platformAmount, inactiveAmount);
+			rptRuleConfigService.updateRule(month, latnId, cardType, discount, platformAmount, inactiveAmount,logId);
 
 		} catch (Exception e) {
 			e.printStackTrace();

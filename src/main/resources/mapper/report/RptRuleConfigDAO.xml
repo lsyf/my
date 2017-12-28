@@ -6,9 +6,10 @@
     <select id="listData" resultType="com.loushuiyifan.report.vo.RuleConfigVO">
 		select a.id         as "logId",
 		       a.acct_month as "month",
+		       b.dept_id       as "latnId",  
+		       a.card_id as "cardTypeId", 
 		       b.name       as "latnName",       
-		       decode(a.area_id, 0, chr(51371) || chr(45759),
-		       (select b.name from aweb_organization b where b.data = a.area_id))   as "codeName",     
+		       (select b.name from aweb_organization b where b.type='local_net' and b.data = a.area_id)   as "codeName",     
 		       (select c.card_name from charge.dim_card_def c where c.card_id = a.card_id) as "cardType",
 		       a.rate            as "discount",		       
 		       a.platform_amount as "platformAmount",
@@ -39,30 +40,16 @@
 	
 	<update id="updateByAll">
 	update charge.inet_discount_rate a
-    	set 
-    	<if test='month !=""'>
+    	set    	
     	a.acct_month = #{month},
-    	</if>
-    	<if test='latnId !=""'>
     	a.area_id         = #{latnId},
-    	</if>
-       <if test='cardType !=""'>
     	a.card_id         = #{cardType},
-    	</if>
-       <if test='discount !=""'>
     	a.rate            = #{discount},
-    	</if>
-       <if test='platformAmount !=""'>
     	a.inactive_amount = #{platformAmount},
-    	</if>
-    	<if test='inactiveAmount !=""'>
     	a.platform_amount = #{inactiveAmount},
-    	</if>
         a.lst_upd = sysdate      
-   	where a.acct_month = #{month}
-   	  and a.area_id = #{latnId}
-	  and a.card_id = #{cardType}
-	
+   	where a.id = #{logId}
+   	 
 	</update>
 	<select id="findCardName" resultType="Map">
 	 select a.card_id as "id", 

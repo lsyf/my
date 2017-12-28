@@ -19,6 +19,7 @@ public interface RptRuleConfigDAO extends MyMapper<RuleConfigVO>{
 			                    @Param("discount") String discount);
 	
 	void updateByAll(@Param("month") String month,
+			         @Param("logId") Long logId,
 		             @Param("latnId") String latnId, 
 		             @Param("cardType") String cardType,
 		             @Param("discount") String discount,
