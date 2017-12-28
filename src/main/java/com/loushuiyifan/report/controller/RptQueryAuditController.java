@@ -97,13 +97,8 @@ public class RptQueryAuditController extends BaseReportController{
     public JsonResult quit(String month,String latnId,String incomeSource,    		                    
     		                    @ModelAttribute("user") User user) {
 		Long userId = user.getId();
-		
-		try {
 			
-			rptQueryAuditService.quit(month, latnId, incomeSource, userId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		rptQueryAuditService.quit(month, latnId, incomeSource, userId);
         
         return JsonResult.success();
     }
@@ -119,8 +114,9 @@ public class RptQueryAuditController extends BaseReportController{
     		                @ModelAttribute("user") User user) {
 		Long userId = user.getId();
 		// 判断用户是否有相应审核权限
-		Subject subject = SecurityUtils.getSubject();
-		subject.checkPermission("report:rptQueryCust:audit");
+//		Subject subject = SecurityUtils.getSubject();
+//		subject.checkPermission("report:rptQueryCust:audit");
+//		
 		try {
 			for(int i=0; i< logs.length; i++){
 				String codeName = logs[i];

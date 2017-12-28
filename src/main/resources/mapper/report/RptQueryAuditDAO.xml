@@ -113,9 +113,8 @@
             statementType="CALLABLE">
         {call PKG_RPT_AUDIT_NEW.hasAuditPost2(
          #{userId,mode=IN,jdbcType=NUMERIC},
-         #{logId,mode=IN,jdbcType=NUMERIC},
-         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMsg,mode=OUT,jdbcType=VARCHAR}
+         #{logId, mode=IN,jdbcType=NUMERIC},
+         #{rtnMsg, mode=OUT,jdbcType=VARCHAR}
          )}
     </select>
         
@@ -134,10 +133,10 @@
             statementType="CALLABLE">
         {call PKG_RPT_AUDIT_NEW.auditRpt_part4(
          #{userId,mode=IN,jdbcType=NUMERIC},
-         #{month,mode=IN,jdbcType=VARCHAR},
+         #{month, mode=IN,jdbcType=VARCHAR},
          #{reportId,mode=IN,jdbcType=VARCHAR},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
-         #{rtnMsg,mode=OUT,jdbcType=VARCHAR}
+         #{rtnMsg, mode=OUT,jdbcType=VARCHAR}
          )}
     </select>
 </mapper>

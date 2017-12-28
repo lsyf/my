@@ -65,7 +65,7 @@ function queryList() {
 
 }
 
-function updateData(row) {
+function showData(row) {
 
     
     showPanel(0);
@@ -96,9 +96,9 @@ function doUpdate() {
 
             if (r.state) {
                 toastr.info('更新成功');
-                queryList()
-                //showPanel(1);
-                //table.refresh();
+               
+                showPanel(1);
+                queryList() ;
             } else {
                 toastr.error('更新失败'+r.msg);
             }
@@ -195,7 +195,7 @@ var TableInit = function () {
     //操作 监听
     window.operateEvents = {
     		'click .edit': function (e, value, row, index) {
-                updateData(row);
+    			showData(row);
             }
     };
 

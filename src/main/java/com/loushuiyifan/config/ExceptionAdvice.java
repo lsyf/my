@@ -1,11 +1,13 @@
 package com.loushuiyifan.config;
 
-import com.loushuiyifan.system.vo.JsonResult;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.loushuiyifan.system.vo.JsonResult;
 
 /**
  * @author 漏水亦凡
@@ -16,13 +18,12 @@ public class ExceptionAdvice {
     private Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
 
 
-//    @ExceptionHandler({UnauthorizedException.class})
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    @ResponseBody
-//    public JsonResult processError(Exception e) {
-//        logger.error("error", e);
-//        return JsonResult.failure("没有权限:"+e.getMessage());
-//    }
+    @ExceptionHandler({UnauthorizedException.class})
+    @ResponseBody
+    public JsonResult processError(Exception e) {
+        logger.error("error", e);
+        return JsonResult.failure("没有权限:"+e.getMessage());
+    }
 
     @ExceptionHandler({Exception.class})
     @ResponseBody

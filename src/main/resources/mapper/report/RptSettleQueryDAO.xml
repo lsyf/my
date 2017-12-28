@@ -82,7 +82,7 @@
     </select>
 	<select id="selectAudits" parameterType="Map" statementType="CALLABLE">
       {#{list,mode=OUT,jdbcType=CURSOR,resultMap=rptAuditVO}= call PKG_RPT_SETT.getAuditInfo(
-      #{rptCaseId,mode=IN,jdbcType=NUMERIC},
+      #{rptCaseId,mode=IN,jdbcType=VARCHAR},
       #{month,mode=IN,jdbcType=VARCHAR},
       #{reportId,mode=IN,jdbcType=VARCHAR},
       #{incomeSource,mode=IN,jdbcType=VARCHAR}

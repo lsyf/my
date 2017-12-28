@@ -37,25 +37,26 @@ public class RptQueryAuditService {
 	}
 	
 	public void  quit(String month,String latnId ,String incomeSource,Long userId)
-	          throws Exception{
+	          {
 		
-		//判断用户是否能回退
-		SPDataDTO dto = new SPDataDTO();
-		dto.setLogId(Long.parseLong("21")); //logId 代表审核的c_post_id
-		dto.setUserId(userId);
-		rptQueryAuditDAO.checkUser(dto);
-		
-		String code = dto.getRtnCode().toString();
-        if (!"Y".equals(code)) {
-            throw new ReportException("失败: " + dto.getRtnMsg());
-        }
-        
+			SPDataDTO dto = new SPDataDTO();
+			dto.setLogId(Long.parseLong("7189")); //logId 代表四级审核的c_post_id
+			dto.setUserId(userId);
+			rptQueryAuditDAO.checkUser(dto);
+			
+			String code = dto.getRtnMsg().toString();
+	        if (!"Y".equals(code)) {
+	            throw new ReportException("回退失败");
+	        }				
+	
+		       
         //执行回退存过
         SPDataDTO dto2 = new SPDataDTO();
         dto2.setMonth(month);
         dto2.setReportId(incomeSource);
         dto2.setLatnId(latnId);
-        int code2 = dto.getRtnCode();
+        rptQueryAuditDAO.delAuditStatus(dto2);
+        int code2 = dto2.getRtnCode();
         if (code2 != 0) {//非0为失败
             throw new ReportException("数据回退失败: " + dto2.getRtnMsg());
         }

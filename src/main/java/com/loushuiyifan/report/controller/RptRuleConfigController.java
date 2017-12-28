@@ -81,9 +81,12 @@ public class RptRuleConfigController extends BaseReportController{
     public JsonResult update(String month,String latnId, String cardType,String discount, 
     		                  String platformAmount,String inactiveAmount,Long logId,
     		                  @ModelAttribute("user") User user) {
-		try {
+		 
 			Long userId = user.getId();
-			
+			double dis =Double.parseDouble(discount);
+			if(dis<0 &&dis>1){
+				throw new ReportException("超出折扣率的取值范围：[0,1]");
+			}
 			List<String> num =rptRuleConfigService.checkUsers(logId, userId);
 			
 			if(num.size()!=1 && userId !=19306&& userId !=119 && userId !=113 &&userId !=34951&& userId !=216630&& userId !=1082230){
@@ -92,10 +95,8 @@ public class RptRuleConfigController extends BaseReportController{
 			
 			rptRuleConfigService.updateRule(month,cardType, discount, platformAmount, inactiveAmount,logId);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		        return JsonResult.success();
+		 	
+		 return JsonResult.success();
     }
 	
 	
