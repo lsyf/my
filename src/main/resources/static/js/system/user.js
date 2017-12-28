@@ -591,7 +591,7 @@ var OrgZtree = function () {
             node.id = data.id;
             node.pId = data.parentId;
             node.name = data.name;
-            node.open = true;
+            node.open = false;
             node.checkedOld = false;
             nodes.push(node)
         });
@@ -621,7 +621,7 @@ var OrgZtree = function () {
                 node.checked = false;
             }
             node.checkedOld = node.checked;
-            node.open = true;
+            node.open = false;
         });
 
         $.fn.zTree.init($("#" + oZtree.id), treeSetting, root);
