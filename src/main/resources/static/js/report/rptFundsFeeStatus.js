@@ -7,7 +7,7 @@ function initFundsFeeForm() {
     buildSelect('upload_month', months);
     isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 100);
     isTree.Init(reportIds);
-   
+
 }
 
 function queryLog() {
@@ -37,24 +37,15 @@ function queryLog() {
 }
 
 //回退
-function quitData() {
-	var month = $("#upload_month").val();
-	var reportId = isTree.val(); 
-	
-//	var selects = $('#table_upload').bootstrapTable('getSelections');
-//	if(selects.length==0){
-//		toastr.info('未选中任何数据');
-//		return;
-//	}
-//	var logs = [];
-//	selects.forEach(function(data,i){
-//		logs.push(data.voucherCode);
-//	});
-	editAlert('警告', '是否确定回退月份: ' + month+',报表编号:'+reportId , '回退', function () {
+function quitData(id) {
+    var month = $("#upload_month").val();
+    var id = id ;
+
+    editAlert('警告', '是否确定回退月份: ' + month + ',报表编号:' + id, '回退', function () {
         $.ajax({
             type: "POST",
             url: hostUrl + "rptFundsFeeStatus/quit",
-            data: {month: month, reportId: reportId},
+            data: {month: month, reportId: id},
             dataType: "json",
             success: function (r) {
                 if (r.state) {
@@ -63,7 +54,7 @@ function quitData() {
 
                     queryLog()
                 } else {
-                    toastr.error('回退失败'+r.msg);
+                    toastr.error('回退失败' + r.msg);
                 }
             },
             error: function (result) {
@@ -75,20 +66,20 @@ function quitData() {
 }
 
 //电子档案下载
-function downData() {
-	var month = $("#upload_month").val();
-	 
-	var selects = $('#table_upload').bootstrapTable('getSelections');
-	if(selects.length==0){
-		toastr.info('未选中任何数据');
-		return;
-	}
-	var logs = [];
-	selects.forEach(function(data,i){
-		logs.push(data.voucherCode);
-	});
-	
-	
+function downData(id) {
+    var month = $("#upload_month").val();
+
+    var selects = $('#table_upload').bootstrapTable('getSelections');
+    if (selects.length == 0) {
+        toastr.info('未选中任何数据');
+        return;
+    }
+    var logs = [];
+    selects.forEach(function (data, i) {
+        logs.push(data.voucherCode);
+    });
+
+
 }
 
 //Table初始化
@@ -107,7 +98,7 @@ var TableInit = function () {
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 50,                       //每页的记录行数（*）
-            pageList: [50,100,500],        //可供选择的每页的行数（*）
+            pageList: [50, 100, 500],        //可供选择的每页的行数（*）
             // search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
@@ -119,62 +110,84 @@ var TableInit = function () {
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
-             
+
             data: [],
             columns: [{
-            	checkbox:true
-            },{
                 field: 'reportName',
-                width:'80px',
+                width: '80px',
                 title: '报表名称'
             }, {
                 field: 'status',
-                width:'120px',
+                width: '120px',
                 title: '报表状态',
-                formatter:function(value,row,index){
-                	var a ='';
-                	if(value =="一审"){
-                		var a = '<span style="color:#00CD00">'+value+'</span>';  
-                	}else if(value =="二审"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="准备数据"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="准备生成文件"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="生成文件成功"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="通知集团"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="集团入库"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="通知集团失败"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="集团入库失败"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="过账成功"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="过账失败"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="SAP冲销"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else if(value =="SAP删除"){
-                		var a = '<span style="color:#FF0000">'+value+'</span>'; 
-                	}else{
-                		var a = '<span style="color:#BEBEBE">'+value+'</span>'; 
-                	}
-                	return a;
+                formatter: function (value, row, index) {
+                    var a = '';
+                    if (value == "一审") {
+                        var a = '<span style="color:#00CD00">' + value + '</span>';
+                    } else if (value == "二审") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "准备数据") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "准备生成文件") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "生成文件成功") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "通知集团") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "集团入库") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "通知集团失败") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "集团入库失败") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "过账成功") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "过账失败") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "SAP冲销") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else if (value == "SAP删除") {
+                        var a = '<span style="color:#FF0000">' + value + '</span>';
+                    } else {
+                        var a = '<span style="color:#BEBEBE">' + value + '</span>';
+                    }
+                    return a;
                 }
             }, {
                 field: 'voucherCode',
-                width:'120px',
+                width: '120px',
                 title: '凭证号'
+            }, {
+                field: '123',
+                width: '120px',
+                title: '操作',
+                formatter: operateFormatter,
+                events: operateEvents,
             }]
         });
 
 
     };
 
-    
+    //操作显示format
+    function operateFormatter(value, row, index) {
+        return [
+            '<button type="button" class="download btn btn-primary btn-xs">下载</button> \
+            <button type="button" class="back btn btn-danger btn-xs">回退</button>'
+        ].join('');
+    }
+
+    //操作 监听
+    window.operateEvents = {
+        'click .download': function (e, value, row, index) {
+            downData(row.reportName.substring(0, 1));
+        },
+        'click .back': function (e, value, row, index) {
+            quitData(row.reportName.substring(0, 1));
+        }
+
+    };
+
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);

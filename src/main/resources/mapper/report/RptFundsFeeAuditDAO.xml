@@ -58,7 +58,7 @@
         #{comment,mode=IN,jdbcType=VARCHAR},
         #{rtnCode,mode=OUT,jdbcType=NUMERIC},
         #{rtnMsg,mode=OUT,jdbcType=VARCHAR},
-        #{rtnStatus,mode=OUT,jdbcType=VARCHAR}
+        #{rtnMsg2,mode=OUT,jdbcType=VARCHAR}
         )}
     </select>
 	<select id="selectAudits" parameterType="Map" statementType="CALLABLE">

@@ -54,13 +54,14 @@ public class RptFundsFeeQueryService {
 
     public List<Map<String, String>> listReportName() {
         //List<Map<String, String>> list = new ArrayList<>();
-    	List<Map<String, String>> list = rptFundsFeeQueryDAO.listReportName();
+        List<Map<String, String>> list = new ArrayList<>();
         Map<String, String> m = Maps.newHashMap();
         m.put("id", "0");
         m.put("name", "全部");
         m.put("data", "0");
         m.put("lvl", "1");
         list.add(m);
+        list.addAll(rptFundsFeeQueryDAO.listReportName());
         //List<Map<String, String>> list2 = rptFundsFeeQueryDAO.listReportName();
         //list.addAll(list2);
         return list;
