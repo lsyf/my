@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptSettleOldDataDAO">
+	<select id="listData" resultType="com.loushuiyifan.report.vo.SettleDataVO" >
+		
+	   select distinct a.log_id as "logId",
+                a.REPORT_ID     as "reportId",
+                b.REPORT_name   as "reportName",
+                a.acct_month    as "month",
+                b.income_source as "incomeSource",
+                decode(a.state, 0, '无', '1', '有数据') as "status",
+                c.file_seq      as "fileSeq",
+       			to_char(c.create_date, 'YYYY-MM-DD hh24:mi:ss') as "createDate",
+       			to_char(c.import_date, 'YYYY-MM-DD hh24:mi:ss') as "importDate"
+                   
+		  from rpt_sett_state a, rpt_sett_def b, rpt_sett_log c
+		 where a.REPORT_ID = b.REPORT_ID 
+		   and a.log_id = c.log_id
+   		   and b.batch_id = c.batch_id
+   		   and a.acct_month = #{month}
+	 	<if test='reportId !="0" '>
+			and a.REPORT_ID = #{reportId}
+		</if>
+	 	order by a.report_id  
+			
+		
+	</select> 
+	<select id="listOld" resultType="Map">
+	select * from rpt_sett_income_cut a 
+		 where a.log_id= #{logId}
+		 and a.BUKRS like '833%'
+		 order by REMARK ASC
+	
+	</select>
+	<select id="titleOld" resultType="Map">
+		 select distinct c.rn2 as "id",
+		        c.COLUMN_NAME  as "name",
+		        c.rn1 
+	      from rpt_sett_log a, rpt_sett_def b, v_rpt_sett_format c
+	        where a.batch_id = b.batch_id
+	        and b.report_id = c.SHEET_CODE
+	        and a.log_id = #{logId}
+	        order by c.rn1 ASC
+	</select>
+	
+    <resultMap id="rptAuditVO" type="com.loushuiyifan.report.vo.RptAuditVO">
+    </resultMap>
+</mapper>

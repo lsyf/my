@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/static}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>结算详情</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="stylesheet"
+          href="../../static/plugins/bootstrap-table/bootstrap-table.min.css"
+          th:href="@{/static/plugins/bootstrap-table/bootstrap-table.min.css}">
+    <script src="../../static/plugins/bootstrap-table/bootstrap-table.min.js"
+            th:src="@{/static/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script src="../../static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"
+            th:src="@{/static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+
+    <script src="../../static/plugins/moment/moment-with-locales.min.js"
+            th:src="@{/static/plugins/moment/moment-with-locales.min.js}"></script>
+
+
+    <link rel="stylesheet"
+          href="../../static/plugins/zTree/zTreeStyle.css"
+          th:href="@{/static/plugins/zTree/zTreeStyle.css}">
+    <script src="../../static/plugins/zTree/jquery.ztree.all.min.js"
+            th:src="@{/static/plugins/zTree/jquery.ztree.all.min.js}"></script>
+
+    
+
+    <script src="../../static/js/report/common.js"
+            th:src="@{/static/js/report/common.js}"></script>
+    <script src="../../static/js/report/rptSettleDetail2.js"
+            th:src="@{/static/js/report/rptSettleDetail2.js}"></script>
+
+
+    <style>
+        .btn-form {
+            margin-right: 20px;
+        }
+
+        .table-row {
+            /*height: 30px;*/
+        }
+    </style>
+
+</head>
+
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content">
+
+        <script th:inline="javascript">
+            //页面传值
+            var report_titles= [[${titles}]];
+            var report_datas= [[${datas}]];
+            
+            $(function () {
+            	initSettleDetail();
+            });
+        </script>
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>集团结算详情</h1>
+            
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div id="form-panel">
+               
+                    <div class="box-header">
+                        	查询条件
+                    </div>
+              
+            </div>
+
+            <div id="form-table">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <ul class="nav nav-tabs" role="tablist" id="tabs">
+                            <li role="presentation" class="active">
+                                <a href="#tab_table1" aria-controls="tab_table1"
+                                   role="tab" data-toggle="tab">原始数据</a>
+                            </li>
+                           
+                        </ul>
+                    </div>
+                    <div class="box-body">
+                        <div class="tab-content" id="tab_panels">
+                            <div role="tabpanel" class="tab-pane active" id="tab_table1">
+                                <h4 style="text-align: center;"><b id="title_table"></b>
+                                </h4>
+                                <table id="table_query" class="table_data"></table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</div>
+</body>
+</html>
