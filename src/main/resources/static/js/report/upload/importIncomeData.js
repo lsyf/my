@@ -171,11 +171,10 @@ function removeData() {
 
     var logIds = [];
     var txt = "";
-    var month = "";
+
     selects.forEach(function (d, i) {
         logIds.push(d.logId);
         txt += d.logId + ', '
-        month = d.month;
     });
 
     editAlert('警告', '是否确定删除流水号: ' + txt, '删除', function () {
