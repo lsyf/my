@@ -1,11 +1,7 @@
 package com.loushuiyifan.report.controller;
 
-import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.service.RptFundsFeeAuditService;
-import com.loushuiyifan.report.service.RptFundsFeeQueryService;
-import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.report.vo.FundsAuditVO;
-import com.loushuiyifan.system.vo.JsonResult;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -14,12 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Map;
+import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.service.RptFundsFeeAuditService;
+import com.loushuiyifan.report.service.RptFundsFeeQueryService;
+import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.report.vo.FundsAuditVO;
+import com.loushuiyifan.system.vo.JsonResult;
 
 @Controller
 @RequestMapping("rptFundsFeeAudit")
@@ -65,19 +68,24 @@ public class RptFundsFeeAuditController extends BaseReportController {
         return JsonResult.success(list);
     }
 
+    @PostMapping("listAudit")
+    @ResponseBody
+    public JsonResult listAudit(String month,String reportId) {
+       
+    	Map<String, Object> map = rptFundsFeeAuditService.listAudit(month,reportId);
+        
+        return JsonResult.success(map);
+    }
+    
     /**
      * 报表审核
      */
     @PostMapping("audit")
     @ResponseBody
-    public JsonResult auditReport(String month, String reportId) {
-        //TODO 报表审核未定
-        try {
-            rptFundsFeeAuditService.auditReport(month, reportId);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public JsonResult auditReport(Long rptCaseId, String status, String comment,
+                                  @ModelAttribute("user") User user) {
+    	Long userId = user.getId();
+    	rptFundsFeeAuditService.audit(rptCaseId, status, comment, userId);
         return JsonResult.success();
     }
 }

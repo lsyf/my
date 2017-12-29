@@ -42,12 +42,14 @@ public class SettleExportServ extends AbstractPoiExport<Map<String, String>>{
     
     @Override
     protected void process(Workbook wb) throws Exception {
-    	//wb.setSheetName(0, "原始数据");//设置sheet名
-    	//Sheet sheet = wb.getSheetAt(0);
-        Sheet sheet1 = wb.createSheet("原始数据");
-        Sheet sheet2 = wb.createSheet("处理后数据");
+    	
+        Sheet sheet1 = wb.createSheet("原始数据");       
     	processSheet(sheet1,cols,rows);
-    	processSheet(sheet2,col,row);
+    	if(col !=null){
+    		Sheet sheet2 = wb.createSheet("处理后数据");
+    		processSheet(sheet2,col,row);
+    	}
+    	
     }
     
     protected void processSheet(Sheet sheet,

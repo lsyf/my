@@ -48,5 +48,26 @@
     	and REPORT_ID = #{reportId}
       </if>
 	</select> 
-			
+	
+	<select id="auditRpt" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
+            statementType="CALLABLE">
+        {call PKG_RPT_BALANCE.auditRpt(
+        #{userId,mode=IN,jdbcType=NUMERIC},
+        #{rptCaseId,mode=IN,jdbcType=NUMERIC},
+        #{status,mode=IN,jdbcType=VARCHAR},
+        #{comment,mode=IN,jdbcType=VARCHAR},
+        #{rtnCode,mode=OUT,jdbcType=NUMERIC},
+        #{rtnMsg,mode=OUT,jdbcType=VARCHAR},
+        #{rtnStatus,mode=OUT,jdbcType=VARCHAR}
+        )}
+    </select>
+	<select id="selectAudits" parameterType="Map" statementType="CALLABLE">
+      {#{list,mode=OUT,jdbcType=CURSOR,resultMap=rptAuditVO}= call PKG_RPT_BALANCE.getAuditInfo(
+      #{rptCaseId,mode=IN,jdbcType=VARCHAR},
+      #{month,mode=IN,jdbcType=VARCHAR},
+      #{reportId,mode=IN,jdbcType=VARCHAR}
+      )}
+    </select>
+    <resultMap id="rptAuditVO" type="com.loushuiyifan.report.vo.RptAuditVO">
+    </resultMap>		
 </mapper>

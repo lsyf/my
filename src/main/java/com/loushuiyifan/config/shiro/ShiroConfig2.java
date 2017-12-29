@@ -78,7 +78,7 @@ public class ShiroConfig2 {
         userRealm.setCredentialsMatcher(credentialsMatcher()); 
         userRealm.setCachingEnabled(true);
         userRealm.setAuthenticationCachingEnabled(false);
-        userRealm.setAuthorizationCachingEnabled(true); //TODO 缓存授权
+        userRealm.setAuthorizationCachingEnabled(false); //TODO 缓存授权
         return userRealm;
     }
 
