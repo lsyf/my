@@ -3,6 +3,7 @@ package com.loushuiyifan.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 /**
  * @author 漏水亦凡
@@ -21,11 +22,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/static/");
+                .addResourceLocations("classpath:/static/")
+                .resourceChain(false)
+                .addResolver(new VersionResourceResolver()
+                        .addContentVersionStrategy("/**"));
 
-//        registry.addResourceHandler("/download/**")
-//                .addResourceLocations("file:/report/")
-//                .setCachePeriod(3155926);
 
     }
 
