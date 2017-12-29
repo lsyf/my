@@ -63,3 +63,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 /src/main/java/com/loushuiyifan/config/DBConfig_12.java
+/src/main/java/com/loushuiyifan/config/DobboConfig.java
+/src/main/resources/application.yml
