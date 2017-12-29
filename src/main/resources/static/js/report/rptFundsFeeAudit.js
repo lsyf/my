@@ -39,49 +39,6 @@ function queryLog() {
 
 }
 
-//四审
-function auditStatus() {
-	var month = $("#upload_month").val();
-	var reportId = isTree.val(); 
-
-    editAlert('警告', '是否确定:  账期' + month + ", 状态:" + status, '更新状态', function () {
-    	
-    	var selects = $('#table_upload').bootstrapTable('getSelections');
-    	if(selects.length==0){
-    		toastr.info('未选中任何数据');
-    		return;
-    	}
-    	var logs = [];
-    	selects.forEach(function(data,i){
-    		logs.push(data.subId);
-    	});
-    	
-        $.ajax({
-            type: "POST",
-            url: hostUrl + "rptFundsFeeAudit/audit",
-            data: {
-            	month: month,
-                reportId: reportId
-            },
-            dataType: "json",
-            success: function (r) {
-                if (r.state) {
-                    toastr.info('更新成功');
-                    hideAlert();
-
-                    queryLog()
-                } else {
-                    toastr.error('更新失败');
-                    toastr.error(r.msg);
-                }
-            },
-            error: function (result) {
-                toastr.error('发送请求失败');
-            }
-        });
-    });
-    showAlert();
-}
 
 //审核查询
 function listAudit(type, btn) {
@@ -93,7 +50,7 @@ function listAudit(type, btn) {
         url: hostUrl + "rptFundsFeeAudit/listAudit",
         data: {
             month: $("#upload_month").val(),
-            logs: logs
+            reportId: reportId
         },
         dataType: "json",
         beforeSend: function () {
@@ -175,7 +132,7 @@ var TableInit = function () {
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            height: 800,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图

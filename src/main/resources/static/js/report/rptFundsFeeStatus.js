@@ -37,20 +37,20 @@ function queryLog() {
 }
 
 //回退
-function quitData(row) {
+function quitData() {
 	var month = $("#upload_month").val();
 	var reportId = isTree.val(); 
 	
-	var selects = $('#table_upload').bootstrapTable('getSelections');
-	if(selects.length==0){
-		toastr.info('未选中任何数据');
-		return;
-	}
-	var logs = [];
-	selects.forEach(function(data,i){
-		logs.push(data.voucherCode);
-	});
-	editAlert('警告', '是否确定回退月份: ' + month,'报表编号:'+reportId , '回退', function () {
+//	var selects = $('#table_upload').bootstrapTable('getSelections');
+//	if(selects.length==0){
+//		toastr.info('未选中任何数据');
+//		return;
+//	}
+//	var logs = [];
+//	selects.forEach(function(data,i){
+//		logs.push(data.voucherCode);
+//	});
+	editAlert('警告', '是否确定回退月份: ' + month+',报表编号:'+reportId , '回退', function () {
         $.ajax({
             type: "POST",
             url: hostUrl + "rptFundsFeeStatus/quit",
@@ -63,8 +63,7 @@ function quitData(row) {
 
                     queryLog()
                 } else {
-                    toastr.error('回退失败');
-                    toastr.error(r.msg);
+                    toastr.error('回退失败'+r.msg);
                 }
             },
             error: function (result) {
@@ -75,7 +74,22 @@ function quitData(row) {
     showAlert();
 }
 
-
+//电子档案下载
+function downData() {
+	var month = $("#upload_month").val();
+	 
+	var selects = $('#table_upload').bootstrapTable('getSelections');
+	if(selects.length==0){
+		toastr.info('未选中任何数据');
+		return;
+	}
+	var logs = [];
+	selects.forEach(function(data,i){
+		logs.push(data.voucherCode);
+	});
+	
+	
+}
 
 //Table初始化
 var TableInit = function () {

@@ -13,7 +13,7 @@ function initForm() {
 }
 
 
-function queryData() {
+function queryData(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptSettleOldData/list",
@@ -22,18 +22,22 @@ function queryData() {
             reportId: isTree.val()
         },
         dataType: "json",
+        beforeSend: function () {
+            $(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
+               
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+        	$(btn).button("reset");
+            toastr.error('连接服务器请求失败!');
         }
     });
 
@@ -105,7 +109,7 @@ var TableInit = function () {
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            height: 800,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图

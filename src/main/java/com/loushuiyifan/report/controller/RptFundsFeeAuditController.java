@@ -82,7 +82,7 @@ public class RptFundsFeeAuditController extends BaseReportController {
      */
     @PostMapping("audit")
     @ResponseBody
-    public JsonResult auditReport(Long rptCaseId, String status, String comment,
+    public JsonResult auditReport(String rptCaseId, String status, String comment,
                                   @ModelAttribute("user") User user) {
     	Long userId = user.getId();
     	rptFundsFeeAuditService.audit(rptCaseId, status, comment, userId);

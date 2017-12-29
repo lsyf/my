@@ -80,21 +80,21 @@ public class RptSettleQueryService {
     	Map<String, Object> map = Maps.newHashMap();
     	map.put("list", list);
     	map.put("rptCaseId", rptCaseId);
-    	map.put("incomeSource", incomeSource);
+    	
     	
     	return map;
     }
     
-    public void audit(Long rptCaseId, String incomeSource,String status, String comment, Long userId) {
+    public void audit(Long rptCaseId, String status, String comment, Long userId) {
         SPDataDTO dto = new SPDataDTO();
-        dto.setRptCaseId(rptCaseId+Long.parseLong(incomeSource));
+        dto.setRptCaseId(rptCaseId);
         dto.setUserId(userId);
         dto.setStatus(status);
         dto.setComment(comment);
         rptSettleQueryDAO.auditRpt(dto);
         Integer code = dto.getRtnCode();
         if (code != 0) {//非0审核失败
-            throw new ReportException(dto.getRtnMsg());
+            throw new ReportException("审核失败:"+dto.getRtnMsg());
         }
     }
     

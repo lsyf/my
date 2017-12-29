@@ -21,7 +21,7 @@ public class SPDataDTO implements Cloneable {
     String comment;
 
     String reportId; //新增资金缴拨回退存过，报表编号
-
+    String rptFeeCaseId;
     //OUT返回值
     Integer rtnCode;
     String rtnMsg;

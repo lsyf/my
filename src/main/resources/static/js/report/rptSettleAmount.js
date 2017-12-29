@@ -11,7 +11,7 @@ function initForm() {
 }
 
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptSettleAmount/list",
@@ -21,18 +21,25 @@ function queryLog() {
             zbCode: $("#upload_zbCode").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	toastr.info('查询中。。。');
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+            	toastr.error('查询失败' + r.msg);
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+        	
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
@@ -62,34 +69,40 @@ function exportData() {
 
 }
 
-function collectData() {
+function collectData(btn) {
 	var month = $("#upload_month").val();
     var latnId = orgTree.val();
     var zbCode = $("#upload_zbCode").val(); 
+    $.ajax({
+        type: "POST",
+        url: hostUrl + "rptSettleAmount/collect",
+        data: { month: month, 
+        	    latnId: latnId, 
+        	    zbCode: zbCode
+        	},
+        dataType: "json",
+        beforeSend: function () {
+            $(btn).button("loading");
+            toastr.info('查询中。。。');
+        },
+        success: function (r) {
+            if (r.state) {
+                var data = r.data;
+                table.load(data);
+            } else {
+                toastr.error('汇总失败'+r.msg);
+                
+            }
+        },
+        error: function (result) {
+        	
+            toastr.error('连接服务器请求失败!');
+        },
+        always:function(){
+        	$(btn).button("reset");
+        }
+    });	
 	
-	editAlert('警告', '是否确定:  账期' + month + ", 营业区:" + latnId+ ",指标:"+zbCode, 
-			'更新状态', function (){
-		$.ajax({
-	        type: "POST",
-	        url: hostUrl + "rptSettleAmount/collect",
-	        data: { month: month, latnId: latnId, zbCode: zbCode},
-	        dataType: "json",
-	        success: function (r) {
-	            if (r.state) {
-	                var data = r.data;
-	                table.load(data);
-	            } else {
-	                toastr.error('汇总失败');
-	                toastr.error(r.msg);
-	            }
-	        },
-	        error: function (result) {
-	            toastr.error('发送请求失败');
-	        }
-	    });	
-	});
-    showAlert();
-
 }
 
 //Table初始化
@@ -116,7 +129,7 @@ var TableInit = function () {
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            height: 800,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图

@@ -93,7 +93,6 @@ function itsmData() {
                 hideAlert();
             },
             success: function (r) {
-                $('#btn_itsm').button("reset");
                 if (r.state) {
                     toastr.info('送审成功');
                     queryLog();
@@ -102,8 +101,10 @@ function itsmData() {
                 }
             },
             error: function (result) {
-                $('#btn_itsm').button("reset");
                 toastrError('请求失败');
+            },
+            always:function(){
+            	$('#btn_itsm').button("reset");
             }
         });
     });

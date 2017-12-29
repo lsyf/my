@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.service.RptSettleQueryService;
+import com.loushuiyifan.report.service.RptFundsFeeQueryService;
 import com.loushuiyifan.report.service.RptFundsFeeStatusService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.FundsStatusVO;
@@ -30,7 +31,7 @@ public class RptFundsFeeStatusController extends BaseReportController{
 	@Autowired
 	RptFundsFeeStatusService rptStatusFundsFeeFeeService;
 	@Autowired
-	RptSettleQueryService rptSettleQueryService;
+    RptFundsFeeQueryService rptFundsFeeQueryService;
 	/**
      * 资金缴拨状态查询界面
      *
@@ -42,7 +43,7 @@ public class RptFundsFeeStatusController extends BaseReportController{
         
         //页面条件
         List<CommonVO> months = dateService.commonMonths();
-        List<Map<String, String>> reportIds =rptSettleQueryService.listReportInfo();
+        List<Map<String, String>> reportIds = rptFundsFeeQueryService.listReportName();
         map.put("months", months);
         map.put("reportIds", reportIds);
         return "report/rptFundsFeeStatus";

@@ -146,7 +146,7 @@ public class RptSettleQueryController extends BaseReportController{
        //TODO 审核存过返回值改为0：成功，非0：失败
     	//PKG_RPT_SETT.auditRpt
     	Long userId = user.getId();
-        rptSettleQueryService.audit(rptCaseId, incomeSource,status, comment, userId);
+        rptSettleQueryService.audit(rptCaseId,status, comment, userId);
         return JsonResult.success();
     }
     

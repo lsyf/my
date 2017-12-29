@@ -40,7 +40,7 @@ public class RptFundsFeeAuditService {
 	public Map<String, Object> listAudit(String month, String reportId){
 			StringBuilder sb = new StringBuilder(); 
 			sb.append(reportId).append(month);
-			Long rptCaseId =Long.parseLong(sb.toString());
+			String rptCaseId =sb.toString();
 			Map param = new HashMap();
 			param.put("rptCaseId", rptCaseId);
 			param.put("month",month);
@@ -62,13 +62,14 @@ public class RptFundsFeeAuditService {
 	/**
 	 * 报表审核
 	 */
-	public void audit(Long rptCaseId,String status, String comment, Long userId) {
+	public void audit(String rptCaseId,String status, String comment, Long userId) {
         if("".equals(comment)){
         	throw new ReportException("审核意见不可为空！");
         }
 		
 		SPDataDTO dto = new SPDataDTO();
-        dto.setRptCaseId(rptCaseId);
+		dto.setRptFeeCaseId(rptCaseId);
+		//dto.setRptCaseId(rptCaseId);
         dto.setUserId(userId);
         dto.setStatus(status);
         dto.setComment(comment);
