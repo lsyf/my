@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>集团结算详情</title>
+    <title>结算详情</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -32,8 +32,8 @@
 
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../static/js/report/rptSettleDetail.js"
-            th:src="@{/static/js/report/rptSettleDetail.js}"></script>
+    <script src="../../static/js/report/rptSettleDetail2.js"
+            th:src="@{/static/js/report/rptSettleDetail2.js}"></script>
 
 
     <style>
@@ -59,7 +59,7 @@
             //页面传值
             var report_titles= [[${titles}]];
             var report_datas= [[${datas}]];
-            var report_detail= [[${detail}]];
+            
             $(function () {
             	initSettleDetail();
             });
@@ -90,10 +90,7 @@
                                 <a href="#tab_table1" aria-controls="tab_table1"
                                    role="tab" data-toggle="tab">原始数据</a>
                             </li>
-                            <li role="presentation">
-                                <a href="#tab_table2" aria-controls="tab_table2"
-                                   role="tab" data-toggle="tab">处理后数据</a>
-                            </li>
+                           
                         </ul>
                     </div>
                     <div class="box-body">
@@ -103,10 +100,7 @@
                                 </h4>
                                 <table id="table_query" class="table_data"></table>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="tab_table2">
-                                <table id="table_query2" class="table_data"></table>
-                            </div>
-
+                            
                         </div>
                     </div>
                 </div>

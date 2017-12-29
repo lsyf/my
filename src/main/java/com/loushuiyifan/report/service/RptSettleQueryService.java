@@ -62,8 +62,9 @@ public class RptSettleQueryService {
 							            String reportId,
 							            Long logId,
 							            String incomeSource){
-    	
-    	Long rptCaseId = logId + Long.parseLong(incomeSource);
+    	StringBuilder sb = new StringBuilder(); 
+    	sb.append(String.valueOf(logId)).append(incomeSource);
+    	Long rptCaseId =Long.parseLong(sb.toString());
     	Map param = new HashMap();
         param.put("rptCaseId", rptCaseId);
         param.put("month",month);
@@ -91,7 +92,8 @@ public class RptSettleQueryService {
         dto.setStatus(status);
         dto.setComment(comment);
         rptSettleQueryDAO.auditRpt(dto);
-        if (dto.getRtnCode() != 0) {//非0审核失败
+        Integer code = dto.getRtnCode();
+        if (code != 0) {//非0审核失败
             throw new ReportException(dto.getRtnMsg());
         }
     }
@@ -142,9 +144,13 @@ public class RptSettleQueryService {
         return data;
     }
     
+    
     public String getFileName(String reportId,String incomeSource){
     	
-    	return "集团结算_"+reportId+"_"+incomeSource+"_.xls";
+    	if("0".equals(reportId)){   		
+    		reportId="全部";
+    	}
+    	return "集团结算_"+reportId+"_"+incomeSource+".xls";
     }
     
     /**

@@ -64,7 +64,7 @@ public class ImportGroupController extends BaseReportController {
 
         //首先校验能否导入
         //TODO 测试修改
-//        dateService.checkImportGroup();
+        dateService.checkImportGroup();
 
         //然后保存
         Path path = reportStorageService.store(file);
