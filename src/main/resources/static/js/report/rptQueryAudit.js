@@ -11,8 +11,9 @@ function initTransLog() {
     
 }
 
-function queryState() {
-    $.ajax({
+function queryState(btn) {
+	$(btn).button("loading");
+	$.ajax({
         type: "POST",
         url: hostUrl + "rptQueryAudit/list",
         data: {
@@ -21,6 +22,10 @@ function queryState() {
             incomeSource: $("#query_incomeSource").val()
         },
         dataType: "json",
+        beforeSend: function () {
+       	
+        	toastr.warn('查询中。。。');
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
@@ -32,12 +37,16 @@ function queryState() {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
-        }
+            toastr.error('连接服务器请求失败!');
+            $(btn).button("reset");
+        }/*,
+        complete: function () {
+            $(btn).button("reset");
+        }*/
     });
 
 }
-function queryFee(){
+function queryFee(btn){
 	$.ajax({
         type: "POST",
         url: hostUrl + "rptQueryAudit/listFee",
@@ -47,6 +56,10 @@ function queryFee(){
             incomeSource: $("#query_incomeSource").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        	toastr.warn('查询中。。。');
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
@@ -57,7 +70,10 @@ function queryFee(){
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete: function () {
+            $(btn).button("reset");
         }
     });
 }
@@ -78,7 +94,7 @@ function quitData(){
 	        dataType: "json",
 	        success: function (r) {
 	            if (r.state) {
-	            	toastr.info('回退成功');
+	            	toastr.warn('回退成功');
 	            	hideAlert();
 	            	queryState();
 	            } else {
@@ -86,7 +102,7 @@ function quitData(){
 	            }
 	        },
 	        error: function (result) {
-	            toastr.error('发送请求失败');
+	            toastr.error('连接服务器请求失败!');
 	        }
 	    });
 		
@@ -94,11 +110,11 @@ function quitData(){
 	showAlert();	
 }
 //四审
-function auditData() {
+function auditData(btn) {
 	var month = $("#query_month").val();	 
 	var selects = $('#table_upload').bootstrapTable('getSelections');
 	if(selects.length==0){
-		toastr.info('未选中任何数据');
+		toastr.warn('未选中任何数据');
 		return;
 	}
 	var logs = [];
@@ -114,9 +130,13 @@ function auditData() {
             logs: logs         
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        	toastr.warn('查询中。。。');
+        },
         success: function (r) {
             if (r.state) {
-            	toastr.info('审核成功');
+            	toastr.warn('审核成功');
             	hideAlert();
             	queryState();
             } else {
@@ -124,7 +144,10 @@ function auditData() {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete: function () {
+            $(btn).button("reset");
         }
     });
 	

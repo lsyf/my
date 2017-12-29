@@ -413,8 +413,8 @@ public class ImportIncomeDataService {
                             break;
                     }
                 }
-                //如果为空行，则跳过
-                if (bean.getAreaId() == null) {
+                //如果areaId和 indexData为空,则默认该行为无效数据
+                if (bean.getAreaId() == null&&bean.getIndexData()==null) {
                     continue;
                 }
                 list.add(bean);
