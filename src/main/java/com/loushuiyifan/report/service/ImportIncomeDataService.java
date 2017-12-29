@@ -357,15 +357,8 @@ public class ImportIncomeDataService {
                 Row row = sheet.getRow(y);
                 RptImportDataChennel bean = new RptImportDataChennel();
                 for (int x = startX; x <= row.getLastCellNum(); x++) {
-                    String data = "";
-                    try {
-//                        data = getCellData(row.getCell(x), evaluator);
-                        data = getXLSCellValue(row.getCell(x));
-                    } catch (Exception e) {
-                        logger.info(sheet.getSheetName());
-                        logger.info("{}:{}", y, x);
-                        return new ArrayList<>();
-                    }
+                    String data = getXLSCellValue(row.getCell(x));
+
                     if (StringUtils.isEmpty(data)) {
                         continue;
                     }
@@ -419,6 +412,10 @@ public class ImportIncomeDataService {
                             bean.setItemCode(data);
                             break;
                     }
+                }
+                //如果为空行，则跳过
+                if (bean.getAreaId() == null) {
+                    continue;
                 }
                 list.add(bean);
             }
