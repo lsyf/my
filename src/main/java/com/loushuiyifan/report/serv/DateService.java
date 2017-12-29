@@ -59,7 +59,7 @@ public class DateService {
     }
     
     public List<CommonVO> commonMonths() {
-    	return calcMonths(11, 2);
+    	return calcMonths(11, 0);
     }
     
     

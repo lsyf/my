@@ -84,7 +84,7 @@ public class RptRuleConfigController extends BaseReportController{
 		 
 			Long userId = user.getId();
 			double dis =Double.parseDouble(discount);
-			if(dis<0 &&dis>1){
+			if(dis<0 ||dis>1){
 				throw new ReportException("超出折扣率的取值范围：[0,1]");
 			}
 			List<String> num =rptRuleConfigService.checkUsers(logId, userId);
