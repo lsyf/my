@@ -57,9 +57,9 @@ public class DateService {
         }
         return list;
     }
-    
+    //显示当前月份和上年全年月份
     public List<CommonVO> commonMonths() {
-    	return calcMonths(11, 0);
+    	return calcMonths(12, 0);
     }
     
     

@@ -142,8 +142,12 @@ var buildSelect = function(id, data, allId, allName) {
 		$select.append(option);
 	}
 	data = data == null ? [] : data;
-	data.forEach(function(d) {
-		var option = '<option value="' + d.data + '">' + d.name + '</option>';
+	data.forEach(function(d,i) {
+		var selected ='';
+		if(i==1){
+			selected= ' selected = "selected" ';
+		}
+		var option = '<option value="' + d.data+'"' + selected+ '>' + d.name +'</option>';
 		$select.append(option);
 	});
 };
