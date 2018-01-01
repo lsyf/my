@@ -10,7 +10,7 @@ function initFundsFeeForm() {
 
 }
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptFundsFeeStatus/list",
@@ -19,18 +19,24 @@ function queryLog() {
             reportId: isTree.val()
         },
         dataType: "json",
+        beforeSend: function () {
+            $(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
+                
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function() {
+        	$(btn).button("reset");
         }
     });
 
@@ -58,7 +64,7 @@ function quitData(id) {
                 }
             },
             error: function (result) {
-                toastr.error('发送请求失败');
+                toastr.error('连接服务器请求失败!');
             }
         });
     });

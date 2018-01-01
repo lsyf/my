@@ -135,8 +135,8 @@
 	</select>
 	<select id="collectData" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
-        {call PKG_RPT_BALANCE.p_quit_audit(
-         #{month,mode=OUT,jdbcType=VARCHAR})}
+        {call IRPT_ALL_2017.irpt_all_income_sjs(
+         #{month,mode=IN,jdbcType=VARCHAR},
          #{rtnCode,mode=OUT,jdbcType=NUMERIC},
          #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>

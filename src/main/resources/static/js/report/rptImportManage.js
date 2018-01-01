@@ -25,7 +25,7 @@ function initDatePicker() {
     $('#query_end').val(m_this);
 
 }
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptImportManage/list",
@@ -36,6 +36,9 @@ function queryLog() {
         	userName: $("#query_userId").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
@@ -46,7 +49,10 @@ function queryLog() {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 

@@ -11,8 +11,8 @@ function initTransLog() {
     
 }
 
-function queryState(btn) {
-	$(btn).button("loading");
+function queryState() {
+	
 	$.ajax({
         type: "POST",
         url: hostUrl + "rptQueryAudit/list",
@@ -23,8 +23,8 @@ function queryState(btn) {
         },
         dataType: "json",
         beforeSend: function () {
-       	
-        	toastr.warn('查询中。。。');
+        	$("#btn_query").button("loading");
+   
         },
         success: function (r) {
             if (r.state) {
@@ -32,17 +32,17 @@ function queryState(btn) {
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
+                
             }
         },
         error: function (result) {
             toastr.error('连接服务器请求失败!');
-            $(btn).button("reset");
-        }/*,
+            
+        },
         complete: function () {
-            $(btn).button("reset");
-        }*/
+            $("#btn_query").button("reset");
+        },
     });
 
 }
@@ -58,7 +58,6 @@ function queryFee(btn){
         dataType: "json",
         beforeSend: function () {
         	$(btn).button("loading");
-        	toastr.warn('查询中。。。');
         },
         success: function (r) {
             if (r.state) {
@@ -94,7 +93,7 @@ function quitData(){
 	        dataType: "json",
 	        success: function (r) {
 	            if (r.state) {
-	            	toastr.warn('回退成功');
+	            	toastr.warning('回退成功');
 	            	hideAlert();
 	            	queryState();
 	            } else {
@@ -114,7 +113,7 @@ function auditData(btn) {
 	var month = $("#query_month").val();	 
 	var selects = $('#table_upload').bootstrapTable('getSelections');
 	if(selects.length==0){
-		toastr.warn('未选中任何数据');
+		toastr.warning('未选中任何数据');
 		return;
 	}
 	var logs = [];
@@ -132,11 +131,10 @@ function auditData(btn) {
         dataType: "json",
         beforeSend: function () {
         	$(btn).button("loading");
-        	toastr.warn('查询中。。。');
         },
         success: function (r) {
             if (r.state) {
-            	toastr.warn('审核成功');
+            	toastr.warning('审核成功');
             	hideAlert();
             	queryState();
             } else {

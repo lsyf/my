@@ -8,7 +8,7 @@ function initForm() {
       
 }
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "queryIncomeState/list",
@@ -17,6 +17,9 @@ function queryLog() {
             status: $("#upload_state").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
@@ -28,7 +31,10 @@ function queryLog() {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
@@ -38,12 +44,12 @@ function queryLog() {
 function changeStatus() {
     var month = $("#upload_month").val();
     var status = $("#upload_state").val()
-
+    
     editAlert('警告', '是否确定:  账期' + month + ", 状态:" + status, '更新状态', function () {
     	
     	var selects = $('#table_upload').bootstrapTable('getSelections');
     	if(selects.length==0){
-    		toastr.info('未选中任何数据');
+    		toastr.warning('未选中任何数据');
     		return;
     	}
     	var logs = [];
@@ -66,12 +72,11 @@ function changeStatus() {
 
                     queryLog()
                 } else {
-                    toastr.error('更新失败');
-                    toastr.error(r.msg);
+                    toastr.error('更新失败'+r.msg);
                 }
             },
             error: function (result) {
-                toastr.error('发送请求失败');
+                toastr.error('连接服务器请求失败!');
             }
         });
     });

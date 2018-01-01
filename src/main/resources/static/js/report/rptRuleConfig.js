@@ -37,7 +37,7 @@ function showPanel(a){
     }
 }
 
-function queryList() {
+function queryList(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptRuleConfig/list",
@@ -49,6 +49,9 @@ function queryList() {
             discount: $("#query_discount").val()           
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
@@ -59,7 +62,10 @@ function queryList() {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
@@ -105,7 +111,7 @@ function doUpdate() {
         },
         error: function () {
             $("#btn_save").button("reset");
-            toastr.error("发送请求失败");
+            toastr.error("连接服务器请求失败!");
         }
     });
 }

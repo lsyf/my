@@ -14,7 +14,7 @@ function initForm() {
 
 
 function queryData(btn) {
-	$(btn).button("loading");
+	
 	$.ajax({
         type: "POST",
         url: hostUrl + "rptSettleQuery/list",
@@ -24,7 +24,7 @@ function queryData(btn) {
         },
         dataType: "json",
         beforeSend: function () {
-        	toastr.warn('查询中。。。');
+        	$(btn).button("loading");
         },
         success: function (r) {
             if (r.state) {
@@ -50,7 +50,7 @@ function exportData() {
 	
 	var selects = table.getSelections();
     if (selects.length == 0) {
-        toastr.warn('未选中任何数据');
+        toastr.warning('未选中任何数据');
         return;
     }
 
@@ -91,10 +91,10 @@ function detailData(row) {
 function listAudit(type, btn) {
     var selects = table.getSelections();
     if (selects.length == 0) {
-        toastr.warn('未选中任何数据');
+        toastr.warning('未选中任何数据');
         return;
     } else if (selects.length > 1) {
-        toastr.warn('选中数据大于1');
+        toastr.warning('选中数据大于1');
         return;
     }
     var logs = [];
@@ -151,7 +151,7 @@ function auditData(rptCaseId, status) {
         success: function (r) {
             if (r.state) {
                 if (status == '0') {
-                    toastr.warn('审核不通过, 成功!');
+                    toastr.warning('审核不通过, 成功!');
                     hideAudit();
                     return
                 }

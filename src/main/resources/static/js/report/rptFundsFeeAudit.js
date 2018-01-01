@@ -13,7 +13,7 @@ function initFundsFeeForm() {
    
 }
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptFundsFeeAudit/list",
@@ -22,18 +22,24 @@ function queryLog() {
             reportId: isTree.val()
         },
         dataType: "json",
+        beforeSend: function () {
+            $(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
+                
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function() {
+        	$(btn).button("reset");
         }
     });
 
@@ -74,8 +80,11 @@ function listAudit(type, btn) {
             }
         },
         error: function (result) {
-            $(btn).button("reset");
-            toastr.error('发送请求失败');
+           
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function() {
+        	$(btn).button("reset");
         }
     });
 }
@@ -93,7 +102,7 @@ function auditData(rptCaseId, status) {
         success: function (r) {
             if (r.state) {
                 if (status == '0') {
-                    toastr.info('审核不通过, 成功!');
+                    toastr.warning('审核不通过, 成功!');
                     hideAudit();
                     return
                 }
@@ -103,7 +112,7 @@ function auditData(rptCaseId, status) {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
         }
     });
 }

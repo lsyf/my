@@ -39,13 +39,15 @@ function queryData() {
                 $('#title_table').text(title);
                 table.Init(data.titles, data.datas);
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
             }
         },
         error: function (result) {
+            //$('#btn_query').button("reset");
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function () {
             $('#btn_query').button("reset");
-            toastr.error('发送请求失败');
         }
     });
 
@@ -75,7 +77,7 @@ function removeData(btn) {
                 }
             },
             error: function (result) {
-                toastr.error('发送请求失败');
+                toastr.error('连接服务器请求失败!');
             },
             complete:function () {
                 $(btn).button("reset");

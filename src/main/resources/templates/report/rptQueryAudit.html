@@ -157,12 +157,21 @@
 										class="btn btn-success pull-right btn-sm btn-form">
 										查询金额</button>
 									<button class="btn btn-success pull-right btn-sm btn-form"
-										type="button" id="btn_query" onclick="queryState(this)">
+										type="button" id="btn_query" onclick="queryState()">
 										查询状态</button>
 
 								</div>
 							</form>
-						
+						<div class="form-horizontal col-sm-4">
+                            <p>
+                                                  提示: --><br/>
+                                1、excel版本只支持2003版格式，后缀必须为.xls<br/>
+                                2、导入的科目编码、来源编码、渠道编码区域编码必须为最底层编码<br/>
+                                3、系统只导入sheet名中带有“-”符号的数据。如 “101-杭州市本级" .对于sheet1 的没有“-”的sheet数据不处理。<br/>
+                                4、请勿随意改动模板的sheet名 导入失败后，请从以上4点检查excel
+                            </p>
+
+                        </div>
 				</div>
 
 				<div id="form-table">

@@ -8,7 +8,7 @@ function initRptQueryDownload() {
 
 }
 
-function queryData() {
+function queryData(btn) {
 
     $.ajax({
         type: "POST",
@@ -17,17 +17,23 @@ function queryData() {
             month: $("#form_month").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
                 table.load(data);
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败'+r.msg);
+               
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
@@ -37,7 +43,7 @@ function downloadZip(btn) {
 
     var selects = table.getSelections();
     if (selects == null || selects.length == 0) {
-        toastr.info('未选中任何流水号');
+        toastr.warning('未选中任何流水号');
         return;
     }
 

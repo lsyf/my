@@ -13,7 +13,7 @@ function initRptQueryCreate() {
 
 }
 
-function queryData() {
+function queryData(btn) {
     var latnId = orgTree.txt();
     //如果是股份则不传输地市信息
     latnId = latnId == "股份" ? null : latnId;
@@ -26,6 +26,9 @@ function queryData() {
             incomeSource: $("#form_incomeSource").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
@@ -36,7 +39,10 @@ function queryData() {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
@@ -46,7 +52,7 @@ function removeData(btn) {
 
     var selects = table.getSelections();
     if (selects == null || selects.length == 0) {
-        toastr.info('未选中任何流水号');
+        toastr.warning('未选中任何流水号');
         return;
     }
 
@@ -76,7 +82,7 @@ function removeData(btn) {
                 }
             },
             error: function (result) {
-                toastr.error('发送请求失败');
+                toastr.error('连接服务器请求失败!');
             },
             complete: function () {
                 $(btn).button("reset");
@@ -112,7 +118,7 @@ function createData(btn) {
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
         },
         complete: function () {
             $(btn).button("reset");

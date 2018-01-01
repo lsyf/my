@@ -12,7 +12,7 @@ function initICT() {
     initForm();
 }
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "importICT/list",
@@ -20,6 +20,9 @@ function queryLog() {
             month: $("#upload_month").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 table.load(r.data);
@@ -28,7 +31,10 @@ function queryLog() {
             }
         },
         error: function (result) {
-            toastrError('发送请求失败');
+            toastrError('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
@@ -103,7 +109,7 @@ function removeData(row) {
                 }
             },
             error: function (result) {
-            	toastrError('发送请求失败');
+            	toastrError('连接服务器请求失败!');
             }
         });
     });

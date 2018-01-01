@@ -22,7 +22,6 @@ function queryLog(btn) {
         },
         dataType: "json",
         beforeSend: function () {
-        	toastr.info('查询中。。。');
         	$(btn).button("loading");
         },
         success: function (r) {
@@ -83,7 +82,6 @@ function collectData(btn) {
         dataType: "json",
         beforeSend: function () {
             $(btn).button("loading");
-            toastr.info('查询中。。。');
         },
         success: function (r) {
             if (r.state) {
@@ -98,7 +96,7 @@ function collectData(btn) {
         	
             toastr.error('连接服务器请求失败!');
         },
-        always:function(){
+        complete:function(){
         	$(btn).button("reset");
         }
     });	
