@@ -303,6 +303,7 @@ public class UserService extends BaseService<User> {
         bean.setEmail(email);
         bean.setLocked(locked);
         bean.setEip(eip);
+        bean.setCreateDate(Calendar.getInstance().getTime());
 
         //如果密码不为空，则更新密码
         if (password == null || StringUtils.isEmpty(password.trim())) {
