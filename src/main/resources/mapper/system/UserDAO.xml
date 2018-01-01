@@ -121,6 +121,7 @@
     <select id="selectAllUsers" resultType="com.loushuiyifan.common.bean.User">
         select *
         from aweb_user a
+        order by a.last_login desc
     </select>
 
 
