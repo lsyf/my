@@ -67,7 +67,7 @@ function initForm() {
                     $('#btn_upload').button("reset");
                     if (r.state) {
                         $('#upload_file').fileinput('clear');
-                        toastr.info('导入成功');
+                        toastr.warning('导入成功');
 
                         queryLog();
 
@@ -100,7 +100,7 @@ function removeData(row) {
             dataType: "json",
             success: function (r) {
                 if (r.state) {
-                    toastr.info('删除成功');
+                    toastr.warning('删除成功');
                     hideAlert();
 
                     queryLog();
@@ -152,9 +152,6 @@ var TableInit = function () {
                 field: 'logId',
                 title: '流水号'
             }, {
-                field: 'city',
-                title: '地市'
-            }, {
                 field: 'fileName',
                 title: '导入文件'
             }, {
@@ -164,8 +161,11 @@ var TableInit = function () {
                 field: 'sum',
                 title: '金额'
             }, {
-                field: 'userId',
-                title: '操作人ID'
+                field: 'userName',
+                title: '用户名'
+            }, {
+                field: 'action',
+                title: '昵称'
             }, {
                 field: 'remark',
                 title: '导入说明'

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptImportManageService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
@@ -51,6 +52,7 @@ public class RptImportManageController extends BaseReportController{
 			list = rptImportManageService.list(startDate, endDate, fileName,userName,userId);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ReportException("提示"+e.getMessage());
 		}
         
         return JsonResult.success(list);

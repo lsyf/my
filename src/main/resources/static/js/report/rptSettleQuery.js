@@ -94,7 +94,7 @@ function listAudit(type, btn) {
         toastr.warning('未选中任何数据');
         return;
     } else if (selects.length > 1) {
-        toastr.warning('选中数据大于1');
+        toastr.warning('选中数据大于1行');
         return;
     }
     var logs = [];

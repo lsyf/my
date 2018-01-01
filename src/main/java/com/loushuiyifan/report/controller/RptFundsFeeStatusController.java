@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptSettleQueryService;
 import com.loushuiyifan.report.service.RptFundsFeeQueryService;
 import com.loushuiyifan.report.service.RptFundsFeeStatusService;
@@ -73,10 +74,11 @@ public class RptFundsFeeStatusController extends BaseReportController{
     @ResponseBody
     @RequiresPermissions("report:rptFundsFeeStatus:quit")
     public JsonResult doQuit(String month, String reportId, @ModelAttribute("user") User user){
-    	//TODO
+    
     	 Long userId = user.getId();
-    	 rptStatusFundsFeeFeeService.quit(userId, month, reportId);
     	 
+    		 rptStatusFundsFeeFeeService.quit(userId, month, reportId);
+ 		
         return JsonResult.success();
     }
     

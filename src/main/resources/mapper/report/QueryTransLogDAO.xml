@@ -111,7 +111,7 @@
 		select file_name
   			from rpt_msg_info 
  			where busi_type = 2
-   			and batch_id =#batch_id#
+   			and batch_id =#{batchId}
    			and file_name like '%.gz%'
 	</select>
 </mapper>

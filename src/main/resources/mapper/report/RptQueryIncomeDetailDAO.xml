@@ -95,5 +95,15 @@
 	select distinct a.lst_upd as lstUpd from Rpt_Msg_Info a where a.session_id = #{sessionId}
 	</select>
 
-
+	<select id="detailById" resultType="java.util.Map">
+	select a.session_id as "sessionId",
+		   a.file_name    as "fileName",
+           a.resultcode   as "status",
+           to_char(a.request_time,'yyyy-MM-dd HH24:mi:ss') as "requestTime",
+           a.return_text as "returnText"    
+	    from Rpt_Msg_Result_Detail a
+	     where a.session_id = #{sessionId}
+	     order by a.request_time desc
+	
+	</select>
 </mapper>

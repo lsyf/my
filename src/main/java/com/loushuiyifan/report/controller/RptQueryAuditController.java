@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptQueryAuditService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.system.vo.JsonResult;
@@ -97,9 +98,14 @@ public class RptQueryAuditController extends BaseReportController{
     public JsonResult quit(String month,String latnId,String incomeSource,    		                    
     		                    @ModelAttribute("user") User user) {
 		Long userId = user.getId();
-			
-		rptQueryAuditService.quit(month, latnId, incomeSource, userId);
-        
+		
+		try {
+			rptQueryAuditService.quit(month, latnId, incomeSource, userId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ReportException("提示"+e.getMessage());
+		}
         return JsonResult.success();
     }
 	
@@ -114,9 +120,7 @@ public class RptQueryAuditController extends BaseReportController{
     		                @ModelAttribute("user") User user) {
 		Long userId = user.getId();
 		// 判断用户是否有相应审核权限
-//		Subject subject = SecurityUtils.getSubject();
-//		subject.checkPermission("report:rptQueryCust:audit");
-//		
+
 		try {
 			for(int i=0; i< logs.length; i++){
 				String codeName = logs[i];
@@ -125,6 +129,7 @@ public class RptQueryAuditController extends BaseReportController{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ReportException("提示"+e.getMessage());
 		}
         
         return JsonResult.success();

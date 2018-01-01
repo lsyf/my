@@ -33,15 +33,17 @@ public class RptSettleAmountService {
     /**
      * 汇总
      */
-    public void collect(String month) {
-        SPDataDTO dto = new SPDataDTO();
+    public String collect(String month) {
+           	
+		SPDataDTO dto = new SPDataDTO();
         dto.setMonth(month);
         rptSettleAmountDAO.collectData(dto);
-        Integer code = dto.getRtnCode();
-        if (code != 0) {//非0为失败
+        String code = dto.getRtnMsg2();
+        if (!"0".equals(code)) {//非0为失败
             throw new ReportException("数据汇总失败: " + dto.getRtnMsg());
         }
-
+    
+        return dto.getRtnMsg();
     }
 
     /**

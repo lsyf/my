@@ -1,12 +1,19 @@
 package com.loushuiyifan.report.service;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +23,7 @@ import com.loushuiyifan.report.dao.QueryTransLogDAO;
 import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.CodeListTaxService;
 import com.loushuiyifan.report.serv.CommonExportServ;
+import com.loushuiyifan.report.serv.FileService;
 import com.loushuiyifan.report.serv.LocalNetService;
 import com.loushuiyifan.report.serv.ReportDownloadService;
 import com.loushuiyifan.report.vo.TransLogVO;
@@ -78,17 +86,55 @@ public class QueryTransLogService {
     /**
      * 电子档案下载
      */
-    public String downLoadFile(String batchId, String month) throws IOException {
-        String fileName = queryTransLogDAO.queryFileName(batchId);
-        if (fileName == null) {
-            throw new ReportException("电子档案文件为空");
-        }
-        //TODO 待确定电子档案生成gz文件目录,文件按月份归档
-        Path path = Paths.get("");
-        if (!Files.exists(path)) {
-            Files.createDirectory(path);
-        }
-        return path.resolve(fileName).toString();
+    public void downLoadFile(String batchId, String month) {
+        
+    	
+    		String fileName = queryTransLogDAO.queryFileName(batchId);
+            if (fileName == null) {
+                throw new ReportException("电子档案文件为空");
+            }
+            
+            //待确定电子档案生成gz文件目录,文件按月份归档
+            Path path = Paths.get("/report/files/fileMonth/",fileName);
+                
+            try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(path.toFile()))){
+    			
+            	
+            	String filePath = path.resolve(fileName).toString();
+                filePath = filePath.replaceAll("\\\\", "/");
+            	//首先批量下载所有文件
+                FileService.pull(filePath);
+                
+                File f = new File(filePath);
+                if (!f.exists()) {
+                	throw new ReportException("电子档案文件下载失败"); 
+                }
+                
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
+                
+                String filename = FilenameUtils.getName(filePath);
+
+                ZipEntry entry = new ZipEntry(filename);
+                zos.putNextEntry(entry);
+
+                int len;
+                byte[] buffer = new byte[8192];
+                while ((len = bis.read(buffer)) != -1) {
+                    zos.write(buffer, 0, len);
+                }
+                
+                zos.closeEntry();
+                bis.close();           
+                zos.close();
+                               
+            } catch (Exception e) {
+    			e.printStackTrace();
+    			throw new ReportException("下载失败" + e.getMessage());
+    		}
+		
+    	
+        
+        
     }
 
     public String getFileName(String month, String latnId, String incomeSource, String taxtId) {

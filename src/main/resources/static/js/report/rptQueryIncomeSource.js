@@ -200,7 +200,9 @@ var TableInit = function () {
                 class: 'table_colum2',
                 field: t.id,
                 title: t.name,
-                // formatter: dataRound,
+                formatter: function (v) {
+                    return v == null ? 0 : v;
+                },
                 halign: 'center',
                 align: 'right',
                 // cellStyle: testCellStyle

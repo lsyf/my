@@ -127,14 +127,11 @@
 
                             <div class="form-group  form-group-sm">
                                 <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_resend" onclick="resend()">
-                                    	重发
-                                </button><button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_find" onclick="findData()">
+                                        type="button" id="btn_find" onclick="findData(this)">
                                     	查询ID
                                 </button>
                                 <button class="btn btn-success pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryData()">
+                                        type="button" id="btn_query" onclick="queryData(this)">
                                     	查询
                                 </button>
 								
@@ -159,7 +156,7 @@
             
         </section>
 
-
+	<div th:replace="modal/modal_detail :: detail"></div>
     </div>
 
 </div>

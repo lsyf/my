@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptFundsFeeAuditService;
 import com.loushuiyifan.report.service.RptFundsFeeQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
@@ -71,9 +72,9 @@ public class RptFundsFeeAuditController extends BaseReportController {
     @PostMapping("listAudit")
     @ResponseBody
     public JsonResult listAudit(String month,String reportId) {
-       
-    	Map<String, Object> map = rptFundsFeeAuditService.listAudit(month,reportId);
-        
+    	
+    	Map<String, Object>  map = rptFundsFeeAuditService.listAudit(month,reportId);
+           	
         return JsonResult.success(map);
     }
     
@@ -85,7 +86,14 @@ public class RptFundsFeeAuditController extends BaseReportController {
     public JsonResult auditReport(String rptCaseId, String status, String comment,
                                   @ModelAttribute("user") User user) {
     	Long userId = user.getId();
-    	rptFundsFeeAuditService.audit(rptCaseId, status, comment, userId);
-        return JsonResult.success();
+    	try {
+    		rptFundsFeeAuditService.audit(rptCaseId, status, comment, userId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ReportException("提示"+e.getMessage());
+		}
+    	
+    	return JsonResult.success();
     }
 }

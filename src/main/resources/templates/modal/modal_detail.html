@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>main-header</title>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <div th:fragment="detail" class="modal fade bs-example-modal-lg" id="modal_detail" tabindex="-1" role="dialog"
+         aria-labelledby="detail_title"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="detail_title">详情</h4>
+                </div>
+                <div class="modal-body table-cell-textarea" id="detail_body">
+                    <table id="table_detail"></table>
+                    
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group form-group-sm" style="margin-top: 10px;padding-top: 10px">
+                        
+                        <button id="detail_cancel" type="button" class="btn btn-primary" data-dismiss="modal">
+                            	返回
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            /* function editAudit(txt_title, type) {
+                $('#detail_title').text(txt_title);
+
+                 if (type == 'view') {
+                    $('#div_audit_comment').hide();
+                    $('#audit_deny').hide();
+                    $('#audit_allow').hide();
+                    return;
+                } else {
+                    $('#div_audit_comment').show();
+                    $('#audit_deny').show();
+                    $('#audit_allow').show();
+                } 
+               
+            } */
+
+            function showAudit() {
+                var modal = $('#modal_detail');
+                modal.modal({
+                    keyboard: true,
+                    backdrop: 'static'
+                })
+            }
+
+            function hideAudit() {
+                $('#modal_detail').modal('hide');
+            }
+        </script>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

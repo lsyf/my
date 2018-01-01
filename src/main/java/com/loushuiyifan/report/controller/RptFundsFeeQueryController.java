@@ -2,6 +2,7 @@ package com.loushuiyifan.report.controller;
 
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.service.RptFundsFeeQueryService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.FundsFeeVO;
@@ -84,6 +85,7 @@ public class RptFundsFeeQueryController extends BaseReportController {
             downloadService.download(req, resp, datas, name);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new ReportException("提示："+e.getMessage());
         }
         return JsonResult.success();
     }

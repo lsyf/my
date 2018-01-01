@@ -36,8 +36,12 @@ function queryData(btn) {
             }
         },
         error: function (result) {
-        	$(btn).button("reset");
+        	
             toastr.error('连接服务器请求失败!');
+        },
+        complete:function () {
+        	$(btn).button("reset");
+           
         }
     });
 

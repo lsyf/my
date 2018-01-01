@@ -61,6 +61,7 @@ public class RptQueryIncomeDetailController {
             
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ReportException("提示"+e.getMessage());
 		}
     	
     	return JsonResult.success(list);
@@ -84,7 +85,7 @@ public class RptQueryIncomeDetailController {
     @ResponseBody
     @RequiresPermissions("report:rptQueryIncomeDetail:view")
     public JsonResult detailList(String sessionId){
-    	//TODO 待写
+    	
     	List<Map<String,String>> list = rptQueryIncomeDetailService.detail(sessionId);
         return JsonResult.success(list);
     }
@@ -95,13 +96,14 @@ public class RptQueryIncomeDetailController {
     @PostMapping("repeat")
     @ResponseBody
     @RequiresPermissions("report:rptQueryIncomeDetail:view")
-    public JsonResult repeat(@RequestParam("logs[]") String[] logs){
+    public JsonResult repeat(String sessionId){
     	try {
-    		for(String sessionId : logs){
+    		
         		rptQueryIncomeDetailService.send(sessionId);
-        	}
+        	
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ReportException(e.getMessage());
 		}
     	
         return JsonResult.success();

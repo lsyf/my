@@ -13,8 +13,9 @@ function initFundsFeeForm() {
    
 }
 
-function queryLog(btn) {
-    $.ajax({
+function queryLog() {
+    
+	$.ajax({
         type: "POST",
         url: hostUrl + "rptFundsFeeAudit/list",
         data: {
@@ -23,7 +24,7 @@ function queryLog(btn) {
         },
         dataType: "json",
         beforeSend: function () {
-            $(btn).button("loading");
+            $("#btn_query").button("loading");
         },
         success: function (r) {
             if (r.state) {
@@ -39,7 +40,7 @@ function queryLog(btn) {
             toastr.error('连接服务器请求失败!');
         },
         complete:function() {
-        	$(btn).button("reset");
+        	$("#btn_query").button("reset");
         }
     });
 
@@ -232,19 +233,19 @@ var TableAudit = function () {
           columns: [
               {
                   field: 'seqNo',
-                  title: '序号',
+                  title: '序号'
               },
               {
                   field: 'descText',
-                  title: '名称',
+                  title: '名称'
               },
               {
                   field: 'time',
-                  title: '审核时间',
+                  title: '审核时间'
               },
               {
                   field: 'auditorName',
-                  title: '审核人',
+                  title: '审核人'
               },
               {
                   field: 'auditStatus',
@@ -260,7 +261,7 @@ var TableAudit = function () {
               },
               {
                   field: 'auditComment',
-                  title: '审核意见',
+                  title: '审核意见'
               }
           ]
       });

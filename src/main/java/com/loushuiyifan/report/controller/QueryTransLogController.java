@@ -4,6 +4,7 @@ import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.bean.User;
 import com.loushuiyifan.report.controller.rest.BaseReportController;
 import com.loushuiyifan.report.exception.ReportException;
+import com.loushuiyifan.report.serv.FileService;
 import com.loushuiyifan.report.service.QueryTransLogService;
 import com.loushuiyifan.report.vo.CommonVO;
 import com.loushuiyifan.report.vo.TransLogVO;
@@ -110,17 +111,12 @@ public class QueryTransLogController extends BaseReportController {
     public void downLoadTran(HttpServletRequest req,
                              HttpServletResponse resp,
                              String month,
-                             @RequestParam("logs[]") String[] logs) {
-        try {
-            for(String batchId : logs){
-            	String path = queryTransLogService.downLoadFile(batchId, month);
-            	downloadService.download(req, resp, path);
-            }
-        	
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+                             @RequestParam("logs[]") String[] logs) {    
+    	for(String batchId :logs){
+    		queryTransLogService.downLoadFile(batchId, month);
+    	}
+    	
+                         	
     }
 
 

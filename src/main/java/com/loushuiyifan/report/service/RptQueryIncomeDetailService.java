@@ -52,7 +52,7 @@ public class RptQueryIncomeDetailService {
 	}
 	
    public List<Map<String,String>> detail(String sessionId){
-		//TODO 详情弹出窗口代写
+		
 		return rptQueryIncomeDetailDAO.detailById(sessionId);
 		
 	}
@@ -71,13 +71,13 @@ public class RptQueryIncomeDetailService {
 		long time =sdf.parse(lstUpd).getTime();
 		long now = Calendar.getInstance().getTimeInMillis();
 		long temp = (now - time) / (1000 * 60);
-		if (temp < 20) {
-			throw new ReportException("开始采集后, 20分钟内不允许重发");
+		if (temp < 15) {
+			throw new ReportException("开始采集后, 15分钟内不允许重发");
 		}
 		
 		if("0".equals(map.get("code0")) && "0".equals(map.get("code3"))){
 			throw new ReportException("入库成功,不允许重发");
-		}else if(!"0".equals(map.get("code0")) && "0".equals(map.get("code2")) ){
+		}else if(!"0".equals(map.get("code3")) && "0".equals(map.get("code2")) ){
 			throw new ReportException("文件采集成功, 数据文件有错误");
 		}else{
 			rptQueryIncomeDetailDAO.updateById(sessionId);

@@ -44,7 +44,7 @@ public class FileService {
         SFTPUtils sftp = null;
         try {
             sftp = new SFTPUtils(SFTP_HOST, SFTP_USERNAME, SFTP_PASSWORD);
-
+            
             filePath = filePath.replaceAll("\\\\", "/");
             String path = FilenameUtils.getFullPath(filePath);
             String fileName = FilenameUtils.getName(filePath);

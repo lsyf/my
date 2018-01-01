@@ -86,7 +86,7 @@ function downData() {
 		logs.push(data.batchId);
 	});
 	
-	var names =['month','logs'];
+	var names =['month','logs[]'];
 	var params =[month,logs];
 	var form = $("#form_down");   //定义一个form表单
 	form.attr('action', hostUrl + 'queryTransLog/downLog');

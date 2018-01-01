@@ -85,10 +85,9 @@ function collectData(btn) {
         },
         success: function (r) {
             if (r.state) {
-                var data = r.data;
-                table.load(data);
+                toastr.warning('成功:'+r.msg);
             } else {
-                toastr.error('汇总失败'+r.msg);
+                toastr.error('失败'+r.msg);
                 
             }
         },

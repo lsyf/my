@@ -1,9 +1,9 @@
 var table;
-
+var table_detail;
 function initRptQueryIncomeDetail() {
     table = new TableInit();
     table.Init();
-
+    table_detail = new tableDetail();
     initDatePicker();
 }
 
@@ -27,7 +27,7 @@ function initDatePicker() {
 }
 
 
-function queryData() {
+function queryData(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptQueryIncomeDetail/list",
@@ -37,103 +37,114 @@ function queryData() {
             state: $("#upload_state").val()
         },
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
                 table.load(data);
 
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+            	toastr.error('查询失败' + r.msg);
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
 }
 
-function findData() {
+function findData(btn) {
 	var sessionId = $("#query_sessionId").val();
     $.ajax({
         type: "POST",
         url: hostUrl + "rptQueryIncomeDetail/find",
         data: {sessionId :sessionId},
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
             	var data = r.data;
                 table.load(data);
             	
             } else {
-                toastr.error('提示，查询失败');
-                toastr.error(r.msg);
+            	toastr.error('查询失败' + r.msg);
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
 }
 
 //详情
-function detailData() {
+function detailData(row,btn) {
 	
     $.ajax({
         type: "POST",
         url: hostUrl + "rptQueryIncomeDetail/detail",
         data: {"sessionId": row.sessionId},
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
             	var data = r.data;
-                table.load(data);
-
+            	table_detail.load(data);
+            	showAudit();
             } else {
-                toastr.error('提示，查询失败');
-                toastr.error(r.msg);
+                toastr.error('提示，查询失败'+r.msg);
+               
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 
 }
 
 //重发
-function resend(){
-	//var sessionId = $("#query_sessionId").val();
-	 
-	var selects = $('#table_upload').bootstrapTable('getSelections');
-	if(selects.length==0){
-		toastr.info('未选中任何数据');
-		return;
-	}
-	var logs = [];
-	selects.forEach(function(data,i){
-		logs.push(data.sessionId);
-	});
+function resend(row,btn){
 	
 	$.ajax({
         type: "POST",
         url: hostUrl + "rptQueryIncomeDetail/repeat",
-        data: {logs :logs},
+        data: {"sessionId": row.sessionId},
         dataType: "json",
+        beforeSend: function () {
+        	$(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
-                toastr.info('成功');
+                toastr.warning('重发成功');
                 hideAlert();
 
             } else {
-                toastr.error('失败');
-                toastr.error(r.msg);
+                toastr.error('失败'+r.msg);
+               
             }
         },
         error: function (result) {
-            toastr.error('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function(){
+        	$(btn).button("reset");
         }
     });
 }
@@ -169,8 +180,6 @@ var TableInit = function () {
 
             data: [],
             columns: [{
-            	checkbox:true
-            },{
                 field: 'sessionId',
                 width: '120px',
                 title: '会话号'
@@ -188,25 +197,116 @@ var TableInit = function () {
                 title: 'Sap入库回执'
             }, {
                 field: 'startDate',
-                width: '120px',
+                width: '80px',
                 title: '开始日期'
             }, {
                 field: 'endDate',
-                width: '120px',
+                width: '80px',
                 title: '结束日期'
+            }, {
+                field: '123',
+                width: '80px',
+                title: '操作',
+                formatter: operateFormatter,
+                events: operateEvents,
             }]
         });
 
     };
 
-    
+  //操作显示format
+    function operateFormatter(value, row, index) {
+        return [
+        	'<button type="button" class="detail btn btn-primary btn-xs">详情</button>',
+        	'<button type="button" class="back btn btn-danger btn-xs">重发</button>'
+        ].join('');
+    }
+  //操作 监听
+    window.operateEvents = {
+        'click .back': function (e, value, row, index) {
+        	resend(row,this);
+        },
+        'click .detail': function (e, value, row, index) {
+        	detailData(row,this);
+        },
 
+    };
     //刷新数据
     oTableInit.load = function (data) {
         $('#table_upload').bootstrapTable('load', data);
     };
 
-
     return oTableInit;
 };
 
+
+//
+var tableDetail = function () {
+var oTableInit = new Object();
+var $table = $('#table_detail');
+
+//初始化Table
+oTableInit.Init = function () {
+    $table.bootstrapTable({
+        striped: true,                      //是否显示行间隔色
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        // pagination: true,                   //是否显示分页（*）
+        sortable: false,                     //是否启用排序
+        sortOrder: "asc",                   //排序方式
+        contentType: 'application/x-www-form-urlencoded',
+        sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                       //初始化加载第一页，默认第一页
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+        // search: true,                       //是否显示表格搜索
+        strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+        showColumns: false,                  //是否显示所有的列
+        showRefresh: false,                  //是否显示刷新按钮
+        minimumCountColumns: 2,             //最少允许的列数
+        clickToSelect: true,                //是否启用点击选中行
+        //height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+        uniqueId: "rowNum",                     //每一行的唯一标识，一般为主键列
+        showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+        cardView: false,                    //是否显示详细视图
+        detailView: false,                   //是否显示父子表
+        data: [],
+        columns: [
+            {
+                field: 'sessionId',
+                title: '会话号',
+                width: '80px'
+            },
+            {
+                field: 'fileName',
+                title: '文件名称',
+                width: '80px'
+            },
+            {
+                field: 'status',
+                title: '状态',
+                width: '80px'
+            },
+            {
+                field: 'requestTime',
+                title: '时间',
+                width: '80px'
+            },
+            {
+                field: 'returnText',
+                title: '回执内容',
+                width: '80px'
+            }
+        ]
+    });
+};
+
+
+	//刷新数据
+	oTableInit.load = function (data) {
+	    $table.bootstrapTable('load', data);
+	};
+	
+	oTableInit.Init();
+	
+	return oTableInit;
+}

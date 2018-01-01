@@ -87,6 +87,7 @@ public class QueryIncomeStateController extends BaseReportController {
 			 }
 		} catch (Exception e) {
 			e.getStackTrace();
+			throw new ReportException(e.getMessage());
 		}
 		 
 		 
