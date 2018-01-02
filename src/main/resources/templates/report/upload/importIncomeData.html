@@ -92,8 +92,7 @@
         <section class="content">
 
             <div id="form-panel" style="font-size:10px;">
-                <div class="box box-primary">
-                   
+                
                     <div class="box-body">
 
                         <form id="form_upload" class="form-horizontal col-sm-7">
@@ -124,8 +123,9 @@
                             <div class="form-group form-group-sm">
                                 <label for="upload_remark" class="col-sm-2 control-label">备注</label>
                                 <div class="col-sm-10">
-                                    <textarea id="upload_remark" name="remark" type="text"
-                                              class="form-control"></textarea>
+                                    <!-- <textarea id="upload_remark" type="text" name="remark" 
+                                       class="form-control"></textarea> -->
+                                <input id="upload_remark" name="remark" type="text" class="input-sm form-control" />
                                 </div>
                             </div>
 
@@ -172,18 +172,17 @@
                         </div>
                     </div>
 
-                </div>
+                
             </div>
 
-            <div id="form-table" style="font-size:10px;">
-                <div class="box box-primary">
-                    <div class="box-header">
-                        稽核汇总
-                    </div>
+            <div id="form-table" style="font-size:12px;">
+                <h4 style="text-align: center;" id="table_title"><b id="title_table"></b>
+                </h4>
+                    
                     <div class="box-body">
                         <table id="table_upload"></table>
                     </div>
-                </div>
+                
             </div>
 
             <div id="menuContent" class="menuContent">

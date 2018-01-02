@@ -51,8 +51,8 @@
     	a.acct_month = #{month},
     	a.card_id         = #{cardType},
     	a.rate            = #{discount},
-    	a.inactive_amount = #{platformAmount},
-    	a.platform_amount = #{inactiveAmount},
+    	a.inactive_amount = #{inactiveAmount},
+    	a.platform_amount = #{platformAmount},
         a.lst_upd = sysdate      
    	where a.id = #{logId}
    	 

@@ -95,7 +95,7 @@ public class LoginService {
         try {
             String code = sendShortMsgService.send(phone);
             saveVerifyCode(username, code);
-            return code;
+            return phone;
         } catch (Exception e) {
             e.printStackTrace();
             throw new SystemException("发送验证码失败:" + e.getMessage());

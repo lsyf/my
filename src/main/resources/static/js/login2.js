@@ -65,7 +65,7 @@ function sendCode(btn) {
         },
         success: function (r, a, b) {
             if (r.state) {
-                toastr.info("发送成功");
+                toastr.info("短信已发送至： "+r.msg);
                 forbid($btn);
             } else {
                 toastr.info("发送失败:" + r.msg);

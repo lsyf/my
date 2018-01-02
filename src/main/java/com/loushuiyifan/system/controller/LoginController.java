@@ -97,8 +97,8 @@ public class LoginController {
     @PostMapping("/sendPhoneCode")
     @ResponseBody
     public JsonResult sendPhoneCode(String username) {
-        loginService.sendPhoneCode(username);
-        return JsonResult.success();
+       String phone =  loginService.sendPhoneCode(username);
+        return JsonResult.success(phone);
     }
 
 
