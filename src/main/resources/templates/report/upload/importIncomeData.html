@@ -92,48 +92,48 @@
         <section class="content">
 
             <div id="form-panel" style="font-size:10px;">
-                
-                    <div class="box-body">
 
-                        <form id="form_upload" class="form-horizontal col-sm-7">
+                <div>
 
-                            <div class="form-group form-group-sm">
-                                <label for="upload_month" class="col-sm-2 control-label">月份</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control" name="month" id="upload_month">
-                                    </select>
-                                </div>
+                    <form id="form_upload" class="form-horizontal col-sm-7">
 
-                                <label for="upload_latnId" class="col-sm-2 control-label">本地网</label>
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="upload_latnId" readonly>
-                                    <input class="form-control" name="latnId" type="hidden">
-                                </div>
-
+                        <div class="form-group form-group-sm">
+                            <label for="upload_month" class="col-sm-2 control-label">月份</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" name="month" id="upload_month">
+                                </select>
                             </div>
 
-                            <div class="form-group form-group-sm">
-                                <label for="upload_file" class="col-sm-2 control-label">文件</label>
-                                <div class="col-sm-10">
-                                    <input id="upload_file" name="file" type="file" class="file form-control"
-                                           data-show-preview="false" data-show-remove="false" data-language="zh"
-                                           data-show-upload="false" data-browse-class="btn-sm btn-primary">
-                                </div>
-                            </div>
-                            <div class="form-group form-group-sm">
-                                <label for="upload_remark" class="col-sm-2 control-label">备注</label>
-                                <div class="col-sm-10">
-                                    <!-- <textarea id="upload_remark" type="text" name="remark" 
-                                       class="form-control"></textarea> -->
-                                <input id="upload_remark" name="remark" type="text" class="input-sm form-control" />
-                                </div>
+                            <label for="upload_latnId" class="col-sm-2 control-label">本地网</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="upload_latnId" readonly>
+                                <input class="form-control" name="latnId" type="hidden">
                             </div>
 
+                        </div>
+
+                        <div class="form-group form-group-sm">
+                            <label for="upload_file" class="col-sm-2 control-label">文件</label>
+                            <div class="col-sm-10">
+                                <input id="upload_file" name="file" type="file" class="file form-control"
+                                       data-show-preview="false" data-show-remove="false" data-language="zh"
+                                       data-show-upload="false" data-browse-class="btn-sm btn-primary">
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="upload_remark" class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10">
+                                <!-- <textarea id="upload_remark" type="text" name="remark"
+                                   class="form-control"></textarea> -->
+                                <input id="upload_remark" name="remark" type="text" class="input-sm form-control"/>
+                            </div>
+                        </div>
 
 
-                        </form>
-                        <div class="form-horizontal col-sm-5">
-                            <p><samall>
+                    </form>
+                    <div class="form-horizontal col-sm-5">
+                        <p>
+                            <samall>
                                 导入提示: ---> <a th:href="@{/download/template/importIncomeData}"
                                               target="_blank"><b>模板下载</b></a><br/>
                                 1、excel版本只支持2003版格式，后缀必须为.xls
@@ -141,17 +141,16 @@
                                 3、系统只导入sheet名中带有“-”符号的数据。如 “101-杭州市本级" .对于sheet1 的没有“-”的sheet数据不处理。
                                 4、请勿随意改动模板的sheet名 导入失败后，请从以上4点检查excel
                             </samall>
-                            </p>
-
+                        </p>
 
 
                         <div class="form-group  form-group-sm col-sm-12">
 
-                            <button id="btn_itsm" type="button"  onclick="itsmData()"
+                            <button id="btn_itsm" type="button" onclick="itsmData()"
                                     class="btn btn-danger pull-right btn-form btn-sm">
                                 ITSM送审
                             </button>
-                            <button id="btn_remove" type="button"  onclick="removeData()"
+                            <button id="btn_remove" type="button" onclick="removeData()"
                                     class="btn btn-danger pull-right btn-form btn-sm">
                                 删除
                             </button>
@@ -169,20 +168,19 @@
                             </button>
 
                         </div>
-                        </div>
                     </div>
+                </div>
 
-                
+
             </div>
 
             <div id="form-table" style="font-size:12px;">
                 <h4 style="text-align: center;" id="table_title"><b id="title_table"></b>
                 </h4>
-                    
-                    <div class="box-body">
-                        <table id="table_upload"></table>
-                    </div>
-                
+
+                <table id="table_upload"></table>
+
+
             </div>
 
             <div id="menuContent" class="menuContent">

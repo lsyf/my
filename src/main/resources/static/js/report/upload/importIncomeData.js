@@ -15,8 +15,8 @@ function initIncomeData() {
 }
 
 function queryLog() {
-	var title =' 稽核结果';
-	$.ajax({
+    var title = ' 稽核结果';
+    $.ajax({
         type: "POST",
         url: hostUrl + "importIncomeData/list",
         data: {
@@ -26,7 +26,7 @@ function queryLog() {
         dataType: "json",
         success: function (r) {
             if (r.state) {
-            	$('#title_table').text(title);
+                $('#title_table').text(title);
                 table.load(r.data);
             } else {
                 toastrError(r.msg);
@@ -104,8 +104,8 @@ function itsmData() {
             error: function (result) {
                 toastrError('请求失败');
             },
-            always:function(){
-            	$('#btn_itsm').button("reset");
+            always: function () {
+                $('#btn_itsm').button("reset");
             }
         });
     });
@@ -253,8 +253,8 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#table_upload').bootstrapTable({
-        	toolbar: "#table_title",
-        	striped: true,                      //是否显示行间隔色
+            toolbar: "#table_title",
+            striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
             sortable: true,                     //是否启用排序
@@ -263,7 +263,7 @@ var TableInit = function () {
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 10,                       //每页的记录行数（*）
-            pageList: [10,50, 100],        //可供选择的每页的行数（*）
+            pageList: [10, 50, 100],        //可供选择的每页的行数（*）
             search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
@@ -286,40 +286,54 @@ var TableInit = function () {
                 valign: 'middle'
             }, {
                 field: 'logId',
-                sortable : true,
-                 title: '流水号'
+                sortable: true,
+                title: '流水号'
             }, {
                 field: 'city',
-                sortable : true,
-                title: '地市'
+                sortable: true,
+                title: '地市',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:50px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'fileName',
-                sortable : true,
-                title: '导入文件'
+                sortable: true,
+                title: '导入文件',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'num',
-                sortable : true,
+                sortable: true,
                 title: '记录数'
             }, {
                 field: 'sum',
-                sortable : true,
+                sortable: true,
                 title: '合计(元)'
             }, {
                 field: 'sum2',
-                sortable : true,
+                sortable: true,
                 title: '收入(元)'
             }, {
                 field: 'userName',
-                sortable : true,
+                sortable: true,
                 title: '操作人'
             }, {
                 field: 'action',
-                sortable : true,
+                sortable: true,
                 title: '提交状态'
             }, {
                 field: 'isItsm',
                 title: '送审资格',
-                sortable : true,
+                sortable: true,
                 formatter: function (v) {
                     if (v == '1')
                         return '需要送审';
@@ -329,7 +343,7 @@ var TableInit = function () {
             }, {
                 field: 'itsmStatus',
                 title: '送审状态',
-                sortable : true,
+                sortable: true,
                 formatter: function (v) {
                     switch (v) {
                         case '0':
@@ -344,7 +358,7 @@ var TableInit = function () {
                 }
             }, {
                 field: 'itsmOrderNo',
-                sortable : true,
+                sortable: true,
                 title: 'ITSM单号'
             }, {
                 field: 'itsmUrl',
@@ -360,7 +374,14 @@ var TableInit = function () {
                 events: operateEvents
             }, {
                 field: 'remark',
-                title: '导入说明'
+                title: '导入说明',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }]
         });
 
