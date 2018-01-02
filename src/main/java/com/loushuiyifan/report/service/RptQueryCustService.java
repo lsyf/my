@@ -3,6 +3,7 @@ package com.loushuiyifan.report.service;
 import com.google.common.collect.Maps;
 import com.loushuiyifan.common.bean.Organization;
 import com.loushuiyifan.common.util.ProtoStuffSerializerUtil;
+import com.loushuiyifan.config.poi.PoiUtils;
 import com.loushuiyifan.report.ReportConfig;
 import com.loushuiyifan.report.bean.ReportCache;
 import com.loushuiyifan.report.bean.RptCase;
@@ -10,17 +11,11 @@ import com.loushuiyifan.report.dao.ReportCacheDAO;
 import com.loushuiyifan.report.dao.RptQueryCustDAO;
 import com.loushuiyifan.report.dto.SPDataDTO;
 import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.serv.CodeListTaxService;
-import com.loushuiyifan.report.serv.FileService;
-import com.loushuiyifan.report.serv.LocalNetService;
-import com.loushuiyifan.report.serv.ReportDownloadService;
-import com.loushuiyifan.report.serv.ReportExportServ;
+import com.loushuiyifan.report.serv.*;
 import com.loushuiyifan.report.vo.RptAuditVO;
 import com.loushuiyifan.report.vo.RptQueryDataVO;
 import com.loushuiyifan.system.service.DictionaryService;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -439,12 +434,15 @@ public class RptQueryCustService {
                 row.createCell(2).setCellValue(pid);
                 row.createCell(3).setCellValue(name);
 
+                CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
                 for (int j = 0; j < columns.size(); j++) {
                     int tempIndex = columnIndex + j;
                     String key = id + _append + columns.get(j);
                     Map<String, String> temp = datas.get(key);
                     double data = temp == null ? 0 : Double.parseDouble(temp.get("data"));
-                    row.createCell(tempIndex).setCellValue(data);
+                    Cell cell = row.createCell(tempIndex);
+                    cell.setCellValue(data);
+                    cell.setCellStyle(cellStyle);
                 }
 
             }

@@ -16,6 +16,13 @@ public class PoiUtils {
     private static final Logger LOG = LoggerFactory.getLogger(PoiUtils.class);
     private static String filePath = "d:/a.xlsx";
 
+    public static CellStyle valueCellStyle(Workbook wb) {
+        CellStyle cellStyle = wb.createCellStyle();
+        DataFormat df = wb.createDataFormat();
+        cellStyle.setDataFormat(df.getFormat("0.00"));
+        return cellStyle;
+    }
+
     /**
      * 创建的sheet名，非法字符替换成下划线
      *

@@ -17,6 +17,8 @@ public abstract class AbstractPoiExport<E> implements PoiExport<E> {
     protected boolean isXlsx = false;//是否是xlsx
     protected boolean isMulti = false; //是否多sheet
 
+    protected Workbook workbook;
+
     //模板
     protected InputStream is = null;
     //导出
@@ -49,7 +51,7 @@ public abstract class AbstractPoiExport<E> implements PoiExport<E> {
      * 导出
      */
     public void export() throws Exception {
-        Workbook wb = getWorkbook();
+        Workbook wb = createWorkbook();
 
         process(wb);
 
@@ -60,29 +62,30 @@ public abstract class AbstractPoiExport<E> implements PoiExport<E> {
         wb.close();
     }
 
-    private Workbook getWorkbook() throws IOException {
-        Workbook wb;
+    private Workbook createWorkbook() throws IOException {
         if (!hasTemp) {
             if (isXlsx) {
-                wb = new SXSSFWorkbook();
+                workbook = new SXSSFWorkbook();
             } else {
-                wb = new HSSFWorkbook();
+                workbook = new HSSFWorkbook();
             }
         } else {//有输入流
             //WorkbookFactory:07默认采用XSSFWorkbook,03默认采用HSSFWorkbook,为了优化内存,弃用,采用SXSSFWorkbook
             //wb = WorkbookFactory.create(is);
 
             if (isXlsx) {
-                wb = new SXSSFWorkbook(new XSSFWorkbook(is));
+                workbook = new SXSSFWorkbook(new XSSFWorkbook(is));
             } else {
-                wb = new HSSFWorkbook(is);
+                workbook = new HSSFWorkbook(is);
             }
         }
-        return wb;
+        return workbook;
     }
 
     protected abstract void process(Workbook wb) throws Exception;
 
 
-
+    public Workbook getWorkbook() {
+        return workbook;
+    }
 }
