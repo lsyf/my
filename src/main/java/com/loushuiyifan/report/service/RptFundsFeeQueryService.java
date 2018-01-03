@@ -45,7 +45,7 @@ public class RptFundsFeeQueryService {
         String[] titles = {"指标编码", "指标名称", "金额", "利润中心编码", "利润中心简称", "SAP科目编码"};
 
         byte[] data = new CommonExportServ().column(keys, titles)
-                .data(list)
+                .data(list).type(null)
                 .exportData();
 
         return data;

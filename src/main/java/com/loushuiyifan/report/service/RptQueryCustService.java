@@ -418,7 +418,8 @@ public class RptQueryCustService {
                                     Map<String, Map<String, String>> datas) throws Exception {
             int rowIndex = 5;//行指针
             int columnIndex = 4;//列指针
-
+            CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
+            
             String _append = "_";
             for (int i = 0; i < rows.size(); i++) {
                 Map<String, String> rowData = rows.get(i);
@@ -434,7 +435,7 @@ public class RptQueryCustService {
                 row.createCell(2).setCellValue(pid);
                 row.createCell(3).setCellValue(name);
 
-                CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
+                
                 for (int j = 0; j < columns.size(); j++) {
                     int tempIndex = columnIndex + j;
                     String key = id + _append + columns.get(j);

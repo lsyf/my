@@ -150,44 +150,55 @@ var TableInit = function () {
             data: [],
             columns: [{
                 field: 'logId',
-                width:'80px',
                 title: '编号'
             }, {
                 field: 'month',
-                width:'120px',
                 title: '帐期'
             }, {
                 field: 'latnName',
-                width:'120px',
-                title: '本地网'
+                title: '本地网',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'codeName',
-                width:'120px',
-                title: '营业区'
+                title: '营业区',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'cardType',
-                width:'80px',
-                title: '卡类型'
+                title: '卡类型',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'discount',
-                width:'80px',
                 title: '折扣率'
             }, {
                 field: 'platformAmount',
-                width:'80px',
                 title: '平台过期卡金额(元)'
             }, {
                 field: 'inactiveAmount',
-                width:'80px',
                 title: '库存过期卡金额(元)'
             },{
             	field: 'userName',
-                title: '修改人',
-                width: 100
+                title: '修改人'
             },{
             	field: 'lstUpd',
-            	title: '修改时间',
-                width: 100
+            	title: '修改时间'
             }, {
                 field: 'operate',
                 title: '操作',

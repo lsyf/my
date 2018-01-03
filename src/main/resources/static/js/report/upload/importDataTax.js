@@ -150,7 +150,14 @@ var TableInit = function () {
                 title: '流水号'
             } , {
                 field: 'fileName',
-                title: '导入文件'
+                title: '导入文件',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'count',
                 title: '记录数'

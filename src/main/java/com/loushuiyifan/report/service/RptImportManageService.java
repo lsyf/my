@@ -42,16 +42,18 @@ public class RptImportManageService {
     	}else{
      		return null;
     	}
-    	String flag ="";
+    	
     	List<Map<String,String>> list =null;
+    	
+    	List<String> latnIds = rptImportManageDAO.selectLatnByuserId(userId);
     	List<String> role =rptImportCutDataDAO.selectRoleById(userId);
-    	if(role.contains("1") ||role.size()==1){
-    		flag ="1";
+    	if(role.contains("1")){
+    		
     		list = rptImportManageDAO.listForMap(start, 
-    				end, fileName, userName,flag,userId);
+    				end, fileName, userName,"1",latnIds);
     	}else{
     		list = rptImportManageDAO.listForMap(start, 
-    				end, fileName, userName,"",userId);
+    				end, fileName, userName,"2",latnIds);
     	}
 		
 		return list;

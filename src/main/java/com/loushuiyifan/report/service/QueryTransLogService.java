@@ -77,7 +77,7 @@ public class QueryTransLogService {
                 "最后修改时间", "凭证号"};
 
         byte[] data = new CommonExportServ().column(keys, titles)
-                .data(list)
+                .data(list).type(null)
                 .exportData();
 
         return data;

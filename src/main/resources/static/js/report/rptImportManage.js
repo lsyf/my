@@ -90,8 +90,6 @@ var TableInit = function () {
 
             data: [],
             columns: [{
-            	checkbox:true
-            },{
                 field: 'logId',
                 width: '80px',
                 title: '流水号'
@@ -101,28 +99,49 @@ var TableInit = function () {
                 title: '账期'
             }, {
                 field: 'useName',
-                width: '120px',
+                width: '80px',
                 title: '操作人'
             }, {
                 field: 'codeName',
-                width: '120px',
+                width: '80px',
                 title: '本地网'
             }, {
                 field: 'incomeSource',
                 width: '80px',
-                title: '收入来源'
+                title: '收入来源',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'fileName',
-                width: '200px',
-                title: '导入文件'
+                width: '100px',
+                title: '导入文件',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'importDate',
-                width: '120px',
+                width: '100px',
                 title: '入库时间'
             }, {
                 field: 'exportDesc',
                 width: '80px',
-                title: '入库描述'
+                title: '入库描述',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }]
         });
 

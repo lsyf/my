@@ -28,7 +28,7 @@ public class RptTaxExportService {
         String[] titles = {"账期", "纳税识别号", "税务科目", "会计收入","税务收入", "税额"};
 
         byte[] data = new CommonExportServ().column(keys, titles)
-							                .data(list)
+							                .data(list).type(null)
 							                .exportData();
 
         return data;

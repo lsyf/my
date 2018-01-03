@@ -14,11 +14,15 @@
 		   to_char(t.import_date, 'yyyy-MM-dd hh24:mi:ss') as "importDate",
 		   t.export_desc  as "exportDesc" 
       from(select * from ext_import_log r    
-       
-      <if test='flag !="1"'>
-      where r.user_id =#{userId}	
-	  </if>              
-                 
+       where r.type = 'rpt_import_data_channel'
+      <if test='flag !="1"'>                 
+          and r.latn_id in(
+        <foreach collection="list" item="latnId" separator=",">
+            #{latnId}
+        </foreach>
+        )
+          	
+	  </if>                       
       )t
 	
 	where t.import_date <![CDATA[>=]]> to_date(#{startDate}, 'yyyy-MM-dd hh24:mi')	
@@ -33,4 +37,13 @@
 	order by t.log_id DESC	
 	</select>
 	
+	<select id="selectLatnByuserId" resultType="java.lang.String">
+	select a.data from 
+		 aweb_organization a,
+		 aweb_user_organization b
+		 where a.id =b.org_id
+		 and a.type ='local_net'
+		 and b.user_id = #{userId}
+	
+	</select>
 </mapper>

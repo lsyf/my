@@ -66,7 +66,7 @@ public class RptSettleAmountService {
         }
 
         byte[] data = new CommonExportServ().column(keys, titles)
-                .data(list)
+                .data(list).type("settle")
                 .exportData();
 
         return data;

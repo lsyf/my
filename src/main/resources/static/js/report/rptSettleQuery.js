@@ -211,7 +211,14 @@ var TableInit = function () {
             }, {
                 field: 'reportName',
                 width: '100px',
-                title: '报表名称'
+                title: '报表名称',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:50px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'month',
                 width: '70px',

@@ -153,7 +153,14 @@ var TableInit = function () {
                 title: '流水号'
             }, {
                 field: 'fileName',
-                title: '导入文件'
+                title: '导入文件',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'num',
                 title: '记录数'
@@ -168,7 +175,14 @@ var TableInit = function () {
                 title: '昵称'
             }, {
                 field: 'remark',
-                title: '导入说明'
+                title: '导入说明',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'operate',
                 title: '操作',

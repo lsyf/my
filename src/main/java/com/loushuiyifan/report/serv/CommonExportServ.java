@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -13,6 +14,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.loushuiyifan.config.poi.AbstractPoiExport;
+import com.loushuiyifan.config.poi.PoiUtils;
 import com.loushuiyifan.report.exception.ReportException;
 
 /**
@@ -31,7 +33,13 @@ public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
     //列名
     protected String[] reportTitles;
 
-
+    protected String type;
+    
+    public CommonExportServ type(String type) {      
+        this.type = type;
+        return this;
+    }
+    
     public CommonExportServ column(String[] keys, String[] titles) {
         if (keys.length != titles.length) {
             throw new ReportException("导出文件列数据配置错误!");
@@ -67,20 +75,48 @@ public class CommonExportServ extends AbstractPoiExport<Map<String, String>> {
             titleRow.createCell(i).setCellValue(reportTitles[i]);
         }
 
-        //然后填充数据
-        for (int i = 0; i < reportDatas.size(); i++) {
-            int rowIndex = i + 1;
-            Row row = sheet.createRow(rowIndex);
+        if(type !=null && !"".equals(type)){
+        	//然后填充数据
+            for (int i = 0; i < reportDatas.size(); i++) {
+                int rowIndex = i + 1;
+                Row row = sheet.createRow(rowIndex);
+                CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
+                Map<String, String> map = reportDatas.get(i);
+                for (int j = 0; j < reportKeys.length; j++) {
+                    String key = reportKeys[j];
 
-            Map<String, String> map = reportDatas.get(i);
-            for (int j = 0; j < reportKeys.length; j++) {
-                String key = reportKeys[j];
+                    Object obj =map.get(key);
+                    Cell cell = row.createCell(j);
+                    if(!"val".equals(key)){
+                    	double data =obj ==null? 0:Double.parseDouble(obj.toString());
+                    	cell.setCellValue(data);
+                    }else{
+                    	String data = obj ==null?"-":obj.toString();
+                    	cell.setCellValue(data);
+                    }
+                   
+                    cell.setCellStyle(cellStyle);
+                }
+            }
+        }else{
+        	//然后填充数据
+            for (int i = 0; i < reportDatas.size(); i++) {
+                int rowIndex = i + 1;
+                Row row = sheet.createRow(rowIndex);
+                //CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
+                Map<String, String> map = reportDatas.get(i);
+                for (int j = 0; j < reportKeys.length; j++) {
+                    String key = reportKeys[j];
 
-                Object obj =map.get(key);
-                String data = obj ==null?"-":obj.toString();
-                row.createCell(j).setCellValue(data);
+                    Object obj =map.get(key);
+                    Cell cell = row.createCell(j);                    
+                    String data = obj ==null?"-":obj.toString();
+                    cell.setCellValue(data);                    
+                    //cell.setCellStyle(cellStyle);
+                }
             }
         }
+        
 
     }
 }

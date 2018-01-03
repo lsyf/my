@@ -142,15 +142,22 @@ var TableInit = function () {
                 title: '账期'
             }, {
                 field: 'incomeSource',
-                width: '120px',
+                width: '100px',
                 title: '收入来源编码'
             }, {
                 field: 'incomeName',
-                width: '120px',
-                title: '收入来源名称'
+                width: '100px',
+                title: '收入来源名称',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'codeName',
-                width: '120px',
+                width: '100px',
                 title: '本地网名称'
             }, {
                 field: 'batchId',
@@ -175,7 +182,14 @@ var TableInit = function () {
             }, {
                 field: 'voucherCode',
                 width: '200px',
-                title: '凭证号'
+                title: '凭证号',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }]
         });
 
