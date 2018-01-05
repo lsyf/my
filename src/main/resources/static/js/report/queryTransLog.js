@@ -1,15 +1,15 @@
 var table;
 var orgTree;
-var isTree;
+
 function initTransLog() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
+    CommSelect('upload_incomeSource', incomeSources);
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId", 80);
     orgTree.Init(orgs);
-    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_incomeSource", 100);
-    isTree.Init(incomeSources);
+   
 
 }
 
@@ -20,7 +20,7 @@ function queryLog(btn) {
         data: {
             month: $("#upload_month").val(),
             latnId: orgTree.val(),
-            incomeSource: isTree.val(),
+            incomeSource: $("#upload_incomeSource").val(),
             taxtId: $("#upload_taxtId").val()
         },
         dataType: "json",
@@ -50,7 +50,7 @@ function queryLog(btn) {
 function exportData() {
     var month = $("#upload_month").val();
     var latnId = orgTree.val();
-    var incomeSource = isTree.val();
+    var incomeSource = $("#upload_incomeSource").val();
     var taxtId = $("#upload_taxtId").val();
 
 
@@ -151,7 +151,7 @@ var TableInit = function () {
                 formatter: function (v) {
                     return [
                         '<div title="' + v + '" ' +
-                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        'style="width:150px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
                     ].join('');
                 }
@@ -161,7 +161,7 @@ var TableInit = function () {
                 title: '本地网名称'
             }, {
                 field: 'batchId',
-                width: '200px',
+                width: '100px',
                 title: '批次号'
             }, {
                 field: 'subId',
@@ -173,15 +173,15 @@ var TableInit = function () {
                 title: '状态'
             }, {
                 field: 'createDate',
-                width: '150px',
+                width: '120px',
                 title: '创建时间'
             }, {
                 field: 'lstUpd',
-                width: '150px',
+                width: '120px',
                 title: '最后修改时间'
             }, {
                 field: 'voucherCode',
-                width: '200px',
+                width: '120px',
                 title: '凭证号',
                 formatter: function (v) {
                     return [

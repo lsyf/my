@@ -105,7 +105,7 @@ function removeData(row) {
 
                     queryLog();
                 } else {
-                    toastrError('提删除失败:' + r.msg);
+                    toastrError('删除失败:' + r.msg);
                 }
             },
             error: function (result) {
@@ -157,7 +157,7 @@ var TableInit = function () {
                 formatter: function (v) {
                     return [
                         '<div title="' + v + '" ' +
-                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
                     ].join('');
                 }

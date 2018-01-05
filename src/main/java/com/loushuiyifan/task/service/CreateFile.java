@@ -33,10 +33,12 @@ import java.util.Map;
 @Service
 public class CreateFile {
 	private static final Logger logger = LoggerFactory.getLogger(CreateXML.class);
-	private static final String TEMP_PATH ="D:/TEMP/";
-	private static final String FILE_PATH =null;
-	private static final String IP ="134.96.246.21";
-	private static final String USERNAME ="rptadmin";
+	
+	private static final String TEMP_PATH ="D:/report/files/createFile/";
+	//private static final String TEMP_PATH ="/report/files/createFile/";
+	private static final String FILE_PATH ="/app/MonthData/";
+	public static final String IP = "134.96.93.186";
+	public static final String USERNAME = "zjeda";
 	
 	@Autowired
 	RptMsgInfoDataDAO rptMsgInfoDataDAO;

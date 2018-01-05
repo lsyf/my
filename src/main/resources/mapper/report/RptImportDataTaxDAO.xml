@@ -58,7 +58,7 @@
     <select id="insertTaxGroup" parameterType="com.loushuiyifan.report.dto.SPDataDTO"
             statementType="CALLABLE">
         {call MSS_STAT_TO_TAX(
-         #{l_remark,mode=IN,jdbcType=NUMERIC},
+         #{latnId,mode=IN,jdbcType=NUMERIC},
          #{rtnCode ,mode=OUT,jdbcType=NUMERIC},
          #{rtnMsg,mode=OUT,jdbcType=VARCHAR})}
     </select>

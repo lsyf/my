@@ -160,7 +160,14 @@ var TableInit = function () {
                 title: '地市'
             }, {
                 field: 'fileName',
-                title: '导入文件'
+                title: '导入文件',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'num',
                 title: '记录数'

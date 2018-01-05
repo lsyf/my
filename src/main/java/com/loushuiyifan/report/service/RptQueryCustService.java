@@ -116,7 +116,9 @@ public class RptQueryCustService {
             List<Map<String, String>> fields = rptEditionService.listFieldMap();
             //数据
             Map<String, Map<String, String>> datas = rptQueryCustDAO.listAsMap(month, incomeSource, latnId, type);
-
+            if (datas == null ||datas.size()==0) {
+                throw new ReportException("数据还未准备好！");
+            }
             //由于fields接下来会更改，优先生成文件
             String filePath = export(month, latnId, incomeSource, type,
                     custs, fields, datas);

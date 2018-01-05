@@ -116,7 +116,9 @@ public class RptQueryComDetailService {
 
             //数据
             Map<String, Map<String, String>> datas = getDataMap(month, latnId);
-
+            if (datas == null ||datas.size()==0) {
+                throw new ReportException("数据还未准备好！");
+            }
             //由于fields接下来会更改，优先生成文件
             String filePath = export(month, latnId, type,
                     cols, fields, datas);
@@ -362,9 +364,10 @@ public class RptQueryComDetailService {
                                     List<Map<String, String>> rows,
                                     Map<String, Map<String, String>> datas) throws Exception {
             int rowIndex = 3;//行指针
-            int columnIndex = 3;//列指针
-
+            int columnIndex = 3;//列指针            
             String _append = "_";
+            CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
+
             for (int i = 0; i < rows.size(); i++) {
                 Map<String, String> rowData = rows.get(i);
 
@@ -377,8 +380,7 @@ public class RptQueryComDetailService {
                 row.createCell(1).setCellValue(name);
                 row.createCell(2).setCellValue(id);
 
-                CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
-                for (int j = 0; j < columns.size(); j++) {
+                                for (int j = 0; j < columns.size(); j++) {
                     int tempIndex = columnIndex + j;
                     String key = id + _append + columns.get(j);
                     Map<String, String> temp = datas.get(key);

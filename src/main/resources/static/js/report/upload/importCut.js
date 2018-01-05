@@ -196,7 +196,7 @@ var TableInit = function () {
                 formatter: function (v) {
                     return [
                         '<div title="' + v + '" ' +
-                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        'style="width:120px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
                     ].join('');
                 }

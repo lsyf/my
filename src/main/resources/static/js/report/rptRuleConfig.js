@@ -6,7 +6,7 @@ function initRuleConfigForm() {
     table.Init();
 
     buildSelect('query_month', months);
-    buildSelect('query_card', cards);
+    CommSelect('query_card', cards);
     
     
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "query_latnId", 80);
@@ -14,7 +14,7 @@ function initRuleConfigForm() {
     
   //表单下拉加载
     buildSelect('form_month', months);
-    buildSelect('form_card', cards);
+    CommSelect('form_card', cards);
     form_orgTree = new ZtreeSelect("treeOrg2", "menuContent2", "form_latnId");
     form_orgTree.Init(orgs);
 

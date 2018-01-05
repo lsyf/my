@@ -82,6 +82,10 @@ public class ImportSettleCutService {
 
         List<SettCutRateVO> datas = rptSettCutRateDAO.SettCutRateData(month, reportId);
         List<SettCutDataVO> logs = rptSettCutLogDAO.SettCutLog(month);
+        
+        if (datas == null ||datas.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
         Map<String, Object> map = Maps.newHashMap();
         map.put("datas", datas);
         map.put("logs", logs);

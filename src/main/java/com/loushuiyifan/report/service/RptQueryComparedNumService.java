@@ -115,7 +115,9 @@ public class RptQueryComparedNumService {
             List<Map<String, String>> fields = rptEditionService.listFieldMap();
             //数据
             Map<String, Map<String, String>> datas = getDataMap(month, latnId, type);
-
+            if (datas == null ||datas.size()==0) {
+                throw new ReportException("数据还未准备好！");
+            }
             //由于fields接下来会更改，优先生成文件
             String filePath = export(month, latnId, type,
                     cols, fields, datas);

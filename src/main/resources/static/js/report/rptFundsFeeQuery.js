@@ -1,16 +1,13 @@
 var table;
-var orgTree;
-var isTree;
+
 function initFundsFeeForm() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
-    orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_prctrName", 80);
-    orgTree.Init(orgs);
-    isTree = new ZtreeSelect("treeOrg2", "menuContent2", "upload_reportId", 100);
-    isTree.Init(reportIds);
-   
+    CommSelect('upload_prctrName', orgs);
+    CommSelect('upload_reportId', reportIds);
+    
 }
 
 function queryLog(btn) {
@@ -19,8 +16,8 @@ function queryLog(btn) {
         url: hostUrl + "rptFundsFeeQuery/list",
         data: {
             month: $("#upload_month").val(),
-            prctrName: orgTree.val(),
-            reportId: isTree.val()
+            prctrName: $("#upload_prctrName").val(),
+            reportId: $("#upload_reportId").val()
         },
         dataType: "json",
         beforeSend: function () {
@@ -50,8 +47,8 @@ function queryLog(btn) {
 //导出
 function exportData() {
   var month = $("#upload_month").val();
-  var prctrName = orgTree.val();
-  var reportId = isTree.val();
+  var prctrName = $("#upload_prctrName").val();
+  var reportId = $("#upload_reportId").val();
  
   var names = ['month', 'reportId', 'prctrName'];
   var params = [month, reportId, prctrName];
@@ -104,27 +101,28 @@ var TableInit = function () {
             data: [],
             columns: [{
                 field: 'indexCode',
-                width:'80px',
                 title: '指标编码'
             }, {
                 field: 'indexName',
-                width:'120px',
-                title: '指标名称'
+                title: '指标名称',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:250px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'balance',
-                width:'120px',
                 title: '金额'
             }, {
                 field: 'prctr',
-                width:'120px',
                 title: '利润中心编码'
             }, {
                 field: 'prctrName',
-                width:'200px',
                 title: '利润中心简称'
             }, {
                 field: 'sapFinCode',
-                width:'80px',
                 title: 'SAP科目编码'
             }]
         });

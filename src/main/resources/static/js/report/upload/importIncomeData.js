@@ -306,7 +306,7 @@ var TableInit = function () {
                 formatter: function (v) {
                     return [
                         '<div title="' + v + '" ' +
-                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        'style="width:250px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
                     ].join('');
                 }
@@ -357,10 +357,6 @@ var TableInit = function () {
                     }
                 }
             }, {
-                field: 'itsmOrderNo',
-                sortable: true,
-                title: 'ITSM单号'
-            }, {
                 field: 'itsmUrl',
                 title: 'ITSM审批流转',
                 formatter: function (a, b, c) {
@@ -372,6 +368,10 @@ var TableInit = function () {
                     ].join('');
                 },
                 events: operateEvents
+            }, {
+                field: 'itsmOrderNo',
+                sortable: true,
+                title: 'ITSM单号'
             }, {
                 field: 'remark',
                 title: '导入说明',

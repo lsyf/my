@@ -142,9 +142,12 @@ public class ImportC5Service {
 
         String type = ReportConfig.RptImportType.C5.toString();
         Map<String, Object> map = new HashMap<>();
-        List<ImportDataLogVO> l_jihe = rptImportDataC5DAO.jiheSum(month, latnId, type);
+        List<ImportDataLogVO> list = rptImportDataC5DAO.jiheSum(month, latnId, type);
         List<ImportC5DataVO> l_area = rptImportDataC5DAO.areaCount(month, latnId);
-        map.put("list", l_jihe);
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
+        map.put("list", list);
         map.put("c5", l_area);
         return map;
     }

@@ -88,7 +88,9 @@ public class ImportCutService {
                 incomeSource,
                 shareType,
                 remark);
-
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
         return list;
     }
 

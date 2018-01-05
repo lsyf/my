@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.loushuiyifan.report.dao.RptImportCutDataDAO;
 import com.loushuiyifan.report.dao.RptImportManageDAO;
+import com.loushuiyifan.report.exception.ReportException;
 
 @Service
 public class RptImportManageService {
@@ -56,6 +57,9 @@ public class RptImportManageService {
     				end, fileName, userName,"2",latnIds);
     	}
 		
+    	if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
 		return list;
 	}
 }

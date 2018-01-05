@@ -59,9 +59,7 @@ public class QueryIncomeStateController extends BaseReportController {
 	@ResponseBody
 	@RequiresPermissions("report:queryIncomeState:view")
 	public JsonResult list(String month, String status) {
-		List<TransLogVO> list = null;
-
-		list = queryIncomeStateService.list(month, status);
+		List<TransLogVO> list = queryIncomeStateService.list(month, status);
 
 		return JsonResult.success(list);
 	}

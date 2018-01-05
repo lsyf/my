@@ -39,7 +39,7 @@ import com.loushuiyifan.report.vo.ImportLogDomTaxVO;
 		void pkgCutTaxData(SPDataDTO dto);
 		
 		//生成税务
-		 void insertTaxGroup();
+		 void insertTaxGroup(SPDataDTO dto);
 		 
 		 		 
 	}
