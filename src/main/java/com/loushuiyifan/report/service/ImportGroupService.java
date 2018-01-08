@@ -154,6 +154,11 @@ public class ImportGroupService {
                             break;
                     }
                 }
+                
+                //如果GroupId为空,则默认该行为无效数据
+                if (bean.getGroupId() == null) {
+                    continue;
+                }
                 list.add(bean);
             }
 

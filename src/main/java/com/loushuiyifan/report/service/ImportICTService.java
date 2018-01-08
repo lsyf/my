@@ -260,6 +260,11 @@ public class ImportICTService {
                             break;
                     }
                 }
+                
+                //如果areaId和 indexData为空,则默认该行为无效数据
+                if (bean.getAreaId() == null&&bean.getIndexData()==null) {
+                    continue;
+                }
                 list.add(bean);
             }
             return list;

@@ -279,6 +279,11 @@ public class ImportCutService {
                             break;
                     }
                 }
+                //如果AreaId为空,则默认该行为无效数据
+              //如果areaId和 indexData为空,则默认该行为无效数据
+                if (bean.getAreaId() == null&&bean.getRate()==null) {
+                    continue;
+                }
                 list.add(bean);
             }
 

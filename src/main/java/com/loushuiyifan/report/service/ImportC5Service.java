@@ -91,7 +91,7 @@ public class ImportC5Service {
         log.setIncomeSoure(incomeSource);
         log.setFileName(filename);
         log.setType(ReportConfig.RptImportType.C5.toString());
-        extImportLogDAO.insert(log);
+        extImportLogDAO.insertSelective(log);
 
 
         //校验导入数据指标
@@ -229,6 +229,11 @@ public class ImportC5Service {
                             break;
 
                     }
+                }
+                
+                //如果areaId和 indexData为空,则默认该行为无效数据
+                if (bean.getAreaId() == null&&bean.getIndexData()==null) {
+                    continue;
                 }
                 list.add(bean);
 

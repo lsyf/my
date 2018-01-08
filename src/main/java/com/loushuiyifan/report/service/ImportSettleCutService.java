@@ -206,6 +206,10 @@ public class ImportSettleCutService {
 
                     }
                 }
+                //如果reportId和 rate为空,则默认该行为无效数据
+                if (bean.getReportId() == null&&bean.getRate()==null) {
+                    continue;
+                }
                 list.add(bean);
             }
 
