@@ -149,14 +149,12 @@ var TableInit = function () {
              
             data: [],
             columns: [{
-            	checkbox:true
-            },{
                 field: 'txtMessage',
                 title: '文本信息',
                 formatter: function (v) {
                     return [
                         '<div title="' + v + '" ' +
-                        'style="width:180px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
                     ].join('');
                 }
@@ -172,7 +170,7 @@ var TableInit = function () {
                 formatter: function (v) {
                     return [
                         '<div title="' + v + '" ' +
-                        'style="width:120px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        'style="width:80px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
                     ].join('');
                 }
@@ -185,7 +183,7 @@ var TableInit = function () {
                 formatter: function (v) {
                     return [
                         '<div title="' + v + '" ' +
-                        'style="width:120px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        'style="width:80px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
                     ].join('');
                 }

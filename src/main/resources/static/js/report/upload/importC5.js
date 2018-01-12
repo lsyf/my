@@ -31,8 +31,8 @@ function queryLog() {
                 table.load(data.list);
                 table2.load(data.c5);
             } else {
-                toastrError('查询失败');
-                toastrError(r.msg);
+                toastrError('查询失败'+r.msg);
+               
             }
         },
         error: function (result) {

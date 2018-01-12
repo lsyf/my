@@ -375,6 +375,9 @@ public class ImportIncomeDataService {
                         case 4:
                             bean.setIncomeSource(data);
                             break;
+                        case 5:
+                            bean.setSourceName(data);
+                            break;
                         case 6:
                             bean.setHorCode(data);
                             break;

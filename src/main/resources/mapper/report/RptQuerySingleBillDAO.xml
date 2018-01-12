@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.loushuiyifan.report.dao.RptQuerySingleBillDAO">
+
+    <select id="listBill" parameterType="java.util.Map" statementType="CALLABLE">
+      {#{list,mode=OUT,jdbcType=CURSOR,resultMap=singleBillVO}= call f_Get_Detail_Info(
+       #{month,mode=IN,jdbcType=NUMERIC},
+       #{latnId,mode=IN,jdbcType=NUMERIC},
+       #{phone,mode=IN,jdbcType=VARCHAR})}
+    </select>
+    <resultMap id="singleBillVO" type="com.loushuiyifan.report.vo.SingleBillVO">
+    </resultMap>
+</mapper>
