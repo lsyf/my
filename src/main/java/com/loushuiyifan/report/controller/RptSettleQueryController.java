@@ -68,16 +68,6 @@ public class RptSettleQueryController extends BaseReportController{
         return JsonResult.success(list);
     }
 
-   /**
-    * 详情查看
-    */
-    @PostMapping("detail")
-    @ResponseBody
-    @RequiresPermissions("report:rptSettleQuery:view")
-    public JsonResult detail(Long logId,String incomeSource){
-    	Map<String, Object> map = rptSettleQueryService.listDetail(logId, incomeSource);
-        return JsonResult.success(map);
-    }
     
     /**
      * 导出

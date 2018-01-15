@@ -30,7 +30,9 @@ public class RptSettleQueryService {
     public List<SettleDataVO> listSettle(String month, String reportId) {
 
         List<SettleDataVO> list = rptSettleQueryDAO.listData(month, reportId);
-        
+        if (list == null || list.isEmpty()) {
+			throw new ReportException("查询数据为空!");
+		}
         return list;
     }
     
@@ -46,6 +48,7 @@ public class RptSettleQueryService {
     	
         List<Map<String, String>> titles = rptSettleQueryDAO.titleOld(logId);
         List<Map<String, String>> datas =rptSettleQueryDAO.listOld(logId);
+        
         if (datas == null || datas.isEmpty()) {
 			throw new ReportException("原始数据为空!");
 		}

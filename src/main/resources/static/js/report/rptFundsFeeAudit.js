@@ -152,11 +152,16 @@ var TableInit = function () {
                 field: 'txtMessage',
                 title: '文本信息',
                 formatter: function (v) {
-                    return [
-                        '<div title="' + v + '" ' +
-                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                    var val="";
+                	if(v ==null){
+                       val ="-";	
+                    }else{
+                    	val =['<div title="' + v + '" ' +
+                        'style="width:80px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
-                    ].join('');
+                    ].join('')
+                    }
+                	return val;
                 }
             }, {
                 field: 'prctr',
@@ -168,11 +173,16 @@ var TableInit = function () {
                 field: 'sapFinCodeName',
                 title: 'SAP科目名称',
                 formatter: function (v) {
-                    return [
-                        '<div title="' + v + '" ' +
+                    var val="";
+                	if(v ==null){
+                       val ="-";	
+                    }else{
+                    	val =['<div title="' + v + '" ' +
                         'style="width:80px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
-                    ].join('');
+                    ].join('')
+                    }
+                	return val;
                 }
             }, {
                 field: 'kunnr',
@@ -181,11 +191,16 @@ var TableInit = function () {
                 field: 'kunnrName',
                 title: '客户名称',
                 formatter: function (v) {
-                    return [
-                        '<div title="' + v + '" ' +
+                    var val="";
+                	if(v ==null){
+                       val ="-";	
+                    }else{
+                    	val =['<div title="' + v + '" ' +
                         'style="width:80px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
                         + v + '</div>'
-                    ].join('');
+                    ].join('')
+                    }
+                	return val;
                 }
             }, {
                 field: 'jieFbalance',

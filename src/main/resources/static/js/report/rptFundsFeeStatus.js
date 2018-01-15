@@ -161,7 +161,14 @@ var TableInit = function () {
             }, {
                 field: 'voucherCode',
                 width: '120px',
-                title: '凭证号'
+                title: '凭证号',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: '123',
                 width: '120px',
