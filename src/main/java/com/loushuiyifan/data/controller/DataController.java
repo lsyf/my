@@ -1,12 +1,15 @@
 package com.loushuiyifan.data.controller;
 
+import com.loushuiyifan.common.bean.Dictionary;
 import com.loushuiyifan.data.service.DataService;
 import com.loushuiyifan.data.vo.DataAnalysis2;
 import com.loushuiyifan.data.vo.DataAnalysis3;
 import com.loushuiyifan.data.vo.DataAnalysis4;
+import com.loushuiyifan.system.service.DictionaryService;
 import com.loushuiyifan.system.vo.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +25,21 @@ public class DataController {
 
     @Autowired
     DataService dataService;
+    @Autowired
+    DictionaryService  dictionaryService;
 
     @GetMapping("{name}")
     public String report(@PathVariable String name) {
         return "data/" + name;
     }
 
+
+    @GetMapping("2")
+    public String report2(ModelMap map) {
+        List<Dictionary> modes = dictionaryService.getAllKidsByData("dataAnalysisMode1");
+        map.put("modes", modes);
+        return "data/2";
+    }
 
     @PostMapping("da1")
     @ResponseBody

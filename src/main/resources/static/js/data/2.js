@@ -5,8 +5,12 @@ function init() {
     initDatePicker();
     initEvent();
 
+    //加载完成后触发加载数据
+    $('#btn_query').trigger('click');
+
 
 }
+
 
 var check_detail;
 var radio_unit;
@@ -29,9 +33,9 @@ function initDatePicker() {
 
     //多选框列表
     check_detail = createCheckboxGroup($('#check_detail'));
-    var details = [{text: '地市', value: 1}, {text: '来源', value: 2}];
+    var details = [{text: '地市', value: 1}, {text: '来源', value: 2}, {text: '产品', value: 3}];
     check_detail.init('detail', details);
-    check_detail.val([1, 2]);
+    // check_detail.val([1, 2, 3]);
 
     radio_unit = createRadioGroup($('#radio_unit'));
     var units = [{text: '元', value: 1}, {text: '万元', value: 10000}];
@@ -43,29 +47,9 @@ function initDatePicker() {
     });
 
     //模式下拉框加载
-    $.post(hostUrl + "dictionary/get", {name: "dataAnalysisMode1"})
-        .done(function (r) {
-            if (r.state) {
-                var data = r.data;
+    buildSelect('select_mode', modes);
 
-                var $select = $('#select_mode');
-                $select.empty();
-                data.forEach(function (d) {
-                    var option = '<option value="' + d.data + '">' + d.name + '</option>';
-                    $select.append(option);
-                });
 
-                //加载完成后触发加载数据
-                $('#btn_query').trigger('click');
-
-            } else {
-                toastr.error('请求模式信息失败，请重试');
-                toastr.error(r.msg);
-            }
-        })
-        .fail(function () {
-            toastr.error('发送请求失败');
-        });
 }
 
 /**
@@ -110,6 +94,15 @@ function initEvent() {
             console.log(e)
         }
 
+    });
+    $('#btn_export').on('click', function () {
+        // 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+        var html = "<html><head><meta charset='utf-8' /></head><body>"
+            + $('#table').prop("outerHTML")
+            + "</body></html>";
+        // 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+        var blob = new Blob([html], {type: "application/vnd.ms-excel"});
+        saveAs(blob, $('#table_title').text() + ".xls");
     });
 
 }
@@ -504,8 +497,8 @@ var KidTableInit = function () {
                 lvl: lvl
             };
         var totals = [total, total1, total2];
-        var offset1 = 0,
-            offset2 = 0;
+        var offset1 = 0,//产品-移动首次出现下标为知
+            offset2 = 0;//产品-固网
         data.forEach(function (d, i) {
             d.keyId = getId();
             d.lvl = lvl;
@@ -586,8 +579,15 @@ var KidTableInit = function () {
 
 
         if (data[0].type == '1' || data[0].type == '2') {
-            data.splice(offset1, 0, total1);
-            data.splice(offset2 + 1, 0, total2);
+            //产品明细区分
+            var is_detail = $.inArray('3', detail) != -1;
+            if (is_detail) {
+                data.splice(offset1, 0, total1);
+                data.splice(offset2 + 1, 0, total2);
+            } else {
+                data = [total1, total2];
+            }
+
         }
         if (lvl == 1) {
             data.push(total);

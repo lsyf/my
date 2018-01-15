@@ -1,103 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>登录</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
-    <link rel="icon" type="image/png" href="../static/img/favicon.ico"
-          th:href="@{/static/img/favicon.ico}">
-
-    <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css"
-          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../static/plugins/font-awesome/css/font-awesome.css"
-          th:href="@{/static/plugins/font-awesome/css/font-awesome.css}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../static/dist/css/AdminLTE.min.css"
-          th:href="@{/static/dist/css/AdminLTE.min.css}">
-
-    <!-- iCheck -->
-    <link rel="stylesheet" href="../static/plugins/iCheck/square/blue.css"
-          th:href="@{/static/plugins/iCheck/square/blue.css}">
-
-    <!-- jQuery 2.2.3 -->
-    <script src="../static/plugins/jQuery/jquery-2.2.3.min.js"
-            th:src="@{/static/plugins/jQuery/jquery-2.2.3.min.js}"></script>
-    <!-- Bootstrap 3.3.6 -->
-    <script src="../static/bootstrap/js/bootstrap.min.js"
-            th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
-    <!-- iCheck -->
-    <script src="../static/plugins/iCheck/icheck.min.js"
-            th:src="@{/static/plugins/iCheck/icheck.min.js}"></script>
-    <!-- jQuery-validate -->
-    <script src="../static/plugins/jQuery-validate/jquery.validate.min.js"
-            th:src="@{/static/plugins/jQuery-validate/jquery.validate.min.js}"></script>
-    <script src="../static/plugins/jQuery-form/jquery.form.min.js"
-            th:src="@{/static/plugins/jQuery-form/jquery.form.min.js}"></script>
-
-
-    <link rel="stylesheet" href="../static/plugins/toastr/toastr.min.css"
-          th:href="@{/static/plugins/toastr/toastr.min.css}">
-    <script src="../static/plugins/toastr/toastr.min.js"
-            th:src="@{/static/plugins/toastr/toastr.min.js}"></script>
-
-    <script src="../static/plugins/clipboard/clipboard.js"
-            th:src="@{/static/plugins/clipboard/clipboard.js}"></script>
-    <link rel="stylesheet" href="../static/plugins/toastr/toastr.min.css"
-          th:href="@{/static/plugins/toastr/toastr.min.css}">
-    <script src="../static/plugins/toastr/toastr.min.js"
-            th:src="@{/static/plugins/toastr/toastr.min.js}"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <meta charset="utf-8"/>
+    <script src="./FileSaver.min.js"></script>
+    <style>
+        /* 此样式仅用于浏览器页面效果，Excel不会分离表格边框，不需要此样式 */
+        table {
+            border-collapse: collapse;
+        }
+    </style>
 </head>
-<body class="hold-transition">
+<body>
+<!-- 设置border="1"以显示表格框线 -->
+<table border="1">
+    <!-- caption元素可以生成表标题，其单元格列跨度为表格的列数 -->
+    <caption>学生成绩表</caption>
+    <tr>
+        <!-- 可以使用rowspan和colspan来合并单元格 -->
+        <th rowspan="2">编号</th>
+        <th rowspan="2">学号</th>
+        <th rowspan="2">姓名</th>
+        <th rowspan="2">性别</th>
+        <th rowspan="2">年龄</th>
+        <th colspan="3">成绩</th>
+    </tr>
+    <tr>
+        <th>语文</th>
+        <th>数学</th>
+        <th>英语</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>2016001</td>
+        <td>张三</td>
+        <td>男</td>
+        <td>13</td>
+        <td>85</td>
+        <td>94</td>
+        <td>77</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>2016002</td>
+        <td>李四</td>
+        <td>女</td>
+        <td>12</td>
+        <td>96</td>
+        <td>84</td>
+        <td>89</td>
+    </tr>
+</table>
 
-
-<button class=" btn-primary" onclick="abc()">1`23</button>
+<button onclick="a()">导出表格</button>
 
 <script>
-    toastr.options = {
-        "onclick": null,
-        "closeButton": false,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-top-center",
-        "preventDuplicates": false,
-        "showDuration": "3000",
-        "hideDuration": "10000",
-        "timeOut": "50000",
-        "extendedTimeOut": "10000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
+    function a() {
+        // 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+        var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+        // 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+        var blob = new Blob([html], {type: "application/vnd.ms-excel"});
+        saveAs(blob, "1.xls");
     }
 
-    //    toast-message
-
-    function abc() {
-        toastrInfo(toastrNum)
-    }
-
-    toastrNum = 1;
-    function toastrInfo(msg) {
-        var id = "toarst_id_" + toastrNum++;
-        html = $('<div id="' + id + '">'
-            + msg + '</div>');
-        toastr.info(html);
-        var clipboard = new Clipboard('#' + id,
-            {
-                text: function () {
-                    return msg;
-                }
-            });
-
-    }
 
 </script>
-
 </body>
 </html>
