@@ -33,6 +33,7 @@
         and a.log_id=b.log_id
         and d.data = a.latnid
         and b.type ='rpt_import_data_c5'
+        and d.type='local_net'
         <if test="latnId !=0 ">
             and a.LATNID = #{latnId}
         </if>

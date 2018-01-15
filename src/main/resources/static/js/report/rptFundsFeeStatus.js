@@ -1,12 +1,11 @@
 var table;
-var isTree;
+
 function initFundsFeeForm() {
     table = new TableInit();
     table.Init();
 
     buildSelect('upload_month', months);
-    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 100);
-    isTree.Init(reportIds);
+    CommSelect('upload_reportId', reportIds);
 
 }
 
@@ -16,7 +15,7 @@ function queryLog(btn) {
         url: hostUrl + "rptFundsFeeStatus/list",
         data: {
             month: $("#upload_month").val(),
-            reportId: isTree.val()
+            reportId: $("#upload_reportId").val()
         },
         dataType: "json",
         beforeSend: function () {

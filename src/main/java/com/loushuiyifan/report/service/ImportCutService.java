@@ -88,7 +88,9 @@ public class ImportCutService {
                 incomeSource,
                 shareType,
                 remark);
-
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
         return list;
     }
 
@@ -276,6 +278,11 @@ public class ImportCutService {
                             bean.setRate(Double.parseDouble(data));
                             break;
                     }
+                }
+                //如果AreaId为空,则默认该行为无效数据
+              //如果areaId和 indexData为空,则默认该行为无效数据
+                if (bean.getAreaId() == null&&bean.getRate()==null) {
+                    continue;
                 }
                 list.add(bean);
             }

@@ -55,7 +55,9 @@ public class QueryTransLogService {
 
 
         List<TransLogVO> list =queryTransLogDAO.queryLogList(month, latnId, incomeSource, taxtId);
-
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
         return list;
     }
 
@@ -77,7 +79,7 @@ public class QueryTransLogService {
                 "最后修改时间", "凭证号"};
 
         byte[] data = new CommonExportServ().column(keys, titles)
-                .data(list)
+                .data(list).type(null)
                 .exportData();
 
         return data;

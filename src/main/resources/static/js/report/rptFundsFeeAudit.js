@@ -1,6 +1,6 @@
 var table;
 var table_audit;
-var isTree;
+
 function initFundsFeeForm() {
     table = new TableInit();
     table.Init();
@@ -8,8 +8,7 @@ function initFundsFeeForm() {
     
     
     buildSelect('upload_month', months);
-    isTree = new ZtreeSelect("treeOrg", "menuContent", "upload_reportId", 100);
-    isTree.Init(reportIds);
+    CommSelect('upload_reportId', reportIds);
    
 }
 
@@ -20,7 +19,7 @@ function queryLog() {
         url: hostUrl + "rptFundsFeeAudit/list",
         data: {
             month: $("#upload_month").val(),
-            reportId: isTree.val()
+            reportId: $("#upload_reportId").val()
         },
         dataType: "json",
         beforeSend: function () {
@@ -49,15 +48,15 @@ function queryLog() {
 
 //审核查询
 function listAudit(type, btn) {
-	var month = $("#upload_month").val();
-	var reportId = isTree.val();
+	//var month = $("#upload_month").val();
+	//var reportId = $("#upload_reportId").val();
 
     $.ajax({
         type: "POST",
         url: hostUrl + "rptFundsFeeAudit/listAudit",
         data: {
             month: $("#upload_month").val(),
-            reportId: reportId
+            reportId: $("#upload_reportId").val()
         },
         dataType: "json",
         beforeSend: function () {
@@ -150,38 +149,49 @@ var TableInit = function () {
              
             data: [],
             columns: [{
-            	checkbox:true
-            },{
                 field: 'txtMessage',
-                width:'60px',
-                title: '文本信息'
+                title: '文本信息',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'prctr',
-                width:'80px',
                 title: '利润中心编码'
             }, {
                 field: 'sapFinCode',
-                width:'80px',
                 title: 'SAP科目编码'
             },{
                 field: 'sapFinCodeName',
-                width:'80px',
-                title: 'SAP科目名称'
+                title: 'SAP科目名称',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:80px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'kunnr',
-                width:'80px',
                 title: '客户编码'
             }, {
                 field: 'kunnrName',
-                width:'80px',
-                title: '客户名称'
+                title: '客户名称',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:80px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'jieFbalance',
-                width:'120px',
                 title: '借方金额'
             }, {
                 field: 'daiFbalance',
-                width:'120px',
                 title: '贷方金额'
             } ]
         });

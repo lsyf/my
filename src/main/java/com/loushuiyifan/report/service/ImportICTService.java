@@ -162,7 +162,11 @@ public class ImportICTService {
      */
     public List<ImportDataLogVO> list(Long userId, String month) {
         String type = ReportConfig.RptImportType.ICT.toString();
-        return rptImportDataICTDAO.listICTLog(userId, month, type);
+        List<ImportDataLogVO> list =rptImportDataICTDAO.listICTLog(userId, month, type);
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
+        return list;
     }
 
 
@@ -255,6 +259,11 @@ public class ImportICTService {
                             bean.setRemark(data);
                             break;
                     }
+                }
+                
+                //如果areaId和 indexData为空,则默认该行为无效数据
+                if (bean.getAreaId() == null&&bean.getIndexData()==null) {
+                    continue;
                 }
                 list.add(bean);
             }

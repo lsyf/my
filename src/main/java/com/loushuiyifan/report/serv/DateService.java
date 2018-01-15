@@ -24,15 +24,16 @@ public class DateService {
     public static final DateTimeFormatter DDHH = DateTimeFormatter.ofPattern("ddHH");
     public static final DateTimeFormatter YYYYMMDDHHMMSS = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     public static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+    private static final String SYSTEM = "system";
     @Autowired
     DictionaryService dictionaryService;
 
     public static void main(String[] args) {
-    	List<CommonVO> list =new DateService().calcMonths(6,2);
+    	List<CommonVO> list =new DateService().prepareMonth();
     	
     	System.out.println(list);
 	}
+    
     /**
      * 周围几个月(例如本月+前n月+后n月)
      *
@@ -57,12 +58,25 @@ public class DateService {
         }
         return list;
     }
+    
     //显示当前月份和上年全年月份
-    public List<CommonVO> commonMonths() {
-    	return calcMonths(12, 0);
+    public List<CommonVO> commonMonths() {    	
+    	return calcMonths(12, 0);   	
     }
     
-    
+    //根据系统控制的参数，来显示月份
+    public List<CommonVO> prepareMonth(){
+    	String type = dictionaryService.getKidDataByName(SYSTEM, "yearType");
+ 
+    	List<CommonVO> list = Lists.newArrayList();
+    	for(int i=1; i<=12;i++){
+    		LocalDate local = LocalDate.of(Integer.parseInt(type), i,1);
+        	String month =local.format(YYYYMM);
+        	list.add(new CommonVO(month, month));
+    	}
+    	
+    	return list;
+    }
     /**
      * 前几个月(例如本月+前两月)
      *

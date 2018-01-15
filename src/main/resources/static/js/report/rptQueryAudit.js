@@ -5,7 +5,7 @@ function initTransLog() {
     table.Init();
 
     buildSelect('query_month', months);
-    buildSelect('query_incomeSource', incomeSources);
+    CommSelect('query_incomeSource', incomeSources);
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "query_latnId", 80);
     orgTree.Init(orgs);
     

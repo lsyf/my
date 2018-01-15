@@ -96,7 +96,7 @@ var TableInit = function () {
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
-            sortable: false,                     //是否启用排序
+            sortable: true,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
@@ -122,18 +122,22 @@ var TableInit = function () {
             	checkbox:true
             },{
                 field: 'subId',
+                sortable: true,
                 title: '流水号'
             },{
                 field: 'month',
                 title: '账期'
             }, {
                 field: 'incomeSource',
+                sortable: true,
                 title: '收入来源编码'
             }, {
                 field: 'incomeName',
+                sortable: true,
                 title: '收入来源名称'
             }, {
                 field: 'status',
+                sortable: true,
                 title: '状态',
                 formatter:function(value,row,index){
                 	var a ='';
@@ -148,6 +152,7 @@ var TableInit = function () {
                 }
             }, {
                 field: 'lstUpd',
+                sortable: true,
                 title: '更新时间'
             }, {
                 field: 'userName',

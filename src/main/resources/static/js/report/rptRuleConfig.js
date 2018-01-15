@@ -6,7 +6,7 @@ function initRuleConfigForm() {
     table.Init();
 
     buildSelect('query_month', months);
-    buildSelect('query_card', cards);
+    CommSelect('query_card', cards);
     
     
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "query_latnId", 80);
@@ -14,7 +14,7 @@ function initRuleConfigForm() {
     
   //表单下拉加载
     buildSelect('form_month', months);
-    buildSelect('form_card', cards);
+    CommSelect('form_card', cards);
     form_orgTree = new ZtreeSelect("treeOrg2", "menuContent2", "form_latnId");
     form_orgTree.Init(orgs);
 
@@ -150,44 +150,55 @@ var TableInit = function () {
             data: [],
             columns: [{
                 field: 'logId',
-                width:'80px',
                 title: '编号'
             }, {
                 field: 'month',
-                width:'120px',
                 title: '帐期'
             }, {
                 field: 'latnName',
-                width:'120px',
-                title: '本地网'
+                title: '本地网',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'codeName',
-                width:'120px',
-                title: '营业区'
+                title: '营业区',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'cardType',
-                width:'80px',
-                title: '卡类型'
+                title: '卡类型',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'discount',
-                width:'80px',
                 title: '折扣率'
             }, {
                 field: 'platformAmount',
-                width:'80px',
                 title: '平台过期卡金额(元)'
             }, {
                 field: 'inactiveAmount',
-                width:'80px',
                 title: '库存过期卡金额(元)'
             },{
             	field: 'userName',
-                title: '修改人',
-                width: 100
+                title: '修改人'
             },{
             	field: 'lstUpd',
-            	title: '修改时间',
-                width: 100
+            	title: '修改时间'
             }, {
                 field: 'operate',
                 title: '操作',

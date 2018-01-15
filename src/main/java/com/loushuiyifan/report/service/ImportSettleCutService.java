@@ -82,6 +82,10 @@ public class ImportSettleCutService {
 
         List<SettCutRateVO> datas = rptSettCutRateDAO.SettCutRateData(month, reportId);
         List<SettCutDataVO> logs = rptSettCutLogDAO.SettCutLog(month);
+        
+        if (datas == null ||datas.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
         Map<String, Object> map = Maps.newHashMap();
         map.put("datas", datas);
         map.put("logs", logs);
@@ -201,6 +205,10 @@ public class ImportSettleCutService {
                             break;
 
                     }
+                }
+                //如果reportId和 rate为空,则默认该行为无效数据
+                if (bean.getReportId() == null&&bean.getRate()==null) {
+                    continue;
                 }
                 list.add(bean);
             }

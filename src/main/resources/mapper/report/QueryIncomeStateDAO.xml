@@ -14,7 +14,7 @@
          <if test="status !='全部' ">
           and status = #{status}
          </if>
-		 
+		 order by row_num 
 	</select>
  	
  	<!-- <select id="checkUserId" resultType="String" >

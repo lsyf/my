@@ -29,7 +29,9 @@ public class RptFundsFeeStatusService {
 	public List<FundsStatusVO> list(String month, String reportId){
 		
 		List<FundsStatusVO> list =rptFundsFeeStatusDAO.listFundsFee(month, reportId);
-	
+		if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
 		return list;
 	}
 	

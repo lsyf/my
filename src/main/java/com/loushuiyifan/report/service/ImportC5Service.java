@@ -91,7 +91,7 @@ public class ImportC5Service {
         log.setIncomeSoure(incomeSource);
         log.setFileName(filename);
         log.setType(ReportConfig.RptImportType.C5.toString());
-        extImportLogDAO.insert(log);
+        extImportLogDAO.insertSelective(log);
 
 
         //校验导入数据指标
@@ -142,9 +142,12 @@ public class ImportC5Service {
 
         String type = ReportConfig.RptImportType.C5.toString();
         Map<String, Object> map = new HashMap<>();
-        List<ImportDataLogVO> l_jihe = rptImportDataC5DAO.jiheSum(month, latnId, type);
+        List<ImportDataLogVO> list = rptImportDataC5DAO.jiheSum(month, latnId, type);
         List<ImportC5DataVO> l_area = rptImportDataC5DAO.areaCount(month, latnId);
-        map.put("list", l_jihe);
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
+        map.put("list", list);
         map.put("c5", l_area);
         return map;
     }
@@ -226,6 +229,11 @@ public class ImportC5Service {
                             break;
 
                     }
+                }
+                
+                //如果areaId和 indexData为空,则默认该行为无效数据
+                if (bean.getAreaId() == null&&bean.getIndexData()==null) {
+                    continue;
                 }
                 list.add(bean);
 

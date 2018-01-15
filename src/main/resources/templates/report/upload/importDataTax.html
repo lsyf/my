@@ -91,58 +91,54 @@
 
             <div id="form-panel" style="font-size:10px;">
                 
-                        <form id="form_upload" class="form-horizontal col-sm-8">
+                 <form id="form_upload" class="form-horizontal col-sm-12">
 
-                            <div class="form-group form-group-sm">
-                                <label for="upload_month" class="col-sm-2 control-label">月份</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control" name="month" id="upload_month">
-                                    </select>
-                                </div>
-                            </div>
+                     <div class="form-group form-group-sm">
+                         <label for="upload_month" class="col-sm-2 control-label">月份</label>
+                         <div class="col-sm-4">
+                             <select class="form-control" name="month" id="upload_month">
+                             </select>
+                         </div>
+                         <div class="col-sm-6 "><p class="pull-right">
+                         导入提示: --> <a th:href="@{/download/template/importDataTax}"
+                                       target="_blank"><b>模板下载</b></a> 
+                         1、excel版本只支持2003版格式，后缀必须为.xls<br/>
 
-                            <div class="form-group form-group-sm">
-                                <label for="upload_file" class="col-sm-2 control-label">文件</label>
-                                <div class="col-sm-7">
-                                    <input id="upload_file" name="file" type="file" class="file form-control"
-                                           data-show-preview="false" data-show-remove="false" data-language="zh"
-                                           data-show-upload="false" data-browse-class="btn-sm btn-primary">
-                                </div>
-                            </div>
-                            <div class="form-group form-group-sm">
-                                <label for="upload_remark" class="col-sm-2 control-label">备注</label>
-                                <div class="col-sm-7">
-                                    <textarea id="upload_remark" name="remark" type="text"
-                                              class="form-control"></textarea>
-                                </div>
-                                
-                                <div class="form-group  form-group-sm">
-                                <button class="btn btn-danger pull-right btn-sm btn-form"
-                                        type="button" id="btn_query" onclick="queryLog()">
-                                  	  稽核
-                                </button>
-                                <button id="btn_upload" type="submit"
-                                        class="btn btn-success pull-right btn-form btn-sm">
-                                   	 导入
-                                </button>
+                     </p></div>
+                     </div>
 
-                            </div>
-                            </div>
-
-
-                            
-                        </form>
-                        <div class="form-horizontal col-sm-4">
-                            <p>
-                                导入提示: ---> <a th:href="@{/download/template/importDataTax}"
-                                              target="_blank"><b>模板下载</b></a><br/>
-                                1、excel版本只支持2003版格式，后缀必须为.xls<br/>
-
-                            </p>
-
-                        </div>
-                   
-               
+                     <div class="form-group form-group-sm">
+                         <label for="upload_file" class="col-sm-2 control-label">文件</label>
+                         <div class="col-sm-6">
+                             <input id="upload_file" name="file" type="file" class="file form-control"
+                                    data-show-preview="false" data-show-remove="false" data-language="zh"
+                                    data-show-upload="false" data-browse-class="btn-sm btn-primary">
+                         </div>
+                     </div>
+                     <div class="form-group form-group-sm">
+                         <label for="upload_remark" class="col-sm-2 control-label">备注</label>
+                         <div class="col-sm-6">
+                             <input id="upload_remark" name="remark" type="text" class="input-sm form-control"/>
+                             <!-- <textarea id="upload_remark" name="remark" type="text"
+                                       class="form-control"></textarea> -->
+                         </div>
+                      
+                         <button class="btn btn-info pull-right btn-sm btn-form"
+                                 type="button" id="btn_query" onclick="">
+                           	 生成税务
+                         </button>
+                         <button class="btn btn-info pull-right btn-sm btn-form"
+                                 type="button" id="btn_query" onclick="queryLog(this)">
+                           	  查询
+                         </button>
+                         <button id="btn_upload" type="button" onclick="uploadData()"
+                                 class="btn btn-success pull-right btn-form btn-sm">
+                            	 导入
+                         </button>
+                  	                             
+                     </div>
+                 </form>
+                        
             </div>
 
             <div id="form-table" style="font-size:12px;">

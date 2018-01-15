@@ -24,7 +24,9 @@ public class RptQueryAuditService {
 		
 		
 		List<Map<String,String>> list = rptQueryAuditDAO.listStateForMap(month, latnId);
-		
+		if (list == null ||list.size()==0) {
+            throw new ReportException("数据还未准备好！");
+        }
 		return list;
 	}
 	

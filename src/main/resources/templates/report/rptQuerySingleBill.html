@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>结算报表查询</title>
+    <title>单号码账单查询</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -30,8 +30,8 @@
 
     <script src="../../static/js/report/common.js"
             th:src="@{/static/js/report/common.js}"></script>
-    <script src="../../static/js/report/rptSettleQuery.js"
-            th:src="@{/static/js/report/rptSettleQuery.js}"></script>
+    <script src="../../static/js/report/rptQuerySingleBill.js"
+            th:src="@{/static/js/report/rptQuerySingleBill.js}"></script>
 
 
     <style>
@@ -39,9 +39,6 @@
             margin-right: 20px;
         }
 
-        .table-row {
-            /*height: 30px;*/
-        }
     </style>
 
 </head>
@@ -55,11 +52,11 @@
 
         <script th:inline="javascript">
             //页面传值
-            var reportIds = [[${reportIds}]];
+            var orgs = [[${orgs}]];
             var months = [[${months}]];
 
             $(function () {
-                initForm();
+                initSingleBillForm();
             });
         </script>
 
@@ -70,66 +67,79 @@
 
         <!-- Main content -->
         <section class="content">
-
-            <div id="form-panel" style="font-size:12px;">
-
+            <div id="form-panel">
+                <div class="box box-primary">
+                <div class="box-body">
+                
                 <form id="form_upload" class="form-horizontal col-sm-12">
-
                     <div class="form-group form-group-sm">
                         <div class="col-sm-4 form-group form-group-rm">
-                            <label for="upload_month" class="col-sm-4 control-label">月份</label>
+                            <label for="query_month" class="col-sm-4 control-label">月份</label>
                             <div class="col-sm-8">
-                                <select class="form-control" name="month" id="upload_month">
+                                <select class="form-control" name="month" id="query_month">
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-4 form-group form-group-rm">
-                            <label for="upload_reportId" class="col-sm-4 control-label">报表编号</label>
+                            <label for="query_latnId" class="col-sm-4 control-label">本地网</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="upload_reportId" readonly>
-                                <input class="form-control" name="reportId" type="hidden">
+                                <input type="text" class="form-control" id="query_latnId" readonly>
+                                <input class="form-control" name="latnId" type="hidden">
+                            </div>
+                        </div>
+                        <div class="col-sm-4 form-group form-group-rm">
+                            <label for="query_phone" class="col-sm-4 control-label">本地网</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" name="phone" id="query_phone">
                             </div>
                         </div>
                         <div class="form-group  form-group-sm">
                             <button class="btn btn-success pull-right btn-sm btn-form"
-                                    type="button" id="btn_export" onclick="exportData()">
-                                导出
-                            </button>
-                            <button class="btn btn-success pull-right btn-sm btn-form"
-                                    type="button" id="btn_audit" onclick="listAudit('audit',this)">
-                                审核
-                            </button>
-                            <button class="btn btn-success pull-right btn-sm btn-form"
                                     type="button" id="btn_query" onclick="queryData(this)">
-                                查询
+                                	查询
                             </button>
-
                         </div>
-
                     </div>
 
                 </form>
-
+                </div>
+                </div>
             </div>
 
-            <div id="form-table" style="font-size:12px;">
+			<div id="form-table" style="font-size:12px;">
+                <div class="box">
+                    <div class="box-header">
+                        <ul class="nav nav-tabs" role="tablist" id="tabs">
+                            <li role="presentation" class="active">
+                                <a href="#tab_table1" aria-controls="tab_table1"
+                                   role="tab" data-toggle="tab">账单汇总</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#tab_table2" aria-controls="tab_table2"
+                                   role="tab" data-toggle="tab">账单明细</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="box-body">
+                        <div class="tab-content" id="tab_panels">
+                            <div role="tabpanel" class="tab-pane active" id="tab_table1">
+                                <table id="table_query" class="table_data"></table>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tab_table2">
+                                <table id="table_detail" class="table_data"></table>
+                            </div>
 
-                <table id="table_upload"></table>
-
+                        </div>
+                    </div>
+                </div>
             </div>
-
+            
             <div id="menuContent" class="menuContent">
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
 
-            <form target="_blank"
-                  id="form_export" method="post" hidden>
-            </form>
-
-
         </section>
 
-     <div th:replace="modal/modal_audit :: audit"></div>
     </div>
 
 </div>

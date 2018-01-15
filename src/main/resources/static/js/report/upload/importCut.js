@@ -192,7 +192,14 @@ var TableInit = function () {
                 title: '收入来源'
             }, {
                 field: 'codeName',
-                title: '收入来源名称'
+                title: '收入来源名称',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:120px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'activeFlag',
                 title: '是否有效'

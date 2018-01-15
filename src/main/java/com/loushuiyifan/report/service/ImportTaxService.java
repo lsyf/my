@@ -125,6 +125,10 @@ public class ImportTaxService {
     public Map<String, Object> list(String month, Long userId) {
         String type = ReportConfig.RptImportType.TAX.toString();
         List<ImportLogDomTaxVO> list = rptImportDataTaxDAO.listTax(userId, month, type);
+        if(list ==null || list.size()==0){
+        	throw new  ReportException("数据未准备好");
+        }
+        
         int count = 0;
         double total = 0;
         for (int i = 0; i < list.size(); i++) {
@@ -176,14 +180,14 @@ public class ImportTaxService {
         //TODO 税务插入到stat_to_group  存过输入修改MSS_STAT_TO_TAX
     	String s = "税务插入到stat_to_group表失败!";
     	
-    	SPDataDTO dto = new SPDataDTO();
-        dto.setLogId(Long.parseLong(type));
-        rptImportDataTaxDAO.insertTaxGroup();
-        int rtnCode = dto.getRtnCode();
-        String rtnMeg = dto.getRtnMsg();
-        if (rtnCode != 0) {
-            System.out.println(rtnMeg);
-        }
+//    	SPDataDTO dto = new SPDataDTO();
+//        dto.setLatnId(type);
+//        rptImportDataTaxDAO.insertTaxGroup(dto);
+//        int rtnCode = dto.getRtnCode();
+//        String rtnMeg = dto.getRtnMsg();
+//        if (rtnCode != 0) {
+//        	throw new  ReportException("提示："+rtnMeg);
+//        }
         s = "税务插入到stat_to_group表成功!";
         
         new CreateFile().process(month);

@@ -6,12 +6,11 @@ function initDataTax() {
 
     buildSelect('upload_month', months);
 
-
     initForm();
 
 }
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "importDataTax/list",
@@ -19,6 +18,9 @@ function queryLog() {
             month: $("#upload_month").val()
         },
         dataType: "json",
+        beforeSend: function () {
+            $(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
@@ -26,11 +28,13 @@ function queryLog() {
 
             } else {
                 toastrError('查询失败:'+r.msg);
-                toastrError(r.msg);
             }
         },
         error: function (result) {
             toastrError('发送请求失败');
+        },
+        complete: function () {
+            $(btn).button("reset");
         }
     });
 
@@ -51,8 +55,7 @@ function removeData(row) {
 
                     queryLog()
                 } else {
-                    toastrError('提删除失败');
-                    toastrError(r.msg);
+                    toastrError('删除失败'+r.msg);
                 }
             },
             error: function (result) {
@@ -63,6 +66,39 @@ function removeData(row) {
     showAlert();
 }
 
+function insertTaxData(btn) {
+    
+        $.ajax({
+            type: "POST",
+            url: hostUrl + "importDataTax/createTax",
+            data: {month: $("#upload_month").val()},
+            dataType: "json",
+            beforeSend: function () {
+                toastr.info('生成文件中...');
+                $(btn).button("loading");
+                hideAlert();
+            },
+            success: function (r) {
+                if (r.state) {
+                    toastr.info('生成成功');
+                    hideAlert();
+                } else {
+                    toastrError('生成失败'+r.msg);
+                }
+            },
+            error: function (result) {
+                toastrError('发送请求失败');
+            },
+            complete: function () {
+                $(btn).button("reset");
+            }
+        });
+  
+}
+
+function uploadData() {
+    $('#form_upload').submit();
+}
 
 function initForm() {
     initValidator();
@@ -88,16 +124,16 @@ function initForm() {
                     if (r.state) {
                         $(form).resetForm();
 
-                        toastr.info('提交成功');
+                        toastr.info('导入成功');
                         queryLog()
 
                     } else {
-                        toastrError('提交失败:' + r.msg);
+                        toastrError('导入失败:' + r.msg);
                     }
                 },
                 error: function (r) {
                     $('#btn_upload').button("reset");
-                    toastrError('提交失败:'+r);
+                    toastrError('导入失败:'+ r.msg);
                     
                 }
             });
@@ -128,8 +164,8 @@ var TableInit = function () {
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 10,                       //每页的记录行数（*）
-            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            pageSize: 20,                       //每页的记录行数（*）
+            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
             // search: true,                       //是否显示表格搜索
             strictSearch: false,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
             showColumns: false,                  //是否显示所有的列
@@ -150,7 +186,14 @@ var TableInit = function () {
                 title: '流水号'
             } , {
                 field: 'fileName',
-                title: '导入文件'
+                title: '导入文件',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'count',
                 title: '记录数'

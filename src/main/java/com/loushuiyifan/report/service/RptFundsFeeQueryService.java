@@ -2,6 +2,7 @@ package com.loushuiyifan.report.service;
 
 import com.google.common.collect.Maps;
 import com.loushuiyifan.report.dao.RptFundsFeeQueryDAO;
+import com.loushuiyifan.report.exception.ReportException;
 import com.loushuiyifan.report.serv.CommonExportServ;
 import com.loushuiyifan.report.vo.FundsFeeVO;
 import org.slf4j.Logger;
@@ -29,7 +30,9 @@ public class RptFundsFeeQueryService {
     public List<FundsFeeVO> list(String month, String reportId, String prctrName) {
 
         List<FundsFeeVO> list = rptFundsFeeQueryDAO.listFundsFee(month, reportId, prctrName);
-
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
         return list;
     }
 
@@ -45,7 +48,7 @@ public class RptFundsFeeQueryService {
         String[] titles = {"指标编码", "指标名称", "金额", "利润中心编码", "利润中心简称", "SAP科目编码"};
 
         byte[] data = new CommonExportServ().column(keys, titles)
-                .data(list)
+                .data(list).type(null)
                 .exportData();
 
         return data;

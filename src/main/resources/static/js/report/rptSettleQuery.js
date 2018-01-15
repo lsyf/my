@@ -202,39 +202,37 @@ var TableInit = function () {
                 checkbox: true
             }, {
                 field: 'logId',
-                width: '60px',
                 title: '流水号'
             }, {
                 field: 'reportId',
-                width: '70px',
                 title: '报表编号'
             }, {
                 field: 'reportName',
-                width: '100px',
-                title: '报表名称'
+                title: '报表名称',
+                formatter: function (v) {
+                    return [
+                        '<div title="' + v + '" ' +
+                        'style="width:200px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+                        + v + '</div>'
+                    ].join('');
+                }
             }, {
                 field: 'month',
-                width: '70px',
                 title: '账期'
             }, {
                 field: 'incomeSource',
-                width: '60px',
                 title: '收入来源'
             }, {
                 field: 'status',
-                width: '60px',
                 title: '状态'
             }, {
                 field: 'fileSeq',
-                width: '60px',
                 title: '重传次数'
             }, {
                 field: 'createDate',
-                width: '150px',
                 title: '下发时间'
             }, {
                 field: 'importDate',
-                width: '150px',
                 title: '导入时间'
             }, {
                 field: 'operate',

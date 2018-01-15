@@ -95,8 +95,9 @@
                                 <div class="col-sm-3 form-group form-group-rm">
                                     <label for="upload_incomeSource" class="col-sm-5 control-label">收入来源</label>
                                     <div class="col-sm-7">
-                                        <input type="text" class="form-control" id="upload_incomeSource" readonly>
-                                        <input class="form-control" name="incomeSource" type="hidden">
+                                    	<select class="form-control" name="incomeSource" id="upload_incomeSource">
+                                        </select>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-sm-3 form-group form-group-rm">
@@ -142,9 +143,7 @@
                 <ul id="treeOrg" class="ztree"></ul>
             </div>
 
-            <div id="menuContent2" class="menuContent">
-                <ul id="treeOrg2" class="ztree"></ul>
-            </div>
+           
             <form target="_blank"
                   id="form_export"
                   method="post" hidden>

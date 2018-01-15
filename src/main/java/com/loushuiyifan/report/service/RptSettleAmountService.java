@@ -26,7 +26,9 @@ public class RptSettleAmountService {
     public List<SettleAmountDataVO> listSettle(String month, String latnId, String zbCode) {
 
         List<SettleAmountDataVO> list = rptSettleAmountDAO.listData(month, latnId, zbCode);
-
+        if (list == null ||list.size()==0) {
+            throw new ReportException("查询数据为空！");
+        }
         return list;
     }
 
@@ -66,7 +68,7 @@ public class RptSettleAmountService {
         }
 
         byte[] data = new CommonExportServ().column(keys, titles)
-                .data(list)
+                .data(list).type("settle")
                 .exportData();
 
         return data;

@@ -151,3 +151,19 @@ var buildSelect = function(id, data, allId, allName) {
 		$select.append(option);
 	});
 };
+
+var CommSelect = function(id, data, allId, allName) {
+	var $select = $('#' + id);
+	$select.empty();
+	if (allId != null) {
+		allName = allName == null ? "全部" : allName;
+		var option = '<option value="' + allId + '">' + allName + '</option>';
+		$select.append(option);
+	}
+	data = data == null ? [] : data;
+	data.forEach(function(d,i) {
+		
+		var option = '<option value="' + d.data+'">' + d.name +'</option>';
+		$select.append(option);
+	});
+};
