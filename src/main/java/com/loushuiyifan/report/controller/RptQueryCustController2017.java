@@ -1,26 +1,28 @@
 package com.loushuiyifan.report.controller;
 
-import com.loushuiyifan.common.bean.Organization;
-import com.loushuiyifan.common.bean.User;
-import com.loushuiyifan.report.controller.rest.BaseReportController;
-import com.loushuiyifan.report.exception.ReportException;
-import com.loushuiyifan.report.service.RptQueryCustService;
-import com.loushuiyifan.report.vo.CommonVO;
-import com.loushuiyifan.report.vo.RptQueryDataVO;
-import com.loushuiyifan.system.vo.JsonResult;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.loushuiyifan.common.bean.Organization;
+import com.loushuiyifan.common.bean.User;
+import com.loushuiyifan.report.controller.rest.BaseReportController;
+import com.loushuiyifan.report.service.RptQueryCustService2017;
+import com.loushuiyifan.report.vo.CommonVO;
+import com.loushuiyifan.report.vo.RptQueryDataVO;
+import com.loushuiyifan.system.vo.JsonResult;
 
 /**
  * 财务报表查询
@@ -29,26 +31,26 @@ import java.util.Map;
  * @date 2017/11/2
  */
 @Controller
-@RequestMapping("rptQueryCust")
-public class RptQueryCustController extends BaseReportController {
+@RequestMapping("rptQueryCust2017")
+public class RptQueryCustController2017 extends BaseReportController {
 
     @Autowired
-    RptQueryCustService rptQueryCustService;
+    RptQueryCustService2017 rptQueryCustService;
 
     @GetMapping
-    @RequiresPermissions("report:rptQueryCust:view")
+    @RequiresPermissions("report:rptQueryCust2017:view")
     public String index(ModelMap map, @ModelAttribute("user") User user) {
         Long userId = user.getId();
 
         // 页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 4);
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.prepareMonth();
         List<Map> incomeSources = codeListTaxService.listByType("income_source2017");
 
         map.put("orgs", orgs);
         map.put("months", months);
         map.put("incomeSources", incomeSources);
-        return "report/rptQueryCust";
+        return "report/rptQueryCust2017";
     }
     
     /**
@@ -62,7 +64,7 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("list")
     @ResponseBody
-    @RequiresPermissions("report:rptQueryCust:view")
+    @RequiresPermissions("report:rptQueryCust2017:view")
     public JsonResult list(String month, String latnId, String incomeSource, String type,
                            @ModelAttribute("user") User user) {
 
@@ -82,7 +84,7 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("export")
     @ResponseBody
-    @RequiresPermissions("report:rptQueryCust:view")
+    @RequiresPermissions("report:rptQueryCust2017:view")
     public void export(HttpServletRequest req, HttpServletResponse resp, String month, String latnId,
                        String incomeSource, String type, Boolean isMulti) throws Exception {
         String path = rptQueryCustService.export(month, latnId, incomeSource, type, isMulti);
@@ -101,7 +103,6 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("listAudit")
     @ResponseBody
-    // @RequiresPermissions("report:rptQueryCust:audit")
     public JsonResult listAudit(String month, String latnId, String incomeSource, String type,
                                 @ModelAttribute("user") User user) {
         Long userId = user.getId();
@@ -114,27 +115,8 @@ public class RptQueryCustController extends BaseReportController {
      */
     @PostMapping("audit")
     @ResponseBody
-    // @RequiresPermissions("report:rptQueryCust:audit")
+    @RequiresPermissions("report:rptQueryCust:audit")
     public JsonResult audit(Long rptCaseId, String status, String comment, @ModelAttribute("user") User user) {
-
-//        // 获取当前需要审核状态
-//        String auditState = "1";
-//
-//        // 判断用户是否有相应审核权限
-//        Subject subject = SecurityUtils.getSubject();
-//        try {
-//            if ("0".equals(status)) {
-//
-//            } else if (auditState.equals("1")) {
-//                subject.checkPermission("report:rptQueryCust:audit:1");
-//            } else if (auditState.equals("2")) {
-//                subject.checkPermission("report:rptQueryCust:audit:2");
-//            } else if (auditState.equals("3")) {
-//                subject.checkPermission("report:rptQueryCust:audit:3");
-//            }
-//        } catch (Exception e) {
-//            throw new ReportException("该用户无审核权限");
-//        }
 
         Long userId = user.getId();
         rptQueryCustService.audit(rptCaseId, status, comment, userId);
