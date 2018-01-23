@@ -126,7 +126,7 @@ public class RptQueryCustService2017 {
             //客户群
             List<Map<String, String>> custs = rptEditionService.listCustMap();
             //指标
-            List<Map<String, String>> fields = rptEditionService.listFieldMap();
+            List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
             //数据
             Map<String, Map<String, String>> datas = rptQueryCustDAO.listAsMap(month, incomeSource, latnId, type);
             if (datas == null ||datas.size()==0) {
@@ -248,7 +248,7 @@ public class RptQueryCustService2017 {
         //客户群
         List<Map<String, String>> custs = rptEditionService.listCustMap();
         //指标
-        List<Map<String, String>> fields = rptEditionService.listFieldMap();
+        List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
 
         //数据
         LinkedHashMap reportData = new LinkedHashMap<>();

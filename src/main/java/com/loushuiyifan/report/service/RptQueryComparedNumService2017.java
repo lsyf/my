@@ -118,7 +118,7 @@ public class RptQueryComparedNumService2017 {
             //列名
             List<Map<String, String>> cols = rptEditionService.listComeparedNumMap();
             //指标
-            List<Map<String, String>> fields = rptEditionService.listFieldMap();
+            List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
             //数据
             Map<String, Map<String, String>> datas = getDataMap(month, latnId, type);
             if (datas == null ||datas.size()==0) {
@@ -245,7 +245,7 @@ public class RptQueryComparedNumService2017 {
         //客户群
         List<Map<String, String>> cols = rptEditionService.listComeparedNumMap();
         //指标
-        List<Map<String, String>> fields = rptEditionService.listFieldMap();
+        List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
 
         //数据
         LinkedHashMap reportData = new LinkedHashMap<>();

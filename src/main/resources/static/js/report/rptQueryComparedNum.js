@@ -22,7 +22,7 @@ function queryData() {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptQueryComparedNum/list",
-        timeout: 30000,
+        timeout: 60000,
         data: {
             month: $("#form_month").val(),
             latnId: orgTree.val(),
@@ -43,7 +43,6 @@ function queryData() {
             }
         },
         error: function (result) {
-            //$('#btn_query').button("reset");
             toastr.error('连接服务器请求失败!');
         },
         complete:function () {

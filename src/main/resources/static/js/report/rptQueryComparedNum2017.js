@@ -22,7 +22,7 @@ function queryData() {
     $.ajax({
         type: "POST",
         url: hostUrl + "rptQueryComparedNum2017/list",
-        timeout: 30000,
+        timeout: 60000,
         data: {
             month: $("#form_month").val(),
             latnId: orgTree.val(),

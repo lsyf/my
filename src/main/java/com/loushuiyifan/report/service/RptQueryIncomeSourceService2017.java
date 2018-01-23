@@ -114,10 +114,11 @@ public class RptQueryIncomeSourceService2017 {
             rptCase.setType(ReportConfig.RptExportType.RPT_QUERY_INCOME_SOURCE.toString());//类型
             Long rptCaseId = rptCaseService.saveCaseSelective(rptCase);
 
-            //收入来源
+            //TODO 收入来源待修改
+            //2017收入来源 -->income_source2018
             List<Map<String, String>> incomeSources = rptEditionService.listIncomeSourceMap();
             //指标
-            List<Map<String, String>> fields = rptEditionService.listFieldMap();
+            List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
             //数据
             Map<String, Map<String, String>> datas = rptQueryIncomeSourceDAO.listAsMap(month, cust, latnId, type);
             if (datas == null ||datas.size()==0) {
@@ -239,7 +240,7 @@ public class RptQueryIncomeSourceService2017 {
         //收入来源
         List<Map<String, String>> incomeSources = rptEditionService.listIncomeSourceMap();
         //指标
-        List<Map<String, String>> fields = rptEditionService.listFieldMap();
+        List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
 
         //数据
         LinkedHashMap reportData = new LinkedHashMap<>();

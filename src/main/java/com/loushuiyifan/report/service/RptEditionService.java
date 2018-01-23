@@ -57,18 +57,32 @@ public class RptEditionService {
         }
         return list;
     }
-
-
+    
+    /**
+     * 2017年指标
+     * @return
+     */
+    public List<Map<String, String>> listFieldMap2017() {
+        return rptRepfieldDefChannelDAO.listMap("1701");
+    }
+    /**
+     * 2017年收入来源
+     * @return
+     */
+    public List<Map<String, String>> listIncomeSourceMap2017() {
+        return codeListTaxDAO.listIncomeSourceMap("income_source2017");
+    }
+    
     public List<Map<String, String>> listCustMap() {
         return rptCustDefChannelDAO.listMap("1701");
     }
 
     public List<Map<String, String>> listFieldMap() {
-        return rptRepfieldDefChannelDAO.listMap("1701");
+        return rptRepfieldDefChannelDAO.listMap("1801");
     }
 
     public List<Map<String, String>> listIncomeSourceMap() {
-        return codeListTaxDAO.listIncomeSourceMap("income_source2017");
+        return codeListTaxDAO.listIncomeSourceMap("income_source2018");
     }
 
     public List<Map<String, String>> listComeparedNumMap() {

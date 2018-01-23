@@ -248,7 +248,7 @@ public class RptQueryCustService {
 
         String latnName = orgs.get(0).getName();
         String isName = codeListTaxService.
-                getNameByTypeAndData("income_source2017", incomeSource).getCodeName();
+                getNameByTypeAndData("income_source2018", incomeSource).getCodeName();
 
 
         String templatePath = configTemplatePath();

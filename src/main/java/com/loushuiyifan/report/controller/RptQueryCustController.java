@@ -43,7 +43,7 @@ public class RptQueryCustController extends BaseReportController {
         // 页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 4);
         List<CommonVO> months = dateService.commonMonths();
-        List<Map> incomeSources = codeListTaxService.listByType("income_source2017");
+        List<Map> incomeSources = codeListTaxService.listByType("income_source2018");
 
         map.put("orgs", orgs);
         map.put("months", months);
