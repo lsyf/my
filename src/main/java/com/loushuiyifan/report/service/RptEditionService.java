@@ -1,16 +1,19 @@
 package com.loushuiyifan.report.service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.common.collect.Maps;
 import com.loushuiyifan.report.dao.CodeListTaxDAO;
 import com.loushuiyifan.report.dao.RptCustDefChannelDAO;
 import com.loushuiyifan.report.dao.RptQueryComDetailDAO;
+import com.loushuiyifan.report.dao.RptQueryComDetailDAO2017;
 import com.loushuiyifan.report.dao.RptRepfieldDefChannelDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 报表数据版本
@@ -33,7 +36,8 @@ public class RptEditionService {
 
     @Autowired
     RptQueryComDetailDAO rptQueryComDetailDAO;
-
+    @Autowired
+    RptQueryComDetailDAO2017 rptQueryComDetailDAO2017;
     public static List<Map<String, String>> list_comparedNum;
     public static List<Map<String, String>> list_comDetail_col;
 
@@ -72,9 +76,30 @@ public class RptEditionService {
     public List<Map<String, String>> listIncomeSourceMap2017() {
         return codeListTaxDAO.listIncomeSourceMap("income_source2017");
     }
+    /**
+     * 2017客户群    
+     * @return
+     */
+    public List<Map<String, String>> listCustMap2017() {
+        return rptCustDefChannelDAO.listMap("1701");
+    }
+    /**
+     * 2017年通信主页明细列名
+     * @return
+     */
+    public List<Map<String, String>> listComDetailColMap2017() {            	    	
+    	return list_comDetail_col;
+    }
+    /**
+     * 2017年通信主页明细指标
+     * @return
+     */
+    public List<Map<String, String>> listComDetailRowMap2017() {
+        return rptQueryComDetailDAO2017.listComDetailRowMap("1701");
+    }
     
     public List<Map<String, String>> listCustMap() {
-        return rptCustDefChannelDAO.listMap("1701");
+        return rptCustDefChannelDAO.listMap("1801");
     }
 
     public List<Map<String, String>> listFieldMap() {
@@ -88,12 +113,34 @@ public class RptEditionService {
     public List<Map<String, String>> listComeparedNumMap() {
         return list_comparedNum;
     }
-
-    public List<Map<String, String>> listComDetailColMap() {
-        return list_comDetail_col;
+   
+    public List<Map<String, String>> listComDetailColMap(){
+    	List<Map<String, String>> cols = new ArrayList<>();
+    	
+    	String[] id = {"1_", "2_", "3_"};
+        String[] name = {"-上年同期数", "-本月发生数", "-本年累计数"};
+        List<Map<String, String>> list =rptQueryComDetailDAO.selectIndexCodeAndName("1801");
+    	for (int k = 0; k < list.size(); k++) {
+    		Map<String, String> map = list.get(k);
+    		   		
+			String[] codes = new String[3];
+			String[] names = new String[3];
+			for(int i = 0; i < id.length; i++){								
+				codes[i] = (id[i]+map.get("id")).toString();
+				names[i] = (map.get("name")+name[i]).toString();
+				
+				Map<String, String> temp = new LinkedHashMap<>();
+				temp.put("id", codes[i]);
+				temp.put("name", names[i]);
+		        cols.add(temp);		        
+			}						
+		}
+    	
+    	return cols;
     }
 
+    
     public List<Map<String, String>> listComDetailRowMap() {
-        return rptQueryComDetailDAO.listComDetailRowMap("1701");
+        return rptQueryComDetailDAO.listComDetailRowMap("1801");
     }
 }

@@ -50,7 +50,7 @@
         and b.area_id = c.area_id
         and b.bureau_id = c.bureau_id
         and a.income_source = d.code_id
-        and d.type_code = 'income_source2017'
+        and d.type_code = 'income_source2018'
         and b.acct_month = #{month}
         <if test="latnId !=0">
             and a.latn_id = #{latnId}

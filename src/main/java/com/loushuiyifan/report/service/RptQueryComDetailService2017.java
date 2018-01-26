@@ -119,9 +119,9 @@ public class RptQueryComDetailService2017 {
             Long rptCaseId = rptCaseService.saveCaseSelective(rptCase);
 
             //列名
-            List<Map<String, String>> cols = rptEditionService.listComDetailColMap();
+            List<Map<String, String>> cols = rptEditionService.listComDetailColMap2017();
             //指标
-            List<Map<String, String>> fields = rptEditionService.listComDetailRowMap();
+            List<Map<String, String>> fields = rptEditionService.listComDetailRowMap2017();
 
             //数据
             Map<String, Map<String, String>> datas = getDataMap(month, latnId);

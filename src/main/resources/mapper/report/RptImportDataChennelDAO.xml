@@ -25,7 +25,7 @@
         c.name as "city",
         b.user_id as "userId",
         d.nickname as "userName",
-        nvl(sum(case when e.index_id <![CDATA[<=]]> ('17011234') then  a.index_data    end ),0) as "sum2",
+        nvl(sum(case when e.index_id <![CDATA[<=]]> ('18011092') then  a.index_data    end ),0) as "sum2",
         b.STATUS as "action",
         b.export_desc as "remark",
         b.IS_ITSM as "isItsm",
@@ -49,7 +49,7 @@
         and c.data = b.latn_id
         and b.type = #{type}
         and b.user_id = d.id
-        and e.rpt_no=1701
+        and e.rpt_no=1801
         and e.group_id=0
         and a.ver_code=e.index_code
         group by  a.acct_month ,b.STATUS, b.log_id, b.file_name, c.name, b.user_id,d.nickname ,

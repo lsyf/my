@@ -22,7 +22,16 @@ public class PoiUtils {
         cellStyle.setDataFormat(df.getFormat("0.00"));
         return cellStyle;
     }
-
+    
+    /**
+     * Cell居中
+     */
+    public static CellStyle setCellStyle(Workbook wb) {
+        CellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        return cellStyle;
+    }
+    
     /**
      * 创建的sheet名，非法字符替换成下划线
      *

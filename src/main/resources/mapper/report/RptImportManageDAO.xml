@@ -8,7 +8,7 @@
            (select c.nickname from aweb_user c where c.id = t.user_id) as "useName",
            (select a.code_name from code_list_tax a where a.type_code = 'local_net' 
            	and a.code_id =t.latn_id ) as "codeName",   
-           (select b.code_name from code_list_tax b where b.type_code = 'income_source2017' 
+           (select b.code_name from code_list_tax b where b.type_code = 'income_source2018' 
             and b.code_id = t.income_soure) as "incomeSource",
 		   t.file_name as "fileName",		
 		   to_char(t.import_date, 'yyyy-MM-dd hh24:mi:ss') as "importDate",

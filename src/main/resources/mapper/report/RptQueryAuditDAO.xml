@@ -77,7 +77,7 @@
 		 where a.acct_month = #{month}
 		  and a.zb_code='1000'
 		  and a.cust_id='0'
-		  and a.income_source  in(select code_id from  code_list_tax where type_code='income_source2016' 
+		  and a.income_source  in(select code_id from  code_list_tax where type_code='income_source2018' 
 		      and ((code_level=2 and code_id<>90)or parent_code_id='90'))
 		  and b.type_code = 'local_net'
 		  and b.code_level=2 

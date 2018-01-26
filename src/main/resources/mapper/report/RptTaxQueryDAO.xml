@@ -86,7 +86,7 @@
                TAXNAMEONE || nvl2(TAXNAMETWO, '-' || TAXNAMETWO, TAXNAMETWO) ||
                nvl2(TAXNAMETHREE, '-' || TAXNAMETHREE, TAXNAMETHREE) as "name"
           from tgl_taxsubject_out
-          where INTYEAR = 2017
+          where INTYEAR = 2018
          order by TAXNO
     </select>
 

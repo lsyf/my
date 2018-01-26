@@ -62,9 +62,9 @@
         and latn_id = #{latnId})
         and a.ver_code in (select index_code
         from rpt_repfield_def_channel
-        where RPT_NO = 1701
+        where RPT_NO = 1801
         and group_Id = '0'
-        and index_id  <=  '17011234')
+        and index_id  <=  '18011092')
         and a.log_id=b.log_id
         and b.itsm_status not in(0,3) 
 		]]>
@@ -81,9 +81,9 @@
         <include refid="foreach_logIds"/>
         and a.ver_code in (select index_code
         from rpt_repfield_def_channel
-        where RPT_NO = 1701
+        where RPT_NO = 1801
         and group_Id = '0'
-        and index_id  <![CDATA[ <= ]]>  '17011234')
+        and index_id  <![CDATA[ <= ]]>  '18011092')
         and b.type = 'local_net'
         and a.area_id = b.data
         group by b.name, a.income_source,a.area_id

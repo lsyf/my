@@ -17,7 +17,7 @@
 		       code_list_tax      b,
 		       code_list_tax_c3 c,
 		       cfg_sts_define     d
-		 where b.type_code = 'income_source2016'
+		 where b.type_code = 'income_source2018'
 		   and a.income_source = b.code_id
 		   and c.type_code = 'local_net'
 		   and a.latn_id = c.code_num
@@ -69,7 +69,7 @@
 		       code_list_tax      b,
 		       code_list_tax_c3 c,
 		       cfg_sts_define     d
-		 where b.type_code = 'income_source2016'
+		 where b.type_code = 'income_source2018'
 		   and a.income_source = b.code_id
 		   and c.type_code = 'local_net'
 		   and a.latn_id = c.code_num

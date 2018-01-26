@@ -15,7 +15,7 @@
         from RPT_EXCEL_WYF a
         <if test='incomeSource!="0"'>
             join code_list_tax b
-            on (b.type_code = 'income_source2017' and
+            on (b.type_code = 'income_source2018' and
             (b.code_id = #{incomeSource} or b.parent_code_id = #{incomeSource}) and
             a.incomesource_id = b.code_id)
         </if>

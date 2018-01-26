@@ -116,7 +116,7 @@ public class RptQueryIncomeSourceService2017 {
 
             //TODO 收入来源待修改
             //2017收入来源 -->income_source2018
-            List<Map<String, String>> incomeSources = rptEditionService.listIncomeSourceMap();
+            List<Map<String, String>> incomeSources = rptEditionService.listIncomeSourceMap2017();
             //指标
             List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
             //数据
@@ -238,7 +238,7 @@ public class RptQueryIncomeSourceService2017 {
         }
 
         //收入来源
-        List<Map<String, String>> incomeSources = rptEditionService.listIncomeSourceMap();
+        List<Map<String, String>> incomeSources = rptEditionService.listIncomeSourceMap2017();
         //指标
         List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
 

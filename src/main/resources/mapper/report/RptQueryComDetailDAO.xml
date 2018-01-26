@@ -6,59 +6,69 @@
     level_cd as "code",
     name as "name" ,
     to_char(row_num) as "id"
-      from rpt_index_tx_def
+      from rpt_index_tx_cfg
      where report_id = #{rptNo}
      order by row_num
     </select>
-
-    <select id="listAsMap" resultType="java.util.Map">
-select  b.row_num || '_1' as "key",
+	<select id="selectIndexCodeAndName" resultType="java.util.Map">
+		select index_code as "id", index_name as "name"
+		   from rpt_cust_def_channel
+		  Where rpt_no = #{rptNo}
+		  order by index_code
+	</select>
+    <!-- 2018年通信主页明细 -->
+    <select id="lastYearAsMap" resultType="java.util.Map">
+    select b.row_num || '_1_'||a.cust_id as "key",
        case
          when b.remark = 'Y' then
           to_char(sum(-a.aft_tax_value), 'fm999999999990.00')
          else
           to_char(sum(a.aft_tax_value), 'fm999999999990.00')
        end as "data"
-  from stat_repfield_compared_data a, rpt_index_tx_def b
+  from stat_repfield_compared_data a, rpt_index_tx_cfg b
  where a.local_net = #{latnId}
    and a.acct_month = to_char(#{lastYearThisMonth})
-   and a.cust_id = '0'
+   and a.cust_id in(select index_code from rpt_cust_def_channel Where rpt_no = '1801') 
    and a.income_source = '0'
-   and b.report_id = 1701
+   and b.report_id = 1801
    and a.zb_code = b.index_code
- group by b.row_num, b.remark
-union all
-select  b.row_num || '_2' as "key",
+ group by b.row_num, b.remark,a.cust_id
+    </select>
+    
+    <select id="thisMonthAsMap" resultType="java.util.Map">
+    select  b.row_num || '_2_'||a.cust_id as "key",
        case
          when b.remark = 'Y' then
           to_char(sum(-a.aft_tax_value), 'fm999999999990.00')
          else
           to_char(sum(a.aft_tax_value), 'fm999999999990.00')
        end as "data"
-  from stat_repfield_content_channel a, rpt_index_tx_def b
+  from stat_repfield_content_channel a, rpt_index_tx_cfg b
  where a.income_source = '0'
-   and a.cust_id = '0'
+   and a.cust_id in(select index_code from rpt_cust_def_channel Where rpt_no = '1801') 
    and a.local_net = #{latnId}
    and a.acct_month = #{thisMonth}
-   and b.report_id = 1701
+   and b.report_id = 1801
    and a.zb_code = b.index_code
- group by b.row_num, b.remark
-union all
-select  b.row_num || '_3' as "key",
+ group by b.row_num, b.remark,a.cust_id
+    </select>
+    
+    <select id="thisYearAsMap" resultType="java.util.Map">
+    select  b.row_num || '_3_'||a.cust_id as "key",
        case
          when b.remark = 'Y' then
           to_char(sum(-a.aft_tax_value), 'fm999999999990.00')
          else
           to_char(sum(a.aft_tax_value), 'fm999999999990.00')
        end as "data"
-  from stat_repfield_content_channel a, rpt_index_tx_def b
+  from stat_repfield_content_channel a, rpt_index_tx_cfg b
  where a.income_source = '0'
    and a.local_net = #{latnId}
    and a.acct_month between #{firstMonth} and #{thisMonth}
-   and a.cust_id = '0'
-   and b.report_id = 1701
+   and a.cust_id in(select index_code from rpt_cust_def_channel Where rpt_no = '1801')
+   and b.report_id = 1801
    and a.zb_code = b.index_code
- group by b.row_num, b.remark
-
+ group by b.row_num, b.remark,a.cust_id
     </select>
+    <!-- 2018年通信主页明细 -->
 </mapper>

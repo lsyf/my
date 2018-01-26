@@ -104,7 +104,7 @@ public class RptQueryCustService {
             rptCase.setLatnId(Long.parseLong(latnId));
             rptCase.setIncomeSoure(incomeSource);
             rptCase.setProcessId(1101L);
-            rptCase.setReportNo(1701L);
+            rptCase.setReportNo(1801L);
             rptCase.setCreateUserid(userId + "");
             rptCase.setTaxMark(Integer.parseInt(type));
             rptCase.setType(ReportConfig.RptExportType.RPT_QUERY_CUST.toString());//类型
@@ -189,7 +189,7 @@ public class RptQueryCustService {
 
 
         String isName = codeListTaxService.
-                getNameByTypeAndData("income_source2017", incomeSource).getCodeName();
+                getNameByTypeAndData("income_source2018", incomeSource).getCodeName();
 
 
         String templatePath = configTemplatePath();

@@ -124,7 +124,7 @@ public class RptQueryCustService2017 {
             Long rptCaseId = rptCaseService.saveCaseSelective(rptCase);
 
             //客户群
-            List<Map<String, String>> custs = rptEditionService.listCustMap();
+            List<Map<String, String>> custs = rptEditionService.listCustMap2017();
             //指标
             List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
             //数据
@@ -246,7 +246,7 @@ public class RptQueryCustService2017 {
         }
 
         //客户群
-        List<Map<String, String>> custs = rptEditionService.listCustMap();
+        List<Map<String, String>> custs = rptEditionService.listCustMap2017();
         //指标
         List<Map<String, String>> fields = rptEditionService.listFieldMap2017();
 
