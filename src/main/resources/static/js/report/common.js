@@ -144,7 +144,7 @@ var buildSelect = function(id, data, allId, allName) {
 	data = data == null ? [] : data;
 	data.forEach(function(d,i) {
 		var selected ='';
-		if(i==1){
+		if(i==2){
 			selected= ' selected = "selected" ';
 		}
 		var option = '<option value="' + d.data+'"' + selected+ '>' + d.name +'</option>';

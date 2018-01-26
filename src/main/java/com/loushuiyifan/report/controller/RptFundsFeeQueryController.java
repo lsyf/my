@@ -40,7 +40,7 @@ public class RptFundsFeeQueryController extends BaseReportController {
 
         //页面条件
         List<Map<String, String>> orgs = localNetService.listPrctrName(userId);
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.lastMonths(2);
         List<Map<String, String>> reportIds = rptFundsFeeQueryService.listReportName();
         map.put("orgs", orgs);
         map.put("months", months);

@@ -43,7 +43,7 @@ public class RptTaxQueryController extends BaseReportController {
 
         //页面条件
         List<Map<String, String>> orgs = rptTaxQueryService.listAreaInfo();
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.lastMonths(2);
 
         map.put("orgs", orgs);
         map.put("months", months);

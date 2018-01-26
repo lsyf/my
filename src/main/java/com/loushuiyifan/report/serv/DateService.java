@@ -29,7 +29,7 @@ public class DateService {
     DictionaryService dictionaryService;
 
     public static void main(String[] args) {
-    	List<CommonVO> list =new DateService().prepareMonth();
+    	List<CommonVO> list =new DateService().calcMonths(12,2);
     	
     	System.out.println(list);
 	}
@@ -43,7 +43,15 @@ public class DateService {
     public List<CommonVO> aroundMonths(Integer num) {
         return calcMonths(num, num);
     }
-
+    /**
+     * 前几个月(例如本月+前两月)
+     *
+     * @param num
+     * @return
+     */
+    public List<CommonVO> lastMonths(Integer num) {
+    	return calcMonths(7,num);
+    }
     /**
      * 前几个月(例如本月+前n月+后m月)
      *
@@ -61,32 +69,23 @@ public class DateService {
     
     //显示当前月份和上年全年月份
     public List<CommonVO> commonMonths() {    	
-    	return calcMonths(12, 0);   	
+    	return calcMonths(0, 2);   	
     }
     
     //根据系统控制的参数，来显示月份
     public List<CommonVO> prepareMonth(){
-    	String type = dictionaryService.getKidDataByName(SYSTEM, "yearType");
+    	//String type = dictionaryService.getKidDataByName(SYSTEM, "yearType");
  
     	List<CommonVO> list = Lists.newArrayList();
     	for(int i=1; i<=12;i++){
-    		LocalDate local = LocalDate.of(Integer.parseInt(type), i,1);
+    		LocalDate local = LocalDate.of(Integer.parseInt("2017"), i,1);
         	String month =local.format(YYYYMM);
         	list.add(new CommonVO(month, month));
     	}
     	
     	return list;
     }
-    /**
-     * 前几个月(例如本月+前两月)
-     *
-     * @param num
-     * @return
-     */
-    public List<CommonVO> lastMonths(Integer num) {
-    	return calcMonths(6,num);
-    }
-
+    
     /**
      * 校验 能否导入收入报账数据
      *

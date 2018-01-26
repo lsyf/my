@@ -48,7 +48,7 @@ public class QueryTransLogController extends BaseReportController {
 
         //页面条件
         List<Organization> orgs = localNetService.listAllByUser(userId, 3);
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.lastMonths(2);
         List<Map<String, String>> incomeSources = codeListTaxService.listIncomeSource(2, "income_source2018");
         map.put("orgs", orgs);
         map.put("months", months);

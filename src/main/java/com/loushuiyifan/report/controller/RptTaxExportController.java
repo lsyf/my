@@ -40,7 +40,7 @@ public class RptTaxExportController extends BaseReportController{
     public String index(ModelMap map) {
 
         //页面条件
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.lastMonths(2);
         
         map.put("months", months);
         return "report/rptTaxExport";
