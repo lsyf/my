@@ -29,7 +29,7 @@ public class DateService {
     DictionaryService dictionaryService;
 
     public static void main(String[] args) {
-    	List<CommonVO> list =new DateService().calcMonths(12,2);
+    	List<CommonVO> list =new DateService().calcMonths(1,2);
     	
     	System.out.println(list);
 	}
@@ -74,8 +74,7 @@ public class DateService {
     
     //根据系统控制的参数，来显示月份
     public List<CommonVO> prepareMonth(){
-    	//String type = dictionaryService.getKidDataByName(SYSTEM, "yearType");
- 
+    	
     	List<CommonVO> list = Lists.newArrayList();
     	for(int i=1; i<=12;i++){
     		LocalDate local = LocalDate.of(Integer.parseInt("2017"), i,1);

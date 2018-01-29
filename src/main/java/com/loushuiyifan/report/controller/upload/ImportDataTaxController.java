@@ -49,7 +49,7 @@ public class ImportDataTaxController extends BaseReportController {
         Long userId = user.getId();
 
         //页面条件
-        List<CommonVO> months = dateService.commonMonths();
+        List<CommonVO> months = dateService.calcMonths(1,2);
         map.put("months", months);
 
         return "report/upload/importDataTax";
