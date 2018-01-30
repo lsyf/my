@@ -88,9 +88,10 @@ public class ImportCutService {
                 incomeSource,
                 shareType,
                 remark);
-        if (list == null ||list.size()==0) {
-            throw new ReportException("查询数据为空！");
-        }
+        //TODO 查不到就查不到就是了，为什么要报错？
+//        if (list == null ||list.size()==0) {
+//            throw new ReportException("查询数据为空！");
+//        }
         return list;
     }
 
@@ -262,6 +263,11 @@ public class ImportCutService {
             for (int y = startY; y <= sheet.getLastRowNum(); y++) {
                 Row row = sheet.getRow(y);
                 RptImportCutRate bean = new RptImportCutRate();
+
+                System.out.println(y);
+                if (row == null) {
+                    continue;
+                }
                 for (int x = startX; x <= row.getLastCellNum(); x++) {
                     String data = getXLSCellValue(row.getCell(x));
                     if (StringUtils.isEmpty(data)) {

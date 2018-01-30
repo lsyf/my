@@ -44,7 +44,7 @@ function queryData() {
                 $('#title_table').text(title);
                 table.Init(data.titles, data.datas);
             } else {
-                toastrError('查询失败' + msg);
+                toastrError('查询失败' + r.msg);
             }
         },
         error: function (result) {

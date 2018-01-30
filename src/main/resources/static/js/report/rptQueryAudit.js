@@ -209,6 +209,11 @@ var TableInit = function () {
                 title: '滞纳金及欠费收回',
                 formatter:imageFormat
             }, {
+                field: 'income04',
+                width: '80px',
+                title: '应付客户对价抵减收入*N',
+                formatter:imageFormat
+            }, {
                 field: 'income80',
                 width: '80px',
                 title: '合约补贴收入*N',

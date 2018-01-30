@@ -2,11 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.loushuiyifan.report.dao.RptQueryAuditDAO">
 
-	<select id="listStateForMap" resultType="Map">
+	<select id="listStateForMap" resultType="map">
 	<![CDATA[
 	select b.code_name as "codeName",
 		   0 as "income0",
 	       sum(decode(a.income_source, '02', status)) as "income02",
+	       sum(decode(a.income_source, '04', status)) as "income04",
 	       sum(decode(a.income_source, '50', status)) as "income50",
 	       sum(decode(a.income_source, '06', status)) as "income06",
 	       sum(decode(a.income_source, '80', status)) as "income80",
@@ -52,11 +53,12 @@
 		 group by b.code_name
 	</select>
 	
-	<select id="listFeeMap" resultType="Map">
+	<select id="listFeeMap" resultType="map">
 		<![CDATA[
 		select b.code_name as "codeName",
 			   to_char(sum(a.aft_tax_value/10000), 'fm999,999,990.00') as "income0",
 		       to_char(sum(decode(a.income_source, '02', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income02",
+		       to_char(sum(decode(a.income_source, '04', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income04",
 		       to_char(sum(decode(a.income_source, '50', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income50",
 		       to_char(sum(decode(a.income_source, '06', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income06",
 		       to_char(sum(decode(a.income_source, '80', a.aft_tax_value/10000)), 'fm999,999,990.00') as "income80",
