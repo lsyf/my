@@ -18,7 +18,7 @@
        a.code_name      as "name"
        from code_list_tax a
         where a.type_code= #{type}
-        order by a.code_id asc
+        order by SORTING desc, code_id
     </select>
 
     <select id="codeListTax" resultType="Map">
