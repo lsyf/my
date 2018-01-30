@@ -39,6 +39,7 @@
         </when>       
         <otherwise></otherwise>
         </choose>
+        order by  substr(group_id,3,4) desc,group_id
         
     </select>
 </mapper>

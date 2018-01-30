@@ -133,19 +133,25 @@ var ZtreeSelect = function (a, b, c, d) {
  * @param id
  * @param data
  */
-var buildSelect = function (id, data, allId, allName) {
+var buildSelect = function (id, data, type) {
     var $select = $('#' + id);
     $select.empty();
-    if (allId != null) {
-        allName = allName == null ? "全部" : allName;
-        var option = '<option value="' + allId + '">' + allName + '</option>';
-        $select.append(option);
+
+    var defaultValue;
+    //null默认为month
+    if (type == null) {
+        if (moment().date() > 15) {
+            defaultValue = moment().format('YYYYMM');
+        } else {
+            defaultValue = moment().subtract(1, 'months').format('YYYYMM');
+        }
     }
+
     data = data == null ? [] : data;
     data.forEach(function (d, i) {
         var selected = '';
         //TODO 暂时默认选中第一个
-        if (i == 0) {
+        if (defaultValue === d.data) {
             selected = ' selected = "selected" ';
         }
         var option = '<option value="' + d.data + '"' + selected + '>' + d.name + '</option>';
