@@ -32,9 +32,7 @@ public class RptFundsFeeAuditService {
     public List<FundsAuditVO> list(String month, String reportId) {
 
         List<FundsAuditVO> list = rptFundsFeeAuditDAO.listFundsFee(month, reportId);
-        if (list == null ||list.size()==0) {
-            throw new ReportException("查询数据为空！");
-        }
+        
         return list;
     }
 

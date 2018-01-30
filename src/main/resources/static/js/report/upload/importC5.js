@@ -28,6 +28,12 @@ function queryLog() {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data.list) && data.list.length === 0){
+                	toastr.warning('查询数据为空! 稽核汇总');
+                }
+                if(Array.prototype.isPrototypeOf(data.c5) && data.c5.length === 0){
+                	toastr.warning('查询数据为空! 区域统计');
+                }
                 table.load(data.list);
                 table2.load(data.c5);
             } else {

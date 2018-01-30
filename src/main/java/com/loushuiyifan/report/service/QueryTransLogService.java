@@ -55,9 +55,7 @@ public class QueryTransLogService {
 
 
         List<TransLogVO> list =queryTransLogDAO.queryLogList(month, latnId, incomeSource, taxtId);
-        if (list == null ||list.size()==0) {
-            throw new ReportException("查询数据为空！");
-        }
+       
         return list;
     }
 

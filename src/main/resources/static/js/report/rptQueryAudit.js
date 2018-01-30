@@ -29,16 +29,16 @@ function queryState() {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data);
-
             } else {
-                toastr.error('查询失败'+r.msg);
-                
+                toastr.error('查询失败'+r.msg);               
             }
         },
         error: function (result) {
-            toastr.error('连接服务器请求失败!');
-            
+            toastr.error('连接服务器请求失败!');           
         },
         complete: function () {
             $("#btn_query").button("reset");
@@ -62,6 +62,9 @@ function queryFee(btn){
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data,2);
 
             } else {

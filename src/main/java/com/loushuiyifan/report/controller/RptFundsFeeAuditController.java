@@ -65,7 +65,6 @@ public class RptFundsFeeAuditController extends BaseReportController {
     public JsonResult listQuery(String month, String reportId) {
         List<FundsAuditVO> list = rptFundsFeeAuditService.list(month, reportId);
 
-
         return JsonResult.success(list);
     }
 

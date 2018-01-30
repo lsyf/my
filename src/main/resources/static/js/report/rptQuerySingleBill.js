@@ -32,6 +32,14 @@ function queryData(btn) {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                var data1 =data.list;
+                var data2 =data.list2;
+                if(Array.prototype.isPrototypeOf(data1) && data1.length === 0){
+                	toastr.warning('查询明细数据为空!');
+                }
+                if(Array.prototype.isPrototypeOf(data2) && data2.length === 0){
+                	toastr.warning('查询汇总数据为空!');
+                }
                 table.load(data.list2);
                 table2.load(data.list);
             } else {

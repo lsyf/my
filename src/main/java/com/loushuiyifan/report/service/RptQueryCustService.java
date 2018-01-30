@@ -160,7 +160,8 @@ public class RptQueryCustService {
                     filePath);
 
         } catch (Exception e) {
-            throw new ReportException("查询数据失败: " + e.getMessage());
+            e.printStackTrace();
+        	throw new ReportException("" + e.getMessage());
         } finally {
             //移除生成状态
             cacheStatusMap.remove(cacheStatusKey);

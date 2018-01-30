@@ -32,9 +32,12 @@ function queryLog(btn) {
         },
         success: function (r) {
             if (r.state) {
-                var data = r.data;
+                var data = r.data;              
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data);
-
+                
             } else {
                 toastrError('查询失败'+r.msg);
                

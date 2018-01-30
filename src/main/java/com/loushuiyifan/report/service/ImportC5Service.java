@@ -144,9 +144,7 @@ public class ImportC5Service {
         Map<String, Object> map = new HashMap<>();
         List<ImportDataLogVO> list = rptImportDataC5DAO.jiheSum(month, latnId, type);
         List<ImportC5DataVO> l_area = rptImportDataC5DAO.areaCount(month, latnId);
-        if (list == null ||list.size()==0) {
-            throw new ReportException("查询数据为空！");
-        }
+        
         map.put("list", list);
         map.put("c5", l_area);
         return map;
