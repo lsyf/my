@@ -29,11 +29,11 @@ public class DateService {
     DictionaryService dictionaryService;
 
     public static void main(String[] args) {
-    	List<CommonVO> list =new DateService().calcMonths(1,2);
-    	
-    	System.out.println(list);
-	}
-    
+        List<CommonVO> list = new DateService().calcMonths(1, 2);
+
+        System.out.println(list);
+    }
+
     /**
      * 周围几个月(例如本月+前n月+后n月)
      *
@@ -43,6 +43,7 @@ public class DateService {
     public List<CommonVO> aroundMonths(Integer num) {
         return calcMonths(num, num);
     }
+
     /**
      * 前几个月(例如本月+前两月)
      *
@@ -50,15 +51,16 @@ public class DateService {
      * @return
      */
     public List<CommonVO> lastMonths(Integer num) {
-    	return calcMonths(7,num);
+        return calcMonths(7, num);
     }
+
     /**
      * 前几个月(例如本月+前n月+后m月)
      *
      * @param num
      * @return
      */
-    public List<CommonVO> calcMonths(Integer n,Integer m) {
+    public List<CommonVO> calcMonths(Integer n, Integer m) {
         List<CommonVO> list = Lists.newArrayList();
         for (int i = m; i >= 0 - n; i--) {
             String date = LocalDate.now().plusMonths(i).format(YYYYMM);
@@ -66,25 +68,37 @@ public class DateService {
         }
         return list;
     }
-    
-    //显示当前月份和上年全年月份
-    public List<CommonVO> commonMonths() {    	
-    	return calcMonths(0, 2);   	
+
+    //通用日期
+    public List<CommonVO> commonMonths() {
+        //TODO 暂时改为全年，不需要显示全年的另外加一个方法配置
+
+        return allMonths(2018);
     }
-    
+
+    public List<CommonVO> allMonths(Integer year) {
+        LocalDate localDate = LocalDate.of(year, 1, 1);
+        List<CommonVO> list = Lists.newArrayList();
+        for (int i = 0; i <=11; i++) {
+            String date = localDate.plusMonths(i).format(YYYYMM);
+            list.add(new CommonVO(date, date));
+        }
+        return list;
+    }
+
     //根据系统控制的参数，来显示月份
-    public List<CommonVO> prepareMonth(){
-    	
-    	List<CommonVO> list = Lists.newArrayList();
-    	for(int i=1; i<=12;i++){
-    		LocalDate local = LocalDate.of(Integer.parseInt("2017"), i,1);
-        	String month =local.format(YYYYMM);
-        	list.add(new CommonVO(month, month));
-    	}
-    	
-    	return list;
+    public List<CommonVO> prepareMonth() {
+
+        List<CommonVO> list = Lists.newArrayList();
+        for (int i = 1; i <= 12; i++) {
+            LocalDate local = LocalDate.of(Integer.parseInt("2017"), i, 1);
+            String month = local.format(YYYYMM);
+            list.add(new CommonVO(month, month));
+        }
+
+        return list;
     }
-    
+
     /**
      * 校验 能否导入收入报账数据
      *
@@ -93,7 +107,7 @@ public class DateService {
     public void checkImportIncomeData(String month) {
 
         //首先当前导入时间校验
-    	//TODO 之前为0324，测试暂时更改
+        //TODO 之前为0324，测试暂时更改
         String limitTime = dictionaryService.getKidDataByName(
                 ReportConfig.RptAppParam.ROOT.toString(),
                 ReportConfig.RptAppParam.TIME_IMPORT_INCOME_DATA.toString());
@@ -117,24 +131,26 @@ public class DateService {
             throw new ReportException("超出账期限制");
         }
     }
-    
+
     /**
      * 一键汇总
+     *
      * @param month
      */
-    public void checkStatistic(String month){
-    	String day = dictionaryService.getKidDataByName(
+    public void checkStatistic(String month) {
+        String day = dictionaryService.getKidDataByName(
                 ReportConfig.RptAppParam.ROOT.toString(),
                 ReportConfig.RptAppParam.MONTH_ONE_KEY.toString());
         int limitDay = Integer.parseInt(day);
-        int nowDay = LocalDate.now().getDayOfMonth();       
+        int nowDay = LocalDate.now().getDayOfMonth();
         int value = nowDay > limitDay ? 0 : -1;
         String str = LocalDate.now().plusMonths(value).format(YYYYMM);
-        int a =Integer.parseInt(month)- Integer.parseInt(str);
-        if (limitDay == 0 || limitDay > 0 && a<0) {
+        int a = Integer.parseInt(month) - Integer.parseInt(str);
+        if (limitDay == 0 || limitDay > 0 && a < 0) {
             throw new ReportException("历史账期不能汇总");
         }
     }
+
     /**
      * 校验 能否导入C5数据
      *
@@ -204,7 +220,7 @@ public class DateService {
      */
     public void checkImportGroup() {
 
-    	//TODO 之前为多少，测试暂时改为多少
+        //TODO 之前为多少，测试暂时改为多少
         //首先当前导入时间校验
         String limitTime = dictionaryService.getKidDataByName(
                 ReportConfig.RptAppParam.ROOT.toString(),
@@ -249,13 +265,13 @@ public class DateService {
         }
     }
 
-      
+
     /**
      * 校验 能否修改收入来源完成度状态
      */
     public void checkIncomeSourceProcess() {
 
-    	//TODO 之前为多少，测试暂时改为多少
+        //TODO 之前为多少，测试暂时改为多少
         //首先当前导入时间校验
         String limitTime = dictionaryService.getKidDataByName(
                 ReportConfig.RptAppParam.ROOT.toString(),
@@ -267,7 +283,7 @@ public class DateService {
 
 
     }
-    
+
     /**
      * 校验 能否导入结算切割数据
      *
