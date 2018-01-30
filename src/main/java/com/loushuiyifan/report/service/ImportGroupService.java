@@ -88,7 +88,7 @@ public class ImportGroupService {
              
             for (RptImportDataGroup data : list) {
                 //判断指标编码是否为空
-                List<String> l = rptImportGroupDataDAO.findSubcode(data.getSubCode(), "1701", Long.parseLong("0"));
+                List<String> l = rptImportGroupDataDAO.findSubcode(data.getSubCode(), "1801", Long.parseLong("0"));
                 if (l == null) {
                     throw new ReportException("导入的数据中，指标编码：" + data.getSubCode() + " 为非明细指标，请检查后重新导入！");
                 } else {

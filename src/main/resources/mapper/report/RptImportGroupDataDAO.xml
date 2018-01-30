@@ -39,6 +39,6 @@
         </when>       
         <otherwise></otherwise>
         </choose>
-        
+       order by lst_upd desc 
     </select>
 </mapper>
