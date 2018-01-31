@@ -138,7 +138,7 @@ function auditData(rptCaseId, status) {
                 toastr.info("审核成功");
                 listAudit('edit')
             } else {
-                toastrError('查询失败' + r.msg);
+                toastrError( r.msg);
             }
         },
         error: function (result) {

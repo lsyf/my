@@ -68,6 +68,9 @@ public class RptQueryCustService {
     //生成缓存状态
     ConcurrentHashMap<String, Instant> cacheStatusMap = new ConcurrentHashMap<>(3000);
 
+    //审核缓存状态
+    ConcurrentHashMap<String, Instant> auditStatusMap = new ConcurrentHashMap<>(3000);
+
     @Transactional
     public RptQueryDataVO list(String month,
                                String latnId,
@@ -116,7 +119,7 @@ public class RptQueryCustService {
             List<Map<String, String>> fields = rptEditionService.listFieldMap();
             //数据
             Map<String, Map<String, String>> datas = rptQueryCustDAO.listAsMap(month, incomeSource, latnId, type);
-            if (datas == null ||datas.size()==0) {
+            if (datas == null || datas.size() == 0) {
                 throw new ReportException("数据还未准备好！");
             }
             //由于fields接下来会更改，优先生成文件
@@ -317,14 +320,32 @@ public class RptQueryCustService {
      * @return
      */
     public void audit(Long rptCaseId, String status, String comment, Long userId) {
-        SPDataDTO dto = new SPDataDTO();
-        dto.setRptCaseId(rptCaseId);
-        dto.setUserId(userId);
-        dto.setStatus(status);
-        dto.setComment(comment);
-        rptQueryCustDAO.auditRpt(dto);
-        if (dto.getRtnCode() != 0) {//非0审核失败
-            throw new ReportException(dto.getRtnMsg());
+
+        //判断是否正在生成
+        String cacheStatusKey = rptCaseId + status;
+        Instant lastInst = auditStatusMap.get(cacheStatusKey);
+        if (lastInst != null) {
+            Long during = Duration.between(lastInst, Instant.now()).getSeconds();
+            throw new ReportException("正在审核，已耗时: " + during + "秒");
+        }
+        //设置为正在审核状态
+        auditStatusMap.put(cacheStatusKey, Instant.now());
+
+        try {
+            SPDataDTO dto = new SPDataDTO();
+            dto.setRptCaseId(rptCaseId);
+            dto.setUserId(userId);
+            dto.setStatus(status);
+            dto.setComment(comment);
+            rptQueryCustDAO.auditRpt(dto);
+            if (dto.getRtnCode() != 0) {//非0审核失败
+                throw new ReportException(dto.getRtnMsg());
+            }
+        } catch (Exception e) {
+            throw new ReportException("审核失败: " + e.getMessage());
+        } finally {
+            //移除审核状态
+            auditStatusMap.remove(cacheStatusKey);
         }
     }
 
@@ -421,7 +442,7 @@ public class RptQueryCustService {
             int rowIndex = 5;//行指针
             int columnIndex = 4;//列指针
             CellStyle cellStyle = PoiUtils.valueCellStyle(getWorkbook());
-            
+
             String _append = "_";
             for (int i = 0; i < rows.size(); i++) {
                 Map<String, String> rowData = rows.get(i);
@@ -437,7 +458,7 @@ public class RptQueryCustService {
                 row.createCell(2).setCellValue(pid);
                 row.createCell(3).setCellValue(name);
 
-                
+
                 for (int j = 0; j < columns.size(); j++) {
                     int tempIndex = columnIndex + j;
                     String key = id + _append + columns.get(j);
