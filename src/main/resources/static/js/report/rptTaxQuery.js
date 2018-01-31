@@ -26,6 +26,9 @@ function queryLog(btn) {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.Init(data.titles, data.datas);
             } else {
                 toastr.error('查询失败'+r.msg);

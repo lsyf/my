@@ -163,9 +163,7 @@ public class ImportICTService {
     public List<ImportDataLogVO> list(Long userId, String month) {
         String type = ReportConfig.RptImportType.ICT.toString();
         List<ImportDataLogVO> list =rptImportDataICTDAO.listICTLog(userId, month, type);
-        if (list == null ||list.size()==0) {
-            throw new ReportException("查询数据为空！");
-        }
+        
         return list;
     }
 

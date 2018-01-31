@@ -36,10 +36,6 @@ public class RptQuerySingleBillService {
 		rptQuerySingleBillDAO.listBill(map);
 		
 		List<SingleBillVO> list = (List<SingleBillVO>)map.get("list");
-		if (list == null || list.size() == 0) {
-            throw new ReportException("查询信息为空");
-        }
-		
 		
 		Map param = new HashMap();
 		for(SingleBillVO vo: list){			

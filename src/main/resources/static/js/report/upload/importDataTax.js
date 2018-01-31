@@ -24,6 +24,10 @@ function queryLog(btn) {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                var data1 =data.list;
+                if(Array.prototype.isPrototypeOf(data1) && data1.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data.list);
 
             } else {

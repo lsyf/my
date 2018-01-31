@@ -28,11 +28,17 @@ function queryLog() {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data.datas) && data.datas.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
+                
+                if(Array.prototype.isPrototypeOf(data.logs) && data.logs.length === 0){
+                	toastr.warning('查询文件为空!');
+                }
                 table.load(data.datas);
                 table2.load(data.logs);
             } else {
-                toastrError('查询失败');
-                toastrError(r.msg);
+                toastrError('查询失败'+r.msg);
             }
         },
         error: function (result) {

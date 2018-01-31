@@ -77,11 +77,13 @@ function queryData() {
             $('#btn_query').button("reset");
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 $('#title_table').text(title);
                 table.Init(data.titles, data.datas);
             } else {
-                toastr.error('查询失败');
-                toastr.error(r.msg);
+                toastr.error('查询失败：'+r.msg);
             }
         },
         error: function (result) {

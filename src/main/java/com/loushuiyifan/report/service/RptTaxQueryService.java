@@ -47,9 +47,7 @@ public class RptTaxQueryService {
         List<Map<String, String>> rows = getRows(latnId, taxType);
         //查询具体数据
         Map<String, Map<String, String>> datas = getDatas(month, latnId, taxType);
-        if (datas == null ||datas.size()==0) {
-            throw new ReportException("数据还未准备好！");
-        }
+        
         //生成html需求数据模型
         //首先遍历指标,建立 id->feild
         Map<String, Map<String, String>> rowMap = Maps.newHashMapWithExpectedSize(2000);

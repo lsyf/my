@@ -160,7 +160,7 @@ public class RptQueryComparedNumService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ReportException("查询数据失败: " + e.getMessage());
+            throw new ReportException(": " + e.getMessage());
         } finally {
             //移除生成状态
             cacheStatusMap.remove(cacheStatusKey);

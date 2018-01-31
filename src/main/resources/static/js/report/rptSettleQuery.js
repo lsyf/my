@@ -29,6 +29,9 @@ function queryData(btn) {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data);
 
             } else {
@@ -117,7 +120,7 @@ function listAudit(type, btn) {
             if (r.state) {
                 var data = r.data.list;
                 var rptCaseId = r.data.rptCaseId;
-                //var incomeSource = r.data.incomeSource;
+                
                 table_audit.load(data);
                 editAudit("审核流程", type, function () {
                     auditData(rptCaseId, "1");

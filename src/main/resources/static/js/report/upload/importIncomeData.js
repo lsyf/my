@@ -9,9 +9,7 @@ function initIncomeData() {
     orgTree = new ZtreeSelect("treeOrg", "menuContent", "upload_latnId");
     orgTree.Init(orgs);
 
-
     initForm();
-
 }
 
 function queryLog() {
@@ -27,7 +25,11 @@ function queryLog() {
         success: function (r) {
             if (r.state) {
                 $('#title_table').text(title);
-                table.load(r.data);
+                var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
+                table.load(data);
             } else {
                 toastrError(r.msg);
             }

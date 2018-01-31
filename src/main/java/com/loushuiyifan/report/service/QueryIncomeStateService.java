@@ -26,9 +26,6 @@ public class QueryIncomeStateService {
 
     	List<TransLogVO> list =queryIncomeStateDAO.queryLogList(month, status);
         
-    	if (list == null ||list.size()==0) {
-            throw new ReportException("查询数据为空！");
-        }
     	return list;
     }
 	

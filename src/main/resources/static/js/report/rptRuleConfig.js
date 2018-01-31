@@ -22,18 +22,14 @@ function initRuleConfigForm() {
 
 function showPanel(a){
 	 
-	if (a){
-         
+	if (a){         
         $("#form-panel").hide();
         $("#table-panel").show();
-    } else {
-    	 
+    } else {   	 
         $("#form-panel").show();
         $("#table-panel").hide();
         var form = $("#rule_form");
-        form.resetForm();
-       
-       
+        form.resetForm();      
     }
 }
 
@@ -55,6 +51,9 @@ function queryList(btn) {
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data);
 
             } else {
@@ -72,8 +71,7 @@ function queryList(btn) {
 }
 
 function showData(row) {
-
-    
+   
     showPanel(0);
     $("#form_month").val(row.month);
     form_orgTree.txt(row.latnName);

@@ -63,7 +63,6 @@ public class RptFundsFeeStatusController extends BaseReportController{
     public JsonResult listQuery(String month, String reportId){
     	List<FundsStatusVO> list =rptStatusFundsFeeFeeService.list(month, reportId);
        
-
         return JsonResult.success(list);
     }
 

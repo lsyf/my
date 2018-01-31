@@ -125,9 +125,6 @@ public class ImportTaxService {
     public Map<String, Object> list(String month, Long userId) {
         String type = ReportConfig.RptImportType.TAX.toString();
         List<ImportLogDomTaxVO> list = rptImportDataTaxDAO.listTax(userId, month, type);
-        if(list ==null || list.size()==0){
-        	throw new  ReportException("数据未准备好");
-        }
         
         int count = 0;
         double total = 0;

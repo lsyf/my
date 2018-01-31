@@ -16,7 +16,7 @@ function initCut() {
 
 }
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "importCut/listCut",
@@ -27,18 +27,27 @@ function queryLog() {
             shareType: $("#upload_cutType").val()
         },
         dataType: "json",
+        beforeSend: function () {
+            $(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
-                var data = r.data;
+                var data = r.data;              
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data);
-
+                
             } else {
                 toastrError('查询失败'+r.msg);
                
             }
         },
         error: function (result) {
-            toastrError('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function() {
+        	$(btn).button("reset");
         }
     });
 

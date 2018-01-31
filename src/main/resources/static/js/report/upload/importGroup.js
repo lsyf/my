@@ -10,7 +10,7 @@ function initGroup() {
     initForm();
 }
 
-function queryLog() {
+function queryLog(btn) {
     $.ajax({
         type: "POST",
         url: hostUrl + "importGroup/list",
@@ -19,9 +19,15 @@ function queryLog() {
             groupId: $("#upload_groupId").val()
         },
         dataType: "json",
+        beforeSend: function () {
+            $(btn).button("loading");
+        },
         success: function (r) {
             if (r.state) {
                 var data = r.data;
+                if(Array.prototype.isPrototypeOf(data) && data.length === 0){
+                	toastr.warning('查询数据为空!');
+                }
                 table.load(data);
 
             } else {
@@ -29,7 +35,10 @@ function queryLog() {
             }
         },
         error: function (result) {
-            toastrError('发送请求失败');
+            toastr.error('连接服务器请求失败!');
+        },
+        complete:function() {
+        	$(btn).button("reset");
         }
     });
 
@@ -56,7 +65,7 @@ function removeData() {
 
                     queryLog()
                 } else {
-                    toastrError('提删除失败'+r.msg);
+                    toastrError('删除失败'+r.msg);
                     }
                 },
                 error: function (result) {
@@ -131,7 +140,7 @@ var TableInit = function () {
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
-            sortable: false,                     //是否启用排序
+            sortable: true,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
             contentType: 'application/x-www-form-urlencoded',
             sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
@@ -155,12 +164,14 @@ var TableInit = function () {
             data: [],
             columns: [{
                 field: 'groupId',
+                sortable: true,
                 title: '指标组编码'
             }, {
                 field: 'groupName',
                 title: '指标组名称'
             }, {
                 field: 'subCode',
+                sortable: true,
                 title: '明细指标编码'
             }, {
                 field: 'subName',
@@ -170,16 +181,12 @@ var TableInit = function () {
                 title: '操作人ID'
             }, {
                 field: 'lstUpd',
+                sortable: true,
                 title: '导入时间'
             }, {
                 field: 'latnId',
                 title: '本地网'
-            }/*, {
-             field: 'operate',
-             title: '操作',
-             events: operateEvents,
-             formatter: operateFormatter
-             }*/]
+            }]
 
         });
 
